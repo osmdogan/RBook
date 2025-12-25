@@ -541,7 +541,7 @@ window.Quarto = {
 </header>
 
 
-<div id="c406b300" class="cell" data-execution_count="1">
+<div id="e8777a94" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -558,7 +558,7 @@ window.Quarto = {
 <h2 data-number="27.2" class="anchored" data-anchor-id="the-extended-least-squares-assumptions"><span class="header-section-number">27.2</span> The extended least squares assumptions</h2>
 <p>The linear regression model with one regressor is <span id="eq-eq25-1"><span class="math display">\[
 Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i = 1, \ldots, n,
-\tag{27.1}\]</span></span> where <span class="math inline">\(Y_i\)</span> is the dependent variable, <span class="math inline">\(X_i\)</span> is the regressor, and <span class="math inline">\(u_i\)</span> is the error term. In <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 14</span></a>, we derive the OLS estimators of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> as <span class="math display">\[
+\tag{27.1}\]</span></span> where <span class="math inline">\(Y_i\)</span> is the dependent variable, <span class="math inline">\(X_i\)</span> is the regressor, and <span class="math inline">\(u_i\)</span> is the error term. In <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 13</span></a>, we derive the OLS estimators of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> as <span class="math display">\[
 \begin{align*}
 \hat{\beta}_1 &amp;= \frac{\sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n (X_i - \bar{X})^2},\\
 \hat{\beta}_0 &amp;= \bar{Y} - \hat{\beta}_1 \bar{X},
@@ -787,7 +787,7 @@ P(|V-\mu_V|&lt;\delta)\geq 1-\frac{\sigma^2_V}{\delta^2}.
 P(\mu_V-\delta&lt;V&lt;\mu_V+\delta)\geq 1-\frac{\sigma^2_V}{\delta^2}.
 \]</span></p>
 <p>In the following code chunk, we assume that <span class="math inline">\(V\sim N(0,1)\)</span> and <code>delta = np. arange(1, 10)</code>. We calculate the Chebychev bound and the actual probability that <span class="math inline">\(V\)</span> is within <span class="math inline">\(\delta\)</span> of its mean. <a href="#fig-fig25-1" class="quarto-xref">Figure&nbsp;<span>27.2</span></a> shows that the Chebychev bound is a conservative estimate of the actual probability.</p>
-<div id="cb2ca5ac" class="cell" data-execution_count="3">
+<div id="be10c981" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the Chebychev inequality</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sigma2_V <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>mu_V <span class="op">=</span> <span class="dv">0</span></span>
@@ -862,7 +862,7 @@ P(|m_c-\mu_Y|\geq\delta)\leq\E\left((\bar{Y}+1/n-\mu_Y)^2\right)/\delta^2=\frac{
 </div>
 <p>In the following code chunk, we illustrate the law of large numbers using the estimators <span class="math inline">\(m_a\)</span>, <span class="math inline">\(m_b\)</span>, and <span class="math inline">\(m_c\)</span> defined in <a href="#exm-exm25-1" class="quarto-xref">Example&nbsp;<span>27.2</span></a>. We set <span class="math inline">\(\mu_Y = 0\)</span>, <span class="math inline">\(\sigma_Y^2 = 1\)</span>, and <span class="math inline">\(a = 0.5\)</span>. We consider three sample sizes: <span class="math inline">\(n = 10\)</span>, <span class="math inline">\(n = 100\)</span>, and <span class="math inline">\(n = 1000\)</span>. For each sample size, we generate 1000 samples and compute each estimator. We then create histograms of each estimator for each sample size.</p>
 <p><a href="#fig-fig25-2" class="quarto-xref">Figure&nbsp;<span>27.3</span></a> displays the histograms of <span class="math inline">\(m_a\)</span>, <span class="math inline">\(m_b\)</span>, and <span class="math inline">\(m_c\)</span> for different sample sizes. In the case of <span class="math inline">\(m_a\)</span> and <span class="math inline">\(m_b\)</span>, the histograms do not concentrate around the true mean <span class="math inline">\(\mu_Y = 0\)</span> as the sample size increases. However, since the histograms are centered around the true mean, these estimators are unbiased. On the other hand, the histogram of <span class="math inline">\(m_c\)</span> becomes more concentrated around the true mean as the sample size increases, indicating that <span class="math inline">\(m_c\)</span> is a consistent estimator.</p>
-<div id="a114c2d2" class="cell" data-execution_count="5">
+<div id="ec49c7c2" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the law of large numbers</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mu_Y <span class="op">=</span> <span class="dv">0</span></span>
@@ -1104,7 +1104,7 @@ F_n(t)&amp;=\sum_{k=0}^{\lfloor t\rfloor}\binom{n}{k}\left(\frac{\lambda}{n}\rig
 </div>
 </div>
 <p>In the following code chunk, we illustrate the convergence in distribution between the binomial and poisson random variables. We set <span class="math inline">\(\lambda = 5\)</span> and consider three sample sizes: <span class="math inline">\(n = 10\)</span>, <span class="math inline">\(n = 20\)</span>, and <span class="math inline">\(n = 50\)</span>. For each sample size, we then compute the cumulative distribution functions of the binomial and poisson random variables over the range <span class="math inline">\(t = 0, 1, \ldots, 15\)</span>. <a href="#fig-fig25-3" class="quarto-xref">Figure&nbsp;<span>27.4</span></a> shows that the cumulative distribution functions of the binomial random variables converge to the cumulative distribution function of the poisson random variable as the sample size increases.</p>
-<div id="101ced4d" class="cell" data-execution_count="7">
+<div id="8605d9fd" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the convergence in distribution</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>lambda_p <span class="op">=</span> <span class="dv">5</span></span>
@@ -1159,7 +1159,7 @@ Figure&nbsp;27.4: Illustrating the convergence in distribution
 \]</span> which suggests that <span class="math inline">\(\bar{Y}\sim N(1/2,1/12n)\)</span> when <span class="math inline">\(n\)</span> is large.</p>
 </div>
 <p>In the following code chunk, we illustrate the central limit theorem using the uniform random variables defined in <a href="#exm-exm25-4" class="quarto-xref">Example&nbsp;<span>27.7</span></a>. We set <span class="math inline">\(n = 10, 50, 100, 500, 1000, 5000\)</span> and generate 1000 samples for each sample size. We then compute the sample mean <span class="math inline">\(\bar{Y}\)</span> and plot the histograms of <span class="math inline">\(\sqrt{12n}(\bar{Y}-1/2)\)</span> for each sample size. <a href="#fig-fig25-4" class="quarto-xref">Figure&nbsp;<span>27.5</span></a> shows the histograms of <span class="math inline">\(\sqrt{12n}(\bar{Y}-1/2)\)</span> along with the standard normal density plot. As the sample size increases, the deviations between the histograms and the standard normal density plot decrease, indicating that the sample mean converges to the standard normal distribution as the sample size grows.</p>
-<div id="64651fdc" class="cell" data-execution_count="9">
+<div id="d5b177a0" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the central limit theorem</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>n_values <span class="op">=</span> [<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">500</span>, <span class="dv">1000</span>, <span class="dv">5000</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1182,7 +1182,7 @@ Figure&nbsp;27.4: Illustrating the convergence in distribution
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="cell-fig-fig25-4" class="cell quarto-layout-panel" data-layout-nrow="3" data-execution_count="10">
+<div id="cell-fig-fig25-4" class="cell quarto-layout-panel" data-execution_count="10" data-layout-nrow="3">
 <div class="quarto-layout-row">
 <div class="cell-output cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
 <div id="fig-fig25-4" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1234,7 +1234,7 @@ P(S_n&gt;40)&amp;=P\left(\frac{S_n-np}{\sqrt{np(1-p)}}&gt;\frac{40-np}{\sqrt{np(
 &amp;=0.2527,
 \end{align*}
 \]</span> where <span class="math inline">\(Z\sim N(0,1)\)</span>. The last step can be computed using the following code:</p>
-<div id="82864029" class="cell" data-execution_count="11">
+<div id="e711c284" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">round</span>(<span class="dv">1</span> <span class="op">-</span> stats.norm.cdf(<span class="fl">0.6661</span>), <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>0.2527</code></pre>
@@ -1242,7 +1242,7 @@ P(S_n&gt;40)&amp;=P\left(\frac{S_n-np}{\sqrt{np(1-p)}}&gt;\frac{40-np}{\sqrt{np(
 </div>
 <p>The result indicates that there is approximately a 25.27% chance that more than 40 students will take longer than 6 months to complete their thesis.</p>
 <p>Since <span class="math inline">\(P(S_n&gt;40)=1-P(S_n\leq 40)\)</span>, we can also compute the exact probability as follows:</p>
-<div id="95abdc44" class="cell" data-execution_count="12">
+<div id="ca8394da" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">round</span>(<span class="dv">1</span> <span class="op">-</span> stats.binom.cdf(<span class="dv">40</span>, <span class="dv">100</span>, np.exp(<span class="op">-</span><span class="dv">1</span>)), <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>0.2197</code></pre>
@@ -1521,7 +1521,7 @@ t=\frac{\hat{\beta}_1-c}{\hat{\sigma}_{\hat{\beta}_1}}=\frac{\sqrt{n}(\hat{\beta
 </section>
 <section id="the-gauss-markov-theorem-1" class="level2" data-number="27.6">
 <h2 data-number="27.6" class="anchored" data-anchor-id="the-gauss-markov-theorem-1"><span class="header-section-number">27.6</span> The Gauss-Markov theorem</h2>
-<p>The Gauss-Markov theorem in <a href="#thm-thm25-2" class="quarto-xref">Theorem&nbsp;<span>27.2</span></a> states that the OLS estimators are the best linear unbiased estimators (BLUE) under the first four assumptions. We prove this claim in <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 29</span></a> using matrix algebra. In this section, we show how the variances of the OLS estimators simplify.</p>
+<p>The Gauss-Markov theorem in <a href="#thm-thm25-2" class="quarto-xref">Theorem&nbsp;<span>27.2</span></a> states that the OLS estimators are the best linear unbiased estimators (BLUE) under the first four assumptions. We prove this claim in <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 28</span></a> using matrix algebra. In this section, we show how the variances of the OLS estimators simplify.</p>
 <p>Under the fourth assumption, the numerator of <span class="math inline">\(\sigma^2_{\widehat{\beta}_1}\)</span> can be written as <span class="math display">\[
 \begin{align*}
 \text{var}((X_i-\mu_X)u_i)&amp;= \E((X_i-\mu_X)^2u^2_i)=\E\left(\E\left((X_i-\mu_X)^2u^2_i|X_i\right)\right)\\
@@ -1580,7 +1580,7 @@ t&amp;=\frac{\hat{\beta}_1-c}{\sqrt{\widehat{\text{var}}(\hat{\beta}_1|X_1,\ldot
 t&amp;=\frac{\hat{\beta}_1-c}{\sqrt{\widehat{\text{var}}(\hat{\beta}_1|X_1,\ldots,X_n)}}=\frac{\hat{\beta}_1-c}{\sqrt{\frac{\sigma^2_{u}}{\sum_{i=1}^n(X_i - \bar{X})^2}}}\div\sqrt{\frac{s^2_{\hat{u}}}{\sigma^2_u}}\\
 &amp;=\frac{\hat{\beta}_1-c}{\sqrt{\frac{\sigma^2_{u}}{\sum_{i=1}^n(X_i - \bar{X})^2}}}\div\sqrt{W/(n-2)},
 \end{align}
-\]</span> where <span class="math inline">\(W=\sum_{i=1}^n\hat{u}^2_i/\sigma^2_u\)</span>. Under <span class="math inline">\(H_0\)</span>, we have <span class="math inline">\(\frac{\hat{\beta}_1-c}{\sqrt{\frac{\sigma^2_{u}}{\sum_{i=1}^n(X_i - \bar{X})^2}}}\sim N(0,1)\)</span>. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 29</span></a>, we show that <span class="math inline">\(W\)</span> has a chi-squared distribution with <span class="math inline">\(n-2\)</span> degrees of freedom and that it is independent of the standardized OLS estimator in the numerator. It then follows from the definition of the Student’s <span class="math inline">\(t\)</span> distribution that the homoskedasticity-only <span class="math inline">\(t\)</span>-statistic has a Student’s <span class="math inline">\(t\)</span> distribution with <span class="math inline">\(n-2\)</span> degrees of freedom.</p>
+\]</span> where <span class="math inline">\(W=\sum_{i=1}^n\hat{u}^2_i/\sigma^2_u\)</span>. Under <span class="math inline">\(H_0\)</span>, we have <span class="math inline">\(\frac{\hat{\beta}_1-c}{\sqrt{\frac{\sigma^2_{u}}{\sum_{i=1}^n(X_i - \bar{X})^2}}}\sim N(0,1)\)</span>. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 28</span></a>, we show that <span class="math inline">\(W\)</span> has a chi-squared distribution with <span class="math inline">\(n-2\)</span> degrees of freedom and that it is independent of the standardized OLS estimator in the numerator. It then follows from the definition of the Student’s <span class="math inline">\(t\)</span> distribution that the homoskedasticity-only <span class="math inline">\(t\)</span>-statistic has a Student’s <span class="math inline">\(t\)</span> distribution with <span class="math inline">\(n-2\)</span> degrees of freedom.</p>
 </div>
 </section>
 <section id="weighted-least-squares" class="level2" data-number="27.9">

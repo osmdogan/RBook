@@ -562,7 +562,7 @@ window.Quarto = {
 </header>
 
 
-<div id="3081556c" class="cell" data-execution_count="1">
+<div id="5e816fcc" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas_datareader <span class="im">as</span> pdr</span>
@@ -713,7 +713,7 @@ u_{2t}
 <li><code>YGROWTH</code>: Annual real GDP growth rate</li>
 <li><code>RECESSION</code>: Recession indicator (1 if recession, 0 otherwise)</li>
 </ul>
-<div id="618e82e1" class="cell" data-execution_count="2">
+<div id="1ee61a4f" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the GrowthRate data</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dfGrowth <span class="op">=</span> pd.read_excel(<span class="st">'data/GrowthRate.xlsx'</span>, header <span class="op">=</span> <span class="dv">0</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dfGrowth.index <span class="op">=</span> pd.date_range(start <span class="op">=</span> <span class="st">'1960'</span>, periods <span class="op">=</span> <span class="bu">len</span>(dfGrowth), freq <span class="op">=</span> <span class="st">'QS'</span>)</span>
@@ -729,7 +729,7 @@ u_{2t}
 <li><code>RSPREAD</code>: Term-spread (<code>GS10-TB3MS</code>)</li>
 <li><code>RECESSION</code>: Dummy variable specifying the recession periods.</li>
 </ul>
-<div id="d5468c7e" class="cell" data-execution_count="3">
+<div id="b4fb7a46" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the TermSpread data</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dfTermSpread <span class="op">=</span> pd.read_csv(<span class="st">'data/TermSpread.csv'</span>, header <span class="op">=</span> <span class="dv">0</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>dfTermSpread.index <span class="op">=</span> pd.date_range(start <span class="op">=</span> <span class="st">'1960-01-01'</span>, periods <span class="op">=</span> <span class="bu">len</span>(dfTermSpread), freq <span class="op">=</span> <span class="st">'QS'</span>) </span>
@@ -739,7 +739,7 @@ u_{2t}
 </div>
 </div>
 <p>In the following code chunk, we merge the two datasets into a single dataset and plot the GDP growth rate and the term spread. The shaded areas in <a href="#fig-fig24-1" class="quarto-xref">Figure&nbsp;<span>26.1</span></a> indicate the recession periods.</p>
-<div id="dffdc8d7" class="cell" data-execution_count="4">
+<div id="dc4b2db5" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the data</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> pd.merge(dfGrowth, dfTermSpread, left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>mydata.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -784,7 +784,7 @@ Figure&nbsp;26.1: GDP growth rate and term spread in the US
 </div>
 </div>
 <p>Although our model is a VAR(<span class="math inline">\(2\)</span>) model, we can check whether the information criteria return the same number of lags. In the following code chunk, we first use the <code>VAR()</code> function to create the VAR model. The <code>select_order</code> method is then used to determine the number of lags selected by the information criteria. The results indicate that all information criteria suggest 2 lags.</p>
-<div id="6aa5f983" class="cell" data-execution_count="6">
+<div id="d230aa6a" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the VAR model</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>varData <span class="op">=</span> mydata.loc[<span class="st">"1981-01-01"</span>:<span class="st">"2017-07-01"</span>, [<span class="st">'YGROWTH'</span>, <span class="st">'RSPREAD'</span>]]</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> VAR(varData)</span>
@@ -804,7 +804,7 @@ Figure&nbsp;26.1: GDP growth rate and term spread in the US
 </div>
 </div>
 <p>We then use the <code>fit</code> method to estimate the VAR model with 2 lags. The <code>summary</code> method provides an overview of the estimation results. In the <code>YGROWTH</code> equation, all estimated coefficients are statistically significant at the 5% level, indicating that the GDP growth rate can be forecasted using its own lagged values and the lagged values of the term spread. In the <code>RSPREAD</code> equation, except for the first lag of <code>YGROWTH</code>, all other estimated coefficients are statistically significant at the 5% level.</p>
-<div id="d95f276c" class="cell" data-execution_count="7">
+<div id="d8afc446" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting VAR model with lag = 2</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>var_model <span class="op">=</span> model.fit(<span class="dv">2</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(var_model.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -813,8 +813,8 @@ Figure&nbsp;26.1: GDP growth rate and term spread in the US
 ==================================
 Model:                         VAR
 Method:                        OLS
-Date:           Sat, 11, Oct, 2025
-Time:                     11:33:37
+Date:           Thu, 25, Dec, 2025
+Time:                     15:55:48
 --------------------------------------------------------------------
 No. of Equations:         2.00000    BIC:                   0.411289
 Nobs:                     145.000    HQIC:                  0.289414
@@ -853,7 +853,7 @@ RSPREAD    0.047020  1.000000
 </div>
 </div>
 <p>Although all information criteria suggest two lags, we can still use autocorrelation tests to check whether there is any remaining correlation in the error terms. In the following code chunk, we use the Ljung-Box test to check for serial correlation in the residuals. The results show that there is no serial correlation in the residuals.</p>
-<div id="2aaa98f5" class="cell" data-execution_count="8">
+<div id="9ac30673" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for serial correlation in the residuals: YGROWTH</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ljungbox_results <span class="op">=</span> acorr_ljungbox(var_model.resid[<span class="st">'YGROWTH'</span>], lags<span class="op">=</span>[<span class="dv">4</span>], return_df<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ljungbox_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -862,7 +862,7 @@ RSPREAD    0.047020  1.000000
 4  0.743437   0.945866</code></pre>
 </div>
 </div>
-<div id="ad513ecf" class="cell" data-execution_count="9">
+<div id="2cccad92" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for serial correlation in the residuals: RSPREAD</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>ljungbox_results <span class="op">=</span> acorr_ljungbox(var_model.resid[<span class="st">'RSPREAD'</span>], lags<span class="op">=</span>[<span class="dv">4</span>], return_df<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ljungbox_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -872,7 +872,7 @@ RSPREAD    0.047020  1.000000
 </div>
 </div>
 <p>In the following code chunk, we use the <code>test_whiteness</code> method, which provides a portmanteau test for testing the overall significance of the residual autocorrelations up to the fourth lag. The results show that there is no serial correlation in the residuals.</p>
-<div id="e71a9436" class="cell" data-execution_count="10">
+<div id="409e2d04" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Overall significance of the residual autocorrelations up to the fourth lag</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>var_model.test_whiteness(nlags<span class="op">=</span><span class="dv">4</span>).summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
@@ -903,7 +903,7 @@ RSPREAD    0.047020  1.000000
 \end{align}
 \]</span></p>
 <p>This test is conducted using the <code>test_causality</code> method in the following code chunk. The results show that the null hypothesis is rejected, indicating that <code>TSpread</code> Granger-causes <code>GDPGR</code>.</p>
-<div id="b2dfc182" class="cell" data-execution_count="11">
+<div id="fe0a0215" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>gtest <span class="op">=</span> var_model.test_causality(<span class="st">'YGROWTH'</span>, [<span class="st">'RSPREAD'</span>], kind<span class="op">=</span><span class="st">'f'</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gtest.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -916,7 +916,7 @@ Test statistic Critical value p-value    df
 </div>
 </div>
 <p>We can use the <code>forecast</code> method to forecast the GDP growth rate and the term spread for the next 10 periods. The forecasted values are plotted in <a href="#fig-fig24-forecast1" class="quarto-xref">Figure&nbsp;<span>26.2</span></a>.</p>
-<div id="66dd6abc" class="cell" data-execution_count="12">
+<div id="59785921" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>forecast <span class="op">=</span> var_model.forecast(varData.values[<span class="op">-</span><span class="dv">2</span>:], steps<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>forecast <span class="op">=</span> pd.DataFrame(forecast, columns<span class="op">=</span>[<span class="st">'GDPGR'</span>, <span class="st">'TSpread'</span>], index<span class="op">=</span>pd.date_range(start<span class="op">=</span><span class="st">'2017-10-01'</span>, periods<span class="op">=</span><span class="dv">10</span>, freq<span class="op">=</span><span class="st">'QS'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1294,7 +1294,7 @@ Y_{1t}=\mu_0+\theta_1Y_{1t}+\theta_2Y_{2t}+\sum_{j=-p}^p\delta_j\Delta Y_{1,t-j}
 <section id="an-empirical-application-1" class="level3" data-number="26.5.6">
 <h3 data-number="26.5.6" class="anchored" data-anchor-id="an-empirical-application-1"><span class="header-section-number">26.5.6</span> An empirical application</h3>
 <p>As an example, we examine the relationship between short- and long-term interest rates: (i) the interest rate on 3-month Treasury bills and (ii) the interest rate on 10-year Treasury bonds. <a href="#fig-f24-2" class="quarto-xref">Figure&nbsp;<span>26.4</span></a> displays the time series plots. Both interest rates were low during the 1960s, rose throughout the 1970s to peak in the early 1980s, and declined thereafter. However, the difference between long-term and short-term interest rates, known as the term spread (also shown in <a href="#fig-f24-2" class="quarto-xref">Figure&nbsp;<span>26.4</span></a>), does not appear to exhibit a trend. These patterns suggest that long-term and short-term interest rates are cointegrated, as both series share a common stochastic trend and exhibit similar long-run behavior.</p>
-<div id="a29313ef" class="cell" data-execution_count="16">
+<div id="ebc10125" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data from FRED-QD.dta</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_stata(<span class="st">'data/FRED-QD.dta'</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set time index</span></span>
@@ -1336,7 +1336,7 @@ Figure&nbsp;26.4: Interest rates and the term spread
 \text{tb3ms}_t = \mu + \theta \text{gs10}_t + v_t.
 \end{align}
 \tag{26.14}\]</span></span></p>
-<div id="8eee423a" class="cell" data-execution_count="18">
+<div id="0c065749" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate the cointegrating parameter</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> smf.ols(<span class="st">'tb3ms ~ gs10'</span>, data<span class="op">=</span>df).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1400,7 +1400,7 @@ Standard errors in parentheses.<br>
 </div>
 </div>
 <p>In the second step, we use the EG-ADF test to test whether <span class="math inline">\(\hat{v}_t\)</span> is stationary. The ADF test statistic given below is <span class="math inline">\(-4.72\)</span>, which is less than the <span class="math inline">\(5\%\)</span> critical value <span class="math inline">\(-3.41\)</span> given in <a href="#tbl-t24-2" class="quarto-xref">Table&nbsp;<span>26.2</span></a>. Thus, we can reject the null hypothesis of unit root. As a result, this two-step approach suggests that <code>gs10</code> and <code>tb3ms</code> are cointegrated.</p>
-<div id="02ec2287" class="cell" data-execution_count="20">
+<div id="1e0aba1c" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ADF test for the error term</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>adf_results <span class="op">=</span> stt.adfuller(results.resid, regression<span class="op">=</span><span class="st">'c'</span>, autolag<span class="op">=</span><span class="st">'AIC'</span>)</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(adf_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1422,7 +1422,7 @@ Standard errors in parentheses.<br>
 \end{align}
 \]</span></p>
 <p>In the following code chunk, we use the <code>VECM()</code> function to estimate the VECM model for <code>tb3ms</code> and <code>gs10</code>. The option <code>k_ar_diff=3</code> specifies that the lag order for the differenced variables is 3. The option <code>coint_rank=1</code> indicates that there is one cointegrating relationship between the variables. The option <code>deterministic='ci'</code> ensures that the VECM includes an intercept term in the vector error correction term.</p>
-<div id="cb383827" class="cell" data-execution_count="21">
+<div id="1760cddb" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> df.copy()</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>vecmData <span class="op">=</span> mydata[[<span class="st">'tb3ms'</span>, <span class="st">'gs10'</span>]]</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>vecm_model <span class="op">=</span> VECM(vecmData, k_ar_diff<span class="op">=</span><span class="dv">3</span>, coint_rank<span class="op">=</span><span class="dv">1</span>, deterministic<span class="op">=</span><span class="st">'ci'</span>)</span>
@@ -1473,19 +1473,19 @@ const          1.5764      0.448      3.518      0.000       0.698       2.455
 <p>The estimated coefficients for the lag terms appear in the first and second blocks of the estimation output. For <span class="math inline">\(\Delta\text{tb3ms}\)</span>, only its own lag terms are statistically significant at the 5% level. For <span class="math inline">\(\Delta\text{gs10}\)</span>, only the first lag of its own term is statistically significant at the <span class="math inline">\(5\%\)</span> level.</p>
 <p>The estimated coefficients for the error correction terms are provided in the third and fourth blocks of the estimation output. These coefficients are <span class="math inline">\(\hat{\alpha}_1=-0.095\)</span> and <span class="math inline">\(\hat{\alpha}_2=0.069\)</span>, both statistically significant at the 5% level. The estimate <span class="math inline">\(\hat{\alpha}_1=-0.095\)</span> suggests that the error correction term <span class="math inline">\((\text{tb3ms}_{t-1}-\theta\text{gs10}_{t-1}-\mu)\)</span> negatively affects <span class="math inline">\(\Delta\text{tb3ms}_t\)</span>, while <span class="math inline">\(\hat{\alpha}_2=0.069\)</span> indicates a positive effect on <span class="math inline">\(\Delta\text{gs10}_t\)</span>. These estimates imply that if the short-run interest rate exceeds the long-run interest rate by more than 1.6, the short-run interest rate will decrease while the long-run interest rate will increase, and vice versa.</p>
 <p>In the following code chunk, we use the <code>coint_johansen()</code> function to implement the Johansen cointegration test. The option <code>det_order=0</code> indicates that the error correction term includes a constant term, and the option <code>k_ar_diff=3</code> specifies that the lag order for the differenced variables is 3. The function returns the trace and maximum eigenvalue statistics and their critical values.</p>
-<div id="12bd0f24" class="cell" data-execution_count="22">
+<div id="c0ac3146" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Johansen cointegration test</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>johansen_results <span class="op">=</span> coint_johansen(vecmData, det_order<span class="op">=</span><span class="dv">0</span>, k_ar_diff<span class="op">=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The trace statistic is returned in the <code>trace_stat</code> attribute, and the critical values at the <span class="math inline">\(10\%\)</span>, <span class="math inline">\(5\%\)</span>, and <span class="math inline">\(1\%\)</span> significance levels are returned in the <code>trace_stat_crit_vals</code> attribute. The trace statistics for <span class="math inline">\(H_0:\text{rank}(\bs{\Pi})=0\)</span> and <span class="math inline">\(H_0:\text{rank}(\bs{\Pi})=1\)</span> are <span class="math inline">\(31.56\)</span> and <span class="math inline">\(2.77\)</span>, respectively. The corresponding critical values at the <span class="math inline">\(5\%\)</span> significance level are <span class="math inline">\(15.49\)</span> and <span class="math inline">\(3.84\)</span>. Thus, we can reject <span class="math inline">\(H_0:\text{rank}(\bs{\Pi})=0\)</span> but fail to reject <span class="math inline">\(H_0:\text{rank}(\bs{\Pi})=1\)</span>. As a result, we conclude that there is one cointegrating relationship according to the trace statistic.</p>
-<div id="14bf945e" class="cell" data-execution_count="23">
+<div id="ec1ef372" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print trace statistic</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(johansen_results.trace_stat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[31.58004689  2.77321245]</code></pre>
 </div>
 </div>
-<div id="854a9ef2" class="cell" data-execution_count="24">
+<div id="445eb32f" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print critical values for trace statistic at 10%, 5%, and 1% significance levels</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(johansen_results.trace_stat_crit_vals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1494,14 +1494,14 @@ const          1.5764      0.448      3.518      0.000       0.698       2.455
 </div>
 </div>
 <p>The maximum eigenvalue statistic is returned in the <code>max_eig_stat</code> attribute, and the critical values at the <span class="math inline">\(10\%\)</span>, <span class="math inline">\(5\%\)</span>, and <span class="math inline">\(1\%\)</span> significance levels are returned in the <code>max_eig_stat_crit_vals</code> attribute. The maximum eigenvalue statistics for <span class="math inline">\(H_0:\text{rank}(\bs{\Pi})=0\)</span> and <span class="math inline">\(H_0:\text{rank}(\bs{\Pi})=1\)</span> are <span class="math inline">\(28.8\)</span> and <span class="math inline">\(2.77\)</span>, respectively. The corresponding critical values at the <span class="math inline">\(5\%\)</span> significance level are <span class="math inline">\(14.26\)</span> and <span class="math inline">\(3.84\)</span>. Again, we can reject <span class="math inline">\(H_0:\text{rank}(\bs{\Pi})=0\)</span> but fail to reject <span class="math inline">\(H_0:\text{rank}(\bs{\Pi})=1\)</span>. As a result, we conclude that there is also one cointegrating relationship according to the maximum eigenvalue statistic.</p>
-<div id="53102855" class="cell" data-execution_count="25">
+<div id="92b7d471" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print maximum eigenvalue statistic</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(johansen_results.max_eig_stat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[28.80683443  2.77321245]</code></pre>
 </div>
 </div>
-<div id="8c8a85da" class="cell" data-execution_count="26">
+<div id="37afa611" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print critical values for maximum eigenvalue statistic at 10%, 5%, and 1% significance levels</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(johansen_results.max_eig_stat_crit_vals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1518,7 +1518,7 @@ const          1.5764      0.448      3.518      0.000       0.698       2.455
 <p><span class="theorem-title"><strong>Definition 26.4 (Volatility clustering)</strong></span> A series exhibits <strong>volatility clustering</strong> if periods of high volatility are followed by high volatility, and periods of low volatility are followed by low volatility.</p>
 </div>
 <p>As an example, we consider the daily Wilshire 5000 index, a broad stock market index that includes all actively traded U.S. stocks. <a href="#fig-f24-3" class="quarto-xref">Figure&nbsp;<span>26.5</span></a> displays the time series plots of the index value, returns, squared returns, and absolute returns. The returns are calculated as the percentage change in the index value; squared returns are the square of the returns, and absolute returns are the absolute value of the returns. Although the index value shows an upward trend, there are periods where the value decreases. The returns exhibit volatility clustering, with periods of high volatility followed by high volatility and periods of low volatility followed by low volatility. This pattern is also observed in the squared and absolute returns.</p>
-<div id="266f927f" class="cell" data-execution_count="27">
+<div id="509592a9" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load WILL500IND.csv data</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'data/WILL500IND.csv'</span>)</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1616,7 +1616,7 @@ Figure&nbsp;26.6: Correlograms of returns and squared returns
 \end{align}
 \]</span></p>
 <p>For the Wilshire 5000 index returns, we set <span class="math inline">\(h=20\)</span> and compute the 20-day realized volatility. In the following code chunk, we calculate the realized volatility using the <code>return</code> column in the <code>df</code> DataFrame. The realized volatility is calculated as the square root of the mean of the squared returns over the past 20 days.</p>
-<div id="0dc90321" class="cell" data-execution_count="30">
+<div id="5a6daa20" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate realized volatility</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="bu">len</span>(df)</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">20</span></span>
@@ -1795,7 +1795,7 @@ e_h=Y_{T+h}-Y_{T+h|T}=\beta_0+u_{T+h}-\beta_0=u_{T+h}.
 \end{align}
 \]</span></p>
 <p>In Python, we can use the <code>arch</code> package to estimate a GARCH model. The following code chunk uses the <code>arch_model()</code> function from the <code>arch</code> package to estimate the model. The option <code>vol='Garch'</code> specifies that the model is a GARCH model. The options <code>p=1</code> and <code>q=1</code> indicate that the lag order for the squared residuals and the conditional variance is 1, respectively. The option <code>dist='Normal'</code> specifies that the error term <span class="math inline">\(v_t\)</span> follows the standard normal distribution. The fit method is used to estimate the model.</p>
-<div id="233dbbdf" class="cell" data-execution_count="33">
+<div id="363ac6b4" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate GARCH(1,1) model</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span> df.dropna()</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>garch_model <span class="op">=</span> arch_model(df[<span class="st">'return'</span>], vol<span class="op">=</span><span class="st">'Garch'</span>, p<span class="op">=</span><span class="dv">1</span>, q<span class="op">=</span><span class="dv">1</span>, dist<span class="op">=</span><span class="st">'Normal'</span>)</span>
@@ -1810,8 +1810,8 @@ Vol Model:                      GARCH   Log-Likelihood:               -9141.76
 Distribution:                  Normal   AIC:                           18291.5
 Method:            Maximum Likelihood   BIC:                           18319.0
                                         No. Observations:                 7055
-Date:                Sat, Oct 11 2025   Df Residuals:                     7054
-Time:                        11:33:42   Df Model:                            1
+Date:                Thu, Dec 25 2025   Df Residuals:                     7054
+Time:                        15:55:52   Df Model:                            1
                                  Mean Model                                 
 ============================================================================
                  coef    std err          t      P&gt;|t|      95.0% Conf. Int.
@@ -1897,7 +1897,7 @@ Figure&nbsp;26.10: Return and GARCH volatility bands
 </div>
 </div>
 <p>Next, we forecast the volatility for the next five periods using the <code>forecast</code> method. The option <code>horizon=5</code> specifies that we want to forecast the next five periods. The option <code>method='analytic'</code> indicates that we want to use the analytic method to forecast the volatility.</p>
-<div id="b4711997" class="cell" data-execution_count="36">
+<div id="4b14662b" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecast volatility</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>forecasts <span class="op">=</span> results.forecast(horizon<span class="op">=</span><span class="dv">5</span>, method<span class="op">=</span><span class="st">'analytic'</span>)</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1920,7 +1920,7 @@ date
 &amp;H_1: v_t \text{ is not normally distributed}.
 \end{align}
 \]</span> The test statistic has a chi-squared distribution with two degrees of freedom. The following code chunk uses the <code>jarque_bera()</code> function from the <code>scipy.stats</code> package to perform the Jarque-Bera test on the standardized residuals. Since the p-value is less than 0.05, we reject the null hypothesis of normality.</p>
-<div id="fab58852" class="cell" data-execution_count="37">
+<div id="a0fe6035" class="cell" data-execution_count="37">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Jarque-Bera test</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>jb_results <span class="op">=</span> stats.jarque_bera(results.std_resid)</span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(jb_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1930,7 +1930,7 @@ date
 </div>
 <p>Since the assumption that <span class="math inline">\(v_t \sim N(0,1)\)</span> is rejected, we can use the <code>arch_model</code> function to estimate a GARCH model with a different distribution for the error term. In addition to the standard normal distribution, the arch package provides the following alternatives: the Student t-distribution (<code>t</code>), the skewed Student t-distribution (<code>skewt</code>), and the generalized error distribution (<code>ged</code>).</p>
 <p>In this example, we assume that the standardized error terms follow a standardized Student t-distribution with <span class="math inline">\(\nu\)</span> degrees of freedom, which is a common choice for financial data that exhibit heavy tails. In the following code chunk, the option <code>dist='t'</code> specifies this distribution. The degrees of freedom parameter <span class="math inline">\(\nu\)</span> is estimated along with the other parameters.</p>
-<div id="a2fd8fab" class="cell" data-execution_count="38">
+<div id="dfe91ed1" class="cell" data-execution_count="38">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate GARCH(1,1) model with Student's t-distribution</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>garch_model_t <span class="op">=</span> arch_model(df[<span class="st">'return'</span>], vol<span class="op">=</span><span class="st">'Garch'</span>, p<span class="op">=</span><span class="dv">1</span>, q<span class="op">=</span><span class="dv">1</span>, dist<span class="op">=</span><span class="st">'t'</span>)</span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>results_t <span class="op">=</span> garch_model_t.fit(disp<span class="op">=</span><span class="st">'off'</span>)</span>
@@ -1944,8 +1944,8 @@ Vol Model:                            GARCH   Log-Likelihood:               -898
 Distribution:      Standardized Student's t   AIC:                           17988.1
 Method:                  Maximum Likelihood   BIC:                           18022.4
                                               No. Observations:                 7055
-Date:                      Sat, Oct 11 2025   Df Residuals:                     7054
-Time:                              11:33:42   Df Model:                            1
+Date:                      Thu, Dec 25 2025   Df Residuals:                     7054
+Time:                              15:55:52   Df Model:                            1
                                  Mean Model                                 
 ============================================================================
                  coef    std err          t      P&gt;|t|      95.0% Conf. Int.

@@ -547,7 +547,7 @@ window.Quarto = {
 </header>
 
 
-<div id="fde92805" class="cell" data-execution_count="1">
+<div id="c2909fec" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> linearmodels <span class="im">import</span> PanelOLS</span>
@@ -595,7 +595,7 @@ window.Quarto = {
 <li><code>perinc</code>: per capita personal income</li>
 </ul>
 <p>We will first change the measurement of the per capita vehicle fatality to vehicle fatality per 10,000 people.</p>
-<div id="ec14c15d" class="cell" data-execution_count="2">
+<div id="140f2f06" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fatality <span class="op">=</span> pd.read_csv(<span class="st">'data/fatality.csv'</span>, header <span class="op">=</span> <span class="dv">0</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -727,7 +727,7 @@ Table&nbsp;19.1: Descriptive statistics
 \text{FatalityRate}_{it} = \beta_0 + \beta_1 \text{BeerTax}_{it} + u_{it},
 \]</span></p>
 <p>where <span class="math inline">\(\text{FatalityRate}_{it}\)</span> is the vehicle fatality rate in state <span class="math inline">\(i\)</span> in year <span class="math inline">\(t\)</span>, and <span class="math inline">\(\text{BeerTax}_{it}\)</span> is the real tax on a case of beer in state <span class="math inline">\(i\)</span> in year <span class="math inline">\(t\)</span>.</p>
-<div id="3dbe3a02" class="cell" data-execution_count="4">
+<div id="90d1c481" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for 1982</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_1982 <span class="op">=</span> fatality[fatality[<span class="st">'year'</span>] <span class="op">==</span> <span class="dv">1982</span>]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>res_1982 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'mrall ~ beertax'</span>, data<span class="op">=</span>df_1982).fit().params</span>
@@ -820,7 +820,7 @@ Figure&nbsp;19.1: The relationship between beer tax and fatal accidents
 \end{align*}
 \]</span></p>
 <p>Thus, any change in the fatality rate from 1982 to 1988 cannot be caused by <span class="math inline">\(Z_i\)</span>, because <span class="math inline">\(Z_i\)</span> (by assumption) does not change between 1982 and 1988. The difference regression eliminates the effect of <span class="math inline">\(Z_i\)</span> and can be estimated using the OLS estimator. Note that this difference regression does not include an intercept because it was eliminated during the subtraction step. However, we can still include an intercept in the estimation. In the following code, we estimate the difference regression model for the fatality rate and the real beer tax for the years 1982 and 1988.</p>
-<div id="ed259951" class="cell" data-execution_count="6">
+<div id="1df40b75" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Difference regression</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_1988 <span class="op">=</span> df_1988.reset_index().drop(<span class="st">"index"</span>, axis <span class="op">=</span> <span class="dv">1</span>) </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df_1982 <span class="op">=</span> df_1982.reset_index().drop(<span class="st">"index"</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
@@ -841,8 +841,8 @@ Figure&nbsp;19.1: The relationship between beer tax and fatal accidents
 Dep. Variable:                 Dmrall   R-squared:                       0.119
 Model:                            OLS   Adj. R-squared:                  0.100
 Method:                 Least Squares   F-statistic:                     6.225
-Date:                Sat, 11 Oct 2025   Prob (F-statistic):             0.0162
-Time:                        11:39:50   Log-Likelihood:                -22.383
+Date:                Thu, 25 Dec 2025   Prob (F-statistic):             0.0162
+Time:                        16:01:06   Log-Likelihood:                -22.383
 No. Observations:                  48   AIC:                             48.77
 Df Residuals:                      46   BIC:                             52.51
 Df Model:                           1                                         
@@ -949,7 +949,7 @@ Y_{it}&amp;=\beta_0+\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}\\
 \end{align}
 \]</span></p>
 <p>We can use the following code chunk to estimate the first model by the LSDV method. Note that the entity dummy variables are created using the <code>C()</code> function in the formula: <code>C(state)</code> function creates dummy variables for each state. The <code>cov_type='cluster'</code> and <code>cov_kwds={'groups': fatality['state']}</code> options are used to compute the clustered standard errors. We discuss the clustered standard errors in more detail in Section 17.2.4.</p>
-<div id="f927032e" class="cell" data-message="false" data-execution_count="7">
+<div id="1bea3e1c" class="cell" data-message="false" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LSDV method</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>LSDVreg <span class="op">=</span> smf.ols(formula <span class="op">=</span> <span class="st">'mrall ~ beertax + C(state)'</span>, data <span class="op">=</span> fatality)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>LSDVres <span class="op">=</span> LSDVreg.fit(cov_type<span class="op">=</span><span class="st">'cluster'</span>, cov_kwds<span class="op">=</span>{<span class="st">'groups'</span>: fatality[<span class="st">'state'</span>]})</span>
@@ -960,8 +960,8 @@ Y_{it}&amp;=\beta_0+\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}\\
 Dep. Variable:                  mrall   R-squared:                       0.905
 Model:                            OLS   Adj. R-squared:                  0.889
 Method:                 Least Squares   F-statistic:                     9.944
-Date:                Sat, 11 Oct 2025   Prob (F-statistic):            0.00281
-Time:                        11:39:50   Log-Likelihood:                 107.97
+Date:                Thu, 25 Dec 2025   Prob (F-statistic):            0.00281
+Time:                        16:01:06   Log-Likelihood:                 107.97
 No. Observations:                 336   AIC:                            -117.9
 Df Residuals:                     287   BIC:                             69.09
 Df Model:                          48                                         
@@ -1034,7 +1034,7 @@ Notes:
 \]</span></p>
 <p>The estimated coefficient on <span class="math inline">\({\tt BeerTax}_{it}\)</span> is negative and statistically significant at the 5% significance level. This estimate indicates that if the real beer tax increases by $1 dollar, then on average the traffic fatalities decline by 0.66 per 10,000 people.</p>
 <p>The fixed effects form can be estimated using the <code>PanelOLS()</code> function from the <code>linearmodels</code> package. We first set the index of the dataset to the entity and time variables using the <code>set_index()</code> function. The entity fixed effects are included in the model by specifying the <code>EntityEffects</code> option in the formula. We use the <code>cov_type='clustered'</code> and <code>cluster_entity = True</code> options to compute the clustered standard errors. The following code chunk estimates the fixed effects model using the within transformation.</p>
-<div id="e5597c0f" class="cell" data-execution_count="8">
+<div id="3e4f9c18" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> fatality.set_index([<span class="st">'state'</span>,<span class="st">'year'</span>])</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Withinreg <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + EntityEffects'</span>, data <span class="op">=</span> df)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Withinres <span class="op">=</span> Withinreg.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
@@ -1045,8 +1045,8 @@ Notes:
 Dep. Variable:                  mrall   R-squared:                        0.0407
 Estimator:                   PanelOLS   R-squared (Between):             -0.7126
 No. Observations:                 336   R-squared (Within):               0.0407
-Date:                Sat, Oct 11 2025   R-squared (Overall):             -0.6380
-Time:                        11:39:50   Log-likelihood                    107.97
+Date:                Thu, Dec 25 2025   R-squared (Overall):             -0.6380
+Time:                        16:01:06   Log-likelihood                    107.97
 Cov. Estimator:             Clustered                                           
                                         F-statistic:                      12.190
 Entities:                          48   P-value                           0.0006
@@ -1159,7 +1159,7 @@ Y_{it} &amp;= \beta_0+\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}\\
 \widehat{\text{FatalityRate}}_{it} = 1.89 + 0.37 \text{BeerTax}_{it} -0.08 B2_t -0.07B3_t + \ldots -0.001 B7_t.
 \]</span></p>
 <p>The estimated coefficient on <span class="math inline">\({\tt BeerTax}_{it}\)</span> is positive and statistically significant at the 5% significance level. This estimate indicates that if the real beer tax increases by $1 dollar, then on average the traffic fatalities increase by <span class="math inline">\(0.37\)</span> per <span class="math inline">\(10.000\)</span> people, which is contrary to what we would expect.</p>
-<div id="189b293c" class="cell" data-execution_count="9">
+<div id="52dff0a1" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>LSDVreg <span class="op">=</span> smf.ols(formula <span class="op">=</span> <span class="st">'mrall ~ beertax + C(year)'</span>, data <span class="op">=</span> fatality)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>LSDVres <span class="op">=</span> LSDVreg.fit(cov_type<span class="op">=</span><span class="st">'cluster'</span>, cov_kwds<span class="op">=</span>{<span class="st">'groups'</span>: fatality[<span class="st">'state'</span>]})</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(LSDVres.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1169,8 +1169,8 @@ Y_{it} &amp;= \beta_0+\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}\\
 Dep. Variable:                  mrall   R-squared:                       0.099
 Model:                            OLS   Adj. R-squared:                  0.079
 Method:                 Least Squares   F-statistic:                     6.534
-Date:                Sat, 11 Oct 2025   Prob (F-statistic):           2.12e-05
-Time:                        11:39:50   Log-Likelihood:                -270.06
+Date:                Thu, 25 Dec 2025   Prob (F-statistic):           2.12e-05
+Time:                        16:01:06   Log-Likelihood:                -270.06
 No. Observations:                 336   AIC:                             556.1
 Df Residuals:                     328   BIC:                             586.6
 Df Model:                           7                                         
@@ -1198,7 +1198,7 @@ Notes:
 </div>
 </div>
 <p>The time fixed effects form can be estimated using the <code>PanelOLS</code> function from the <code>linearmodels</code> package. We first set the index of the dataset to the entity and time variables using the <code>set_index</code> function. The time fixed effects are included in the model by specifying the <code>TimeEffects</code> option in the formula. Again, we use the <code>cov_type='clustered'</code> and <code>cluster_entity = True</code> options to compute the clustered standard errors. The following code chunk can be used to estimate the time fixed effects model.</p>
-<div id="3c5350de" class="cell" data-execution_count="10">
+<div id="29943cff" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Withinreg <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + TimeEffects'</span>, data <span class="op">=</span> df)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Withinres <span class="op">=</span> Withinreg.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Withinres)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1208,8 +1208,8 @@ Notes:
 Dep. Variable:                  mrall   R-squared:                        0.0945
 Estimator:                   PanelOLS   R-squared (Between):              0.1100
 No. Observations:                 336   R-squared (Within):              -0.0582
-Date:                Sat, Oct 11 2025   R-squared (Overall):              0.0934
-Time:                        11:39:50   Log-likelihood                   -270.06
+Date:                Thu, Dec 25 2025   R-squared (Overall):              0.0934
+Time:                        16:01:06   Log-likelihood                   -270.06
 Cov. Estimator:             Clustered                                           
                                         F-statistic:                      34.246
 Entities:                          48   P-value                           0.0000
@@ -1284,7 +1284,7 @@ Y_{it} &amp;= \beta_0+\beta_1X_{it}+\gamma_2D2_i+\gamma_3D3_i+\dots+\gamma_nDn_i
 &amp; -0.08 B2_t -0.07B3_t + \ldots -0.05 B7_t.
 \end{align}
 \]</span></p>
-<div id="0cb16efa" class="cell" data-message="false" data-execution_count="11">
+<div id="d07e6405" class="cell" data-message="false" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LSDV method</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>LSDVreg <span class="op">=</span> smf.ols(formula <span class="op">=</span> <span class="st">'mrall ~ beertax + C(state) + C(year)'</span>, data <span class="op">=</span> fatality)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>LSDVres <span class="op">=</span> LSDVreg.fit(cov_type<span class="op">=</span><span class="st">'cluster'</span>, cov_kwds<span class="op">=</span>{<span class="st">'groups'</span>: fatality[<span class="st">'state'</span>]})</span>
@@ -1295,8 +1295,8 @@ Y_{it} &amp;= \beta_0+\beta_1X_{it}+\gamma_2D2_i+\gamma_3D3_i+\dots+\gamma_nDn_i
 Dep. Variable:                  mrall   R-squared:                       0.909
 Model:                            OLS   Adj. R-squared:                  0.891
 Method:                 Least Squares   F-statistic:                     4.555
-Date:                Sat, 11 Oct 2025   Prob (F-statistic):           0.000604
-Time:                        11:39:50   Log-Likelihood:                 115.04
+Date:                Thu, 25 Dec 2025   Prob (F-statistic):           0.000604
+Time:                        16:01:06   Log-Likelihood:                 115.04
 No. Observations:                 336   AIC:                            -120.1
 Df Residuals:                     281   BIC:                             89.86
 Df Model:                          54                                         
@@ -1371,7 +1371,7 @@ Notes:
 </div>
 </div>
 <p>The entity and time fixed effects form can be estimated using the <code>PanelOLS</code> function from the <code>linearmodels</code> package. The entity and time fixed effects are included in the model by specifying the <code>EntityEffects</code> and <code>TimeEffects</code> options in the formula. The following code chunk estimates the entity and time fixed effects model using the within transformation.</p>
-<div id="ad72c8b0" class="cell" data-execution_count="12">
+<div id="d15d9854" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Withinreg <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + EntityEffects + TimeEffects'</span>, data <span class="op">=</span> df)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>Withinres <span class="op">=</span> Withinreg.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Withinres)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1381,8 +1381,8 @@ Notes:
 Dep. Variable:                  mrall   R-squared:                        0.0361
 Estimator:                   PanelOLS   R-squared (Between):             -0.6875
 No. Observations:                 336   R-squared (Within):               0.0407
-Date:                Sat, Oct 11 2025   R-squared (Overall):             -0.6154
-Time:                        11:39:50   Log-likelihood                    115.04
+Date:                Thu, Dec 25 2025   R-squared (Overall):             -0.6154
+Time:                        16:01:06   Log-likelihood                    115.04
 Cov. Estimator:             Clustered                                           
                                         F-statistic:                      10.513
 Entities:                          48   P-value                           0.0013
@@ -1488,7 +1488,7 @@ Y_{it}=\beta_0 + \beta_1X_{1it} + \beta_2X_{2it} + \dots + \beta_k X_{kit} + \al
 \end{align}
 \]</span></p>
 <p>The <code>RandomEffects()</code> function from the <code>linearmodels</code> package is used to estimate the random effects model. The <code>from_formula</code> method is used to specify the model formula.</p>
-<div id="1cbb8194" class="cell" data-execution_count="13">
+<div id="9f09be4c" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Randomreg <span class="op">=</span> RandomEffects.from_formula(<span class="st">'mrall ~ 1 + beertax + EntityEffects + TimeEffects'</span>, data <span class="op">=</span> df)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>Randomres <span class="op">=</span> Randomreg.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Randomres)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1498,8 +1498,8 @@ Y_{it}=\beta_0 + \beta_1X_{1it} + \beta_2X_{2it} + \dots + \beta_k X_{kit} + \al
 Dep. Variable:                  mrall   R-squared:                        0.0005
 Estimator:              RandomEffects   R-squared (Between):             -0.0324
 No. Observations:                 336   R-squared (Within):               0.0062
-Date:                Sat, Oct 11 2025   R-squared (Overall):             -0.0285
-Time:                        11:39:50   Log-likelihood                    74.298
+Date:                Thu, Dec 25 2025   R-squared (Overall):             -0.0285
+Time:                        16:01:06   Log-likelihood                    74.298
 Cov. Estimator:             Clustered                                           
                                         F-statistic:                      0.1755
 Entities:                          48   P-value                           0.6756
@@ -1563,7 +1563,7 @@ beertax       -0.0520     0.1093    -0.4757     0.6346     -0.2671      0.1631
 \]</span></p></li>
 </ol>
 <p>We consider the fourth model as our base model and other models with additional regressors for sensitivity checks. The minimum legal drinking age and the punishment for drunk driving are related to drunk driving laws. Vehicle miles traveled is used as a proxy for the amount of driving, and the unemployment rate and the log of personal income are used as proxies for overall state economic conditions.</p>
-<div id="b9d59e09" class="cell" data-execution_count="14">
+<div id="39ab8d37" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the log of personal income</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'lperinc'</span>] <span class="op">=</span> np.log(df[<span class="st">'perinc'</span>])</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1577,7 +1577,7 @@ beertax       -0.0520     0.1093    -0.4757     0.6346     -0.2671      0.1631
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'punish'</span>] <span class="op">=</span> ((df[<span class="st">'jaild'</span>] <span class="op">==</span> <span class="dv">1</span>)<span class="op">|</span>(df[<span class="st">'comserd'</span>] <span class="op">==</span> <span class="dv">1</span>)).astype(<span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We use the <code>PooledOLS()</code> and <code>PanelOLS()</code> functions from the <code>linearmodels</code> package to estimate all models. The models are specified using the <code>from_formula</code> method, and clustered standard errors are computed by setting <code>cov_type='clustered'</code> and <code>cluster_entity=True</code>.</p>
-<div id="c747f7d7" class="cell" data-message="false" data-execution_count="15">
+<div id="e86fd2f7" class="cell" data-message="false" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1: Pooled OLS with only the beer tax</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>reg1 <span class="op">=</span> PooledOLS.from_formula(<span class="st">'mrall ~ 1 + beertax'</span>, df)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>reg1 <span class="op">=</span> reg1.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
@@ -2306,7 +2306,7 @@ Note:
 \end{align*}
 \]</span></p></li>
 </ul>
-<div id="8eeec53e" class="cell" data-execution_count="17">
+<div id="5a13e5d5" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>reg4.wald_test(formula<span class="op">=</span><span class="st">'drink18 = drink19 = drink20 = 0'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>Linear Equality Hypothesis Test
@@ -2314,7 +2314,7 @@ H0: Linear equality constraint is valid
 Statistic: 1.3148
 P-value: 0.7256
 Distributed: chi2(3)
-WaldTestStatistic, id: 0x203c9464650</code></pre>
+WaldTestStatistic, id: 0x1a9ed9a7da0</code></pre>
 </div>
 </div>
 <p>The reported p-value is 0.73. Thus, we fail to reject the null hypothesis at any conventional level. We can also test if the employment rate and per capita income are jointly significant in Model 4 by testing the following hypothesis: <span class="math display">\[
@@ -2323,7 +2323,7 @@ WaldTestStatistic, id: 0x203c9464650</code></pre>
 &amp; H_1:\text{At least one coefficient is nonzero}.
 \end{align*}
 \]</span></p>
-<div id="16f0cdf1" class="cell" data-execution_count="18">
+<div id="cc0e1341" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>reg4.wald_test(formula<span class="op">=</span><span class="st">'unrate = lperinc= 0'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>Linear Equality Hypothesis Test
@@ -2331,7 +2331,7 @@ H0: Linear equality constraint is valid
 Statistic: 57.0821
 P-value: 0.0000
 Distributed: chi2(2)
-WaldTestStatistic, id: 0x203c9465310</code></pre>
+WaldTestStatistic, id: 0x1a9ec62d220</code></pre>
 </div>
 </div>
 <p>We reject the null hypothesis at the 5% level. Thus, the economic indicators are jointly significant in explaining traffic fatalities.</p>

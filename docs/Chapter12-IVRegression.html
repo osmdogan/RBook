@@ -556,7 +556,7 @@ window.Quarto = {
 </header>
 
 
-<div id="5cc0c7b3" class="cell" data-message="false" data-execution_count="1">
+<div id="1b04ed98" class="cell" data-message="false" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -878,7 +878,7 @@ s_{ZY}&amp;=\frac{1}{n-1}\sum^n_{i=1}(Z_i-\bar{Z})(Y_i-\bar{Y})\\
 <li><p><strong>Instrument exogeneity</strong>: We need to show that the general sales tax affects the demand for cigarettes only through its effect on the price. This assumption is plausible because general sales tax rates vary across states and are usually set based on the state’s fiscal policies. Therefore, the general sales tax is likely to be uncorrelated with the factors that affect cigarette consumption.</p></li>
 </ul>
 <p>We use the following code chunk to import data and generate (i) the real cigarettes prices, (ii) the real sales taxes, and (iii) the real per-capita income.The summary statistics of variables are shown in <a href="#tbl-t19-1" class="quarto-xref">Table&nbsp;<span>21.1</span></a>.</p>
-<div id="0e8ff941" class="cell" data-message="false" data-execution_count="5">
+<div id="8cb7c13c" class="cell" data-message="false" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> pd.read_excel(<span class="st">"data/cig_ch12.xlsx"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -995,7 +995,7 @@ Table&nbsp;21.1: Summary statistics
 </div>
 </div>
 <p>To estimate <a href="#eq-eq19-4" class="quarto-xref">Equation&nbsp;<span>21.4</span></a>, we only use data from the year 1995. The code chunk below generates the subset of data for the year 1995, adds a column of ones to the data frame, and estimates the IV regression using the <code>IV2SLS</code> function from the <code>linearmodels</code> package.</p>
-<div id="0bb2b307" class="cell" data-message="false" data-execution_count="7">
+<div id="409e6f48" class="cell" data-message="false" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a subset for the year 1995</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mydata1995 <span class="op">=</span> mydata[mydata[<span class="st">'year'</span>] <span class="op">==</span> <span class="dv">1995</span>]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1195,7 +1195,7 @@ Y_i &amp;= \beta_0 + \beta_1X_i + \beta_2W_i +u_i-\E(u_i|W_i,Z_i)+\E(u_i|W_i,Z_i
 \tag{21.10}\]</span></span></p>
 <p>where <span class="math inline">\(\text{Income}_i\)</span> is the real per capita income in state <span class="math inline">\(i\)</span>.</p>
 <p>We use the <code>from_formula</code> method of the <code>IV2SLS</code> function to specify the formula for the demand equation. In this case, we need to create a formula that includes the dependent variable, the exogenous variables, and the endogenous variable with the instrument(s), where instrument(s) are enclosed in square brackets. The general syntax for the formula is as follows:</p>
-<div id="bd026cb7" class="cell" data-execution_count="9">
+<div id="2e67f632" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>outcome <span class="op">~</span> exogenous <span class="op">+</span> [endogenous <span class="op">~</span> instruments]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We use the following code chunk to estimate <a href="#eq-eq19-7" class="quarto-xref">Equation&nbsp;<span>21.10</span></a>. The estimation results are shown in <a href="#tbl-t19-3" class="quarto-xref">Table&nbsp;<span>21.3</span></a>. The estimated model is <span class="math display">\[
@@ -1204,7 +1204,7 @@ Y_i &amp;= \beta_0 + \beta_1X_i + \beta_2W_i +u_i-\E(u_i|W_i,Z_i)+\E(u_i|W_i,Z_i
 \end{align}
 \]</span></p>
 <p>The TSLS estimate <span class="math inline">\(\hat{\beta}^{TSLS}_1=-1.143\)</span> suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately <span class="math inline">\(1.14\)</span> percent, holding real income constant.</p>
-<div id="935ec06d" class="cell" data-execution_count="10">
+<div id="a57722bd" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model: Using only sales taxes as the instrument</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> IV2SLS.from_formula(</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    formula<span class="op">=</span><span class="st">"np.log(packpc) ~ 1 + np.log(rincome) + [np.log(rprice) ~ salestax]"</span>,</span>
@@ -1248,7 +1248,7 @@ Table&nbsp;21.3: Estimation Results
 </div>
 </div>
 <p>The model in <a href="#eq-eq19-7" class="quarto-xref">Equation&nbsp;<span>21.10</span></a> is exatcly identified because there is only one endogenous variable and one instrument. In addition to this instrument, we can use the cigarette-specific tax as an additional instrument. We use the following code chunk to estimate the model using both the sales tax and the cigarette-specific tax as instruments.</p>
-<div id="64e65223" class="cell" data-execution_count="12">
+<div id="6a7c53e3" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model: Using both sales tax and cigarette tax as the instruments</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> IV2SLS.from_formula(</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    formula<span class="op">=</span><span class="st">"np.log(packpc) ~ 1 + np.log(rincome) + [np.log(rprice) ~ salestax + cigtax]"</span>,</span>
@@ -1390,7 +1390,7 @@ Key Concept 19.2: Checking instrument validity
 \end{align}
 \tag{21.15}\]</span></span></p>
 <p>We first create the 10-year change variables and then estimate the demand elasticity using the TSLS estimator with the 10-year changes in the instrumental variables.</p>
-<div id="a4ae587d" class="cell" data-execution_count="14">
+<div id="c203f437" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the subsets of data for the years 1995 and 1985</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>mydata1995 <span class="op">=</span> mydata[mydata[<span class="st">'year'</span>] <span class="op">==</span> <span class="dv">1995</span>]</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>mydata1985 <span class="op">=</span> mydata[mydata[<span class="st">'year'</span>] <span class="op">==</span> <span class="dv">1985</span>]</span>
@@ -1417,7 +1417,7 @@ Key Concept 19.2: Checking instrument validity
 <section id="estimation" class="level3" data-number="21.5.2">
 <h3 data-number="21.5.2" class="anchored" data-anchor-id="estimation"><span class="header-section-number">21.5.2</span> Estimation</h3>
 <p>We estimate three models: (i) using only sales taxes as the instrument, (ii) using only the cigarette-specific tax as the instrument, and (iii) using both sales tax and cigarette tax as the instruments. The following code chunk can be used to estimate the model using the <code>from_formula</code> method.</p>
-<div id="f6e76a8e" class="cell" data-message="false" data-execution_count="15">
+<div id="ddf0313f" class="cell" data-message="false" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1: Using only sales taxes as the instrument</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="op">=</span> IV2SLS.from_formula(</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    formula<span class="op">=</span><span class="st">"packdiff ~ 1 + incomediff + [pricediff ~ salestaxdiff]"</span>,</span>
@@ -1479,12 +1479,12 @@ Table&nbsp;21.5: Estimation Results
 <section id="checking-instrument-validity-1" class="level3" data-number="21.5.3">
 <h3 data-number="21.5.3" class="anchored" data-anchor-id="checking-instrument-validity-1"><span class="header-section-number">21.5.3</span> Checking instrument validity</h3>
 <p>The relevance of the instruments can be checked using the <span class="math inline">\(F\)</span>-statistic from the first stage regressions. The code chunk below shows how to compute the <span class="math inline">\(F\)</span>-statistics for the first stage regressions.</p>
-<div id="2567a3b0" class="cell" data-message="false" data-execution_count="17">
+<div id="02c44dbc" class="cell" data-message="false" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>f1 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'pricediff ~ salestaxdiff + incomediff'</span>, data<span class="op">=</span>diffData).fit(cov_type<span class="op">=</span><span class="st">'HC1'</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>f2 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'pricediff ~ cigtaxdiff + incomediff'</span>, data<span class="op">=</span>diffData).fit(cov_type<span class="op">=</span><span class="st">'HC1'</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>f3 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'pricediff ~ salestaxdiff + cigtaxdiff + incomediff'</span>, data<span class="op">=</span>diffData).fit(cov_type<span class="op">=</span><span class="st">'HC1'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="aa536b34" class="cell" data-execution_count="18">
+<div id="235e14fd" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># F-statistics</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>f1_fstat <span class="op">=</span> f1.f_test(<span class="st">"salestaxdiff = 0"</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>f2_fstat <span class="op">=</span> f2.f_test(<span class="st">"cigtaxdiff = 0"</span>)</span>
@@ -1501,7 +1501,7 @@ Table&nbsp;21.5: Estimation Results
 </div>
 <p>The first stage <span class="math inline">\(F\)</span>-statistics are 33.7, 107.2, and 86.7 for models 1, 2, and 3, respectively. These <span class="math inline">\(F\)</span>-statistics are greater than 10, indicating that the instruments are relevant.</p>
 <p>Since the first two models are exactly identified, we cannot use the <span class="math inline">\(J\)</span>-test to test instrument exogeneity. However, the regression in column (3) is overidentified because there are two instruments and a single included endogenous regressor, resulting in one <span class="math inline">\((m - k = 2 - 1 = 1)\)</span> overidentifying restriction.</p>
-<div id="28c44db4" class="cell" data-execution_count="19">
+<div id="fcaf4f63" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the residuals from the regression in column (3)</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>diffData[<span class="st">'residuals'</span>] <span class="op">=</span> model3.resids</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1519,7 +1519,7 @@ Table&nbsp;21.5: Estimation Results
 <pre><code>4.931982149411609</code></pre>
 </div>
 </div>
-<div id="c4924e66" class="cell" data-execution_count="20">
+<div id="3e683528" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the p-value</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>p_value<span class="op">=</span><span class="dv">1</span><span class="op">-</span>stats.chi2.cdf(jtest, df<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p_value.<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1560,7 +1560,7 @@ Table&nbsp;21.5: Estimation Results
 <li><code>lat_abst</code>: Absolute value of the latitude of the country (i.e., a measure of distance from the equator), scaled to take values between 0 and 1, where 0 is the equator.</li>
 </ul>
 <p>We use the data from <code>maketable1.dta</code> to create a scatter plot of log GDP per capita in 1995 (<code>logpgp95</code>) against the average protection against expropriation risk over 1985-95 (<code>avexpr</code>). The scatter plot is shown in <a href="#fig-f19-5" class="quarto-xref">Figure&nbsp;<span>21.4</span></a>. The plot reveals a strong positive relationship between protection against expropriation and log GDP per capita. If protection against expropriation is an indicator of institutional quality, then the scatterplot suggests that income per capita is postively associated with institutional quality.</p>
-<div id="f68b6700" class="cell" data-execution_count="21">
+<div id="7ec79234" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> pd.read_stata(<span class="st">"data/maketable1.dta"</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>df1.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1644,7 +1644,7 @@ Figure&nbsp;21.5: The OLS relationship between expropriation risk and income
 <li>Climate proxied by latitude (<code>lat_abst</code>).</li>
 </ul>
 <p>We estimate some of the extended models considered by <span class="citation" data-cites="Acemoglu2001">Acemoglu, Johnson, and Robinson (<a href="references.html#ref-Acemoglu2001" role="doc-biblioref">2001</a>)</span> using data in the <code>maketable2.dta</code> file. The results are presented in <a href="#tbl-t19-6" class="quarto-xref">Table&nbsp;<span>21.6</span></a>. The coefficient estimate for the protection against expropriation index is statistically significant at the 1% level across all three models. The relationship remains robust to the inclusion of additional controls, such as geography and continent dummies.</p>
-<div id="b44e1ce3" class="cell" data-execution_count="24">
+<div id="ce202b7d" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.read_stata(<span class="st">'data/maketable2.dta'</span>)</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate an OLS regression for each set of variables using smf.ols</span></span>
@@ -1879,7 +1879,7 @@ Figure&nbsp;21.7: First-stage relationship between settler mortality and expropr
 </div>
 </div>
 </div>
-<div id="a9a4cdde" class="cell" data-execution_count="28">
+<div id="f81451a7" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The first stage F-statistic</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>m1.f_test(<span class="st">"logem4 = 0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="27">
@@ -1893,7 +1893,7 @@ Figure&nbsp;21.7: First-stage relationship between settler mortality and expropr
 <li>The disease burden on local people in Africa or India, for example, did not appear to be higher than average, supported by relatively high population densities in these areas before colonization.</li>
 </ul>
 <p>Hence, the settler mortality rate variable seem to be a valid instrument and we can proceed with the TSLS estimation. The estimation results are presented in <a href="#tbl-t19-7" class="quarto-xref">Table&nbsp;<span>21.7</span></a>. The estimated coefficient on the protection against expropriation index is 0.94, with a standard error of 0.18. The coefficient is statistically significant at the 5% level. Compared to the OLS estimate (0.53), the TSLS estimate is larger, suggesting that the OLS estimate is biased downwards.</p>
-<div id="a2bb1c09" class="cell" data-message="false" data-execution_count="29">
+<div id="66ae0d7b" class="cell" data-message="false" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using only mortality rate as the instrument</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Import and select the data</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>df4 <span class="op">=</span> pd.read_stata(<span class="st">'data/maketable4.dta'</span>)</span>

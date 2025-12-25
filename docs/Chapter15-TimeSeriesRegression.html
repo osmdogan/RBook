@@ -557,7 +557,7 @@ window.Quarto = {
 </header>
 
 
-<div id="f1823745" class="cell" data-execution_count="1">
+<div id="88bb007a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> datetime</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -593,7 +593,7 @@ window.Quarto = {
 <section id="time-series-data-types-in-python" class="level2" data-number="24.2">
 <h2 data-number="24.2" class="anchored" data-anchor-id="time-series-data-types-in-python"><span class="header-section-number">24.2</span> Time series data types in Python</h2>
 <p>We use <code>pandas</code> and <code>pandas_datareader</code> libraries to work with time series data. We use <code>DataFrame</code> objects in <code>pandas</code> with a time index to store time series data. The <code>data_range</code> function in <code>pandas</code> can be used to generate the time index. Its syntax is as follows:</p>
-<div id="168bb0e5" class="cell" data-execution_count="2">
+<div id="29ac29b2" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pd.date_range(start<span class="op">=</span><span class="va">None</span>, end<span class="op">=</span><span class="va">None</span>, periods<span class="op">=</span><span class="va">None</span>, freq<span class="op">=</span> <span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>where</p>
@@ -609,7 +609,7 @@ window.Quarto = {
 <li><code>RECESSION</code>: Recession indicator (1 if recession, 0 otherwise)</li>
 </ul>
 <p>We use the <code>read_excel</code> function in <code>pandas</code> to read the data and then use the <code>date_range</code> function to set the time index.</p>
-<div id="80fe44a9" class="cell" data-execution_count="3">
+<div id="3c98c540" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the GDP growth rate data</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dfGrowth <span class="op">=</span> pd.read_excel(<span class="st">'data/GrowthRate.xlsx'</span>, header <span class="op">=</span> <span class="dv">0</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>dfGrowth.columns</span>
@@ -676,7 +676,7 @@ Figure&nbsp;24.1: The logarithm and the growth rate of real GDP in the U.S. over
 <li><code>CPIAUCSL</code>: Consumer Price Index for All Urban Consumers: (all items, quarterly average of monthly values)</li>
 </ul>
 <p>We use the <code>read_excel</code> function in <code>pandas</code> to read the data set and then use the <code>date_range</code> function to set the time index.</p>
-<div id="566b9f98" class="cell" data-execution_count="5">
+<div id="f66056de" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the macroeconomic data set</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dfMacro <span class="op">=</span> pd.read_excel(<span class="st">'data/us_macro_quarterly.xlsx'</span>, header <span class="op">=</span> <span class="dv">0</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>dfMacro.columns</span>
@@ -840,14 +840,14 @@ Figure&nbsp;24.3: The U.S. real GDP data from FRED
 \end{align}
 \]</span> where the approximation follows from <span class="math inline">\(\ln(1+x)\approx x\)</span> when <span class="math inline">\(x\)</span> is small. Therefore, the <em>annualized</em> growth rate in <span class="math inline">\(Y_t\)</span> with frequency <span class="math inline">\(s\)</span> is approximately <span class="math inline">\(s\times 100 \Delta \ln Y_t\)</span>.</p>
 <p>In order to calculate lags, leads, and differences over time, we need to set the index of the pandas DataFrame appropriately so that these operations can be performed easily. As an example, we consider the quarterly real GDP time series contained in the <code>GrowthRate.xlsx</code> file.</p>
-<div id="92acdf28" class="cell" data-execution_count="8">
+<div id="9df3e2e0" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dfGrowth.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>Index(['Period', 'Y', 'YGROWTH', 'RECESSION'], dtype='object')</code></pre>
 </div>
 </div>
 <p>In the following, we compute the first lag and annualized growth rate of the real GDP variable. The annualized percentage growth rate is calculated using the logarithmic approximation: <span class="math inline">\(4\times100\times\left(\ln(GDP_t)-\ln(GDP_{t-1})\right)=400\times\Delta\ln(GDP_t)\)</span>. The results for 2016 and 2017 are given in <a href="#tbl-t22-1" class="quarto-xref">Table&nbsp;<span>24.1</span></a>. For example, the annualized growth rate of the real GDP from 2016:Q4 to 2017:Q1 is <span class="math inline">\(400\times\left(\ln(16903.24)-\ln(16851.42)\right)=1.23\%\)</span>.</p>
-<div id="a74e80f6" class="cell" data-execution_count="9">
+<div id="8d8f3f76" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Real GDP</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>dfGrowth[<span class="st">"GDP"</span>] <span class="op">=</span> np.exp(dfGrowth[<span class="st">"Y"</span>])</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -948,7 +948,7 @@ Table&nbsp;24.1: The subset of the U.S. real GDP data set
 </div>
 </div>
 <p>As another example, we consider the quarterly U.S. macroeconomic dataset contained in the <code>macroseries.csv</code> file. We calculate the first lag, the first difference, and the annualized growth rate of the U.S. Consumer Price Index (CPI). <a href="#fig-f22-4" class="quarto-xref">Figure&nbsp;<span>24.4</span></a> displays the quarterly U.S. CPI index from 1957 to 2005. The shaded areas indicate recession periods, during which the real GDP growth rate is negative. The figure shows that the index exhibits an upward trend over time, particularly after the 1970s.</p>
-<div id="d4e7bc87" class="cell" data-execution_count="11">
+<div id="7c8a2b8c" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the macroeconomic data set</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'data/macroseries.csv'</span>, header <span class="op">=</span> <span class="dv">0</span>)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the index</span></span>
@@ -1121,7 +1121,7 @@ s_Y^2 = \frac{1}{T}\sum_{t=1}^T (Y_t - \overline{Y})^2,
 <li><code>adfuller()</code>: Augmented Dickey-Fuller unit root test.</li>
 </ul>
 <p>As an example, we compute the sample serial correlations of the U.S. GDP growth rate. The first four sample autocorrelations are <span class="math inline">\(\hat{\rho}_1 = 0.33\)</span>, <span class="math inline">\(\hat{\rho}_2 = 0.26\)</span>, <span class="math inline">\(\hat{\rho}_3 = 0.10\)</span>, and <span class="math inline">\(\hat{\rho}_4 = 0.11\)</span>. These values suggest that GDP growth rates are mildly positively autocorrelated: when GDP grows faster than average in one period, it tends to grow faster than average in the subsequent period as well.</p>
-<div id="3f1ebdf2" class="cell" data-execution_count="15">
+<div id="e3887651" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ACF of the US GDP growth rate</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>stt.acf(dfGrowth.YGROWTH, nlags<span class="op">=</span><span class="dv">12</span>).<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
@@ -1202,7 +1202,7 @@ u_{t-1}=Y_{t-1}-\beta_0-\beta_1 Y_{t-2}-\cdots-\beta_p Y_{t-p-1}=f(Y_{t-1},Y_{t-
 &amp;\text{GDPGR}_t=\beta_0+\beta_1{\tt GDPGR}_{t-1}+\beta_2{\tt GDPGR}_{t-2}+u_t,
 \end{align}
 \tag{24.8}\]</span></span> where <span class="math inline">\(\text{GDPGR}_t\)</span> denotes the GDP growth rate at time <span class="math inline">\(t\)</span>. We use the OLS estimator with heteroskedasticity-robust standard errors to estimate these models.</p>
-<div id="0c21b598" class="cell" data-execution_count="17">
+<div id="8ecaec2b" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the data</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> dfGrowth.loc[<span class="st">'1962-01-01'</span>:<span class="st">'2017-07-01'</span>, [<span class="st">'YGROWTH'</span>]]</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1331,7 +1331,7 @@ Standard errors in parentheses.<br>
 \end{align*}
 \]</span> Since the actual growth rate in 2017:Q4 is <span class="math inline">\(2.5\%\)</span>, the forecast error is <span class="math inline">\(2.5\% - 3.0\% = -0.5\)</span> percentage points.</p>
 <p>We used the <code>smf.ols()</code> function to estimate the AR(<span class="math inline">\(1\)</span>) and AR(<span class="math inline">\(2\)</span>) models for the GDP growth rate above. Below, we use the <code>ARIMA</code> function from the <code>statsmodels.tsa.arima.model</code> module to estimate the AR(<span class="math inline">\(1\)</span>) and AR(<span class="math inline">\(2\)</span>) models for the GDP growth rate. In the <code>ARIMA</code> function, the order of the model is specified as <code>(p, d, q)</code>, where <code>p</code> is the order of the autoregressive part, <code>d</code> is the order of differencing, and <code>q</code> is the order of the moving average part. Note that although the estimated coefficients are the same as those presented in <a href="#tbl-t22-3" class="quarto-xref">Table&nbsp;<span>24.3</span></a>, the standard errors are different because the <code>ARIMA</code> function does not use the heteroskedasticity-robust standard errors.</p>
-<div id="e535988b" class="cell" data-execution_count="19">
+<div id="b67a6c17" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the data</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> dfGrowth.loc[<span class="st">'1962-01-01'</span>:<span class="st">'2017-07-01'</span>, [<span class="st">'YGROWTH'</span>]]</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1356,8 +1356,8 @@ Standard errors in parentheses.<br>
 ==============================================================================
 Dep. Variable:                YGROWTH   No. Observations:                  223
 Model:                 ARIMA(1, 0, 0)   Log Likelihood                -564.997
-Date:                Sat, 11 Oct 2025   AIC                           1135.995
-Time:                        11:35:05   BIC                           1146.216
+Date:                Thu, 25 Dec 2025   AIC                           1135.995
+Time:                        15:53:05   BIC                           1146.216
 Sample:                    01-01-1962   HQIC                          1140.121
                          - 07-01-2017                                         
 Covariance Type:                  opg                                         
@@ -1382,8 +1382,8 @@ AR(2) Model Summary:
 ==============================================================================
 Dep. Variable:                YGROWTH   No. Observations:                  223
 Model:                 ARIMA(2, 0, 0)   Log Likelihood                -561.492
-Date:                Sat, 11 Oct 2025   AIC                           1130.985
-Time:                        11:35:05   BIC                           1144.613
+Date:                Thu, 25 Dec 2025   AIC                           1130.985
+Time:                        15:53:05   BIC                           1144.613
 Sample:                    01-01-1962   HQIC                          1136.487
                          - 07-01-2017                                         
 Covariance Type:                  opg                                         
@@ -1548,7 +1548,7 @@ Figure&nbsp;24.7: The 10-step ahead forecasted GDP growth rates
 </div>
 </div>
 <p>In the next example, we use the data set in <code>macroseries.csv</code> to estimate the AR(<span class="math inline">\(1\)</span>) and AR(<span class="math inline">\(4\)</span>) models for the change in the U.S. inflation rate.</p>
-<div id="d4238b74" class="cell" data-execution_count="22">
+<div id="a17b3b39" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># AR(1) and AR(4) models for the change U.S. inflation rate</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'L1_Delta_Inf'</span>] <span class="op">=</span> df[<span class="st">'Delta_Inf'</span>].shift(<span class="dv">1</span>)</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'L2_Delta_Inf'</span>] <span class="op">=</span> df[<span class="st">'Delta_Inf'</span>].shift(<span class="dv">2</span>)</span>
@@ -1680,7 +1680,7 @@ Standard errors in parentheses.<br>
 \widehat{\Delta \text{inf}}_t = 0.022 - 0.258 \Delta \text{inf}_{t-1} - 0.322 \Delta \text{inf}_{t-2} + 0.158 \Delta \text{inf}_{t-3} - 0.030 \Delta \text{inf}_{t-4}.
 \]</span></p>
 <p>We observe that the fit of the model improves significantly compared to the AR(<span class="math inline">\(1\)</span>) model, as indicated by an increase in the adjusted R-squared to 0.185. Furthermore, in the AR(<span class="math inline">\(4\)</span>) model, the additional time lag terms are jointly statistically significant, as shown by the <span class="math inline">\(F\)</span>-test result below.</p>
-<div id="23ca7da1" class="cell" data-execution_count="24">
+<div id="6f7ad1c9" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>hypotheses <span class="op">=</span> [<span class="st">'L2_Delta_Inf=0'</span>, <span class="st">'L3_Delta_Inf=0'</span>, <span class="st">'L4_Delta_Inf=0'</span>]</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>ftest <span class="op">=</span> AR_4.f_test(hypotheses)</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ftest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1715,7 +1715,7 @@ Y_t &amp;= \beta_0 + \beta_1Y_{t-1} + \beta_2Y_{t-2} +\ldots+ \beta_pY_{t-p}\non
 \end{align*}
 \tag{24.11}\]</span></span> where <code>TSpread</code> is the term spread, measured as the difference between the 10-year Treasury bond rate (the long-term interest rate) and the 3-month Treasury bill rate (the short-term interest rate).</p>
 <p>We use the dataset provided in the <code>TermSpread.csv</code> file to estimate these models. In <a href="#fig-f22-7" class="quarto-xref">Figure&nbsp;<span>24.8</span></a>, we plot the U.S. long-term and short-term interest rates. The figure shows that both interest rates tend to move together over time. <a href="#fig-f22-8" class="quarto-xref">Figure&nbsp;<span>24.9</span></a> displays the term spread, which is generally positive and tends to decline before the recession periods. This observation suggests that the term spread may serve as a useful predictor for the GDP growth rate.</p>
-<div id="4652b9a1" class="cell" data-execution_count="25">
+<div id="f5fbb0b9" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the term spread data</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>dfTermSpread <span class="op">=</span> pd.read_csv(<span class="st">'data/TermSpread.csv'</span>, header <span class="op">=</span> <span class="dv">0</span>)</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>dfTermSpread.index <span class="op">=</span> pd.date_range(start <span class="op">=</span> <span class="st">'1960-01-01'</span>, periods<span class="op">=</span><span class="bu">len</span>(dfTermSpread), freq <span class="op">=</span> <span class="st">'QS'</span>) </span>
@@ -1777,7 +1777,7 @@ Figure&nbsp;24.9: The term spread in the U.S.
 &amp;\widehat{\text{GDPGR}}_t=0.95+0.24{\tt GDPGR}_{t-1}+0.18{\tt GDPGR}_{t-2}-0.13{\tt TSpread}_{t-1}+0.62{\tt TSpread}_{t-2}.
 \end{align}
 \]</span></p>
-<div id="5cb8fa54" class="cell" data-execution_count="28">
+<div id="eeffdc22" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> pd.merge(dfGrowth, dfTermSpread, left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the data</span></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> mydata.loc[<span class="st">'1962-01-01'</span>:<span class="st">'2017-07-01'</span>, [<span class="st">'YGROWTH'</span>, <span class="st">'RSPREAD'</span>]]</span>
@@ -1909,7 +1909,7 @@ Standard errors in parentheses.<br>
 </div>
 </div>
 <p>The estimated coefficients in the ADL(<span class="math inline">\(2,2\)</span>) model on <code>TSpread</code> are statistically insignificant at the 5% level. The joint null hypothesis <span class="math inline">\(H_0:\delta_1=\delta_2=0\)</span> can be tested using the F-statistic. The <span class="math inline">\(F\)</span>-test result below shows that the coefficients on the term spread are jointly statistically significant.</p>
-<div id="5996bc21" class="cell" data-execution_count="30">
+<div id="976061a6" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>hypotheses <span class="op">=</span> [<span class="st">'RSPREAD.shift(1)=0'</span>, <span class="st">'RSPREAD.shift(2)=0'</span>]</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>ftest <span class="op">=</span> adl22_model.f_test(hypotheses)</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ftest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1926,7 +1926,7 @@ Standard errors in parentheses.<br>
 \end{align*}
 \]</span> The actual GDP growth rate in 2017:Q4 was 2.5. Hence, the forecast error is <span class="math inline">\(2.5 - 2.93 = -0.43\)</span> percentage points.</p>
 <p>In the following code chunk, we estimate the ADL(<span class="math inline">\(2,1\)</span>) and ADL(<span class="math inline">\(2,2\)</span>) models for the GDP growth rate using the <code>ARIMA()</code> function from the <code>statsmodels.tsa.arima.model</code> module. Note that the parameter estimates are slightly different from those in <a href="#tbl-t22-6" class="quarto-xref">Table&nbsp;<span>24.6</span></a>, as the <code>ARIMA()</code> function uses a different estimation method.</p>
-<div id="4fb5e257" class="cell" data-execution_count="31">
+<div id="d6540738" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> pd.merge(dfGrowth, dfTermSpread, left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the data</span></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> mydata.loc[<span class="st">'1962-01-01'</span>:<span class="st">'2017-07-01'</span>, [<span class="st">'YGROWTH'</span>, <span class="st">'RSPREAD'</span>]]</span>
@@ -1938,7 +1938,7 @@ Standard errors in parentheses.<br>
 <span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>mydata[<span class="st">'RSpread_lag1'</span>] <span class="op">=</span> mydata[<span class="st">'RSPREAD'</span>].shift(<span class="dv">1</span>)</span>
 <span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>mydata[<span class="st">'RSpread_lag2'</span>] <span class="op">=</span> mydata[<span class="st">'RSPREAD'</span>].shift(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="10afc5b1" class="cell" data-execution_count="32">
+<div id="3a346709" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ADL(2,1) Model</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>model_adl21 <span class="op">=</span> ARIMA(mydata[<span class="st">'YGROWTH'</span>][<span class="dv">2</span>:], order<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>), exog<span class="op">=</span>mydata[[<span class="st">'RSpread_lag1'</span>]][<span class="dv">2</span>:])</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>adl21_model <span class="op">=</span> model_adl21.fit()</span>
@@ -1948,8 +1948,8 @@ Standard errors in parentheses.<br>
 ==============================================================================
 Dep. Variable:                YGROWTH   No. Observations:                  221
 Model:                 ARIMA(2, 0, 0)   Log Likelihood                -554.521
-Date:                Sat, 11 Oct 2025   AIC                           1119.041
-Time:                        11:35:07   BIC                           1136.032
+Date:                Thu, 25 Dec 2025   AIC                           1119.041
+Time:                        15:53:06   BIC                           1136.032
 Sample:                    07-01-1962   HQIC                          1125.902
                          - 07-01-2017                                         
 Covariance Type:                  opg                                         
@@ -1972,7 +1972,7 @@ Warnings:
 [1] Covariance matrix calculated using the outer product of gradients (complex-step).</code></pre>
 </div>
 </div>
-<div id="4f3bf380" class="cell" data-execution_count="33">
+<div id="13b3abf2" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ADL(2,2) Model</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>model_adl22 <span class="op">=</span> ARIMA(mydata[<span class="st">'YGROWTH'</span>][<span class="dv">3</span>:], order<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>), exog<span class="op">=</span>mydata[[<span class="st">'RSpread_lag1'</span>, <span class="st">'RSpread_lag2'</span>]][<span class="dv">3</span>:])</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>adl22_model <span class="op">=</span> model_adl22.fit()</span>
@@ -1982,8 +1982,8 @@ Warnings:
 ==============================================================================
 Dep. Variable:                YGROWTH   No. Observations:                  220
 Model:                 ARIMA(2, 0, 0)   Log Likelihood                -549.573
-Date:                Sat, 11 Oct 2025   AIC                           1111.145
-Time:                        11:35:07   BIC                           1131.507
+Date:                Thu, 25 Dec 2025   AIC                           1111.145
+Time:                        15:53:06   BIC                           1131.507
 Sample:                    10-01-1962   HQIC                          1119.368
                          - 07-01-2017                                         
 Covariance Type:                  opg                                         
@@ -2047,7 +2047,7 @@ Figure&nbsp;24.10: The relationship between the change in inflation and the lagg
 &amp;\quad + \delta_1\text{Urate}_{t-1} + \delta_2\text{Urate}_{t-2} + \delta_3\text{Urate}_{t-3} + \delta_4\text{Urate}_{t-4} + u_t,
 \end{align*}
 \tag{24.12}\]</span></span> where <span class="math inline">\(\text{Urate}_t\)</span> is the unemployment rate at time <span class="math inline">\(t\)</span>. The ARDL(4,4) model includes four lags of the change in inflation and four lags of the unemployment rate as predictors. The estimation results are presented in <a href="#tbl-t22-7" class="quarto-xref">Table&nbsp;<span>24.7</span></a>.</p>
-<div id="865a9186" class="cell" data-execution_count="35">
+<div id="d9e46c81" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>adl44 <span class="op">=</span> smf.ols(formula <span class="op">=</span> <span class="st">'Delta_Inf ~ L1_Delta_Inf + L2_Delta_Inf + L3_Delta_Inf + L4_Delta_Inf + L1_u_rate + L2_u_rate + L3_u_rate + L4_u_rate'</span>, </span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>                  data <span class="op">=</span> df_subset).fit(cov_type<span class="op">=</span><span class="st">'HC1'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -2179,7 +2179,7 @@ Standard errors in parentheses.<br>
 </div>
 </div>
 <p>We observe that the fit improves significantly compared to the AR(<span class="math inline">\(4\)</span>) model in <a href="#tbl-t22-5" class="quarto-xref">Table&nbsp;<span>24.5</span></a>, as the reported adjusted R-squared is 0.335. Furthermore, the F-statistic for the joint null hypothesis <span class="math inline">\(H_0:\delta_1=\ldots=\delta_4=0\)</span> indicates that the additional time lag terms for the unemployment rate are jointly statistically significant at the 5% level.</p>
-<div id="4d340584" class="cell" data-execution_count="37">
+<div id="9f853246" class="cell" data-execution_count="37">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>hypotheses <span class="op">=</span> [<span class="st">'L1_u_rate=0'</span>, <span class="st">'L2_u_rate=0'</span>, <span class="st">'L3_u_rate=0'</span>, <span class="st">'L4_u_rate=0'</span>]</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>ftest <span class="op">=</span> adl44.f_test(hypotheses)</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'The F test value is </span><span class="sc">{0:.3f}</span><span class="st"> with a p-value of </span><span class="sc">{1:.4f}</span><span class="st">.'</span>.<span class="bu">format</span>(ftest.statistic, ftest.pvalue))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2269,7 +2269,7 @@ P(\text{AIC}(2)-\text{AIC}(1)&lt;0)&amp;=P(F&gt;2)\to P(\chi^2_1&gt;2)=0.16.
 \]</span> In general, we have <span class="math inline">\(P(\hat{p}&lt;p)\to0\)</span>, but <span class="math inline">\(P(\hat{p}&gt;p)\not\to0\)</span>. Thus, the AIC can overestimate the number of lags even in large samples.</p>
 </div>
 <p>In Python, we can use <code>statsmodels.api.tsa.arma_order_select_ic()</code> to calculate AIC and BIC and the corresponding lag orders. As an example, consider determining the lag order of an AR model for the GDP growth rate. The lag order selected by the AIC is 4, while the BIC selects 2.</p>
-<div id="d20a4f96" class="cell" data-execution_count="38">
+<div id="e7d7f6ff" class="cell" data-execution_count="38">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> dfGrowth.loc[<span class="st">'1962-01-01'</span>:<span class="st">'2017-07-01'</span>, [<span class="st">'YGROWTH'</span>]]</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>lag_order <span class="op">=</span> sm.tsa.arma_order_select_ic(mydata.YGROWTH, </span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>                                        max_ar <span class="op">=</span> <span class="dv">8</span>, max_ma <span class="op">=</span> <span class="dv">0</span>,</span>
@@ -2282,7 +2282,7 @@ P(\text{AIC}(2)-\text{AIC}(1)&lt;0)&amp;=P(F&gt;2)\to P(\chi^2_1&gt;2)=0.16.
 </div>
 </div>
 <p>As another example, we consider the inflation rate in the <code>macroseries.csv</code> file. According to the results given below, the AIC suggests an AR(<span class="math inline">\(3\)</span>) model, while the BIC suggests an AR(<span class="math inline">\(2\)</span>) model for the change in inflation rate.</p>
-<div id="4872d451" class="cell" data-execution_count="39">
+<div id="27c071bc" class="cell" data-execution_count="39">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>lag_order <span class="op">=</span> sm.tsa.arma_order_select_ic(df_subset.Delta_Inf, </span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>                                        max_ar <span class="op">=</span> <span class="dv">8</span>, max_ma <span class="op">=</span> <span class="dv">0</span>,</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                                        ic <span class="op">=</span> [<span class="st">'aic'</span>, <span class="st">'bic'</span>], </span>
@@ -2357,7 +2357,7 @@ Pseudo out-of-sample forecasts
 \]</span></p>
 <p>The 95% forecast interval is not a confidence interval for <span class="math inline">\(Y_{T+1}\)</span>. The key distinction is that <span class="math inline">\(Y_{T+1}\)</span> is a random variable, not a fixed parameter. Nevertheless, the forecast interval is widely used in practice as a measure of forecast uncertainty and can still provide a reasonable approximation, even when <span class="math inline">\(u_{T+1}\)</span> is not normally distributed.</p>
 <p>As an example, we compare the forecasting performance of the AR(<span class="math inline">\(2\)</span>) model in <a href="#eq-eq22-8" class="quarto-xref">Equation&nbsp;<span>24.8</span></a> with that of the ADL(<span class="math inline">\(2,2\)</span>) model in <a href="#eq-eq22-11" class="quarto-xref">Equation&nbsp;<span>24.11</span></a>. In the following code chunk, we estimate both models and compute the SER and FPE estimates of the RMSFE. Using the POOS method, we forecast the GDP growth rate over the period 2007:Q1 to 2017:Q3 with both models.</p>
-<div id="65a6a377" class="cell" data-execution_count="40">
+<div id="49f386a1" class="cell" data-execution_count="40">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RMSFE estimates for AR(2) and ADL(2,2) models</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> pd.merge(dfGrowth, dfTermSpread, left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> mydata.loc[<span class="st">'1962-01-01'</span>:<span class="st">'2017-07-01'</span>, [<span class="st">'YGROWTH'</span>, <span class="st">'RSPREAD'</span>]]</span>
@@ -2538,7 +2538,7 @@ Figure&nbsp;24.11: Actual GDP growth rate and forecasts
 </div>
 </div>
 <p>In the next example, we consider the ADL(<span class="math inline">\(4,4\)</span>) model in <a href="#eq-eq22-12" class="quarto-xref">Equation&nbsp;<span>24.12</span></a> for the change in inflation. We set <span class="math inline">\(t_1\)</span> to 1990:Q1 and <span class="math inline">\(T\)</span> to 2004:Q4. The estimated values of the RMSFE using the SER, FPE, and POOS methods are presented in <a href="#tbl-t22-9" class="quarto-xref">Table&nbsp;<span>24.9</span></a>. The results show that the FPE estimate is slightly larger than the SER estimate, which is consistent with the formulas given in <a href="#eq-eq22-17" class="quarto-xref">Equation&nbsp;<span>24.17</span></a> and <a href="#eq-eq22-18" class="quarto-xref">Equation&nbsp;<span>24.18</span></a>. The POOS method provides the smallest estimate of the RMSFE.</p>
-<div id="83b3464b" class="cell" data-execution_count="43">
+<div id="debd212b" class="cell" data-execution_count="43">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RMSFE estimates for the change in inflation</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the RMSFE using the SER and FPE methods</span></span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>RMSFE_SER <span class="op">=</span>  np.sqrt(adl44.mse_resid)</span>
@@ -2739,7 +2739,7 @@ Y_t &amp;= Y_{t-1} + u_t,
 <li><p>It can be written as <span class="math inline">\(Y_t=Y_0+\sum_{s=1}^tu_s\)</span>. Assuming <span class="math inline">\(Y_0=0\)</span>, it follows that <span class="math inline">\(\text{var}(Y_t) = t \sigma_u^2\)</span>, where <span class="math inline">\(\sigma_u^2\)</span> is the variance of <span class="math inline">\(u_t\)</span>.</p></li>
 </ul>
 <p>As an example, we consider the following three series: the log of the U.S. real GDP, the U.S. inflation rate, and the dollar/pound exchange return (FX return) rate. The time series plots of these series are given in <a href="#fig-f22-12" class="quarto-xref">Figure&nbsp;<span>24.13</span></a>. Which series are likely not stationary?</p>
-<div id="134f7e83" class="cell" data-execution_count="46">
+<div id="316b6065" class="cell" data-execution_count="46">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Three time series: log of U.S. real GDP, U.S. inflation rate and FX return rate</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>dfMacro[<span class="st">'LogGDP'</span>] <span class="op">=</span> np.log(dfMacro[<span class="st">'GDPC96'</span>]) </span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>dfMacro[<span class="st">'Inflation'</span>] <span class="op">=</span> <span class="dv">400</span><span class="op">*</span>(np.log(dfMacro[<span class="st">'CPIAUCSL'</span>]) <span class="op">-</span> np.log(dfMacro[<span class="st">'CPIAUCSL'</span>]. shift(<span class="dv">1</span>)))</span>
@@ -2888,7 +2888,7 @@ What problems are caused by trends?
 </div>
 <p>In the next example, we simulate a random walk process and estimate an AR(<span class="math inline">\(1\)</span>) model using the OLS estimator. We repeat this simulation 1,000 times for three different sample sizes: 100, 500, and 1,000. In each simulation, we estimate the AR(<span class="math inline">\(1\)</span>) model and record the estimate of the AR(<span class="math inline">\(1\)</span>) coefficient, bias, and the t-statistic for testing the null hypothesis that the AR(<span class="math inline">\(1\)</span>) coefficient is zero.</p>
 <p>In <a href="#tbl-t22-t9" class="quarto-xref">Table&nbsp;<span>24.10</span></a>, we present the average coefficient estimate, average bias, and average t-statistic for each sample size. The simulation results show that the OLS estimator exhibits a negative bias, and the magnitude of this bias decreases as the sample size increases. Also, the average t-statistic increases as the sample size grows. <a href="#fig-f22-15" class="quarto-xref">Figure&nbsp;<span>24.16</span></a> shows histograms of the estimates and t-statistics. These histograms indicate that the finite-sample distribution of the OLS estimator is left-skewed, while that of the t-statistic is right-skewed. Both finite sample distributions deviate from normality. Therefore, inference based on the standard normal distribution is not valid in the presence of a stochastic trend even when the sample size is large.</p>
-<div id="251e5bab" class="cell" data-execution_count="50">
+<div id="bffa6cc6" class="cell" data-execution_count="50">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation to show the effect of nonstationarity on the OLS estimator</span></span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to simulate random walk and estimate AR(1) model</span></span>
 <span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simulate_ar1(n, n_simulations):</span>
@@ -3025,7 +3025,7 @@ Figure&nbsp;24.16: Histograms of estimates and t-statistics
 </div>
 <p>In the next example, we use a simulation study to illustrate the spurious regression phenomenon. We generate <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span> from independent random walk with drift processes and estimate the following regression model: <span class="math inline">\(Y_t=\beta_0+\beta_1X_t+u_t\)</span>. We repeat this simulation 1,000 times for three different sample sizes: 100, 500, and 1,000. In each simulation, we estimate the regression model and record the slope coefficient estimate, bias, and the <span class="math inline">\(t\)</span>-statistic for testing the null hypothesis that the slope coefficient is zero.</p>
 <p>The simulation results are presented in <a href="#tbl-t22-t10" class="quarto-xref">Table&nbsp;<span>24.11</span></a>. The OLS estimator reports large positive bias, and the bias does not decrease as the sample size increases. The <span class="math inline">\(t\)</span>-statistics are also large, indicating a statistically significant relationship between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span>. <a href="#fig-f22-16" class="quarto-xref">Figure&nbsp;<span>24.17</span></a> shows histograms of the estimates and t-statistics.</p>
-<div id="5e0dca5c" class="cell" data-execution_count="53">
+<div id="e1654c68" class="cell" data-execution_count="53">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation to show the spurious regression phenomenon</span></span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to simulate two independent random walks and estimate a regression model</span></span>
 <span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simulate_spurious_regression(n, n_simulations):</span>
@@ -3201,7 +3201,7 @@ Y_t &amp;= \beta_0 + \beta_1Y_{t-1} +\beta_2Y_{t-2} + u_t\\
 <p>where <span class="math inline">\(\alpha\)</span> is the coefficient of the time trend. In this case, the null hypothesis is <span class="math inline">\(H_0:\delta = 0\)</span> (unit root), and the alternative is <span class="math inline">\(H_1:\delta &lt; 0\)</span> (stationary around a deterministic time trend). The augmented Dickey-Fuller test statistic for testing <span class="math inline">\(H_0:\delta = 0\)</span> in <a href="#eq-eq22-27" class="quarto-xref">Equation&nbsp;<span>24.27</span></a> is again the OLS t-statistic.</p>
 <p>In practice, we use either <a href="#eq-eq22-26" class="quarto-xref">Equation&nbsp;<span>24.26</span></a> or <a href="#eq-eq22-27" class="quarto-xref">Equation&nbsp;<span>24.27</span></a>, depending on whether we suspect a deterministic trend in the series. In either case, the lag length <span class="math inline">\(𝑝\)</span> is selected based on information criteria. The econometric literature suggests that including too many lags is preferable to including too few. Therefore, it is recommended to use the AIC rather than the BIC when estimating <span class="math inline">\(p\)</span> for the ADF statistic. In conducting the test, we cannot resort to the critical values obtained from the standard normal distribution even in large samples. The reason is that under <span class="math inline">\(H_0\)</span>, the augmented Dickey-Fuller statistic is not normally distributed. See Chapter 16 in <span class="citation" data-cites="Hansen2022">Hansen (<a href="references.html#ref-Hansen2022" role="doc-biblioref">2022</a>)</span> for the distribution of the the Dickey-Fuller test. We need to resort to simulation methods to determine the critical values from the finite sample distribution of the t-statistic.</p>
 <p>Since the null distribution of the Dickey-Fuller test is not standard normal, even in large samples, the critical values must be obtained through simulation methods. To this end, we can use <code>statsmodels.tsa.stattools.adfuller()</code> to implement the test and tabulate the critical values using a simulation study. In the following example, we simulate a random walk process and estimate the ADF statistic. We repeat this simulation 1,000 times for each model and calculate the critical values at the 1%, 5%, and 10% significance levels. The simulation results are presented in <a href="#tbl-t22-t11" class="quarto-xref">Table&nbsp;<span>24.12</span></a>. The histograms of the ADF statistics are shown in <a href="#fig-f22-17" class="quarto-xref">Figure&nbsp;<span>24.18</span></a>. Note that these critical values are obtained from the finite sample distribution of the ADF statistic. They are substantially different from the critical values obtained from the standard normal distribution.</p>
-<div id="df886389" class="cell" data-execution_count="56">
+<div id="42ae87fd" class="cell" data-execution_count="56">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to simulate a random walk</span></span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simulate_random_walk(n):</span>
 <span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate random walk with intercept</span></span>
@@ -3340,7 +3340,7 @@ Figure&nbsp;24.18: Histograms of the ADF statistics
 </div>
 </div>
 <p>In the next example, we will implement the Dickey-Fuller test for a unit root in the log of the U.S. GDP. We use the <code>statsmodels.tsa.stattools.adfuller()</code> function to estimate the ADF statistic. Since the log GDP has an upward trend, we include a time trend in the regression. The null hypothesis is that the log GDP has a unit root, and the alternative hypothesis is that the log GDP is stationary around a deterministic trend. The function reports the ADF statistic, the p-value, and the critical values at the 1%, 5%, and 10% significance levels. The ADF test statistic is -2.04, and the p-value is 0.58. The critical values at the 1%, 5%, and 10% significance levels are -3.99, -3.42, and -3.14, respectively. Since the ADF statistic is greater than the critical value at the 5% significance level, we fail to reject the null hypothesis of a unit root in the log GDP series.</p>
-<div id="8f957ede" class="cell" data-execution_count="59">
+<div id="ee0a2a0d" class="cell" data-execution_count="59">
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>adf_gdp <span class="op">=</span> stt.adfuller(dfGrowth[<span class="st">'Y'</span>], maxlag <span class="op">=</span> <span class="dv">4</span>, regression <span class="op">=</span> <span class="st">'ct'</span>)</span>
 <span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(adf_gdp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -3348,7 +3348,7 @@ Figure&nbsp;24.18: Histograms of the ADF statistics
 </div>
 </div>
 <p>In the next example, we use the Dickey-Fuller test for testing a unit root in the U.S. inflation series. In the <code>stt.adfuller</code> function call, we set <code>maxlag=4</code> to include four lags in the regression. The regression type is set to <code>'c'</code> to include a constant in the regression. The p-value from the Dickey-Fuller test is approximately 7.5%. Therefore, at the 5% significance level, we fail to reject the null hypothesis of a unit root in the U.S. inflation series.</p>
-<div id="01d2e697" class="cell" data-execution_count="60">
+<div id="fd703a97" class="cell" data-execution_count="60">
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>stt.adfuller(df_subset[<span class="st">'Inf'</span>], maxlag <span class="op">=</span> <span class="dv">4</span>, regression <span class="op">=</span> <span class="st">'c'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="59">
 <pre><code>(-2.6972643365433013,
@@ -3392,7 +3392,7 @@ QLR = \max \left\{F(\tau_0),F(\tau_0+1),\dots,F(\tau_1-1),F(\tau_1)\right\}.
 \end{align*}
 \]</span></p>
 <p>where <span class="math inline">\(D_t(\tau)\)</span> is a dummy variable for the periods after <span class="math inline">\(\tau\)</span>. We then test <span class="math inline">\(H_0:\gamma_0 = \gamma_1 =\gamma_2=0\)</span>. In the following code chunk, the break date is allowed to vary between 1970:Q1 and 2005:Q4. For each break date, we estimate the regression model, compute the Chow test statistic using the <code>f_test()</code> method of the fitted model, and store the result in the <code>savers</code> array.</p>
-<div id="75d3746f" class="cell" data-execution_count="61">
+<div id="31f0a01d" class="cell" data-execution_count="61">
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Computing the QLR test for a break in the coefficients of the term spread</span></span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>break_tau <span class="op">=</span> pd.date_range(start <span class="op">=</span> <span class="st">'1970-01-01'</span>, end <span class="op">=</span> <span class="st">'2005-10-01'</span>, freq <span class="op">=</span> <span class="st">'QS'</span>)</span>
 <span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>savers <span class="op">=</span> np.empty(<span class="bu">len</span>(break_tau))</span>
@@ -3463,7 +3463,7 @@ Figure&nbsp;24.19: F-statistic values for a break in the intercept and the coeff
 \end{align*}
 \]</span></p>
 <p>We compute the Chow test statistic for the null hypothesis <span class="math inline">\(H_0:\gamma_0 = \gamma_1 =\gamma_2=\gamma_3=\gamma_4=0\)</span> for each possible break date <span class="math inline">\(\tau\)</span>. The break date is allowed to vary between 1970:Q1 and 1997:Q4. For each break date, we estimate the regression model, compute the Chow test statistic using the <code>f_test()</code> method of the fitted model, and store the result in the <code>savers</code> array.</p>
-<div id="5c5fe002" class="cell" data-execution_count="63">
+<div id="cba6240e" class="cell" data-execution_count="63">
 <div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Computing the QLR test for a break in the coefficients of the unemployment rate</span></span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>break_tau <span class="op">=</span> pd.date_range(start <span class="op">=</span> <span class="st">'1970-01-01'</span>, end <span class="op">=</span> <span class="st">'1997-10-01'</span>, freq <span class="op">=</span> <span class="st">'QS'</span>)</span>
 <span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>savers <span class="op">=</span> np.empty(<span class="bu">len</span>(break_tau))</span>
@@ -3519,7 +3519,7 @@ Figure&nbsp;24.20: F-statistic values for a break in the intercept and the coeff
 <h3 data-number="24.11.8" class="anchored" data-anchor-id="using-pseudo-out-of-sample-forecast-for-detecting-breaks"><span class="header-section-number">24.11.8</span> Using pseudo out-of-sample forecast for detecting breaks</h3>
 <p>We can also use the pseudo out-of-sample forecast to check the stability of the coefficients. To that end, we can plot the in-sample predicted values, the pseudo out-of-sample forecast, and the actual values. If the coefficients are stable, we should not observe any deterioration in the pseduo out-of-sample forecasts. Another way that we can check the stability of the coefficients is to compare the estimates of MSFE<span class="math inline">\(_\text{POOS}\)</span> and MSFE<span class="math inline">\(_\text{FPE}\)</span>. If the series is stationary, the two estimates should be similar. A large deviation between the estimates of MSFE<span class="math inline">\(_\text{POOS}\)</span> and MSFE<span class="math inline">\(_\text{FPE}\)</span> indicates that the coefficients are not stable.</p>
 <p>Using the QLR statistic, we show that the intercept and the coefficients on the lags of the term spread in the ADL(<span class="math inline">\(2,2\)</span>) model for the U.S. growth rate are not stable. The QLR statistic is 6.39, suggesting a break date of 1980:Q4. In the next example, we compute pseudo-out-of-sample forecasts for the U.S. GDP growth rate over the period 2003:Q1–2017:Q3, using an estimation sample from 1981:Q1 to 2002:Q4. The RMSFE estimates are reported in <a href="#tbl-t22-t12" class="quarto-xref">Table&nbsp;<span>24.13</span></a>. The RMSFE values based on the SER and FPE methods in this table are computed from the model fitted to the data over the 1981:Q1–2002:Q4 sample period. The RMSFE based on the POOS method is 2.29, which is slightly smaller than the RMSFE based on the FPE method (2.35).</p>
-<div id="4f42b61b" class="cell" data-execution_count="65">
+<div id="5acbfcc8" class="cell" data-execution_count="65">
 <div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the data for the pseudo out-of-sample forecast</span></span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> pd.merge(dfGrowth, dfTermSpread, left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> mydata.loc[<span class="st">'1962-01-01'</span>:<span class="st">'2017-10-01'</span>, [<span class="st">'YGROWTH'</span>, <span class="st">'RSPREAD'</span>]]</span>

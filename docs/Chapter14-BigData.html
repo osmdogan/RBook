@@ -587,7 +587,7 @@ window.Quarto = {
 </div>
 <p>Some examples of dimension reduction methods include Lasso, elastic net, ridge regression, and principal components regression. In high-dimensional prediction exercises, there can be many variables that do not significantly contribute to the predictive performance of the model. A model that includes many irrelevant variables is often referred to as a <strong>sparse model</strong>.</p>
 <p>In this chapter, we cover machine learning methods, including ridge, Lasso, elastic net, and principal components analysis, that can handle high-dimensional data. In this chapter, we will use the <code>sklearn</code> module to implement the machine learning methods.</p>
-<div id="3e9cdda9" class="cell" data-execution_count="1">
+<div id="035fd26e" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -1113,7 +1113,7 @@ Table&nbsp;23.1: The small case
 </div>
 </div>
 <p>The in-sample (training sample) and out-of-sample (testing sample) data are contained in the files <code>ca_school_testscore_insample.dta</code> and <code>ca_school_testscore_outofsample.dta</code>, respectively. In the following code chunk, we import the data and then construct standardized variables. The standardized variables are stored in <code>pred_sx</code>.</p>
-<div id="ecf49ee9" class="cell" data-message="false" data-execution_count="6">
+<div id="e1799dab" class="cell" data-message="false" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Small case: data preparation</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>insample <span class="op">=</span> pd.read_stata(<span class="st">'data/ca_school_testscore_insample.dta'</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>outofsample <span class="op">=</span> pd.read_stata(<span class="st">'data/ca_school_testscore_outofsample.dta'</span>)</span>
@@ -1148,8 +1148,8 @@ Table&nbsp;23.1: The small case
 Dep. Variable:           testscore_dm   R-squared (uncentered):                   0.301
 Model:                            OLS   Adj. R-squared (uncentered):              0.300
 Method:                 Least Squares   F-statistic:                              211.2
-Date:                Sat, 11 Oct 2025   Prob (F-statistic):                   7.78e-151
-Time:                        11:36:23   Log-Likelihood:                         -10611.
+Date:                Thu, 25 Dec 2025   Prob (F-statistic):                   7.78e-151
+Time:                        15:51:55   Log-Likelihood:                         -10611.
 No. Observations:                1966   AIC:                                  2.123e+04
 Df Residuals:                    1962   BIC:                                  2.125e+04
 Df Model:                           4                                                  
@@ -1174,7 +1174,7 @@ Notes:
 </div>
 </div>
 <p>In the following code chunk, we first generate the in-sample and out-of-sample predicted values and then compute the prediction errors. The in-sample and out-of-sample predictions are stored in <code>testscore_ols</code>, and the prediction errors are stored in <code>e_ols</code>. Lastly, we compute the split-sample estimate of the RMSPE (the out-of-sample RMSPE estimate).</p>
-<div id="3648d1e2" class="cell" data-execution_count="7">
+<div id="116c1b03" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate out-of-sample predictions and RMSPE</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>data.loc[:, <span class="st">'testscore_ols'</span>] <span class="op">=</span> mean_testscore <span class="op">+</span> model_std.predict(pred_sx)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'e_ols'</span>] <span class="op">=</span> data[<span class="st">'testscore'</span>] <span class="op">-</span> data[<span class="st">'testscore_ols'</span>]</span>
@@ -1186,7 +1186,7 @@ Notes:
 </div>
 </div>
 <p>In the following code chunk, we compute the <span class="math inline">\(m\)</span>-fold cross-validation estimate of the MSPE. We use the <code>KFold</code> function from the <code>sklearn.model_selection</code> module to split the dataset into <span class="math inline">\(m=10\)</span> consecutive folds (subsets) without shuffling, by default. We then use the <code>kf.split</code> method to generate indices for the training and test sets, which are denoted as <code>train_index</code> and <code>val_index</code>, respectively. We use the <code>mean_squared_error</code> function to compute the mean squared errors from each fold and then collect these measures in the <code>rmse_cv</code> list.</p>
-<div id="0c6b5d21" class="cell" data-execution_count="8">
+<div id="f4e249b3" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute RMSPE by the 10-fold cross-validation</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> pred_sx[data[<span class="st">'insample'</span>]]</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> data.loc[data[<span class="st">'insample'</span>],<span class="st">'testscore_dm'</span>]</span>
@@ -1209,7 +1209,7 @@ Notes:
 </div>
 </div>
 <p>In the following code chunk, we explore an alternative approach to compute the 10-fold cross-validation estimate of the RMSPE. We use the <code>cross_val_score()</code> function from the <code>sklearn.model_selection</code> module to calculate the mean squared error for each fold. To achieve this, we first define the mean squared error as the scoring metric using the <code>make_scorer()</code> function and then pass this custom scorer to the <code>cross_val_score()</code> function.</p>
-<div id="b09e9aaa" class="cell" data-execution_count="9">
+<div id="9e44b207" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the scoring method as negative mean squared error (MSE) since cross_val_score maximizes scores</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>scoring <span class="op">=</span> make_scorer(mean_squared_error, greater_is_better<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1229,7 +1229,7 @@ Notes:
 </div>
 </div>
 <p>Finally, instead of using the <code>cross_val_score()</code> function, we can use <code>cross_val_predict()</code> to compute the cross-validated predictions and then calculate the mean squared error using the <code>mean_squared_error</code> function, as shown in the following code chunk.</p>
-<div id="14477011" class="cell" data-execution_count="10">
+<div id="2fc7211a" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform 10-fold cross-validation and get predictions for each fold</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> cross_val_predict(LinearRegression(), X_train, y_train, cv<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1245,7 +1245,7 @@ Notes:
 <pre><code>The 10-fold CV estimate of RMSPE = 53.6</code></pre>
 </div>
 </div>
-<div id="9e225f31" class="cell" data-execution_count="11">
+<div id="b2b96db7" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove data</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1327,7 +1327,7 @@ Table&nbsp;23.2: The large case
 </div>
 </div>
 <p>In the following code chunk, the <code>pred_columns</code> list includes the names of the original variables given in <a href="#tbl-LargeCase" class="quarto-xref">Table&nbsp;<span>23.2</span></a>.</p>
-<div id="d17c10e4" class="cell" data-message="false" data-execution_count="12">
+<div id="7af3a440" class="cell" data-message="false" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Large case: data preparation</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.concat([insample, outofsample], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1350,7 +1350,7 @@ Table&nbsp;23.2: The large case
 <span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In addition to the 38 variables in the <code>pred_columns</code> list, we also consider their squares, cubes, and interactions, resulting in 816 distinct predictors. In the following code chunk, we generate these variables along with their standardized versions.</p>
-<div id="39080289" class="cell" data-execution_count="13">
+<div id="702507de" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(pred_columns)):</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    mean <span class="op">=</span> data.loc[data[<span class="st">'insample'</span>], pred_columns[i]].mean()</span>
@@ -1386,7 +1386,7 @@ Table&nbsp;23.2: The large case
 <span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> data[<span class="st">'testscore_dm'</span>].loc[data[<span class="st">'insample'</span>]]         </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In the following code chunk, we perform the OLS estimation and compute the split-sample estimate of the MSPE (the out-of-sample MSPE estimate).</p>
-<div id="1794d76a" class="cell" data-execution_count="14">
+<div id="1a9ac9d9" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictive regression model: OLS estimation</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>model_std <span class="op">=</span> sm.OLS(y_train, X_train).fit()        </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>data.loc[:, <span class="st">'testscore_ols'</span>] <span class="op">=</span> mean_testscore <span class="op">+</span> model_std.predict(data.<span class="bu">filter</span>(like<span class="op">=</span><span class="st">'sS_x'</span>)) </span>
@@ -1401,7 +1401,7 @@ Table&nbsp;23.2: The large case
 </div>
 </div>
 <p>Next, we compute the 10-fold cross-validation estimate of the MSPE in the following code chunk. Note that our results will differ from those of <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> because we will not further standardize the regressors or demean the outcome variable at each fold of the cross-validation.</p>
-<div id="e833bc5b" class="cell" data-execution_count="15">
+<div id="b4c03d49" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute 10-fold CV estimate of the RMSPE</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>rmse_cv <span class="op">=</span> []</span>
@@ -1419,7 +1419,7 @@ Table&nbsp;23.2: The large case
 <span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'OLSinMSPE_large_model.sav'</span></span>
 <span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>pickle.dump(large_rmse_cv_in_ols, <span class="bu">open</span>(filename, <span class="st">'wb'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="0ef959e3" class="cell" data-execution_count="16">
+<div id="b593d37f" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'OLSinMSPE_large_model.sav'</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>large_rmse_cv_in_ols <span class="op">=</span> pickle.load(<span class="bu">open</span>(filename,<span class="st">"rb"</span>))</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The 10-fold CV estimate of RMSPE in the large case = </span><span class="sc">{</span>large_rmse_cv_in_ols<span class="sc">:.1f}</span><span class="ss">"</span>)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1428,7 +1428,7 @@ Table&nbsp;23.2: The large case
 </div>
 </div>
 <p>In the following code chunk, similar to the small case, we can use the <code>cross_val_predict()</code> function to compute the 10-fold cross-validation estimate of the MSPE in an alternative way.</p>
-<div id="5d93121a" class="cell" data-execution_count="17">
+<div id="b86fa8b9" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform 10-fold cross-validation and get predictions for each fold</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> cross_val_predict(LinearRegression(), X_train, y_train, cv<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1442,7 +1442,7 @@ Table&nbsp;23.2: The large case
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The 10-fold CV estimate of RMSPE for the large case = </span><span class="sc">{</span>rmse_cv<span class="sc">:.1f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we consider the principal component analysis for the large case. In the following, we first use the 10-fold cross-validation method to choose the number of principal components <span class="math inline">\(p\)</span>. We create the workflow with <code>pipe = Pipeline([('pca', pca), ('linreg', linreg)])</code>, where principal component analysis is applied before fitting the linear regression model. We then define the grid of principal components using <code>p_grid = {'pca__n_components': range(1, 60)}</code> and pass the <code>pipe</code> and <code>p_grid</code> to the <code>GridSearchCV</code> function. Finally, we use the <code>grid.fit</code> method for searching the number of principal components that minimizes the 10-fold cross-validation estimate of the MSPE. The 10-fold cross-validation estimate of the MSPE is minimized when <span class="math inline">\(p=51\)</span>.</p>
-<div id="08bf3609" class="cell" data-execution_count="18">
+<div id="8964f549" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Initialize PCA and Linear Regression</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA()</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>linreg <span class="op">=</span> LinearRegression(fit_intercept<span class="op">=</span><span class="va">False</span>)</span>
@@ -1480,7 +1480,7 @@ Table&nbsp;23.2: The large case
 <span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'No_pc_large_model.sav'</span></span>
 <span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>pickle.dump([grid, p_grid], <span class="bu">open</span>(filename, <span class="st">'wb'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="444d1123" class="cell" data-execution_count="19">
+<div id="6b42cc5f" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load results</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'No_pc_large_model.sav'</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>grid <span class="op">=</span> pickle.load(<span class="bu">open</span>(filename,<span class="st">"rb"</span>))[<span class="dv">0</span>]</span>
@@ -1520,7 +1520,7 @@ Figure&nbsp;23.4: The MSPE as a function of the number of principal components p
 </div>
 </div>
 <p>In the following code chunk, we follow <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> to further standardize the regressors and demean the outcome variable at each fold of the cross-validation. This code chunk produces <span class="math inline">\(p=46\)</span> as in <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span>.</p>
-<div id="64a3ef43" class="cell" data-execution_count="21">
+<div id="09f53a14" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize 10-fold cross-validation and other parameters</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>pmin, pmax <span class="op">=</span> <span class="dv">1</span>, <span class="dv">60</span></span>
@@ -1565,7 +1565,7 @@ Figure&nbsp;23.4: The MSPE as a function of the number of principal components p
 <span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In the following code chunk, we assume that <span class="math inline">\(p=51\)</span> and compute the split-sample estimate of the MSPE.</p>
-<div id="9372f838" class="cell" data-execution_count="22">
+<div id="55a4b63e" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize PCA with 51 components and fit to training data</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">51</span>)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>pca.fit(X_train)</span>
@@ -1573,7 +1573,7 @@ Figure&nbsp;23.4: The MSPE as a function of the number of principal components p
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'pc_large_model.sav'</span></span>
 <span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>pickle.dump(pca, <span class="bu">open</span>(filename, <span class="st">'wb'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="2a820025" class="cell" data-execution_count="23">
+<div id="e4678d32" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load results</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'pc_large_model.sav'</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> pickle.load(<span class="bu">open</span>(filename,<span class="st">"rb"</span>))</span>
@@ -1593,7 +1593,7 @@ Figure&nbsp;23.4: The MSPE as a function of the number of principal components p
 </div>
 </div>
 <p>Alternatively, we can use the <code>Pipeline()</code> function to streamline the PCA transformation and regression fitting process as shown in the following code chunk.</p>
-<div id="5deb5ed0" class="cell" data-execution_count="24">
+<div id="7b86bf3b" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using Pipeline</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>pipeline <span class="op">=</span> Pipeline([</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'pca'</span>, PCA(n_components<span class="op">=</span><span class="dv">51</span>)),</span>
@@ -1633,13 +1633,13 @@ Figure&nbsp;23.5: The scree plot for the large case
 </div>
 </div>
 <p>Next, we implement the ridge regression using the <code>RidgeCV()</code> function from the <code>sklearn.linear_model</code> module. Note that the number of grid points for the ridge shrinkage parameter can be made finer by modifying <code>alphas</code> argument in <code>RidgeCV</code> at the expense of more computation time.</p>
-<div id="d3304311" class="cell" data-execution_count="26">
+<div id="41d069fb" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ridge, modify alphas in consideration of computation time</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>large_ridge_model <span class="op">=</span> RidgeCV(cv<span class="op">=</span><span class="dv">10</span>, fit_intercept<span class="op">=</span><span class="va">False</span>, alphas<span class="op">=</span>np.logspace(<span class="dv">3</span>,<span class="fl">3.75</span>,<span class="dv">16</span>)).fit(X_train, y_train)</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'large_ridge_model.sav'</span></span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>pickle.dump(large_ridge_model, <span class="bu">open</span>(filename, <span class="st">'wb'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="20475598" class="cell" data-execution_count="27">
+<div id="cec0068a" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load </span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'large_ridge_model.sav'</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>large_ridge_model <span class="op">=</span> pickle.load(<span class="bu">open</span>(filename,<span class="st">"rb"</span>))</span>
@@ -1662,7 +1662,7 @@ The out-of-sample RMSPE of Ridge regression in the large case = 38.8</code></pre
 </div>
 </div>
 <p>Instead of the <code>RidgeCV</code> function, we may also use the <code>GridSearchCV()</code> function from the <code>sklearn.model_selection</code> module to select the shrinkage parameter. We present this approach in the following code chunk.</p>
-<div id="3e6714bf" class="cell" data-execution_count="28">
+<div id="47713ea7" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the Ridge model</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>ridge_model <span class="op">=</span> Ridge(fit_intercept<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1690,7 +1690,7 @@ The out-of-sample RMSPE of Ridge regression in the large case = 38.8</code></pre
 <span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The out-of-sample RMSPE of Ridge regression = </span><span class="sc">{</span>large_rmse_oos_ridge<span class="sc">:.1f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In the following code chunk, we implement the Lasso approach using the <code>LassoCV()</code> function from the <code>sklearn.linear_model</code> module. Note that <code>LassoCV()</code> uses 100 grid points for the shrinkage parameter and this can significantly increase computational burden in very high-dimensional exercises. You can specify <code>alphas</code> argument to modify the grid points for the shrinkage parameter.</p>
-<div id="1e7ffe94" class="cell" data-execution_count="29">
+<div id="15abe9c3" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the Lasso model using cross-validation</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>large_lasso_model <span class="op">=</span> LassoCV(cv<span class="op">=</span><span class="dv">10</span>, fit_intercept<span class="op">=</span><span class="va">False</span>).fit(X_train, y_train)</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1698,7 +1698,7 @@ The out-of-sample RMSPE of Ridge regression in the large case = 38.8</code></pre
 <span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'large_lasso_model.sav'</span></span>
 <span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>pickle.dump(large_lasso_model, <span class="bu">open</span>(filename, <span class="st">'wb'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="fc5cb065" class="cell" data-execution_count="30">
+<div id="2e7e65fd" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the model results</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'large_lasso_model.sav'</span></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>large_lasso_model <span class="op">=</span> pickle.load(<span class="bu">open</span>(filename,<span class="st">"rb"</span>))    </span>
@@ -1742,7 +1742,7 @@ Figure&nbsp;23.6: The MSPE in each fold in the large case
 </div>
 </div>
 <p>In the following code chunk, we compute the out-of-sample MSPE estimate (the split-sample estimate of MSPE).</p>
-<div id="015d2f92" class="cell" data-execution_count="32">
+<div id="64ef5950" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate out-of-sample predictions errors and RMSPE</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'e_lasso'</span>] <span class="op">=</span> data[<span class="st">'testscore'</span>] <span class="op">-</span> data[<span class="st">'testscore_lasso'</span>]</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'e_lasso2'</span>] <span class="op">=</span> data[<span class="st">'e_lasso'</span>] <span class="op">**</span> <span class="dv">2</span></span>
@@ -1754,7 +1754,7 @@ Figure&nbsp;23.6: The MSPE in each fold in the large case
 </div>
 </div>
 <p>Alternatively, we can compute the split-sample estimate of the MSPE using the <code>GridSearchCV()</code> function, as shown in the following code chunk.</p>
-<div id="23eb1367" class="cell" data-execution_count="33">
+<div id="da21f2d2" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the parameter grid</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {<span class="st">'alpha'</span>: np.logspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">10</span>)}</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1776,7 +1776,7 @@ Figure&nbsp;23.6: The MSPE in each fold in the large case
 <span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The out-of-sample RMSPE of Lasso regression in the large case = </span><span class="sc">{</span>large_rmse_oos_lasso<span class="sc">:.1f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="c1f44aae" class="cell" data-execution_count="34">
+<div id="90640d3d" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove data</span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> data </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1850,7 +1850,7 @@ Table&nbsp;23.3: The very large case
 </div>
 </div>
 <p>We do not consider the OLS approach for this case as it is not feasible. In the following code chunk, we create the standardized variables.</p>
-<div id="765de31c" class="cell" data-message="false" data-execution_count="35">
+<div id="db4aa40a" class="cell" data-message="false" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Very large case</span></span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.concat([insample, outofsample], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> insample, outofsample</span>
@@ -1943,7 +1943,7 @@ Table&nbsp;23.3: The very large case
 <span id="cb46-90"><a href="#cb46-90" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> data[<span class="st">'testscore_dm'</span>].loc[data[<span class="st">'insample'</span>]]                  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In the following, we start with the principal component analysis.</p>
-<div id="a799c15a" class="cell" data-execution_count="36">
+<div id="101e675d" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA()</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>linreg <span class="op">=</span> LinearRegression(fit_intercept<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> Pipeline([(<span class="st">'pca'</span>, pca), (<span class="st">'linreg'</span>, linreg)])</span>
@@ -1954,7 +1954,7 @@ Table&nbsp;23.3: The very large case
 <span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'No_pc_very_large_model.sav'</span></span>
 <span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>pickle.dump([grid, p_grid], <span class="bu">open</span>(filename, <span class="st">'wb'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="fb58b006" class="cell" data-execution_count="37">
+<div id="77fd2e09" class="cell" data-execution_count="37">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'No_pc_very_large_model.sav'</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>grid <span class="op">=</span> pickle.load(<span class="bu">open</span>(filename,<span class="st">"rb"</span>))[<span class="dv">0</span>]</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>p_grid <span class="op">=</span> pickle.load(<span class="bu">open</span>(filename,<span class="st">"rb"</span>))[<span class="dv">1</span>]</span>
@@ -1986,7 +1986,7 @@ Figure&nbsp;23.7: Plot of MSPE versus number of components
 </div>
 </div>
 <p>In the following code chunk, we follow <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> to further standardize the regressors and demean the outcome variable at each fold of the cross-validation. This code chunk produces <span class="math inline">\(p=69\)</span> as in Stock and Watson (2020).</p>
-<div id="71ca7f99" class="cell" data-execution_count="39">
+<div id="8ebf021a" class="cell" data-execution_count="39">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize 10-fold cross-validation and other parameters</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>pmin, pmax <span class="op">=</span> <span class="dv">1</span>, <span class="dv">70</span></span>
@@ -2025,14 +2025,14 @@ Figure&nbsp;23.7: Plot of MSPE versus number of components
 <span id="cb51-36"><a href="#cb51-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The scree plot given in <a href="#fig-fig21-8" class="quarto-xref">Figure&nbsp;<span>23.8</span></a> indicates that the first principal component explains around <span class="math inline">\(15\%\)</span> of the variance of 2065 predictors.</p>
-<div id="d9f7b9cb" class="cell" data-execution_count="40">
+<div id="30104201" class="cell" data-execution_count="40">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PC regression</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">54</span>)</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>pca.fit(X_train)</span>
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'pc_very_large_model.sav'</span></span>
 <span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>pickle.dump(pca, <span class="bu">open</span>(filename, <span class="st">'wb'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="159d2451" class="cell" data-execution_count="41">
+<div id="417e938b" class="cell" data-execution_count="41">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'pc_very_large_model.sav'</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> pickle.load(<span class="bu">open</span>(filename,<span class="st">"rb"</span>))</span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>pcs <span class="op">=</span> pca.transform(data.<span class="bu">filter</span>(like<span class="op">=</span><span class="st">'sS_'</span>)) <span class="co">#PCs for insample and OOS</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2057,7 +2057,7 @@ Figure&nbsp;23.8: The scree plot for the very large case
 </div>
 </div>
 </div>
-<div id="51a434f0" class="cell" data-execution_count="43">
+<div id="c9e9815e" class="cell" data-execution_count="43">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PC regression</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>model_pc <span class="op">=</span> sm.OLS(y_train, pcs[data[<span class="st">'insample'</span>], :]).fit()        </span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>data.loc[:, <span class="st">'testscore_pc'</span>] <span class="op">=</span> mean_testscore <span class="op">+</span> model_pc.predict(pcs)            </span>
@@ -2073,14 +2073,14 @@ Figure&nbsp;23.8: The scree plot for the very large case
 </div>
 </div>
 <p>In the following, we estimate the ridge regression and then return the out-of-sample estimate of the MSPE.</p>
-<div id="24ed562f" class="cell" data-execution_count="44">
+<div id="6126e51a" class="cell" data-execution_count="44">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ridge, modify alphas in consideration of computation time</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>vlarge_ridge_model <span class="op">=</span> RidgeCV(cv<span class="op">=</span><span class="dv">10</span>, fit_intercept<span class="op">=</span><span class="va">False</span>, alphas<span class="op">=</span>np.logspace(<span class="dv">3</span>,<span class="fl">3.75</span>,<span class="dv">16</span>)).fit(X_train, y_train)</span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Save model result</span></span>
 <span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'vlarge_ridge_model.sav'</span></span>
 <span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>pickle.dump(vlarge_ridge_model, <span class="bu">open</span>(filename, <span class="st">'wb'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="aae9635e" class="cell" data-execution_count="45">
+<div id="e941e02e" class="cell" data-execution_count="45">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load model result</span></span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'vlarge_ridge_model.sav'</span></span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>vlarge_ridge_model <span class="op">=</span> pickle.load(<span class="bu">open</span>(filename,<span class="st">"rb"</span>))</span>
@@ -2100,7 +2100,7 @@ The out-of-sample RMSPE of Ridge regression = 39.0</code></pre>
 </div>
 </div>
 <p>Finally, we perform the Lasso and compute the out-of-sample MSPE estimate.</p>
-<div id="12390950" class="cell" data-execution_count="46">
+<div id="882d23b7" class="cell" data-execution_count="46">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lasso</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>start_time <span class="op">=</span> time.time()</span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>vlarge_lasso_model <span class="op">=</span> LassoCV(cv<span class="op">=</span><span class="dv">10</span>, fit_intercept<span class="op">=</span><span class="va">False</span>).fit(X_train, y_train)</span>
@@ -2109,7 +2109,7 @@ The out-of-sample RMSPE of Ridge regression = 39.0</code></pre>
 <span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'vlarge_lasso_model.sav'</span></span>
 <span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>pickle.dump(vlarge_lasso_model, <span class="bu">open</span>(filename, <span class="st">'wb'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="247dd628" class="cell" data-execution_count="47">
+<div id="38640caf" class="cell" data-execution_count="47">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load model result</span></span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">'vlarge_lasso_model.sav'</span></span>
 <span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>vlarge_lasso_model <span class="op">=</span> pickle.load(<span class="bu">open</span>(filename,<span class="st">"rb"</span>)) </span>
@@ -2147,7 +2147,7 @@ Figure&nbsp;23.9: The MSPE computed from each fold
 </div>
 </div>
 </div>
-<div id="52efccdf" class="cell" data-execution_count="49">
+<div id="c8cdfac7" class="cell" data-execution_count="49">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate out-of-sample errors</span></span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'e_lasso'</span>] <span class="op">=</span> data[<span class="st">'testscore'</span>] <span class="op">-</span> data[<span class="st">'testscore_lasso'</span>]</span>
 <span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'e_lasso2'</span>] <span class="op">=</span> data[<span class="st">'e_lasso'</span>] <span class="op">**</span> <span class="dv">2</span></span>
@@ -2158,7 +2158,7 @@ Figure&nbsp;23.9: The MSPE computed from each fold
 <pre><code>The out-of-sample RMSPE of Lasso regression = 39.1</code></pre>
 </div>
 </div>
-<div id="2de81144" class="cell" data-execution_count="50">
+<div id="7bda74e8" class="cell" data-execution_count="50">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove data</span></span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -2172,7 +2172,7 @@ Figure&nbsp;23.9: The MSPE computed from each fold
 <li>In the large and very large cases, the Ridge, Lasso, and PC regression have similar RMSPE estimates.</li>
 <li>When <span class="math inline">\(k\)</span> increases from 817 to 2065, we do not see an improvement in the out-of-sample RMSPE of the Ridge, Lasso, and PC regression.</li>
 </ul>
-<div id="46f0641b" class="cell" data-execution_count="51">
+<div id="01dbbfb6" class="cell" data-execution_count="51">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>predictor_set <span class="op">=</span> [</span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Small (k=4)'</span>, <span class="st">'Estimated '</span><span class="op">+</span><span class="st">u'</span><span class="ch">\u03BB</span><span class="st">'</span><span class="op">+</span><span class="st">' or p'</span>, <span class="st">'In-sample RMSPE'</span>, <span class="st">'Out-of-sample RMSPE'</span>, <span class="st">' '</span>,</span>
 <span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Large (k=817)'</span>, <span class="st">'Estimated '</span><span class="op">+</span><span class="st">u'</span><span class="ch">\u03BB</span><span class="st">'</span><span class="op">+</span><span class="st">' or p'</span>, <span class="st">'In-sample RMSPE'</span>, <span class="st">'Out-of-sample RMSPE'</span>, <span class="st">' '</span>,</span>
