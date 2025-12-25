@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Appendix C — Appendix for Chapter 28 – Introduction to Econometrics with Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./AppendixD.html" rel="next">
+<link href="./AppendixB.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./AppendixA.html">Appendices</a></li><li class="breadcrumb-item"><a href="./AppendixC.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Econometrics with Python</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part0-Python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroPython.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroNumpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-ControlStructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Control Structures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-CustomFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Custom Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-StatFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Statistical Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Pandas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-NumericalAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Applications in Numerical Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-SymbolicMath.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Symbolic Computing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and Review</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentals of Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Further Topics in Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Analysis of Economic Time Series Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theoretical Topics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixC.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#normal-distribution" id="toc-normal-distribution" class="nav-link active" data-scroll-target="#normal-distribution"><span class="header-section-number">C.1</span> Normal distribution</a></li>
+  <li><a href="#moment-generating-function" id="toc-moment-generating-function" class="nav-link" data-scroll-target="#moment-generating-function"><span class="header-section-number">C.2</span> Moment-generating function</a></li>
+  <li><a href="#characteristic-function" id="toc-characteristic-function" class="nav-link" data-scroll-target="#characteristic-function"><span class="header-section-number">C.3</span> Characteristic function</a></li>
+  <li><a href="#the-proof-of-the-central-limit-theorem" id="toc-the-proof-of-the-central-limit-theorem" class="nav-link" data-scroll-target="#the-proof-of-the-central-limit-theorem"><span class="header-section-number">C.4</span> The proof of the central limit theorem</a></li>
+  <li><a href="#the-proof-of-slutskys-theorem" id="toc-the-proof-of-slutskys-theorem" class="nav-link" data-scroll-target="#the-proof-of-slutskys-theorem"><span class="header-section-number">C.5</span> The proof of Slutsky’s theorem</a>
+  <ul class="collapse">
+  <li><a href="#proof-of-part-1" id="toc-proof-of-part-1" class="nav-link" data-scroll-target="#proof-of-part-1"><span class="header-section-number">C.5.1</span> Proof of part 1</a></li>
+  <li><a href="#proof-of-part-2" id="toc-proof-of-part-2" class="nav-link" data-scroll-target="#proof-of-part-2"><span class="header-section-number">C.5.2</span> Proof of part 2</a></li>
+  <li><a href="#proof-of-part-3" id="toc-proof-of-part-3" class="nav-link" data-scroll-target="#proof-of-part-3"><span class="header-section-number">C.5.3</span> Proof of part 3</a></li>
+  </ul></li>
+  <li><a href="#bivariate-normal-distribution" id="toc-bivariate-normal-distribution" class="nav-link" data-scroll-target="#bivariate-normal-distribution"><span class="header-section-number">C.6</span> Bivariate normal distribution</a></li>
+  <li><a href="#chi-square-distribution" id="toc-chi-square-distribution" class="nav-link" data-scroll-target="#chi-square-distribution"><span class="header-section-number">C.7</span> Chi-square distribution</a></li>
+  <li><a href="#student-t-distribution" id="toc-student-t-distribution" class="nav-link" data-scroll-target="#student-t-distribution"><span class="header-section-number">C.8</span> Student t distribution</a></li>
+  <li><a href="#f-distribution" id="toc-f-distribution" class="nav-link" data-scroll-target="#f-distribution"><span class="header-section-number">C.9</span> F distribution</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/AppendixC.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./AppendixA.html">Appendices</a></li><li class="breadcrumb-item"><a href="./AppendixC.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-appendixC" class="quarto-section-identifier">Appendix C — Appendix for Chapter 28</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="b953ecdb" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">'seaborn-v0_8-darkgrid'</span>)  </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> multivariate_normal</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="normal-distribution" class="level2" data-number="C.1">
+<h2 data-number="C.1" class="anchored" data-anchor-id="normal-distribution"><span class="header-section-number">C.1</span> Normal distribution</h2>
+<p>Let <span class="math inline">\(Y\sim N(\mu,\sigma^2)\)</span>. Then, the probability density function (PDF) of <span class="math inline">\(Y\)</span> is given by <span id="eq-eqC-1"><span class="math display">\[
+f_Y(y) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(y-\mu)^2}{2\sigma^2}},
+\tag{C.1}\]</span></span> where <span class="math inline">\(\mu\)</span> is the mean and <span class="math inline">\(\sigma^2\)</span> is the variance. The PDF of normal distribution is symmetric about the mean <span class="math inline">\(\mu\)</span>, i.e., <span class="math inline">\(f(\mu-a)=f(\mu+a)\)</span> for all <span class="math inline">\(a\in\mathbb{R}\)</span>. The PDF has inflection points at <span class="math inline">\(y=\mu\pm\sigma\)</span>. We provide the PDF and CDF plots of the normal distribution with different means and variances in <a href="Chapter2-ReviewProbability.html" class="quarto-xref"><span>Chapter 12</span></a>.</p>
+<p>Clearly, <span class="math inline">\(f (y)\geq 0\)</span> for all <span class="math inline">\(y\in\mathbb{R}\)</span>. What about <span class="math inline">\(\int_{-\infty}^{\infty}f(y)dy=1\)</span>? Define <span class="math inline">\(I=\int_{-\infty}^{\infty}\frac{1}{\sigma\sqrt{2\pi}}e^{-(y-\mu)^2/(2\sigma^2)}dy\)</span>. Set <span class="math inline">\(z=(y-\mu)/\sigma\implies dz=dy/\sigma\)</span>. With this change of variable, <span class="math inline">\(I\)</span> can be expressed as <span class="math display">\[
+I=\int_{-\infty}^{\infty}\frac{1}{\sqrt{2\pi}}e^{-z^2/2}dz.
+\]</span> Because <span class="math inline">\(I &gt; 0\)</span>, it suffices to show that <span class="math inline">\(I^2 = 1\)</span>. Note that <span class="math display">\[
+\begin{align*}
+I^2&amp;=\left(\int_{-\infty}^{\infty}\frac{1}{\sqrt{2\pi}}e^{-x^2/2}dx\right)\left(\int_{-\infty}^{\infty}\frac{1}{\sqrt{2\pi}}e^{-y^2/2}dy\right)\\
+&amp;=\frac{1}{2\pi}\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}e^{-(x^2+y^2)/2}dxdy.
+\end{align*}
+\]</span></p>
+<p>To proceed, we will use the polar coordinate transformation. Set <span class="math inline">\(x=r\cos(\theta)\)</span> and <span class="math inline">\(y=r\sin(\theta)\)</span>. Then, <span class="math inline">\(x^2+y^2=r^2\cos^2(\theta)+r^2\sin^2(\theta)=r^2\)</span>. The Jacobian of the transformation from <span class="math inline">\((x,y)\)</span> space to <span class="math inline">\((r,\theta)\)</span> space is <span class="math inline">\(r\)</span>. Then, we have <span class="math display">\[
+\begin{align*}
+I^2&amp;=\frac{1}{2\pi}\int_{0}^{2\pi}\int_{0}^{\infty}e^{-r^2/2}rdrd\theta=\frac{1}{2\pi}\int^{2\pi}_{0}\left(-e^{-r^2/2}\bigg|^{\infty}_{0}\right)d\theta\\
+&amp;=\frac{1}{2\pi}\int^{2\pi}_{0}d\theta=1.
+\end{align*}
+\]</span></p>
+</section>
+<section id="moment-generating-function" class="level2" data-number="C.2">
+<h2 data-number="C.2" class="anchored" data-anchor-id="moment-generating-function"><span class="header-section-number">C.2</span> Moment-generating function</h2>
+<div id="def-defC-1" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition C.1 (Moments)</strong></span> The <span class="math inline">\(k\)</span>th moment of a random variable <span class="math inline">\(Y\)</span> is defined as <span class="math inline">\(\mathbb{E}(Y^k)\)</span> and is denoted by <span class="math inline">\(\mu_k'\)</span>. The <span class="math inline">\(k\)</span>th central moment of <span class="math inline">\(Y\)</span> is defined as <span class="math inline">\(\mathbb{E}((Y - \mu)^k)\)</span> and is denoted by <span class="math inline">\(\mu_k\)</span>.</p>
+</div>
+<div id="def-defC-2" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition C.2 (Moment-generating function)</strong></span> The <a href="https://en.wikipedia.org/wiki/Moment-generating_function">moment-generating function</a> <span class="math inline">\(M_Y(t)\)</span> of a random variable <span class="math inline">\(Y\)</span> is defined as <span class="math inline">\(M_Y(t) = \E\left(e^{tY} \right)\)</span>. It exists if there is a positive constant <span class="math inline">\(b\)</span> such that <span class="math inline">\(M_Y(t)\)</span> is finite for <span class="math inline">\(|t| \leq b\)</span>.</p>
+</div>
+<p>The moment generating function can be used to find the moments of a random variable. The following theorem shows that the <span class="math inline">\(k\)</span>th moment of a random variable can be obtained by differentiating its moment-generating function <span class="math inline">\(k\)</span> times and evaluating it at <span class="math inline">\(t=0\)</span>.</p>
+<div id="thm-thmC-1" class="theorem">
+<p><span class="theorem-title"><strong>Theorem C.1</strong></span> If <span class="math inline">\(M_Y(t)\)</span> exists, then for any positive integer <span class="math inline">\(k\)</span>, we have <span class="math display">\[
+\begin{align*}
+\frac{d^kM_Y(t)}{dt^k}\bigg|_{t=0}=M_Y^{(k)}(0)=\mu^{'}_k.
+\end{align*}
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thmC-1" class="quarto-xref">Theorem&nbsp;<span>C.1</span></a>). </span>Let <span class="math inline">\(f\)</span> be the PDF of <span class="math inline">\(Y\)</span>. Then, for any integer <span class="math inline">\(k\geq0\)</span>, we have <span class="math display">\[
+\begin{align*}
+\frac{d^kM_Y(t)}{dt^k}&amp;=\frac{d^k}{dt^k}\E\left(e^tY \right)=\frac{d^k}{dt^k}\int e^{ty}f(y)\text{d}y=\int\frac{d^k}{dt^k}e^{ty}f(y)\text{d}y\\
+&amp;=\int y^ke^{ty}f(y)\text{d}y=\E\left(Y^ke^{tY}\right).
+\end{align*}
+\]</span> Thus, <span class="math display">\[
+\frac{d^kM_Y(t)}{dt^k}\bigg|_{t=0}=M_Y^{(k)}(0)=\E\left(Y^ke^{0\cdot Y}\right)=\E\left(Y^k\right)=\mu^{'}_k.
+\]</span></p>
+</div>
+<div id="thm-thmC-2" class="theorem">
+<p><span class="theorem-title"><strong>Theorem C.2 (Moment-generating function of normal distribution)</strong></span> Let <span class="math inline">\(Y\sim N(\mu,\sigma^2)\)</span>. Then, the moment-generating function of <span class="math inline">\(Y\)</span> is given by <span class="math display">\[
+M_Y(t) = e^{\mu t + \frac{\sigma^2 t^2}{2}}.
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thmC-2" class="quarto-xref">Theorem&nbsp;<span>C.2</span></a>). </span>We can express <span class="math inline">\(M_Y(t)\)</span> as <span class="math display">\[
+\begin{align*}
+M_Y(t)=\E(e^{tY})=\int_{-\infty}^{\infty}e^{ty}\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}\left(\frac{y-\mu}{\sigma}\right)^2}dy=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^{\infty}e^{ty-\frac{1}{2}\left(\frac{y-\mu}{\sigma}\right)^2}dy.
+\end{align*}
+\]</span> Define <span class="math inline">\(b=ty-\frac{1}{2}\left(\frac{y-\mu}{\sigma}\right)^2\)</span>. Then, we can express <span class="math inline">\(b\)</span> as <span class="math display">\[
+\begin{align*}
+b&amp;=ty-\frac{1}{2\sigma^2}\left(y^2-2\mu y+\mu^2\right)\\
+&amp;=-\frac{1}{2\sigma^2}\left(y^2-2\mu y-2\sigma^2ty+\mu^2\right)\\
+&amp;=-\frac{1}{2\sigma^2}\left(y^2-2(\mu +\sigma^2t)y+\mu^2\right)\\
+&amp;=-\frac{1}{2\sigma^2}\left(y^2-2(\mu +\sigma^2t)y+(\mu +\sigma^2t)^2-(\mu +\sigma^2t)^2+\mu^2\right)\\
+&amp;=-\frac{1}{2\sigma^2}\left(y-(\mu+\sigma^2t)\right)^2+\frac{1}{2\sigma^2}\left((\mu+\sigma^2t)^2-\mu^2\right)\\
+&amp;=-\frac{1}{2\sigma^2}\left(y-c_1\right)^2+\frac{1}{2\sigma^2}\left(\mu^2+2\mu\sigma^2t+\sigma^4t^2-\mu^2\right)\\
+&amp;=-\frac{1}{2\sigma^2}\left(y-c_1\right)^2+\mu t+\sigma^2t^2/2\\
+&amp;=-\frac{1}{2\sigma^2}\left(y-c_1\right)^2+c_2
+\end{align*}
+\]</span> where <span class="math inline">\(c_1=(\mu+\sigma^2t)\)</span> and <span class="math inline">\(c_2=\mu  t+\sigma^2t^2/2\)</span>. Thus, we can express <span class="math inline">\(M_Y(t)\)</span> as <span class="math display">\[
+\begin{align*}
+M_Y(t)&amp;=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^{\infty}e^{b}dy=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^{\infty}e^{-\frac{1}{2\sigma^2}\left(y-c_1\right)^2+c_2}dy\\
+&amp;=e^{c_2}\int_{-\infty}^{\infty}\underbrace{\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2\sigma^2}\left(y-c_1\right)^2}}_{ N(c_1,\sigma^2)}dy=e^{c_2}=e^{\mu t+\sigma^2t^2/2}.
+\end{align*}
+\]</span></p>
+</div>
+<div id="exm-exmC-1" class="theorem example">
+<p><span class="theorem-title"><strong>Example C.1</strong></span> Using <a href="#thm-thmC-2" class="quarto-xref">Theorem&nbsp;<span>C.2</span></a>, we can find the moments of a random variable that has a normal distribution. For example, the first moment is given by <span class="math display">\[
+\begin{align*}
+\mu^{'}_1&amp;=\frac{dM_Y(t)}{dt}\bigg|_{t=0}=\frac{d}{dt}\left(e^{\mu t+\sigma^2t^2/2}\right)\bigg|_{t=0}\\
+&amp;=\frac{d}{dt}\left(e^{\mu t}\right)\bigg|_{t=0}+\frac{d}{dt}\left(e^{\sigma^2t^2/2}\right)\bigg|_{t=0}\\
+&amp;=\mu e^{\mu t}\bigg|_{t=0}+\sigma^2t e^{\sigma^2t^2/2}\bigg|_{t=0}\\
+&amp;=\mu+\sigma^2\cdot0= \mu.
+\end{align*}
+\]</span> The second moment is given by <span class="math display">\[
+\begin{align*}
+\mu^{'}_2&amp;=\frac{d^2M_Y(t)}{dt^2}\bigg|_{t=0}=\frac{d^2}{dt^2}\left(e^{\mu t+\sigma^2t^2/2}\right)\bigg|_{t=0}\\
+&amp;=\frac{d^2}{dt^2}\left(e^{\mu t}\right)\bigg|_{t=0}+\frac{d^2}{dt^2}\left(e^{\sigma^2t^2/2}\right)\bigg|_{t=0}\\
+&amp;=\mu^2 e^{\mu t}\bigg|_{t=0}+\sigma^2 e^{\sigma^2t^2/2}\bigg|_{t=0}+\sigma^2t^2 e^{\sigma^2t^2/2}\bigg|_{t=0}\\
+&amp;=\mu^2+\sigma^2\cdot1+\sigma^2\cdot0= \mu^2+\sigma^2.
+\end{align*}
+\]</span></p>
+</div>
+<div id="exm-exmC-2" class="theorem example">
+<p><span class="theorem-title"><strong>Example C.2 (Central moments of normal distribution)</strong></span> Since the PDF of the normal distribution is symmetric about the mean <span class="math inline">\(\mu\)</span>, we have <span class="math inline">\(\mu_k=0\)</span> for all odd <span class="math inline">\(k\)</span>. The fourth central moment is <span class="math inline">\(3\sigma^4\)</span>. The even central moments are given by <span class="math display">\[
+\begin{align*}
+\mu_k=\E(Y-\mu)^k=\frac{k!}{2^{k/2}(k/2)!}\sigma^k.
+\end{align*}
+\]</span></p>
+</div>
+</section>
+<section id="characteristic-function" class="level2" data-number="C.3">
+<h2 data-number="C.3" class="anchored" data-anchor-id="characteristic-function"><span class="header-section-number">C.3</span> Characteristic function</h2>
+<p>To introduce the characteristic function of a random variable, we first recall some basic results from complex numbers. The imaginary unit is denoted by <span class="math inline">\(i\)</span>, where <span class="math inline">\(i^2=-1\)</span>. A complex number <span class="math inline">\(z\)</span> is a number of the form <span class="math inline">\(z=a+ib\)</span>, where <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are real numbers. The number <span class="math inline">\(a\)</span> is called the real part of <span class="math inline">\(z\)</span> and <span class="math inline">\(b\)</span> is called the imaginary part of <span class="math inline">\(z\)</span>. The modulus (or absolute value) of a complex number <span class="math inline">\(z=a+ib\)</span> is defined as <span class="math inline">\(|z|=\sqrt{a^2+b^2}\)</span>. In particular, if <span class="math inline">\(z=ib\)</span>, then <span class="math inline">\(|z|=|b|\)</span>. The addition and multiplication of two complex numbers <span class="math inline">\(z_1=a+ib\)</span> and <span class="math inline">\(z_2=c+id\)</span> are defined as <span class="math display">\[
+\begin{align*}
+&amp;z_1+z_2=(a+c)+i(b+d),\\
+&amp;z_1z_2=(ac-bd)+i(ad+bc).
+\end{align*}
+\]</span></p>
+<p>The complex conjugate of a complex number <span class="math inline">\(z=a+ib\)</span> is defined as <span class="math inline">\(\overline{z}=a-ib\)</span>. Note that <span class="math inline">\(z\overline{z}=a^2+b^2\)</span>. The exponential function can be extended to complex numbers. Euler’s formula states that for any real number <span class="math inline">\(x\)</span>, we have <span class="math inline">\(e^{ix}=\cos(x)+i\sin(x)\)</span>. Note that <span class="math inline">\(|e^{ix}|=1\)</span> for all real numbers <span class="math inline">\(x\)</span>.</p>
+<div id="def-defC-3" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition C.3 (Characteristic function)</strong></span> The characteristic function of the random variable <span class="math inline">\(Y\)</span>, denoted by <span class="math inline">\(\varphi_Y(t)\)</span>, is defined as <span class="math display">\[
+\varphi_Y(t) = \E\left(e^{itY} \right),
+\]</span> for <span class="math inline">\(t\in\mathbb{R}\)</span>.</p>
+</div>
+<div id="thm-thmC-3" class="theorem">
+<p><span class="theorem-title"><strong>Theorem C.3 (Properties of characteristic function)</strong></span> Let <span class="math inline">\(Y\)</span> be a random variable with the characteristic function <span class="math inline">\(\varphi_Y(t)\)</span>. Then, the following properties hold:</p>
+<ol type="1">
+<li><span class="math inline">\(\varphi_Y(0)=1\)</span>.</li>
+<li><span class="math inline">\(|\varphi_Y(t)|\leq 1\)</span> for all real numbers <span class="math inline">\(t\)</span>.</li>
+<li><span class="math inline">\(\varphi_Y(t)\)</span> is uniformly continuous.</li>
+<li>If <span class="math inline">\(Y_1,Y_2,\ldots,Y_n\)</span> are independent random variables, then the characteristic function of <span class="math inline">\(S_n=Y_1+Y_2+\cdots+Y_n\)</span> is given by <span class="math inline">\(\varphi_{S_n}(t)=\varphi_{Y_1}(t)\varphi_{Y_2}(t)\cdots\varphi_{Y_n}(t)\)</span>.</li>
+</ol>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thmC-3" class="quarto-xref">Theorem&nbsp;<span>C.3</span></a>). </span></p>
+<ol type="1">
+<li>We have <span class="math inline">\(\varphi_Y(0)=\E(e^{i\cdot0\cdot Y})=\E(1)=1\)</span>.</li>
+<li>Using the triangle inequality, we have <span class="math display">\[
+|\varphi_Y(t)|=|\E(e^{itY})|\leq \E(|e^{itY}|)=\E(1)=1,
+\]</span> where we use the fact that <span class="math inline">\(|e^{ix}|=1\)</span> for all real numbers <span class="math inline">\(x\)</span>.</li>
+<li>For any real numbers <span class="math inline">\(t\)</span> and <span class="math inline">\(h\)</span>, we have <span class="math display">\[
+\begin{align*}
+|\varphi_Y(t+h)-\varphi_Y(t)|&amp;= |\E(e^{i(t+h)Y})-\E(e^{itY})|=|\E(e^{itY}(e^{ihY}-1))|\\
+&amp;\leq \E(|e^{itY}||1-e^{ihY}|)\\
+&amp;=\E(|1-e^{ihY}|).
+\end{align*}
+\]</span> Note that <span class="math inline">\(\lim_{h\to0}|1-e^{ihY}|=0\)</span> for all <span class="math inline">\(Y\)</span>. Also, <span class="math inline">\(|1-e^{ihY}|\leq|1|+|e^{ihY}|= 2\)</span>. Then, by the <a href="https://en.wikipedia.org/wiki/Dominated_convergence_theorem">dominated convergence theorem</a>, we can interchange the limit and expectation to obtain <span class="math display">\[
+\lim_{h\to0}|\varphi_Y(t+h)-\varphi_Y(t)|\leq \lim_{h\to0}\E(|1-e^{ihY}|)=\E(\lim_{h\to0}|1-e^{ihY}|)=0.
+\]</span> Let <span class="math inline">\(\epsilon&gt;0\)</span> be given. Then, there exists a <span class="math inline">\(\delta&gt;0\)</span> such that if <span class="math inline">\(|h|&lt;\delta\)</span>, then <span class="math inline">\(|\varphi_Y(t+h)-\varphi_Y(t)|&lt;\epsilon\)</span> for all <span class="math inline">\(t\)</span>. This shows that <span class="math inline">\(\varphi_Y(t)\)</span> is uniformly continuous.</li>
+<li>The characteristic function of <span class="math inline">\(S_n\)</span> is given by <span class="math display">\[
+\begin{align*}
+\varphi_{S_n}(t)&amp;=\E(e^{itS_n})=\E\left(e^{it(Y_1+Y_2+\cdots+Y_n)}\right)\\
+&amp;=\E\left(e^{itY_1}e^{itY_2}\cdots e^{itY_n}\right)=\E(e^{itY_1})\E(e^{itY_2})\cdots \E(e^{itY_n})\\
+&amp;=\varphi_{Y_1}(t)\varphi_{Y_2}(t)\cdots\varphi_{Y_n}(t),
+\end{align*}
+\]</span> where the fourth equality follows from the independence of <span class="math inline">\(Y_1,Y_2,\ldots,Y_n\)</span>.</li>
+</ol>
+</div>
+<div id="thm-thmC-4" class="theorem">
+<p><span class="theorem-title"><strong>Theorem C.4</strong></span> Let <span class="math inline">\(Y\)</span> be a random variable with <span class="math inline">\(\E(|Y|)&lt;\infty\)</span>. Then, its characteristic function <span class="math inline">\(\varphi_Y(t)\)</span> is continuously differentiable with respect to <span class="math inline">\(t\)</span> and <span class="math display">\[
+\frac{d\varphi_Y(t)}{dt}=i\E\left(Ye^{itY}\right).
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thmC-4" class="quarto-xref">Theorem&nbsp;<span>C.4</span></a>). </span>For any real numbers <span class="math inline">\(t\)</span> and <span class="math inline">\(h\)</span>, we consider the difference quotient at <span class="math inline">\(t\)</span>: <span class="math display">\[
+\begin{align*}
+\lim_{h\to0}\frac{\varphi_Y(t+h)-\varphi_Y(t)}{h}&amp;=\lim_{h\to0}\frac{\E(e^{i(t+h)Y})-\E(e^{itY})}{h}\\
+&amp;=\lim_{h\to0}\E\left(e^{itY}\frac{(e^{ihY}-1)}{h}\right).
+\end{align*}
+\]</span> Let <span class="math inline">\(g_h(Y)=e^{itY}\frac{(e^{ihY}-1)}{h}\)</span>. Note that <span class="math inline">\(\lim_{h\to0}g_h(Y)=iYe^{itY}\)</span> for all <span class="math inline">\(t\)</span>. Also, we have <span class="math display">\[
+|g_h(Y)|=\left|e^{itY}\frac{(e^{ihY}-1)}{h}\right|\leq |e^{itY}|\left|\frac{e^{ihY}-1}{h}\right|.
+\]</span> Since <span class="math inline">\(|e^{ix}-1|=|\int_0^x ie^{iu}du|\leq \int_0^x |ie^{iu}|du=\int_0^x du\leq |x|\)</span>, we have <span class="math display">\[
+|g_h(Y)|\leq |e^{itY}||Y|=|Y|.
+\]</span> Since <span class="math inline">\(\E(|Y|)&lt;\infty\)</span>, by the dominated convergence theorem, we can interchange the limit and expectation to obtain <span class="math display">\[
+\lim_{h\to0}\E(g_h(Y))=\E\left(\lim_{h\to0}g_h(Y)\right)=\E(iYe^{itY})=i\E(Ye^{itY}).
+\]</span> Thus, we have <span class="math display">\[
+\frac{d\varphi_Y(t)}{dt}=i\E\left(Ye^{itY}\right).
+\]</span> Finally, we can resort to the argument used in the proof of part 3 of <a href="#thm-thmC-3" class="quarto-xref">Theorem&nbsp;<span>C.3</span></a> to show that <span class="math inline">\(\frac{d\varphi_Y(t)}{dt}\)</span> is continuous.</p>
+</div>
+<p>We can use <a href="#thm-thmC-4" class="quarto-xref">Theorem&nbsp;<span>C.4</span></a> to derive the Taylor series expansion of the characteristic function <span class="math inline">\(\varphi_Y(t)\)</span> around <span class="math inline">\(t=0\)</span>. Assume that <span class="math inline">\(\E(|Y|^k)&lt;\infty\)</span>, where <span class="math inline">\(k\)</span> is a positive integer. Then, we have <span id="eq-eqC-2"><span class="math display">\[
+\varphi_Y(t)=\sum_{j=0}^{k}\frac{(it)^j}{j!}\mu^{'}_j+o(t^k),
+\tag{C.2}\]</span></span> where <span class="math inline">\(\mu^{'}_j=\E(Y^j)\)</span> is the <span class="math inline">\(j\)</span>th moment of <span class="math inline">\(Y\)</span>, and <span class="math inline">\(o(t^k)\)</span> is a term such that <span class="math inline">\(\lim_{t\to0}o(t^k)/t^k=0\)</span>.</p>
+<div id="exm-exmC-3" class="theorem example">
+<p><span class="theorem-title"><strong>Example C.3 (Characteristic function of normal distribution)</strong></span> Let <span class="math inline">\(Y\sim N(\mu,\sigma^2)\)</span>. Then, the characteristic function of <span class="math inline">\(Y\)</span> is given by <span class="math display">\[
+\varphi_Y(t)=e^{i\mu t-\sigma^2t^2/2}.
+\]</span></p>
+<p>In particular, if <span class="math inline">\(Z\sim N(0,1)\)</span>, then <span class="math inline">\(\varphi_Z(t)=e^{-t^2/2}\)</span>.</p>
+</div>
+</section>
+<section id="the-proof-of-the-central-limit-theorem" class="level2" data-number="C.4">
+<h2 data-number="C.4" class="anchored" data-anchor-id="the-proof-of-the-central-limit-theorem"><span class="header-section-number">C.4</span> The proof of the central limit theorem</h2>
+<p>The <a href="https://en.wikipedia.org/wiki/Central_limit_theorem">central limit theorem</a> introduced in <a href="Chapter18-TheoryRegression.html" class="quarto-xref"><span>Chapter 28</span></a> is known as the Lindeberg-Levy central limit theorem. Its proof is based on the convergence of characteristic functions. Therefore, we first state the following result, known as <a href="https://en.wikipedia.org/wiki/L%C3%A9vy%27s_continuity_theorem">Levy’s continuity theorem</a>, which connects the convergence in distribution to the pointwise convergence of characteristic functions.</p>
+<div id="thm-thmC-5" class="theorem">
+<p><span class="theorem-title"><strong>Theorem C.5 (Levy’s continuity theorem)</strong></span> Let <span class="math inline">\(\{Y_n\}\)</span> be a sequence of random variables with characteristic functions <span class="math inline">\(\{\varphi_{Y_n}(t)\}\)</span> and <span class="math inline">\(Y\)</span> be a random variable with characteristic function <span class="math inline">\(\varphi_Y(t)\)</span>. Then, <span class="math inline">\(Y_n\)</span> converges in distribution to <span class="math inline">\(Y\)</span> if and only if <span class="math inline">\(\varphi_{Y_n}(t)\)</span> converges to <span class="math inline">\(\varphi_Y(t)\)</span> for all real numbers <span class="math inline">\(t\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thmC-5" class="quarto-xref">Theorem&nbsp;<span>C.5</span></a>). </span>See Theorem 2.13 in <span class="citation" data-cites="Vaart1998">Vaart (<a href="references.html#ref-Vaart1998" role="doc-biblioref">1998</a>)</span>.</p>
+</div>
+<p>Below, we use <a href="#thm-thmC-5" class="quarto-xref">Theorem&nbsp;<span>C.5</span></a> to prove the central limit theorem introduced in <a href="Chapter18-TheoryRegression.html" class="quarto-xref"><span>Chapter 28</span></a>.</p>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="Chapter18-TheoryRegression.html#thm-thm25-10-clt" class="quarto-xref">Theorem&nbsp;<span>28.14</span></a>). </span>Define the standardized random variable <span class="math inline">\(Z_i=\frac{Y_i-\mu_Y}{\sigma_Y}\)</span> for <span class="math inline">\(i=1,2,\ldots,n\)</span>. Then, <span class="math inline">\(\E(Z_i)=0\)</span> and <span class="math inline">\(\text{var}(Z_i)=1\)</span>. Let <span class="math inline">\(\varphi_{Z_i}(t)\)</span> be the characteristic function of <span class="math inline">\(Z_i\)</span>. Using <a href="#eq-eqC-2" class="quarto-xref">Equation&nbsp;<span>C.2</span></a>, we can determine the Taylor series expansion of <span class="math inline">\(\varphi_{Z_i}(t)\)</span> around <span class="math inline">\(t=0\)</span> as <span class="math display">\[
+\varphi_{Z_i}(t)=1-\frac{t^2}{2}+o(t^2).
+\]</span></p>
+<p>Define <span class="math inline">\(S_n=\sum_{i=1}^{n}Z_i\)</span>. Note that <span class="math display">\[
+\frac{\bar{Y}-\mu_{\bar{Y}}}{\sigma_{\bar{Y}}}= \frac{1}{\sqrt{n}}\sum_{i=1}^{n}\frac{(Y_i-\mu_Y)}{\sigma_Y}=\frac{1}{\sqrt{n}}\sum_{i=1}^{n}Z_i=\frac{S_n}{\sqrt{n}}.
+\]</span></p>
+<p>Then, the characteristic function of <span class="math inline">\(S_n/\sqrt{n}\)</span> is given by <span class="math display">\[
+\varphi_{S_n/\sqrt{n}}(t)=\left(\varphi_{Z_i}(t/\sqrt{n})\right)^n=\left(1-\frac{t^2}{2n}+o\left(\frac{t^2}{n}\right)\right)^n
+\]</span> Then, as <span class="math inline">\(n\to\infty\)</span>, we have <span class="math display">\[
+\lim_{n\to\infty}\varphi_{S_n/\sqrt{n}}(t)=\lim_{n\to\infty}\left(1-\frac{t^2}{2n}+o\left(\frac{t^2}{n}\right)\right)=e^{-t^2/2}.
+\]</span></p>
+<p>By <a href="#exm-exmC-3" class="quarto-xref">Example&nbsp;<span>C.3</span></a>, <span class="math inline">\(\varphi_Z(t)=e^{-t^2/2}\)</span> is the characteristic function of the standard normal distribution. Therefore, by <a href="#thm-thmC-5" class="quarto-xref">Theorem&nbsp;<span>C.5</span></a>, <span class="math inline">\(S_n/\sqrt{n}\)</span> converges in distribution to <span class="math inline">\(N(0,1)\)</span> as <span class="math inline">\(n\to\infty\)</span>.</p>
+</div>
+</section>
+<section id="the-proof-of-slutskys-theorem" class="level2" data-number="C.5">
+<h2 data-number="C.5" class="anchored" data-anchor-id="the-proof-of-slutskys-theorem"><span class="header-section-number">C.5</span> The proof of Slutsky’s theorem</h2>
+<p>In this section, we provide the proof of Slutsky’s theorem introduced in <a href="Chapter18-TheoryRegression.html" class="quarto-xref"><span>Chapter 28</span></a>. Let <span class="math inline">\(\{X_n\}\)</span> and <span class="math inline">\(\{Y_n\}\)</span> be two sequences of random variables. Assume that <span class="math inline">\(X_n\)</span> converges in distribution to <span class="math inline">\(X\)</span> and <span class="math inline">\(Y_n\)</span> converges in probability to a constant <span class="math inline">\(a\)</span>. Then, Slutsky’s theorem states that <span class="math inline">\(X_n+Y_n\)</span> converges in distribution to <span class="math inline">\(X+a\)</span>, <span class="math inline">\(X_nY_n\)</span> converges in distribution to <span class="math inline">\(aX\)</span>, and <span class="math inline">\(X_n/Y_n\)</span> converges in distribution to <span class="math inline">\(X/a\)</span> if <span class="math inline">\(a\neq0\)</span>. There are alternative proofs of Slutsky’s theorem. Below, we use a version based on the convergence of distribution functions.</p>
+<section id="proof-of-part-1" class="level3" data-number="C.5.1">
+<h3 data-number="C.5.1" class="anchored" data-anchor-id="proof-of-part-1"><span class="header-section-number">C.5.1</span> Proof of part 1</h3>
+<p>Let <span class="math inline">\(F_{X_n+Y_n}\)</span> be the CDF of <span class="math inline">\(X_n+Y_n\)</span>, <span class="math inline">\(F_{X_n}\)</span> the CDF of <span class="math inline">\(X_n\)</span>, and <span class="math inline">\(F_X\)</span> the CDF of <span class="math inline">\(X\)</span>. Let <span class="math inline">\(t\)</span> be the continuity point of <span class="math inline">\(F_{X+a}\)</span>. Then, <span class="math display">\[
+F_{X+a}(t)=P(X+a\leq t)=P(X\leq t-a)=F_X(t-a).
+\]</span> Thus, <span class="math inline">\(t-a\)</span> is a continuity point of <span class="math inline">\(F_X\)</span>. For any <span class="math inline">\(\varepsilon&gt;0\)</span>, we have <span id="eq-eqC-3"><span class="math display">\[
+\begin{align*}
+F_{X_n+Y_n}(t)&amp;=P(X_n+Y_n\leq t)=P(X_n+Y_n\leq t,|Y_n-a|&lt;\varepsilon)\\
+&amp;+P(X_n+Y_n\leq t,|Y_n-a|\geq\varepsilon)\\
+&amp;\leq P(X_n+Y_n\leq t,|Y_n-a|&lt;\varepsilon)+P(|Y_n-a|\geq\varepsilon),
+\end{align*}
+\tag{C.3}\]</span></span> where the inequality follows from the fact that <span class="math inline">\(\{X_n+Y_n\leq t,|Y_n-a|\geq\varepsilon\}\subseteq \{|Y_n-a|\geq\varepsilon\}\)</span>. Thus, we have <span id="eq-eqC-4"><span class="math display">\[
+\begin{align*}
+F_{X_n+Y_n}(t)-P(|Y_n-a|\geq\varepsilon)\leq P(X_n+Y_n\leq t,|Y_n-a|&lt;\varepsilon).
+\end{align*}
+\tag{C.4}\]</span></span> Note that if <span class="math inline">\(|Y_n-a|&lt;\varepsilon\)</span>, then <span class="math inline">\(a-\varepsilon&lt;Y_n&lt;a+\varepsilon\)</span>. Thus, on the event <span class="math inline">\(\{|Y_n-a|&lt;\varepsilon\}\)</span>, we have <span id="eq-eqC-5"><span class="math display">\[
+\begin{align*}
+&amp;\{X_n\leq t-(a+\varepsilon),|Y_n-a|&lt;\varepsilon\}\\
+&amp;\subseteq\{X_n+Y_n\leq t,|Y_n-a|&lt;\varepsilon\}\\
+&amp;\subseteq \{X_n\leq t-(a-\varepsilon), |Y_n-a|&lt;\varepsilon\}.
+\end{align*}
+\tag{C.5}\]</span></span></p>
+<p>From the left-hand side of <a href="#eq-eqC-5" class="quarto-xref">Equation&nbsp;<span>C.5</span></a>, we obtain <span id="eq-eqC-6"><span class="math display">\[
+\begin{align*}
+&amp;F_{X_n}(t-(a+\varepsilon))=P(X_n\leq t-(a+\varepsilon))\\
+&amp;=P(X_n\leq t-(a+\varepsilon),|Y_n-a|&lt;\varepsilon)+P(X_n\leq t-(a+\varepsilon),|Y_n-a|\geq\varepsilon)\\
+&amp;\leq P(X_n\leq t-(a+\varepsilon),|Y_n-a|&lt;\varepsilon)+P(|Y_n-a|\geq\varepsilon)\\
+&amp;\leq P(X_n+Y_n\leq t)+P(|Y_n-a|\geq\varepsilon)\\
+&amp;=F_{X_n+Y_n}(t)+P(|Y_n-a|\geq\varepsilon),
+\end{align*}
+\tag{C.6}\]</span></span> where the last inequality follows from <a href="#eq-eqC-5" class="quarto-xref">Equation&nbsp;<span>C.5</span></a>. Similarly, from the right-hand side of the inequality in <a href="#eq-eqC-5" class="quarto-xref">Equation&nbsp;<span>C.5</span></a>, we have <span id="eq-eqC-7"><span class="math display">\[
+\begin{align*}
+&amp;F_{X_n}(t-(a-\varepsilon)=P(X_n\leq t-(a-\varepsilon))\\
+&amp;=P(X_n\leq t-(a-\varepsilon),|Y_n-a|&lt;\varepsilon)+P(X_n\leq t-(a-\varepsilon),|Y_n-a|\geq\varepsilon)\\
+&amp;\geq P(X_n\leq t-(a-\varepsilon),|Y_n-a|&lt;\varepsilon)\\
+&amp;\geq P(X_n+Y_n\leq t,|Y_n-a|&lt;\varepsilon)\\
+&amp;=F_{X_n+Y_n}(t)-P(|Y_n-a|\geq\varepsilon)\\
+\end{align*}
+\tag{C.7}\]</span></span> where the last equality follows from <a href="#eq-eqC-4" class="quarto-xref">Equation&nbsp;<span>C.4</span></a>. Then, combining <a href="#eq-eqC-6" class="quarto-xref">Equation&nbsp;<span>C.6</span></a> and <a href="#eq-eqC-7" class="quarto-xref">Equation&nbsp;<span>C.7</span></a> yields</p>
+<p><span class="math display">\[
+F_{X_n}(t-(a-\varepsilon))-P(|Y_n-a|\geq\varepsilon)\leq F_{X_n+Y_n}(t)\leq F_{X_n}(t-(a+\varepsilon))+P(|Y_n-a|\geq\varepsilon).
+\]</span></p>
+<p>Since <span class="math inline">\(X_n\xrightarrow{d}X\)</span>, we have <span class="math inline">\(F_{X_n}\to F_X\)</span> at the continuity points of <span class="math inline">\(F_X\)</span>, and since <span class="math inline">\(Y_n\xrightarrow{p}a\)</span>, we have <span class="math inline">\(P(|Y_n-a|\geq\varepsilon)\to0\)</span>. Thus, taking the limit on both sides of the above inequality yields <span class="math display">\[
+F_X(t-(a-\varepsilon))\leq \liminf_{n\to\infty}F_{X_n+Y_n}(t)\leq \limsup_{n\to\infty}F_{X_n+Y_n}(t)\leq F_X(t-(a+\varepsilon)).
+\]</span></p>
+<p>Finally, letting <span class="math inline">\(\varepsilon\to0\)</span> and using the continuity of <span class="math inline">\(F_X\)</span> at <span class="math inline">\(t-a\)</span>, we obtain <span class="math display">\[
+\lim_{n\to\infty}F_{X_n+Y_n}(t)=F_X(t-a).
+\]</span></p>
+</section>
+<section id="proof-of-part-2" class="level3" data-number="C.5.2">
+<h3 data-number="C.5.2" class="anchored" data-anchor-id="proof-of-part-2"><span class="header-section-number">C.5.2</span> Proof of part 2</h3>
+<p>First, we assume that <span class="math inline">\(a\ne0\)</span>. Let <span class="math inline">\(t\)</span> be the continuity point of <span class="math inline">\(F_{aX}\)</span>. Choose <span class="math inline">\(\varepsilon\in(0, |a|/2)\)</span>. Then, as in the proof of part 1, we split <span class="math inline">\(F_{X_nY_n}(t)\)</span> into two parts: <span class="math display">\[
+\begin{align*}
+F_{X_nY_n}(t)&amp;=P(X_nY_n\leq t)=P(X_nY_n\leq t,|Y_n-a|&lt;\varepsilon)\\
+&amp;+P(X_nY_n\leq t,|Y_n-a|\geq\varepsilon)\\
+&amp;\leq P(X_nY_n\leq t,|Y_n-a|&lt;\varepsilon)+P(|Y_n-a|\geq\varepsilon).
+\end{align*}
+\]</span></p>
+<p>On the event <span class="math inline">\(\{|Y_n-a|&lt;\varepsilon\}\)</span>, the sign of <span class="math inline">\(Y_n\)</span> is the same as that of <span class="math inline">\(a\)</span> and <span class="math inline">\(a-\varepsilon&lt;Y_n&lt;a+\varepsilon\)</span>. Then, on the event <span class="math inline">\(\{|Y_n-a|&lt;\varepsilon\}\)</span>, we have <span id="eq-eqC-8"><span class="math display">\[
+\begin{align*}
+&amp;\{X_n\leq t/(a+\varepsilon), |Y_n-a|&lt;\varepsilon\}\\
+&amp;\subseteq\{X_nY_n\leq t,|Y_n-a|&lt;\varepsilon\}\\
+&amp;\subseteq \{X_n\leq t/(a-\varepsilon), |Y_n-a|&lt;\varepsilon\}.
+\end{align*}
+\tag{C.8}\]</span></span></p>
+<p>Similar to the proof of part 1, we can use <a href="#eq-eqC-8" class="quarto-xref">Equation&nbsp;<span>C.8</span></a> to show that <span class="math display">\[
+F_{X_n}(t/(a-\varepsilon))-P(|Y_n-a|\geq\varepsilon)\leq F_{X_nY_n}(t)\leq F_{X_n}(t/(a+\varepsilon))+P(|Y_n-a|\geq\varepsilon).
+\]</span></p>
+<p>Let <span class="math inline">\(n\to\infty\)</span>. Since <span class="math inline">\(X_n\xrightarrow{d}X\)</span> and <span class="math inline">\(Y_n\xrightarrow{p}a\)</span>, we have <span class="math display">\[
+F_X(t/(a-\varepsilon))\leq \liminf_{n\to\infty}F_{X_nY_n}(t)\leq \limsup_{n\to\infty}F_{X_nY_n}(t)\leq F_X(t/(a+\varepsilon)).
+\]</span> Finally, letting <span class="math inline">\(\varepsilon\to0\)</span> and using the continuity of <span class="math inline">\(F_X\)</span> at <span class="math inline">\(t/a\)</span>, we obtain <span class="math display">\[
+\lim_{n\to\infty}F_{X_nY_n}(t)=F_X(t/a)=P(X\leq t/a)=P(aX\leq t)=F_{aX}(t).
+\]</span></p>
+<p>If <span class="math inline">\(a=0\)</span>, it is enough to show that <span class="math inline">\(X_nY_n\xrightarrow{p}0\)</span>. Since <span class="math inline">\(X_n\xrightarrow{d}X\)</span>, the sequence <span class="math inline">\(\{X_n\}\)</span> is tight. Thus, for any <span class="math inline">\(\varepsilon_1&gt;0\)</span>, there exists a constant <span class="math inline">\(M&gt;0\)</span> such that <span class="math inline">\(P(|X_n|&gt;M)&lt;\varepsilon_1\)</span> for all <span class="math inline">\(n\)</span>. For any <span class="math inline">\(\varepsilon_2&gt;0\)</span>, we have <span class="math display">\[
+\begin{align*}
+P(|X_nY_n|&gt;\varepsilon_2)&amp;=P(|X_nY_n|&gt;\varepsilon_2,|X_n|\leq M)+P(|X_nY_n|&gt;\varepsilon_2,|X_n|&gt;M)\\
+&amp;\leq P(|Y_n|&gt;\varepsilon_2/M)+P(|X_n|&gt;M).
+\end{align*}
+\]</span></p>
+<p>By choosing <span class="math inline">\(M\)</span> big enough, we can make <span class="math inline">\(P(|X_n|&gt;M)\)</span> smaller than any given positive number, i.e., <span class="math inline">\(P(|X_n|&gt;M)&lt;\varepsilon_1\)</span>. Since <span class="math inline">\(Y_n\xrightarrow{p}0\)</span>, we have <span class="math inline">\(P(|Y_n|&gt;\varepsilon_2/M)\to0\)</span> as <span class="math inline">\(n\to\infty\)</span>. Thus, <span class="math inline">\(\limsup_{n\to\infty}P(|X_nY_n|&gt;\varepsilon_2)\leq\varepsilon_1\)</span>. Since <span class="math inline">\(\varepsilon_1\)</span> can be arbitrarily small, we have <span class="math inline">\(P(|X_nY_n|&gt;\varepsilon_2)\to0\)</span> as <span class="math inline">\(n\to\infty\)</span>. Therefore, <span class="math inline">\(X_nY_n\xrightarrow{p}0\)</span>.</p>
+</section>
+<section id="proof-of-part-3" class="level3" data-number="C.5.3">
+<h3 data-number="C.5.3" class="anchored" data-anchor-id="proof-of-part-3"><span class="header-section-number">C.5.3</span> Proof of part 3</h3>
+<p>Let <span class="math inline">\(t\)</span> be the continuity point of <span class="math inline">\(F_{X/a}\)</span>. Choose <span class="math inline">\(\varepsilon\in(0, |a|/2)\)</span>. Then, as in the proof of part 1, we split <span class="math inline">\(F_{X_n/Y_n}(t)\)</span> into two parts: <span class="math display">\[
+\begin{align*}
+F_{X_n/Y_n}(t)&amp;=P(X_n/Y_n\leq t)=P(X_n/Y_n\leq t,|Y_n-a|&lt;\varepsilon)\\
+&amp;+P(X_n/Y_n\leq t,|Y_n-a|\geq\varepsilon)\\
+&amp;\leq P(X_n/Y_n\leq t,|Y_n-a|&lt;\varepsilon)+P(|Y_n-a|\geq\varepsilon).
+\end{align*}
+\]</span></p>
+<p>On the event <span class="math inline">\(\{|Y_n-a|&lt;\varepsilon\}\)</span>, the sign of <span class="math inline">\(Y_n\)</span> is the same as that of <span class="math inline">\(a\)</span> and <span class="math inline">\(a-\varepsilon&lt;Y_n&lt;a+\varepsilon\)</span>. Then, on the event <span class="math inline">\(\{|Y_n-a|&lt;\varepsilon\}\)</span>, we have</p>
+<p><span id="eq-eqC-9"><span class="math display">\[
+\begin{align*}
+&amp;\{X_n\leq t(a-\varepsilon),|Y_n-a|&lt;\varepsilon\}\\
+&amp;\subseteq\{X_n/Y_n\leq t,|Y_n-a|&lt;\varepsilon\}\\
+&amp;\subseteq \{X_n\leq t/(a+\varepsilon),|Y_n-a|&lt;\varepsilon\}.
+\end{align*}
+\tag{C.9}\]</span></span></p>
+<p>Note that the inequalities are reversed if <span class="math inline">\(a&lt;0\)</span>. Thus, as in the case of part 1, we can use <a href="#eq-eqC-9" class="quarto-xref">Equation&nbsp;<span>C.9</span></a> to show that <span class="math display">\[
+F_{X_n}(t/(a+\varepsilon))-P(|Y_n-a|\geq\varepsilon)\leq F_{X_n/Y_n}(t)\leq F_{X_n}(t/(a-\varepsilon))+P(|Y_n-a|\geq\varepsilon).
+\]</span></p>
+<p>Let <span class="math inline">\(n\to\infty\)</span>. Since <span class="math inline">\(X_n\xrightarrow{d}X\)</span> and <span class="math inline">\(Y_n\xrightarrow{p}a\)</span>, we have <span class="math display">\[
+F_X(t/(a-\varepsilon))\leq \liminf_{n\to\infty}F_{X_n/Y_n}(t)\leq \limsup_{n\to\infty}F_{X_n/Y_n}(t)\leq F_X(t/(a+\varepsilon)).
+\]</span> Finally, letting <span class="math inline">\(\varepsilon\to0\)</span> and using the continuity of <span class="math inline">\(F_X\)</span> at <span class="math inline">\(t/a\)</span>, we obtain <span class="math display">\[
+\lim_{n\to\infty}F_{X_n/Y_n}(t)=F_X(t/a)=P(X\leq t/a)=P(X/a\leq t)=F_{X/a}(t).
+\]</span></p>
+</section>
+</section>
+<section id="bivariate-normal-distribution" class="level2" data-number="C.6">
+<h2 data-number="C.6" class="anchored" data-anchor-id="bivariate-normal-distribution"><span class="header-section-number">C.6</span> Bivariate normal distribution</h2>
+<p>The bivariate normal PDF of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> is given by <span class="math display">\[
+f_{X,Y}(x,y)=\frac{1}{2\pi\sigma_X\sigma_Y\sqrt{1-\rho^2}}e^{-\frac{1}{2(1-\rho^2)}\left(\frac{(x-\mu_X)^2}{\sigma_X^2}+\frac{(y-\mu_Y)^2}{\sigma_Y^2}-\frac{2\rho(x-\mu_X)(y-\mu_Y)}{\sigma_X\sigma_Y}\right)},
+\]</span> where <span class="math inline">\(\rho\)</span> is the correlation coefficient between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. The marginal distributions of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are univariate normal distributions: <span class="math inline">\(X\sim N(\mu_X,\sigma^2_X)\)</span> and <span class="math inline">\(Y\sim N(\mu_Y,\sigma^2_Y)\)</span>.</p>
+<p>In <a href="#fig-bivariate-normal" class="quarto-xref">Figure&nbsp;<span>C.1</span></a>, we plot the bivariate normal distribution with <span class="math inline">\(\mu_X=\mu_Y=0\)</span>, <span class="math inline">\(\sigma_X=\sigma_Y=1\)</span>, and <span class="math inline">\(\rho=0.5\)</span>. The 3D plot shows the joint PDF of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>.</p>
+<div id="cell-fig-bivariate-normal" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3D plot of bivariate normal distribution</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">0</span>]  <span class="co"># mean</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> [[<span class="dv">1</span>, <span class="fl">0.5</span>], [<span class="fl">0.5</span>, <span class="dv">1</span>]]  <span class="co"># covariance matrix</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">100</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">100</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>X, Y <span class="op">=</span> np.meshgrid(x, y)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> np.dstack((X, Y))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>rv <span class="op">=</span> multivariate_normal(mu, sigma)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a 3D plot</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> fig.add_subplot(<span class="dv">111</span>, projection<span class="op">=</span><span class="st">'3d'</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>ax.plot_surface(X, Y, rv.pdf(pos), cmap<span class="op">=</span><span class="st">'viridis'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, antialiased<span class="op">=</span><span class="va">True</span>,rstride<span class="op">=</span><span class="dv">3</span>, cstride<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'X-axis'</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Y-axis'</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#ax.set_zlabel('Probability Density')</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#ax.set_title('Bivariate Normal Distribution')</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the limits, ticks and view angle</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>ax.set_zlim(<span class="dv">0</span>, <span class="fl">0.2</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>ax.set_zticks(np.linspace(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="dv">5</span>))</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>ax.view_init(<span class="dv">30</span>, <span class="op">-</span><span class="dv">27</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-bivariate-normal" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bivariate-normal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="AppendixC_files/figure-html/fig-bivariate-normal-output-1.png" width="345" height="326" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bivariate-normal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;C.1: 3D plot of bivariate normal distribution
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In <a href="#fig-normal-scatter" class="quarto-xref">Figure&nbsp;<span>C.2</span></a>, we plot the scatter plots of random draws obtained from the bivariate normal distributions that have different correlation coefficients. The correlation coefficient <span class="math inline">\(\rho\)</span> takes values from <span class="math inline">\(\{-0.8, 0, 0.4, 0.8\}\)</span>. The scatter plots show the relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> for different values of <span class="math inline">\(\rho\)</span>. As <span class="math inline">\(\rho\)</span> gets larger in absolute value, the points in the scatter plot become more aligned along the line <span class="math inline">\(y=x\)</span> or <span class="math inline">\(y=-x\)</span>.</p>
+<div id="cell-fig-normal-scatter" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a 2x2 subplot for the plots</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the mean vector</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>mean_vector <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">0</span>])</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the values for rho</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>rho <span class="op">=</span> [<span class="op">-</span><span class="fl">0.8</span>, <span class="dv">0</span>, <span class="fl">0.4</span>, <span class="fl">0.8</span>]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate over the rho values and corresponding subplot axes</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, rho <span class="kw">in</span> <span class="bu">zip</span>(axes.flatten(), rho):</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define the covariance matrix</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    cov_matrix <span class="op">=</span> np.array([[<span class="dv">1</span>, rho], [rho, <span class="dv">1</span>]])</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate random samples from the multivariate normal distribution</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    samples <span class="op">=</span> np.random.multivariate_normal(mean_vector, cov_matrix, size<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot the samples</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    ax.scatter(samples[:, <span class="dv">0</span>], samples[:, <span class="dv">1</span>], alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"$</span><span class="ch">\\</span><span class="ss">rho$=</span><span class="sc">{</span>rho<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"X"</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Y"</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">'equal'</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust layout for better spacing</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-normal-scatter" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-normal-scatter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="AppendixC_files/figure-html/fig-normal-scatter-output-1.png" width="758" height="565" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normal-scatter-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;C.2: Scatter plots of random samples from a bivariate normal distribution with different correlation coefficients
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In <a href="#fig-normal-contour" class="quarto-xref">Figure&nbsp;<span>C.3</span></a>, we plot the contour plots of the bivariate normal distributions that have different correlation coefficients. The contour plots show the level curves of the bivariate normal distribution for different values of <span class="math inline">\(\rho\)</span>. <a href="#fig-normal-contour" class="quarto-xref">Figure&nbsp;<span>C.3</span></a> shows that as <span class="math inline">\(\rho\)</span> gets larger in absolute value, the contours stretch along the line <span class="math inline">\(y=x\)</span> or <span class="math inline">\(y=-x\)</span>.</p>
+<div id="cell-fig-normal-contour" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a 2x2 subplot for the plots</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the mean vector</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>mean_vector <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">0</span>])</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the values for rho</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>rho <span class="op">=</span> [<span class="op">-</span><span class="fl">0.8</span>, <span class="dv">0</span>, <span class="fl">0.4</span>, <span class="fl">0.8</span>]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate over the rho values and corresponding subplot axes</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, rho <span class="kw">in</span> <span class="bu">zip</span>(axes.flatten(), rho):</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define the covariance matrix</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    cov_matrix <span class="op">=</span> np.array([[<span class="dv">1</span>, rho], [rho, <span class="dv">1</span>]])</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a grid of points</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">100</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">100</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    X, Y <span class="op">=</span> np.meshgrid(x, y)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> np.dstack((X, Y))</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate the probability density function</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    rv <span class="op">=</span> multivariate_normal(mean_vector, cov_matrix)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    Z <span class="op">=</span> rv.pdf(pos)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot the contour</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    ax.contour(X, Y, Z, levels<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"$</span><span class="ch">\\</span><span class="ss">rho$=</span><span class="sc">{</span>rho<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"X"</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Y"</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">'equal'</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust layout for better spacing</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-normal-contour" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-normal-contour-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="AppendixC_files/figure-html/fig-normal-contour-output-1.png" width="756" height="565" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normal-contour-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;C.3: Contour plots of bivariate normal distribution with different correlation coefficients
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>If <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are have a joint normal distribution, then the conditional distribution of <span class="math inline">\(Y\)</span> given <span class="math inline">\(X=x\)</span> is also a normal distribution: <span class="math inline">\(Y|X=x\sim N(\mu_{Y|X},\sigma^2_{Y|X})\)</span>, where <span class="math display">\[
+\begin{align*}
+\mu_{Y|X}&amp;=\mu_Y+\rho\frac{\sigma_Y}{\sigma_X}(x-\mu_X),\\
+\sigma^2_{Y|X}&amp;=\sigma^2_Y(1-\rho^2).
+\end{align*}
+\]</span></p>
+<p>The conditional distribution of <span class="math inline">\(X\)</span> given <span class="math inline">\(Y=y\)</span> is also a normal distribution: <span class="math inline">\(X|Y=y\sim N(\mu_{X|Y},\sigma^2_{X|Y})\)</span>, where <span class="math display">\[
+\begin{align*}
+\mu_{X|Y}&amp;=\mu_X+\rho\frac{\sigma_X}{\sigma_Y}(y-\mu_Y),\\
+\sigma^2_{X|Y}&amp;=\sigma^2_X(1-\rho^2).
+\end{align*}
+\]</span></p>
+<p>In Appendix D, we define the multivariate normal distribution that extends the bivariate normal distribution to <span class="math inline">\(n\)</span> dimensions.</p>
+</section>
+<section id="chi-square-distribution" class="level2" data-number="C.7">
+<h2 data-number="C.7" class="anchored" data-anchor-id="chi-square-distribution"><span class="header-section-number">C.7</span> Chi-square distribution</h2>
+<p>The chi-square distribution with <span class="math inline">\(k\)</span> degrees of freedom is defined as the distribution of the sum of the squares of <span class="math inline">\(k\)</span> independent standard normal random variables. If <span class="math inline">\(X\sim\chi^2_k\)</span>, then its PDF is given by <span class="math display">\[
+f_X(x)=\frac{1}{2^{k/2}\Gamma(k/2)}x^{k/2-1}e^{-x/2},\quad x&gt;0.
+\]</span> where <span class="math inline">\(\Gamma(\alpha)=\int_{0}^{\infty}t^{\alpha-1}e^{-t}\text{d}t\)</span> is the gamma function.</p>
+<p>If <span class="math inline">\(X\sim\chi^2_k\)</span>, then <span class="math inline">\(\E(X)=k\)</span> and <span class="math inline">\(\text{var}(X)=2k\)</span>. Its moment generating function is given by <span class="math inline">\(M_X(t)=\left(1-2t\right)^{-k/2}\)</span> for <span class="math inline">\(t&lt;1/2\)</span>.</p>
+<p>In <a href="Chapter2-ReviewProbability.html" class="quarto-xref"><span>Chapter 12</span></a>, we provide the PDF and CDF plots of the chi-square distribution with <span class="math inline">\(k=3,4,10\)</span> degrees of freedom. The PDF of the chi-square distribution is right-skewed, and as <span class="math inline">\(k\)</span> increases, the PDF becomes less skewed and more symmetric. Indeed, if <span class="math inline">\(X_k\sim\chi^2_k\)</span>, then by the central limit theorem introduced in <a href="Chapter18-TheoryRegression.html" class="quarto-xref"><span>Chapter 28</span></a>, as <span class="math inline">\(k\to\infty\)</span>, we have <span class="math display">\[
+\frac{X_k-k}{\sqrt{2k}}\xrightarrow{d}N(0,1).
+\]</span></p>
+<p>The chi-square distribution is also related to the gamma distribution. The chi-square distribution with <span class="math inline">\(k\)</span> degrees of freedom is equivalent to the gamma distribution with shape parameter <span class="math inline">\(k/2\)</span> and scale parameter <span class="math inline">\(2\)</span>. For further details, see the Wikipedia page on the <a href="https://en.wikipedia.org/wiki/Chi-squared_distribution">chi-square distribution</a>.</p>
+</section>
+<section id="student-t-distribution" class="level2" data-number="C.8">
+<h2 data-number="C.8" class="anchored" data-anchor-id="student-t-distribution"><span class="header-section-number">C.8</span> Student t distribution</h2>
+<p>Let <span class="math inline">\(Z\sim N(0,1)\)</span> and <span class="math inline">\(W\sim\chi^2_{\nu}\)</span>. Assume that <span class="math inline">\(Z\)</span> and <span class="math inline">\(W\)</span> are independent. Then, the random variable <span class="math display">\[
+T=\frac{Z}{\sqrt{W/\nu}},
+\]</span></p>
+<p>has Student <span class="math inline">\(t\)</span> distribution with <span class="math inline">\(\nu\)</span> degrees of freedom, and we write <span class="math inline">\(T\sim t_{\nu}\)</span>. The PDF of <span class="math inline">\(T\)</span> is given by <span class="math display">\[
+\begin{align*}
+f_T(t)=
+\begin{cases}
+\frac{\Gamma\left(\frac{\nu+1}{2}\right)}{\sqrt{\nu\pi}\Gamma\left(\frac{\nu}{2}\right)}\frac{1}{\left(1+\frac{t^2}{\nu}\right)^{(\nu+1)/2}},\quad -\infty&lt;t&lt;\infty,\\
+0,\quad\text{otherwise}.
+\end{cases}
+\end{align*}
+\]</span></p>
+<p>The moment-generating function of <span class="math inline">\(T\)</span> does not exist. The first moment is given by <span class="math inline">\(\E(T)=0\)</span> and the second moment is given by <span class="math inline">\(\E(T^2)=\frac{\nu}{\nu-2}\)</span> for <span class="math inline">\(\nu&gt;2\)</span>. The variance is given by <span class="math inline">\(\text{var}(T)=\frac{\nu}{\nu-2}\)</span> for <span class="math inline">\(\nu&gt;2\)</span>.</p>
+<p>In <a href="Chapter2-ReviewProbability.html" class="quarto-xref"><span>Chapter 12</span></a>, we provide the PDF and CDF plots of the Student <span class="math inline">\(t\)</span> distribution with <span class="math inline">\(\nu=1,10\)</span> degrees of freedom. The PDF of the Student <span class="math inline">\(t\)</span> distribution is similar to that of the standard normal distribution, but it has heavier tails. As <span class="math inline">\(\nu\)</span> increases, the PDF of the Student <span class="math inline">\(t\)</span> distribution approaches that of the standard normal distribution. To see this, we write <span class="math inline">\(T\)</span> as <span class="math display">\[
+T=\frac{Z}{\sqrt{W/\nu}}=\frac{Z}{\sqrt{\frac{1}{\nu}\sum_{i=1}^{\nu}X_i^2}},
+\]</span> where <span class="math inline">\(X_1,X_2,\ldots,X_{\nu}\)</span> are independent random variables that have standard normal distributions. By the law of large numbers, <span class="math inline">\(\frac{1}{\nu}\sum_{i=1}^{\nu}X_i^2\xrightarrow{p}\E(X^2_i)=1\)</span> as <span class="math inline">\(\nu\to\infty\)</span>. Thus, by Slutsky’s theorem introduced in <a href="Chapter18-TheoryRegression.html" class="quarto-xref"><span>Chapter 28</span></a>, as <span class="math inline">\(\nu\to\infty\)</span>, we have <span class="math display">\[
+T\stackrel{d}{\to}Z\sim N(0,1).
+\]</span></p>
+</section>
+<section id="f-distribution" class="level2" data-number="C.9">
+<h2 data-number="C.9" class="anchored" data-anchor-id="f-distribution"><span class="header-section-number">C.9</span> F distribution</h2>
+<p>Let <span class="math inline">\(W_1\sim\chi^2_{\nu_1}\)</span> and <span class="math inline">\(W_2\sim\chi^2_{\nu_2}\)</span>. Assume that <span class="math inline">\(W_1\)</span> and <span class="math inline">\(W_2\)</span> are independent. Then, the random variable defined by <span class="math display">\[
+F=\frac{W_1/\nu_1}{W_2/\nu_2},
+\]</span> has <span class="math inline">\(F\)</span> distribution with (numerator) <span class="math inline">\(\nu_1\)</span> and (denominator) <span class="math inline">\(\nu_2\)</span> degrees of freedom. We write <span class="math inline">\(F\sim F_{\nu_1,\nu_2}\)</span>. If <span class="math inline">\(U\sim F_{\nu_1,\nu_2}\)</span>, then its PDF is given by <span class="math display">\[
+\begin{align*}
+f_U(u)=\frac{\Gamma\left(\frac{\nu_1+\nu_2}{2}\right)}{\Gamma\left(\frac{\nu_1}{2}\right)\Gamma\left(\frac{\nu_2}{2}\right)}
+\left(\frac{\nu_1}{\nu_2}\right)^{\nu_1/2}\frac{u^{\frac{\nu_1}{2}}-1}{\left(1+\frac{\nu_1}{\nu_2}u\right)^{(\nu_1+\nu_2)/2}},\quad u&gt;0.
+\end{align*}
+\]</span></p>
+<p>The moment-generating function of <span class="math inline">\(F\)</span> does not exist. The first moment is given by <span class="math inline">\(\E(F)=\frac{\nu_2}{\nu_2-2}\)</span> for <span class="math inline">\(\nu_2&gt;2\)</span>. The variance is given by <span class="math inline">\(\text{var}(F)=\frac{2\nu_2^2(\nu_1+\nu_2-2)}{\nu_1(\nu_2-2)^2(\nu_2-4)}\)</span> for <span class="math inline">\(\nu_2&gt;4\)</span>.</p>
+<p>We provide the PDF and CDF plots of the <span class="math inline">\(F\)</span> distribution with different degrees of freedom in <a href="Chapter2-ReviewProbability.html" class="quarto-xref"><span>Chapter 12</span></a>. The PDF of the <span class="math inline">\(F\)</span> distribution is right-skewed, and as <span class="math inline">\(\nu_2\)</span> increases, the PDF approaches that of the chi-square distribution. Indeed, we discuss that <span class="math inline">\(F_{\nu_1,\nu_2}\)</span> converges to <span class="math inline">\(F_{\nu_1,\infty}=\chi^2_{\nu_1}/\nu_1\)</span> as <span class="math inline">\(\nu_2\to\infty\)</span>. To see this, we write <span class="math inline">\(F\)</span> as <span class="math display">\[
+F=\frac{W_1/\nu_1}{W_2/\nu_2}=\frac{W_1/\nu_1}{\frac{1}{\nu_2}\sum_{i=1}^{\nu_2}X_i^2},
+\]</span> where <span class="math inline">\(X_1,X_2,\ldots,X_{\nu_2}\)</span> are independent random variables that have standard normal distributions. By the law of large numbers, <span class="math inline">\(\frac{W_2}{\nu_2}=\frac{1}{\nu_2}\sum_{i=1}^{\nu_2}X_i^2\xrightarrow{p}\E(X_i^2)=1\)</span> as <span class="math inline">\(\nu_2\to\infty\)</span>. Then, by Slutsky’s theorem introduced in <a href="Chapter18-TheoryRegression.html" class="quarto-xref"><span>Chapter 28</span></a>, as <span class="math inline">\(\nu_2\to\infty\)</span>, we have <span class="math display">\[
+F\stackrel{d}{\to}W_1/\nu_1\sim \chi^2_{\nu_1}/\nu_1.
+\]</span></p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Vaart1998" class="csl-entry" role="listitem">
+Vaart, A. W. van der. 1998. <em>Asymptotic Statistics</em>. Cambridge Series in Statistical and Probabilistic Mathematics. Cambridge University Press.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./AppendixB.html" class="pagination-link" aria-label="Appendix for Chapter 24">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./AppendixD.html" class="pagination-link" aria-label="Appendix for Chapter 29">
+        <span class="nav-page-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/AppendixC.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

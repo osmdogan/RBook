@@ -1,0 +1,1452 @@
+# Appendix for Chapter 29 {#sec-appendixD}
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+plt.style.use('seaborn-v0_8-darkgrid')  
+from scipy.stats import multivariate_normal
+from sympy import symbols, solve
+from scipy.linalg import sqrtm
+import time
+```
+
+```{python}
+#| echo: false
+from IPython.core.interactiveshell import InteractiveShell
+InteractiveShell.ast_node_interactivity = "all"
+```
+
+## Introduction
+In this appendix, we introduce some topics from linear algebra, vector calculus, and random vectors that are essential for econometric analysis. Our treatment of these topics is not exhaustive, and we refer the reader to @Abadir2005 and @Strang2023 for a more detailed treatment.
+
+## Vectors
+A **vector** is a one-dimensional array of numbers. We use lowercase bold symbols such as $\bs{x}$, $\bs{a}$, or $\bs{b}$ to represent vectors. Let $\bs{x}$ be an $n \times 1$ column vector and $\bs{y}$ be a $1 \times n$ row vector. We denote these vectors as
+
+$$
+\begin{align}
+\bs{x} = \begin{pmatrix}
+x_1 \\
+x_2 \\
+\vdots \\
+x_n
+\end{pmatrix}, \quad \text{and} \quad \bs{y} = (y_1, y_2, \ldots, y_n),
+\end{align}
+$$
+where $x_i$ and $y_i$ are the $i$th elements of the vectors $\bs{x}$ and $\bs{y}$, respectively. The transpose of the vector $\bs{x}$ is denoted by $\bs{x}^{'}$, which is a $1 \times n$ row vector. The transpose of the row vector $\bs{y}$ is denoted by $\bs{y}^{'}$, which is an $n \times 1$ column vector. 
+
+Let $\bs{x}\in\mathbb{R}^n$ and $\bs{y}\in\mathbb{R}^n$. Some basic operations associated with vectors are defined as follows:
+
+- Addition: $\bs{x} + \bs{y} = (x_1 + y_1, x_2 + y_2, \ldots, x_n + y_n)^{'}$.
+- Scalar multiplication: $\alpha \bs{x} = (\alpha x_1, \alpha x_2, \ldots, \alpha x_n)^{'}$, where $\alpha\in\mathbb{R}$.
+- Dot product: $\langle\bs{x},\bs{y}\rangle=\bs{x}^{'} \bs{y} = x_1 y_1 + x_2 y_2 + \ldots + x_n y_n$.
+
+:::{#def-orthogonal-vector}
+## Orthogonal vectors
+Two vectors $\bs{x}$ and $\bs{y}$ are said to be **orthogonal** if their dot product is zero, i.e., $\langle\bs{x},\bs{y}\rangle = \bs{x}^{'} \bs{y} = 0$.
+:::
+
+:::{#def-vector-space}
+## Vector space
+A **vector space** is a set of vectors that is closed under vector addition and scalar multiplication. 
+:::
+A vector space must satisfy the following properties:
+
+1. Closure under addition: If $\bs{x}$ and $\bs{y}$ are in the vector space, then $\bs{x} + \bs{y}$ is also in the vector space.
+2. Closure under scalar multiplication: If $\bs{x}$ is in the vector space and $\alpha$ is a scalar, then $\alpha \bs{x}$ is also in the vector space.
+
+:::{#exm-vector-space}
+$\mathbb{R}^2$ is the set of all $2\times1$ vectors. The set of all $2\times1$ vectors is a vector space because it is closed under addition and scalar multiplication. For example, if $\bs{x} = (x_1, x_2)^{'}$ and $\bs{y} = (y_1, y_2)^{'}$, then $\bs{x} + \bs{y} = (x_1 + y_1, x_2 + y_2)^{'}$ is also a $2\times1$ vector. Similarly, if $\alpha\in\mathbb{R}$, then $\alpha \bs{x} = (\alpha x_1, \alpha x_2)^{'}$ is also a $2\times1$ vector.
+:::
+
+:::{#def-span-generate}
+## Span
+A subset $W$ of a vector space $V$ is said to **span** (or generate) $V$ if every vector in $V$ can be expressed as a linear combination of the vectors in $W$. That is, if $\bs{v}\in V$, then there exist scalars $c_1, c_2, \ldots, c_k$ and vectors $\bs{w}_1, \bs{w}_2, \ldots, \bs{w}_k$ in $W$ such that $\bs{v} = c_1\bs{w}_1 + c_2\bs{w}_2 + \ldots + c_k\bs{w}_k$. 
+:::
+
+The span of a set of vectors is the smallest subspace that contains all the vectors in the set. Consider $\bs{e}_1=(1,0,0)^{'}$, $\bs{e}_2=(0,1,0)^{'}$, and $\bs{e}_3=(0,0,1)^{'}$. Then, every vector in $\mathbb{R}^3$ can be expressed as a linear combination of these vectors. For example, the vector $\bs{v}=(x_1,x_2,x_3)^{'}$ can be expressed as $\bs{v} = x_1\bs{e}_1 + x_2\bs{e}_2 + x_3\bs{e}_3$. Thus, the span of the set of vectors $\{\bs{e}_1,\bs{e}_2,\bs{e}_3\}$ is $\mathbb{R}^3$.
+
+:::{#def-linear-independence}
+## Linear independence
+Let $\bs{\nu}_1,\bs{\nu}_2,\ldots,\bs{\nu}_n$ be a collection of vectors in $V$, and $c_1,c_2,\ldots,c_n$ be scalars. The set of vectors $\bs{\nu}_1,\bs{\nu}_2,\ldots,\bs{\nu}_n$ is **linearly independent** if and only if the only solution to $c_1\bs{\nu}_1+c_2\bs{\nu}_2+\cdots+c_n\bs{\nu}_n=0$ is $c_1=c_2=\cdots=c_n=0$. Otherwise, the set of vectors is **linearly dependent**. 
+:::
+
+:::{#exm-linear-independence}
+Let $\bs{x}_1=(3,1)^{'}$, $\bs{x}_2=(1,2)^{'}$, and $\bs{x}_3=(-7/2,-2)^{'}$. Then,
+$$
+\begin{align}
+c_1\bs{x}_1+c_2\bs{x}_2+c_3\bs{x}_3=\bs{0}\implies c_1=2,c_2=1,c_3=2.
+\end{align}
+$$
+Thus, $\bs{x}_1$, $\bs{x}_2$ and $\bs{x}_3$ are linearly dependent.
+:::
+
+:::{#exm-linear-independence}
+Let $\bs{x}_1=(3,1)^{'}$ and $\bs{x}_2=(1,2)^{'}$. Then,
+$$
+\begin{align}
+c_1\bs{x}_1+c_2\bs{x}_2=\bs{0}\implies3c_1+c_2=0,\quad c_1+2c_2=0\implies c_1=c_2=0.
+\end{align}
+$$
+Thus, $\bs{x}_1$ and $\bs{x}_2$ are linearly independent.
+:::
+
+:::{#def-basis}
+## Basis
+A set of vectors $\bs{\nu}_1,\bs{\nu}_2,\ldots,\bs{\nu}_n$ is called a **basis** for a vector space $V$ if the vectors are linearly independent and span the vector space $V$.
+:::
+
+:::{#exm-basis0}
+## Standard basis
+The set of vectors $\bs{e}_1=(1,0)^{'}$, $\bs{e}_2=(0,1)^{'}$ is a basis for $\mathbb{R}^2$. The set of vectors $\bs{e}_1=(1,0,0)^{'}$, $\bs{e}_2=(0,1,0)^{'}$, and $\bs{e}_3=(0,0,1)^{'}$ is a basis for $\mathbb{R}^3$. These basis vectors are called the **standard basis**. The standard basis vectors are orthogonal to each other, i.e., $\langle\bs{e}_i,\bs{e}_j\rangle=0$ for $i\ne j$.
+:::
+
+:::{#def-orthonormal-basis}
+## Orthonormal basis
+A basis for $\mathbb{R}^n$ is called an **orthonormal basis** if the vectors are orthogonal and each vector has unit length.
+:::
+
+:::{#exm-basis1}
+A vector space can have infinitely many bases. For example, consider $\bs{v}_1=(1,0)^{'}$, $\bs{v}_2=(0,\alpha)^{'}$, where $\alpha\ne 0$. Let $\bs{x}=(x_1,x_2)^{'}\in\mathbb{R}^2$. Then, we can express $\bs{x}$ as a linear combination of $\bs{v}_1$ and $\bs{v}_2$ as
+$$
+\begin{align*}
+\bs{x} = x_1\bs{v}_1 + \frac{x_2}{\alpha}\bs{v}_2.
+\end{align*}
+$$
+Thus, $\{\bs{v}_1,\bs{v}_2\}$ is a basis for $\mathbb{R}^2$ for every $\alpha\ne 0$.
+:::
+
+The norm of a vector is a measure of the length of the vector. The Euclidean norm of a vector $\bs{x}$ is defined as $\|\bs{x}\| =\sqrt{\langle\bs{x},\bs{x}\rangle}= \sqrt{\bs{x}^{'} \bs{x}}$, i.e., $\|\bs{x}\|^2 =\langle\bs{x},\bs{x}\rangle= \bs{x}^{'} \bs{x}$.  
+
+:::{#def-normalized-vector}
+## Normalized vector
+A vector $\bs{x}$ is said to be **normalized** if $\|\bs{x}\| = 1$. The normalized vector is obtained by dividing the vector by its norm, i.e., $\bs{u} = \frac{\bs{x}}{\|\bs{x}\|}$, where $\|\bs{u}\| = 1$.
+:::
+
+The relation between the norm and the dot product of two vectors is given by the Cauchy-Schwarz inequality.
+
+:::{#thm-CauchySchwarz}
+## Cauchy-Schwarz inequality 
+For any two vectors $\bs{x}$ and $\bs{y}$ in $\mathbb{R}^n$, $|\bs{x}^{'} \bs{y}| \leq \|\bs{x}\|\times\|\bs{y}\|$.
+:::
+::: {.proof}
+See @Abadir2005.
+:::
+
+The Cauchy-Schwarz inequality can also be stated as $|\langle\bs{x},\bs{y}\rangle|\leq \|\bs{x}\|\times\|\bs{y}\|$ or $\langle\bs{x},\bs{y}\rangle^2\leq \|\bs{x}\|^2\times \|\bs{y}\|^2$. This inequality can be used to show the triangle inequality: $\|\bs{x} + \bs{y}\| \leq \|\bs{x}\| + \|\bs{y}\|$.
+
+:::{#thm-norm-properties}
+## Triangle inequality
+Let $\bs{x}\in\mathbb{R}^n$ and $\bs{y}\in\mathbb{R}^n$ be two vectors and $\|\cdot\|$ be the Euclidean norm. Then,
+
+a. $\|\bs{x}\| \geq 0$ and $\|\bs{x}\| = 0$ if and only if $\bs{x} = \bs{0}$.
+b. $\|\alpha \bs{x}\| = |\alpha|\times \|\bs{x}\|$ for any scalar $\alpha$.
+c. $\|\bs{x} + \bs{y}\| \leq \|\bs{x}\| + \|\bs{y}\|$.
+:::
+::: {.proof}
+a. The norm of a vector is always non-negative. If $\|\bs{x}\| = 0$, then $\bs{x}^{'} \bs{x} = 0$, which implies that $\bs{x} = \bs{0}$. Conversely, if $\bs{x} = \bs{0}$, then $\bs{x}^{'} \bs{x} = 0$, which implies that $\|\bs{x}\| = 0$.
+
+b. Let $\bs{x} = (x_1, x_2, \ldots, x_n)^{'}$. Then, 
+$$
+\begin{align*}
+\|\alpha \bs{x}\| &= \sqrt{(\alpha x_1)^2 + (\alpha x_2)^2 + \ldots + (\alpha x_n)^2} \\
+&= |\alpha| \sqrt{x_1^2 + x_2^2 + \ldots + x_n^2} = |\alpha| \|\bs{x}\|.
+\end{align*}
+$$
+
+c. Using the Cauchy-Schwarz inequality, we have
+$$
+\begin{align}
+\|\bs{x} + \bs{y}\|^2 & = \langle\bs{x} + \bs{y}, \bs{x} + \bs{y}\rangle \\
+& = \langle\bs{x}, \bs{x}\rangle + 2\langle\bs{x}, \bs{y}\rangle + \langle\bs{y}, \bs{y}\rangle \\
+& = \|\bs{x}\| + 2\langle\bs{x}, \bs{y}\rangle + \|\bs{y}\| \\
+& \leq \|\bs{x}\| + 2\|\bs{x}\|\times\|\bs{y}\| + \|\bs{y}\| \\
+& = (\|\bs{x}\| + \|\bs{y}\|)^2.
+\end{align}
+$$  
+:::
+
+
+## Matrices
+A **matrix** is a two-dimensional array of numbers. We use uppercase bold symbols such as $\bs{X}$, $\bs{A}$, or $\bs{B}$ to represent matrices. The $n \times k$ matrix $\bs{X}$ is denoted by $\bs{X} = (x_{ij})$, where $i = 1, 2, \ldots, n$ and $j = 1, 2, \ldots, k$, and is given by
+$$
+\begin{align*}
+\bs{X} = \begin{pmatrix}
+x_{11} & x_{12} & \ldots & x_{1k} \\
+x_{21} & x_{22} & \ldots & x_{2k} \\
+\vdots & \vdots & \ddots & \vdots \\
+x_{n1} & x_{n2} & \ldots & x_{nk}
+\end{pmatrix},
+\end{align*}
+$$
+where $x_{ij}$ is the element in the $i$th row and $j$th column of the matrix. The order of the matrix is $n\times k$. If $n = k$, the matrix is a **square matrix**; if $n = 1$, the matrix is a $1\times k$ row vector; and if $k = 1$, the matrix is an $n\times1$ column vector. 
+
+A square matrix is called a **diagonal matrix** if all the off-diagonal elements are zero. The **identity matrix** is a diagonal matrix with all the diagonal elements equal to 1. We use $\bs{I}_n$ to denote the $n \times n$ identity matrix:
+
+$$
+\begin{align*}
+\bs{I}_n = \begin{pmatrix}
+1 & 0 & \ldots & 0 \\
+0 & 1 & \ldots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \ldots & 1
+\end{pmatrix}.
+\end{align*}
+$$
+
+An **upper triangular matrix** is a square matrix in which all the elements below the main diagonal are zero. A **lower triangular matrix** is a square matrix in which all the elements above the main diagonal are zero. 
+
+The **transpose** of a matrix $\bs{X}$ is denoted by $\bs{X}^{'}$ and is obtained by interchanging the rows and columns of the matrix. The transpose of $\bs{X}$ is given by
+
+$$
+\bs{X}^{'} = \begin{pmatrix}
+x_{11} & x_{21} & \ldots & x_{n1} \\
+x_{12} & x_{22} & \ldots & x_{n2} \\
+\vdots & \vdots & \ddots & \vdots \\
+x_{1k} & x_{2k} & \ldots & x_{nk}
+\end{pmatrix}.
+$$
+
+A square matrix with $\bs{A}^{'}=\bs{A}$ is called a **symmetric matrix**. A square matrix with $\bs{A}^{'}=-\bs{A}$ is called a **skew-symmetric matrix**.
+
+Some basic operations associated with matrices are defined as follows:
+
+- Addition: The sum of two matrices that have the same order is $\bs{A} + \bs{B} = (a_{ij} + b_{ij})$
+- Scalar multiplication: $\alpha \bs{A} = (\
+\alpha a_{ij})$, where $\alpha\in\mathbb{R}$.
+- Matrix multiplication: The product of two matrices is defined only if the number of columns in the first matrix is equal to the number of rows in the second matrix. For example, $\bs{A}_{m\times n} \bs{B}_{n\times k} = \bs{C}_{m\times k}$, where $c_{ij} = \sum_{l=1}^{n} a_{il} b_{lj}$. In this case, we say that $\bs{A}$ and $\bs{B}$ are **conformable** for multiplication. The product of two matrices is not commutative, i.e., $\bs{A} \bs{B} \neq \bs{B} \bs{A}$ in general.
+
+:::{#exm-matrix-multiplication0}
+## Matrix multiplication
+Let $\bs{A} = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}$ and $\bs{B} = \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix}$. Then, $\bs{A}\bs{B}$ is given by
+$$
+\begin{align*}
+\bs{A} \bs{B} = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix} = \begin{pmatrix} 1 \times 5 + 2 \times 7 & 1 \times 6 + 2 \times 8 \\ 3 \times 5 + 4 \times 7 & 3 \times 6 + 4 \times 8 \end{pmatrix} = \begin{pmatrix} 19 & 22 \\ 43 & 50 \end{pmatrix}.
+\end{align*}
+$$
+
+On the other hand, $\bs{B}\bs{A}$ is given by
+$$
+\begin{align*}
+\bs{B} \bs{A} = \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix} \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} = \begin{pmatrix} 5 \times 1 + 6 \times 3 & 5 \times 2 + 6 \times 4 \\ 7 \times 1 + 8 \times 3 & 7 \times 2 + 8 \times 4 \end{pmatrix} = \begin{pmatrix} 23 & 34 \\ 31 & 46 \end{pmatrix}.
+\end{align*}
+$$
+:::
+
+:::{#exm-matrix-multiplication1}
+Let $\bs{A} = \begin{pmatrix} 1 & 2 & 5\\ 3 & 4&6\\10&3&0 \end{pmatrix}$ and $\bs{b} = (b_1,b_2,b_3)^{'}$. The product $\bs{A}\bs{b}$ can be written as
+$$
+\begin{align*}
+\bs{A}\bs{b} &= \begin{pmatrix} 1 & 2 & 5\\ 3 & 4&6\\10&3&0 \end{pmatrix} \begin{pmatrix} b_1 \\ b_2 \\ b_3 \end{pmatrix} = \begin{pmatrix} 1b_1 + 2b_2 + 5b_3 \\ 3b_1 + 4b_2 + 6b_3 \\ 10b_1 + 3b_2 + 0b_3 \end{pmatrix}\\
+&=b_1\begin{pmatrix} 1 \\ 3 \\ 10 \end{pmatrix} + b_2\begin{pmatrix} 2 \\ 4 \\ 3 \end{pmatrix} + b_3\begin{pmatrix} 5 \\ 6 \\ 0 \end{pmatrix}.
+\end{align*}
+$$
+Thus, $\bs{A}\bs{b}$ is a linear combination of the columns of $\bs{A}$, where the coefficients are the elements of $\bs{b}$. 
+
+Similarly, we can write $\bs{b}^{'}\bs{A}$ as
+$$
+\begin{align*}
+\bs{b}^{'}\bs{A} &= \begin{pmatrix} b_1 & b_2 & b_3 \end{pmatrix} \begin{pmatrix} 1 & 2 & 5\\ 3 & 4&6\\10&3&0 \end{pmatrix}\\
+& = \begin{pmatrix} b_1 + 3b_2 + 10b_3 & 2b_1 + 4b_2 + 3b_3 & 5b_1 + 6b_2 + 0b_3 \end{pmatrix}\\
+&=b_1\begin{pmatrix} 1 & 2 & 5 \end{pmatrix} + b_2\begin{pmatrix} 3 & 4 & 6 \end{pmatrix} + b_3\begin{pmatrix} 10 & 3 & 0 \end{pmatrix}.
+\end{align*}
+$$
+Thus, $\bs{b}^{'}\bs{A}$ is a linear combination of the rows of $\bs{A}$, where the coefficients are the elements of $\bs{b}$.
+:::
+
+:::{#exm-matrix-multiplication2}
+We can generalize the operations in @exm-matrix-multiplication1 to matrices. Let $\bs{A}_{m\times n}$ and $\bs{B}_{n\times k}$ be two matrices. Then, the $j$th column of the product $\bs{A}\bs{B}$ is given by
+$$
+\begin{align*}
+(\bs{A}\bs{B})_{\cdot j} = B_{1j}\bs{A}_{\cdot1} + B_{2j}\bs{A}_{\cdot2} + \ldots + B_{nj}\bs{A}_{\cdot n},
+\end{align*}
+$$
+where $(\bs{A}\bs{B})_{\cdot j}$ is the $j$th column of $\bs{A}\bs{B}$, $B_{ij}$ is the $(i,j)$th element of $\bs{B}$, and $\bs{A}_{\cdot i}$ is the $i$th column of $\bs{A}$. Thus, each column of the product $\bs{A}\bs{B}$ is a linear combination of the columns of $\bs{A}$.
+
+Similarly, we can show that the $l$th row of the product $\bs{A}\bs{B}$ is given by
+$$
+\begin{align*}
+(\bs{A}\bs{B})_{l\cdot} = A_{l1}\bs{B}_{1\cdot} + A_{l2}\bs{B}_{2\cdot} + \ldots + A_{ln}\bs{B}_{n\cdot},
+\end{align*}
+$$
+where $(\bs{A}\bs{B})_{l\cdot}$ is the $l$th row of $\bs{A}\bs{B}$, $\bs{B}_{i\cdot}$ is the $i$th row of $\bs{B}$, and $A_{lh}$ is the $(l,h)$th element of $\bs{A}$. Thus, each row of the product $\bs{A}\bs{B}$ is a linear combination of the rows of $\bs{B}$.
+:::
+
+:::{#def-orthogonal-idempotent}
+## Orthogonal and idempotent matrices
+A square $n\times n$ matrix $\bs{A}$ is orthogonal if $\bs{A}^{'}\bs{A} = \bs{A}\bs{A}^{'} = \bs{I}_n$, and idempotent if $\bs{A}^2 = \bs{A}$.
+:::
+
+:::{#def-trace}
+## Trace
+The **trace** of a square matrix $\bs{X}$ is the sum of the diagonal elements of the matrix and is denoted by $\text{tr}(\bs{X}) = \sum_{i=1}^{n} x_{ii}$. 
+:::
+
+We close this section with some properties of the transpose and trace operators. The proofs of these properties are straightforward and can be found in any standard linear algebra textbook, e.g., among others, see @Abadir2005.
+
+- $(\bs{A}^{'})^{'} = \bs{A}$,
+- $(\alpha \bs{A})^{'} = \alpha \bs{A}^{'}$,
+- $(\bs{A} \bs{B})^{'} = \bs{B}^{'} \bs{A}^{'}$,
+- $(\bs{A}\bs{B}\bs{C})^{'} = \bs{C}^{'} \bs{B}^{'} \bs{A}^{'}$,
+- $\text{tr}(\bs{A}^{'}) = \text{tr}(\bs{A})$,
+- $\bs{a}^{'}\bs{a}=\text{tr}(\bs{a}\bs{a}^{'})=\text{tr}(\bs{a}\bs{a}^{'})$, where $\bs{a}$ is a column vector,
+- $\text{tr}(\bs{I}_n) = n$,
+- $\text{tr}(\bs{A} + \bs{B}) = \text{tr}(\bs{A}) + \text{tr}(\bs{B})$,
+- $\text{tr}(\alpha \bs{A}) = \alpha \text{tr}(\bs{A})$,
+- $\text{tr}(\bs{A} \bs{B}) = \text{tr}(\bs{B} \bs{A})$, and
+- $\text{tr}(\bs{A} \bs{B} \bs{C}) = \text{tr}(\bs{B} \bs{C} \bs{A}) = \text{tr}(\bs{C} \bs{A} \bs{B})$.
+
+## Partition matrices
+A matrix can be partitioned into submatrices. For example, let $\bs{A}$ be a $m\times n$ matrix. Then, we can partition $\bs{A}$ as follows:
+$$
+\begin{align*}
+\bs{A} = \begin{pmatrix}
+\bs{A}_{11} & \bs{A}_{12} \\
+\bs{A}_{21} & \bs{A}_{22}
+\end{pmatrix},
+\end{align*}
+$$
+where $\bs{A}_{11}$ is a $p\times q$ matrix, $\bs{A}_{12}$ is a $p\times (n-q)$ matrix, $\bs{A}_{21}$ is a $(m-p)\times q$ matrix, and $\bs{A}_{22}$ is a $(m-p)\times (n-q)$ matrix.
+
+:::{#exm-partition-matrix}
+## Partition matrix
+Let $\bs{A}$ be a $4\times 4$ matrix. Then, we can partition $\bs{A}$ as follows:
+$$
+\begin{align*}
+\bs{A} = 
+\left(
+\begin{array}{ccc|c}
+a_{11} & a_{12} & a_{13} & a_{14} \\
+a_{21} & a_{22} & a_{23} & a_{24} \\
+a_{31} & a_{32} & a_{33} & a_{34} \\
+\hline
+a_{41} & a_{42} & a_{43} & a_{44}
+\end{array}
+\right)
+= \begin{pmatrix}
+\bs{A}_{11} & \bs{A}_{12} \\
+\bs{A}_{21} & \bs{A}_{22}
+\end{pmatrix},
+\end{align*}
+$$
+where
+$$
+\begin{align*}
+\bs{A}_{11} = 
+\begin{pmatrix}
+a_{11} & a_{12} &a_{13} \\
+a_{21} & a_{22}& a_{23}\\
+a_{31} & a_{32} & a_{33}
+\end{pmatrix},\, 
+\bs{A}_{12} = 
+\begin{pmatrix}
+a_{14}\\
+a_{24}\\
+a_{34}
+\end{pmatrix},\, 
+\bs{A}_{21} = 
+\begin{pmatrix}
+a_{41} & a_{42}& a_{43}
+\end{pmatrix},\,
+\text{and}\,
+\bs{A}_{22} = a_{44}.
+\end{align*}
+$$
+:::
+
+Addition and multiplication of partitioned matrices are defined as follows:
+$$
+\begin{align*}
+\begin{pmatrix}
+\bs{A}_{11} & \bs{A}_{12} \\
+\bs{A}_{21} & \bs{A}_{22}
+\end{pmatrix} + \begin{pmatrix}
+\bs{B}_{11} & \bs{B}_{12} \\
+\bs{B}_{21} & \bs{B}_{22}
+\end{pmatrix} = \begin{pmatrix}
+\bs{A}_{11} + \bs{B}_{11} & \bs{A}_{12} + \bs{B}_{12} \\
+\bs{A}_{21} + \bs{B}_{21} & \bs{A}_{22} + \bs{B}_{22}
+\end{pmatrix},
+\end{align*}
+$$
+and
+$$
+\begin{align*}
+\begin{pmatrix}
+\bs{A}_{11} & \bs{A}_{12} \\
+\bs{A}_{21} & \bs{A}_{22}
+\end{pmatrix} \begin{pmatrix}
+\bs{B}_{11} & \bs{B}_{12} \\
+\bs{B}_{21} & \bs{B}_{22}
+\end{pmatrix} = \begin{pmatrix}
+\bs{A}_{11}\bs{B}_{11} + \bs{A}_{12}\bs{B}_{21} & \bs{A}_{11}\bs{B}_{12} + \bs{A}_{12}\bs{B}_{22} \\
+\bs{A}_{21}\bs{B}_{11} + \bs{A}_{22}\bs{B}_{21} & \bs{A}_{21}\bs{B}_{12} + \bs{A}_{22}\bs{B}_{22}
+\end{pmatrix}.
+\end{align*}
+$$
+
+Note that the matrices must be conformable for the operations involved. For example, the matrix $\bs{A}_{11}$ must have the same number of columns as the number of rows in $\bs{B}_{11}$ for the product $\bs{A}_{11}\bs{B}_{11}$ to be defined.
+
+## Sums and products
+Let $\bs{x}\in\mathbb{R}^n$. Then, the sum and product of the elements of $\bs{x}$ are defined as follows:
+
+- $x_1 + x_2 + \ldots + x_n=\sum_{i=1}^{n} x_i$, and
+- $x_1 \times x_2 \times \ldots \times x_n=\prod_{i=1}^{n} x_i$.
+
+The summation operator $\sum$ has the following properties:
+
+- $\sum_{i=1}^na=n\times a$, where $a$ is a constant,
+- $\sum_{i=1}^n (a x_i+by_i)=a\sum_{i=1}^n x_i+b\sum_{i=1}^n y_i$, where $a$ and $b$ are constants,
+- $\sum_{i=1}^n (x_i/y_i)\ne\sum_{i=1}^n x_i/\sum_{i=1}^n y_i$,
+- $\sum_{i=1}^n x_i^2\ne(\sum_{i=1}^n x_i)^2$, and
+- $(\sum_{i=1}^n x_i)^2=(\sum_{i=1}^n x_i)(\sum_{j=1}^{n}x_j)=\sum_{i=1}^n\sum_{j=1}^{n}x_ix_j$.
+
+The product operator $\prod$ satisfies the following properties:
+
+- $\prod_{i=1}^n a=a\times a\times\ldots\times a=a^n$, where $a$ is a constant,
+- $\prod_{i=1}^nx^p_i=(\prod_{i=1}^n x_i)^p$, and
+- $\prod_{i=1}^n (x_iy_i)=(\prod_{i=1}^n x_i)(\prod_{i=1}^n y_i)$.
+
+Let $\bs{l}_n$ be the $n\times1$ vector of ones. Then, the sum of the elements of $\bs{x}$ can be written as $\bs{l}^{'}_n\bs{x}$. Also, the mean of the elements of $\bs{x}$ can be expressed as $\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i = \frac{1}{n}\bs{l}^{'}_n\bs{x}$. Note that $\sum_{i=1}^{n} x_i=n\bar{x}$.
+
+Let $\bs{X}$ be an $n\times k$ matrix. In terms of row vectors, we can express $\bs{X}$ as 
+$$
+\begin{align*}
+\bs{X} = \begin{pmatrix}
+\bs{x}_1^{'} \\
+\bs{x}_2^{'} \\
+\vdots \\
+\bs{x}_n^{'}
+\end{pmatrix},
+\end{align*}
+$$
+where $\bs{x}_i=(x_{i1},x_{i2},\ldots,x_{ik})^{'}$ is the $i$th row vector of $\bs{X}$ for $i=1,\ldots,n$. Thus, we can express $\bs{X}^{'}\bs{X}$ as the sum of $k\times k$ matrices in the following way:
+$$
+\begin{align}
+\bs{X}^{'}\bs{X} = \sum_{i=1}^{n} \bs{x}_i\bs{x}^{'}_i.
+\end{align}
+$${#eq-matrix-sum}
+
+A useful $n\times n$ symmetric and idempotent matrix is $\mathbb{M}_0=\bs{I}_n-\frac{1}{n}\bs{l}_n\bs{l}^{'}_n$. The matrix $\mathbb{M}_0$ is called the **centering matrix**. The centering matrix is used to center the data by subtracting the mean from each element of the data matrix. For example, $\mathbb{M}_0\bs{x}$ is
+$$
+\begin{align*}
+\mathbb{M}_0\bs{x} = \bs{x} -\frac{1}{n}\bs{l}_n\bs{l}^{'}_n\bs{x}=\bs{x}- \bar{x}\bs{l}_n = \begin{pmatrix}
+x_1 - \bar{x} \\
+x_2 - \bar{x} \\
+\vdots \\
+x_n - \bar{x}
+\end{pmatrix}.
+\end{align*}
+$$
+Since $\mathbb{M}_0$ is symmetric and idempotent, we have $(\mathbb{M}_0\bs{x})^{'}(\mathbb{M}_0\bs{x})=\bs{x}^{'}\mathbb{M}_0\mathbb{M}_0\bs{x}=\bs{x}^{'}\mathbb{M}_0\bs{x}$. Thus, we have
+$$
+\begin{align*}
+\bs{x}^{'}\mathbb{M}_0\bs{x} = \sum_{i=1}^{n} (x_i - \bar{x})^2.
+\end{align*}
+$$
+
+## Determinants
+The **determinant** of a square matrix $\bs{A}$ is a scalar value computed from the elements of the matrix. It is usually denoted by $\text{det}(\bs{A})$ or $|\bs{A}|$.  The determinant of $\bs{A}_{n\times n}$ is computed as follows:
+$$
+\begin{align}
+|\bs{A}|=\sum_{i=1}^n(-1)^{i+j}a_{ij}|\bs{M}_{ij}|
+\end{align}
+$$
+where $|\bs{M}_{ij}|$ is called the **minor** of $a_{ij}$ and it is the determinant of the remaining $(n-1)\times (n-1)$ matrix when the $i$th row and the $j$th column of $\bs{A}$ are deleted. Also, $C_{ij}=(-1)^{i+j}|\bs{M}_{ij}|$ is called the **cofactor** of $a_{ij}$.
+
+:::{#exm-determinant}
+## Determinant of a matrix
+The determinant of $A_{2\times2}$ is given by
+$$
+\begin{align}
+|\bs{A}| = \begin{vmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{vmatrix} 
+= a_{11} a_{22} - a_{12} a_{21}.
+\end{align}
+$$
+For  $A_{3\times3}$, setting $j=1$, we have
+$$
+\begin{align}
+|\bs{A}| & = \begin{vmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{vmatrix} \\
+&= a_{11} \begin{vmatrix} a_{22} & a_{23} \\ a_{32} & a_{33} \end{vmatrix} - a_{21} \begin{vmatrix} a_{12} & a_{13} \\ a_{32} & a_{33} \end{vmatrix} + a_{31} \begin{vmatrix} a_{12} & a_{13} \\ a_{22} & a_{23} \end{vmatrix}\\
+&=a_{11}C_{11}+a_{21}C_{21}+a_{31}C_{31}. 
+\end{align}
+$$
+:::
+
+:::{}
+::: {.callout-note icon=false}
+## Properties of determinants
+Let $\bs{A}_{n\times n}$ and $\bs{B}_{n\times n}$ be square matrices, and $c$ be a scalar. Then, some properties of the determinant operator are
+
+- $|\bs{A}^{'}|=|\bs{A}|$,
+- $|c\bs{A}|=c^n|\bs{A}|$, where $n$ is the order of the matrix and $c$ is a scalar,
+- $|\bs{AB}|=|\bs{A}||\bs{B}|$,
+- $|\bs{A}^2|=|\bs{A}|^2$,
+- if $\bs{A}$ is a diagonal or a triangular matrix, then $|\bs{A}|=\prod_{i=1}^na_{ii}$, and
+- if $\bs{A}$ is a block-diagonal matrix, $\bs{A}=
+\left(\begin{array}{cc}
+\bs{A}_{11}&\bs{0}\\
+\bs{0}&\bs{A}_{22}\\
+\end{array}\right)$, then $|\bs{A}|=|\bs{A}_{11}||\bs{A}_{22}|$.
+
+The proof of these properties can be found in any standard linear algebra textbook, e.g., see @Abadir2005.
+:::
+:::
+
+:::{#def-singular}
+## Singular and nonsingular matrices
+A square matrix $\bs{A}$ is said to be **singular** if $|\bs{A}|=0$. Otherwise, it is said to be **nonsingular**.
+:::
+
+## Inverse of a matrix
+The inverse is defined only for square matrices.
+
+:::{#def-inverse}
+## Inverse
+If the $n\times n$ matrix $\bs{A}$ is nonsingular, then there exists a unique matrix $\bs{A}^{-1}$ such that $\bs{A} \bs{A}^{-1} = \bs{A}^{-1} \bs{A} = \bs{I}_n$. The matrix $\bs{A}^{-1}$ is called the **inverse** of $\bs{A}$. 
+:::
+
+:::{}
+:::{#exm-inverse}
+The inverse of a $2\times 2$ matrix $\bs{A}$ is given by
+$$
+\begin{align}
+\bs{A}^{-1} = \frac{1}{|\bs{A}|} \begin{pmatrix} a_{22} & -a_{12} \\ -a_{21} & a_{11} \end{pmatrix}.
+\end{align}
+$$
+For example, let $\bs{A} = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}$. Then, the inverse of $\bs{A}$ is given by
+$$
+\begin{align*}
+\bs{A}^{-1} = \frac{1}{|\bs{A}|} \begin{pmatrix} 4 & -2 \\ -3 & 1 \end{pmatrix} = \frac{1}{-2} \begin{pmatrix} 4 & -2 \\ -3 & 1 \end{pmatrix} = \begin{pmatrix} -2 & 1 \\ \frac{3}{2} & -\frac{1}{2} \end{pmatrix}.
+\end{align*}
+$$
+:::
+:::
+
+:::{.callout-note icon=false}
+## Properties of inverse
+The inverse matrix satisfies the following properties:
+
+a. $(c\bs{A})^{-1}=c^{-1}\bs{A}^{-1}$, where $c$ is a non-zero scalar, 
+b. $(\bs{A}\bs{B})^{-1}=\bs{B}^{-1}\bs{A}^{-1}$, where $\bs{A}$ and $\bs{B}$ are nonsingular matrices, 
+c. $(\bs{A}^{-1})^{-1}=\bs{A}$, 
+d. $(\bs{A}^{'})^{-1}=(\bs{A}^{-1})^{'}$, and 
+e. $|\bs{A}^{-1}|=|\bs{A}|^{-1}$.
+:::
+
+The inverse of a block-diagonal matrix is the block-diagonal matrix of the inverses of the blocks. For example, if
+
+$$
+\begin{align*}
+\bs{A}=
+\left(\begin{array}{cc}
+\bs{A}_{11}&0\\
+0&\bs{A}_{22}\\
+\end{array}\right), 
+\end{align*}
+$$
+
+then 
+
+$$
+\begin{align*}
+\bs{A}^{-1}=
+\left(\begin{array}{cc}
+\bs{A}_{11}^{-1}&\bs{0}\\
+\bs{0}&\bs{A}_{22}^{-1}\\
+\end{array}\right).
+\end{align*}
+$$
+
+Let $\bs{D}$ be an $n\times n$ diagonal matrix with the $i$th diagonal element $d_{ii}$ for $i=1,\ldots,n$. Then, the last property suggests that
+$$
+\begin{align*}
+\bs{D}^{-1} = \begin{pmatrix}
+d_{11}^{-1} & 0 & \ldots & 0 \\
+0 & d_{22}^{-1} & \ldots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \ldots & d_{nn}^{-1}
+\end{pmatrix}.
+\end{align*}
+$$
+
+## Rank of a matrix
+
+The **rank** of the matrix $\bs{A}_{m\times n}$ is the maximum number of linearly independent columns or rows of $\bs{A}$. We denote the rank of $\bs{A}$ by $\text{rank}(\bs{A})$. If $\text{rank}(\bs{A})=n$, then the matrix is said to have **full column rank**.
+
+::: {.callout-note icon=false}
+## Properties of rank
+The rank satisfies the following properties:
+
+a. $0\le \text{rank}(\bs{A})\le\min(m,n)$,
+b. $\text{rank}(\bs{A})=\text{rank}(\bs{A}^{'})$,
+c. $\text{rank}(\bs{A}+\bs{B})\le \text{rank}(\bs{A})+\text{rank}(\bs{B})$,
+d. $\text{rank}(\bs{A}\bs{B})\le \min\left(\text{rank}(\bs{A}),\text{rank}(\bs{B})\right)$, and
+e. $\text{rank}(\bs{A})=\text{rank}(\bs{A}^{'}\bs{A})=\text{rank}(\bs{A}\bs{A}^{'})$.
+:::
+
+The first two properties follow from the definition of rank. The third property follows from the fact that the sum of two matrices can be expressed as a linear combination of the columns of the two matrices. Thus, the column space of $(\bs{A}+\bs{B})$ is a subspace of the sum of the column spaces of $\bs{A}$ and $\bs{B}$. The fourth property follows from the fact that the product of two matrices can be expressed as a linear combination of the columns of the first matrix and the rows of the second matrix. See @exm-matrix-multiplication2.  Finally, the last property follows from the second and the fourth properties.
+
+:::{}
+:::{#exm-rank0}
+Let $\bs{a} \in \mathbb{R}^n$. Then, the rank of $\bs{a}\bs{a}^{\prime}$ is $1$. To see this, note that $\bs{a}\bs{a}^{\prime}$ is an $n\times n$ matrix, which can be expressed as
+$$
+\begin{align*}
+\bs{a}\bs{a}^{'} = 
+\begin{pmatrix}
+a_1a_1 & a_1 a_2 & \ldots & a_1 a_n \\
+a_2 a_1 & a_2a_2 & \ldots & a_2 a_n \\
+\vdots & \vdots & \ddots & \vdots \\
+a_n a_1 & a_n a_2 & \ldots & a_na_n
+\end{pmatrix}.
+\end{align*}
+$$
+Thus, each column of $\bs{a}\bs{a}^{'}$ is a scalar multiple of the vector $\bs{a}$, showing that each column of $\bs{a}\bs{a}^{'}$ lies in the one-dimensional subspace spanned  by $\bs{a}$. Therefore, the rank of $\bs{a}\bs{a}^{'}$ is 1.
+:::
+:::
+
+:::{}
+:::{#exm-rank1-matrix}
+Let $\bs{X}$ be an $n\times k$ matrix. In @eq-matrix-sum, we show that we can express $\bs{X}^{'}\bs{X}$ as
+$$
+\begin{align}
+\bs{X}^{'}\bs{X} = \sum_{i=1}^{n} \bs{x}_i\bs{x}^{'}_i.
+\end{align}
+$$
+Since $\text{rank}(\bs{x}_i\bs{x}^{'}_i)=1$ by @exm-rank0, $\bs{X}^{'}\bs{X}$ is the sum of $n$ matrices, each of which has rank $1$.
+:::
+:::
+
+:::{}
+:::{#thm-determinant-rank}
+## Determinant and rank
+Let $\bs{A}$ be an $n\times n$ matrix. Then, $|\bs{A}|=0$ if and only if $\text{rank}(\bs{A})<n$.
+:::
+:::
+
+:::{}
+:::{.proof}
+## Proof @thm-determinant-rank
+See @Abadir2005 [p.94].
+:::
+:::
+
+## Eigenvalues and eigenvectors
+Eigenvalues and eigenvectors are used used for matrix decompositions, principal component analysis, and many other applications. 
+
+:::{}
+:::{#def-eigenvalue}
+## Eigenvalues and eigenvectors
+Let $\bs{A}$ be an $n\times n$ matrix, $\bs{x}\in\mathbb{R}^n$ be a vector, and $\lambda$ be a scalar. Consider
+$$
+\begin{align}
+\bs{A}\bs{x}=\lambda\bs{x}.
+\end{align}
+$${#eq-eqDD-1}
+A non-zero vector $\bs{x}$ that solves @eq-eqDD-1 is called an **eigenvector**, and the associated $\lambda$ is called an **eigenvalue**.
+:::
+:::
+
+@eq-eqDD-1 suggests that if $\bs{x}$ is an eigenvector of $\bs{A}$, then $c\bs{x}$ is also an eigenvector of $\bs{A}$ for any non-zero scalar $c$. To remove this ambiguity, eigenvectors are usually normalized so that $\|\bs{x}\|=1$.
+
+Eigenvalues and eigenvectors are also called **characteristic roots** and **characteristic vectors**, respectively. We can write @eq-eqDD-1 in the following way:
+$$
+\begin{align}
+(\bs{A}-\lambda\bs{I}_n)\bs{x}=\bs{0},
+\end{align}
+$${#eq-eqDD-2}
+where $\bs{I}_n$ is the $n\times n$ identity matrix. The system in @eq-eqDD-2 has a solution $\bs{x}\ne\bs{0}$ if and only if $|\bs{A}-\lambda\bs{I}_n|=0$. We can use this result to compute $\lambda$. Once we have $\lambda$, we can compute the eigenvector $\bs{x}$ by solving @eq-eqDD-2.
+
+The characteristic polynomial of $\bs{A}$ is defined by $p(\lambda)=|\bs{A}-\lambda\bs{I}_n|$, which is an $n$th order polynomial in $\lambda$. The eigenvalues of $\bs{A}$ are the roots of the characteristic polynomial. Since the characteristic polynomial has at most $n$ roots, $\bs{A}$ can have at most $n$ eigenvalues. The eigenvalues can be real or complex numbers. If the eigenvalues are complex, they come in conjugate pairs as shown in the following example.
+
+:::{}
+:::{#exm-eigenvalue}
+## Eigenvalues and eigenvectors
+Consider the following matrix:
+$$
+\begin{align}
+\bs{A}=\begin{pmatrix}
+0&0&6\\1/2&0&0\\0&1/3&0
+\end{pmatrix}.
+\end{align}
+$$
+Then,
+$$
+\begin{align}
+&|\bs{A}-\lambda \bs{I}_3|=0\implies
+\begin{vmatrix}
+-\lambda&0&6\\
+1/2&-\lambda&0\\
+0&1/3&-\lambda
+\end{vmatrix}
+=-\lambda
+\begin{vmatrix}
+-\lambda&0\\
+1/3&-\lambda
+\end{vmatrix}
++6
+\begin{vmatrix}
+1/2&-\lambda\\
+0&1/3
+\end{vmatrix}
+=0\\
+&\implies(1-\lambda^3)=0\implies(1-\lambda)(\lambda^2+\lambda+1)=0\implies
+\begin{cases}
+\lambda_1=1,\\
+\lambda_2=-1/2+i\sqrt{3}/2,\\
+\lambda_3=-1/2-i\sqrt{3}/2.
+\end{cases}
+\end{align}
+$$
+
+In Python, we can solve the equation $1-\lambda^3=0$ symbolically using the `sympy` package. The `solve` function from this package returns the roots of the equation. 
+
+```{python}
+# Solving 1-lambda^3=0 symbolically
+x = symbols('x')
+equation = 1-x**3
+roots = solve(equation, x)
+roots
+```
+
+Let us find the eigenvector associated with $\lambda_1=1$. From $\bs{A}\bs{x}=\lambda\bs{x}$, we obtain
+$$
+\begin{align}
+&\bs{A}\bs{x}=\bs{x}\implies
+\begin{cases}
+-x_1+6x_3=0\\
+x_1/2-x_2=0\\
+x_2/3-x_3=0
+\end{cases}
+\implies
+\begin{cases}
+-x_1+6x_3=0\\
+x_1/2-3x_3=0
+\end{cases}
+\implies x_1=6x_3.
+\end{align}
+$$
+
+Let $x_3=t$, then $x_1=6t$ and $x_2=3t$, where $t\in\mathbb{R}$ and $t\ne0$. Thus, the associated eigenvector is $\bs{x}=t(6,3,1)^{'}$, where $t\ne0$. In the following code chunk, we set $t=-1$ and normalize $\bs{x}$:
+
+```{python}
+# Normalize x=t*(6,3,1)
+x = np.array([-6,-3,-1])
+norm_x = np.linalg.norm(x)
+normalized_x = x / norm_x 
+normalized_x
+```
+
+We can compute eigenvalues and normalized eigenvectors using  the `np.linalg.eig` function. Note that `e` returns the same eigenvalues that we derived analytically above. Also, `ev[:,2]` returns the same vector as `normalized_x`.
+
+```{python}
+# Compute eigenvalues and normalized eigenvectors of A
+A = np.array([[0,0,6],
+[1/2,0,0],
+[0,1/3,0]])
+
+e,ev=np.linalg.eig(A)
+```	
+
+```{python}
+# Eigenvalues
+e 
+```	
+```{python}
+# Eigenvectors
+ev
+```	
+```{python}
+# Eigenvector corresponding to eigenvalue 1
+ev[:,2] 
+```
+:::
+:::
+
+Let $\bs{A}_{n\times n}$ be a matrix with eigenvalues $\lambda_1,\lambda_2,\ldots,\lambda_n$ and corresponding eigenvectors $\bs{x}_1,\bs{x}_2,\ldots,\bs{x}_n$. Then,
+
+a. $|\bs{A}|=\prod_{i=1}^n\lambda_i$,
+a. $\tr(\bs{A})=\sum_{i=1}^n\lambda_i$, and
+a. $\bs{A}$ is nonsingular if and only if all its eigenvalues are nonzero.
+
+The eigenvalues of a symmetric matrix are real and can be ordered in increasing or decreasing order. The eigenvectors of a symmetric matrix are orthogonal, which means that $\bs{x}_i^{'}\bs{x}_j=0$ for $i\ne j$. We can decompose the symmetric matrix $\bs{A}_{n\times n}$ as 
+$$
+\bs{A}=\bs{Q}\bs{\Lambda}\bs{Q}^{'}, 
+$$
+where $\bs{Q}$ is an orthogonal matrix and $\bs{\Lambda}$ is a diagonal matrix with the eigenvalues of $\bs{A}$ on the diagonal. This decomposition is called the **spectral decomposition** of $\bs{A}$. To see this, let $\bs{q}_1,\bs{q}_2,\ldots,\bs{q}_n$ be the eigenvectors of $\bs{A}$ with corresponding eigenvalues $\lambda_1,\lambda_2,\ldots,\lambda_n$. Then, we have
+$$
+\bs{A}\bs{q}_k=\lambda_k\bs{q}_k\implies \bs{A}\bs{Q}=\bs{Q}\bs{\Lambda},
+$$
+where 
+$$
+\begin{align}
+\bs{Q}=
+\begin{pmatrix}
+\bs{q}_1 & \bs{q}_2 & \ldots & \bs{q}_n
+\end{pmatrix}\, \text{and}\,
+\bs{\Lambda}
+=\begin{pmatrix}
+\lambda_1 & 0 & \ldots & 0 \\
+0 & \lambda_2 & \ldots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \ldots & \lambda_n
+\end{pmatrix}.
+\end{align}
+$$ 
+The matrix $\bs{Q}$ is orthogonal, which means that $\bs{Q}^{'}\bs{Q}=\bs{I}_n$, suggesting that $\bs{Q}^{-1}=\bs{Q}^{'}$. Thus, post-multiplying both sides of the equation $\bs{A}\bs{Q}=\bs{Q}\bs{\Lambda}$ by $\bs{Q}^{'}$ gives us the spectral decomposition of $\bs{A}$.
+
+:::{#exm-quadratic-form}
+Let $\bs{C}$ be a symmetric idempotent matrix. Then, the eigenvalues of $\bs{C}$ are either $0$ or $1$. Also, $\tr(\bs{C}) = \text{rank}(\bs{C})$.
+
+To see the first result, let $\lambda$ be an eigenvalue of $\bs{C}$ and $\bs{q}$ be the corresponding eigenvector. Then, $\bs{C}\bs{q}=\lambda\bs{q}$. Thus, $\bs{C}^2\bs{q}=\lambda\bs{C}\bs{q}=\lambda^2\bs{q}$. Since $\bs{C}^2=\bs{C}$, we have $\lambda^2\bs{q}=\lambda\bs{q}$, which implies that $\lambda^2=\lambda$. Thus, $\lambda=0$ or $\lambda=1$.
+
+From the spectral decomposition of $\bs{C}$, we have $\text{tr}(\bs{C})=\text{tr}(\bs{Q}\bs{\Lambda}\bs{Q}^{'})=\text{tr}(\bs{\Lambda}\bs{Q}^{'}\bs{Q})=\text{tr}(\bs{\Lambda})=\sum_{i=1}^n\lambda_i$. Also,
+$$
+\text{rank}(\bs{C})= \text{rank}(\bs{Q}\bs{\Lambda}\bs{Q}^{'})=\text{rank}(\bs{\Lambda}),
+$$
+which equals the number of non-zero eigenvalues. Since the eigenvalues of $\bs{C}$ are either $0$ or $1$, we have $\tr(\bs{C})= \text{rank}(\bs{C})$.
+:::
+
+## Quadratic forms
+Suppose that $\bs{A}_{n\times n}$ is symmetric and $\bs{x}$ is an $n\times 1$ vector. Then, $\bs{x}^{'}\bs{A}\bs{x}=\sum_{i=1}^n\sum_{j=1}^na_{ij}x_ix_j
+$ is called the **quadratic form** in $\bs{x}$. Furthermore,
+
+i. if $\bs{x}^{'}\bs{A}\bs{x}>0$ for all $\bs{x}\ne0$, then $\bs{A}$ is called **positive definite**,
+ii. if $\bs{x}^{'}\bs{A}\bs{x}<0$ for all $\bs{x}\ne0$, then $\bs{A}$ is called **negative definite**,
+iii. if $\bs{x}^{'}\bs{A}\bs{x}\ge0$ for all $\bs{x}\ne0$, then $\bs{A}$ is called **positive semi-definite**,
+iv. if $\bs{x}^{'}\bs{A}\bs{x}\le0$ for all $\bs{x}\ne0$, then $\bs{A}$ is called **negative semi-definite**, and
+v. if $\bs{x}^{'}\bs{A}\bs{x}>0$ for some $\bs{x}\ne0$ and $\bs{y}^{'}\bs{A}\bs{y}<0$ for some $\bs{y}\ne0$,  then $\bs{A}$ is called **indefinite**.
+
+If $\bs{A}$ is positive definite, then it is invertible. Any symmetric positive-definite matrix $\bs{A}$ can be written as the product of a lower triangular matrix $\bs{L}$ and its transpose $\bs{L}^{'}=\bs{U}$, i.e., $\bs{A}=\bs{LU}$. This decomposition is called the **Cholesky decomposition** of $\bs{A}$. More conveniently,  $\bs{A}^{-1}=\bs{U}^{-1}\bs{L}^{-1}$. The Cholesky decomposition provides a fast and numerically stable way to compute the inverse of a matrix. 
+
+The Cholesky decomposition can be computed using the `np.linalg.cholesky` function in Python. The inverse of a matrix can be computed using the `np.linalg.inv` function. In the following code junks, we compute the Cholesky decomposition of a symmetric positive-definite matrix $\bs{A}$ and its inverse. We also measure the computation time for the inverse of $\bs{A}$ using the Cholesky decomposition and the `np.linalg.inv` function.
+
+```{python}
+# Cholesky decomposition
+A = np.array([[4, 2, 1, 0, 0], 
+              [2, 3, 1, 0.7, 0], 
+              [1, 1, 2, 0, 0.8], 
+              [0.3, 0.5, 1, 5, 1], 
+              [0, 0.1, 0, 1, 4]])
+# Cholesky decomposition of A
+L = np.linalg.cholesky(A)
+# Inverse of A
+start_time = time.time()
+L_inv = np.linalg.inv(L)
+U_inv = L_inv.T
+A_inv = U_inv @ L_inv
+A_inv
+end_time = time.time()
+# Computation time 
+computation_time = end_time - start_time
+computation_time
+```
+
+```{python}	
+# Measure computation time for A_inv
+start_time = time.time()
+A_inv = np.linalg.inv(A)
+# Inverse of A
+A_inv
+end_time = time.time()
+# Computation time
+computation_time = end_time - start_time
+computation_time
+```
+
+:::{#thm-quadratic-form}
+## Properties of quadratic forms
+Let $\bs{A}$ be $n\times n$ real and symmetric matrix with eigenvalues $\lambda_1,\lambda_2,\ldots,\lambda_n$. Then,
+
+a. $\bs{A}$ is positive definite $\iff$ $\lambda_1>0,\ldots,\lambda_n>0$,
+b. $\bs{A}$ is positive semidefinite $\iff$ $\lambda_1\geq0,\ldots,\lambda_n\geq0$,
+c. $\bs{A}$ is negative definite $\iff$ $\lambda_1<0,\ldots,\lambda_n<0$,
+d. $\bs{A}$ is negative semidefinite $\iff$ $\lambda_1\leq0,\ldots,\lambda_n\leq0$, and
+e. $\bs{A}$ is indefinite $\iff$ $\bs{A}$ has both positive and negative eigenvalues.
+:::
+
+:::{}
+::: {.proof}
+## Proof of @thm-quadratic-form
+Since $\bs{A}$ is symmetric, it is diagonalizable. Thus, there exists an orthogonal  matrix $\bs{P}$ such that 
+$$
+\bs{P}^{'}\bs{A}\bs{P}=\text{diag}(\lambda_1,\ldots,\lambda_n),
+$$
+where $\text{diag}(\lambda_1,\ldots,\lambda_n)$ is the diagonal matrix with the eigenvalues of $\bs{A}$ on the diagonal. Let $\bs{y}=(y_1,\ldots,y_n)^{'}$ be the $n\times1$ vector defined by $\bs{y}=\bs{P}^{'}\bs{x}$. Then, $\bs{x}=\bs{P}\bs{y}$, which implies
+$$
+\begin{align}
+\bs{x}^{'}\bs{A}\bs{x}=\bs{y}^{'}\bs{P}^{'}\bs{A}\bs{P}\bs{y}=\bs{y}^{'}\text{diag}(\lambda_1,\ldots,\lambda_n)\bs{y}=\sum_{i=1}^n\lambda_iy^2_i.
+\end{align}
+$${#eq-quadratic-form}
+It follows that $\bs{x}^{'}\bs{A}\bs{x}\geq0$ (res.$\leq0$) for all $\bs{x}$ if and only if $\bs{y}^{'}\bs{P}^{'}\bs{A}\bs{P}\bs{y}\geq0$  (res.$\leq0$) for all $\bs{y}\ne0$.
+
+Also, $\bs{x}=\bs{0}$ if and only if $\bs{y}=\bs{0}$, and so $\bs{x}^{'}\bs{A}\bs{x}>0$ (res.$<0$) for all $\bs{x}\ne\bs{0}$ if and only if $\bs{y}^{'}\bs{P}^{'}\bs{A}\bs{P}\bs{y}>0$  (res.$<0$) for all $\bs{y}\ne\bs{0}$. Then, the conclusion follows from @eq-quadratic-form immediately. 
+:::
+:::
+
+:::{}
+:::{#thm-quadratic-form2}
+Let $\bs{X}$ be an $n\times k$ matrix with rank $k$. Then, $\bs{X}^{'}\bs{X}$ is positive definite and $\bs{X}\bs{X}^{'}$ is positive semidefinite.
+:::
+:::
+
+:::{}
+:::{.proof}
+## Proof of @thm-quadratic-form2
+Let $\bs{x}\ne\bs{0}$. Then, $\bs{x}^{'}\bs{X}^{'}\bs{X}\bs{x}=(\bs{X}\bs{x})^{'}(\bs{X}\bs{x})=\|\bs{X}\bs{x}\|^2\geq0$. Since $\bs{x}\ne\bs{0}$ and $\bs{X}$ has rank $k$, the columns of $\bs{X}$ are linearly independent. Therefore, $\bs{X}\bs{x} \ne \bs{0}$, suggesting that $\|\bs{X}\bs{x}\|^2>0$. Thus, $\bs{X}^{'}\bs{X}$ is positive definite.
+
+Let $\bs{y}\ne\bs{0}$. Then, $\bs{y}^{'}\bs{X}\bs{X}^{'}\bs{y}=(\bs{X}^{'}\bs{y})^{'}(\bs{X}^{'}\bs{y})=\|\bs{X}^{'}\bs{y}\|^2\ge0$. Thus, $\bs{X}\bs{X}^{'}$ is positive semidefinite.
+:::
+:::
+
+## Matrix square root
+Let $\bs{A}$ be an $n\times n$ positive definite matrix. Then, we can find a matrix $\bs{B}$ such that $\bs{A}=\bs{B}^{'}\bs{B}$. The matrix $\bs{B}$ is called the **matrix square root** of $\bs{A}$ and is usually denoted by $\bs{B}=\bs{A}^{1/2}$. Note that if $\bs{B}$ is symmetric, then $\bs{A}=\bs{B}^2$.  The matrix square root of a positive-definite matrix always exists, but  is not unique. For example, if $\bs{A}$ has the spectral decomposition $\bs{A}=\bs{Q}\bs{\Lambda}\bs{Q}^{'}$, then its matrix square root is given by $\bs{B}=\bs{Q}\bs{\Lambda}^{1/2}\bs{Q}^{'}$, where $\bs{\Lambda}^{1/2}$ is the diagonal matrix with the square roots of the eigenvalues of $\bs{A}$ on the diagonal. Another way to compute the matrix square root is to use the Cholesky decomposition of $\bs{A}$, which gives us $\bs{B}=\bs{L}^{'}$, where $\bs{L}$ is the lower triangular matrix such that $\bs{A}=\bs{L}\bs{L}^{'}$.
+
+In Python, the square root of a matrix can be computed using the `scipy.linalg.sqrtm` function. 
+
+```{python}
+# Matrix square root
+A = np.array([[4, 2], [2, 3]])
+B = sqrtm(A)
+# B is the matrix square root of A
+B
+```
+
+```{python}
+# Verify that B is the matrix square root of A
+np.allclose(A, B.T @ B) 
+```
+The matrix square root $\bs{B}$ satifies the following properties: (i) $\bs{B}\bs{A}^{-1}\bs{B}^{'}=\bs{I}_n$, and (ii) $\bs{B}^{'-1}\bs{A}\bs{B}^{-1}=\bs{I}_n$. In Python, these properties can be verified as follows:
+
+```{python}
+# Verify the properties of matrix square root
+B_inv = np.linalg.inv(B)
+A_inv = np.linalg.inv(A)
+# Property (i)
+np.allclose(B @ A_inv @ B.T, np.eye(A.shape[0]), atol=1e-7)
+# Property (ii)
+np.allclose(B_inv.T @ A @ B_inv, np.eye(A.shape[0]), atol=1e-7)
+```
+
+:::{}
+::: {#rem-matrix-square-root}
+## Alternative definition of the matrix square root
+Alternatively, the matrix square root of the positive definite matrix $\bs{A}$ can be defined as a matrix $\bs{B}$ such that $\bs{A} = \bs{B}\bs{B}^{'}$ (@Hansen2022). In this case, the matrix square root $\bs{B}$ satisfies the following properties: (i) $\bs{B}^{'}\bs{A}^{-1}\bs{B} = \bs{I}_n$, and (ii) $\bs{B}^{-1}\bs{A}\bs{B}^{'-1} = \bs{I}_n$.
+:::
+:::
+
+## Matrix norms
+
+:::{}
+:::{#def-matrix-norm}
+## Definition of matrix norm
+A matrix norm $\lVert\cdot\rVert$ is a real-valued function that satisfies the following conditions:
+
+i. $\lVert\mathbf{A}\rVert\ge0$,
+ii. $\lVert\mathbf{A}\rVert=0$ if and only if $\mathbf{A}=\bs{0}$,
+iii. $\lVert\tau\mathbf{A}\rVert=|\tau|\lVert\mathbf{A}\rVert$ for all $\tau\in\mathbb{R}$, 
+iv. $\lVert\mathbf{A+B}\rVert\;\le\;\lVert\mathbf{A}\rVert+\lVert\mathbf{B}\rVert$ (triangle inequality), and
+v. $\lVert\mathbf{AB}\rVert\;\le\;\lVert\mathbf{A}\rVert\lVert\mathbf{B}\rVert$.
+:::
+:::
+ 
+Some immediate properties that follow from the above definition are:
+
+a. Since $\Vert A^2\Vert = \Vert AA\Vert\leq \Vert A\Vert\Vert A\Vert = \Vert A\Vert^2$ for any matrix norm, it follows that $\Vert A\Vert \geq 1$ for any nonzero matrix $A$ for which $A^2 = A$. 
+b. In particular, $\Vert I\Vert\geq 1$ for any matrix norm. 
+c. If $A$ is nonsingular, then $I = AA^{-1}$, so $\Vert I\Vert = \Vert AA^{-1}\Vert\leq \Vert A\Vert\Vert A^{-1}\Vert$, and we have the lower bound
+$$
+\Vert A^{-1}\Vert\geq\frac{\Vert I\Vert}{\Vert A\Vert}.
+$$
+
+Two common norms used for matrix spaces are the Frobenius norm and the spectral norm. The **Frobenius norm** of a matrix $\bs{A}_{m\times k}$ is defined as 
+$$
+\begin{align}
+\|\bs{A}\|_F =\|\text{vec}(A)\|=\text{tr}^{1/2}(\bs{A}^{'}\bs{A}) =\sqrt{\sum_{i=1}^m\sum_{j=1}^k a_{ij}^2},
+\end{align}
+$$ 
+where $\text{vec}(\cdot)$ is the vectorization operator. If $\bs{A}_{n\times n}$ is a real symmetric matrix, then its Frobenius norm is given by
+$$
+\begin{align}
+\|\bs{A}\|_F = \sqrt{\sum_{i=1}^n\lambda_i^2},
+\end{align}
+$$
+where $\lambda_i$'s are the eigenvalues of $\bs{A}$. This can be seen from the spectral decomposition of $\bs{A}$. Let $\bs{A}=\bs{Q}\bs{\Lambda}\bs{Q}$ be the spectral decomposition of $\bs{A}$. Then, $\bs{A}^{'}\bs{A}=\bs{Q}\bs{\Lambda}^{'}\bs{\Lambda}\bs{Q}=\bs{Q}\bs{\Lambda}^2\bs{Q}^{'}$. Thus, $\text{tr}(\bs{A}^{'}\bs{A})=\text{tr}(\bs{Q}\bs{\Lambda}^2\bs{Q}^{'})=\text{tr}(\bs{\Lambda}^2)=\sum_{i=1}^n\lambda_i^2$. 
+
+Let $\bs{a}$ and $\bs{b}$ be two $m\times1$ real vectors. Then,
+$$
+\begin{align}
+\|\bs{a}\bs{b}^{'}\|_F &= \sqrt{\text{tr}((\bs{a}\bs{b}^{'})^{'}\bs{a}\bs{b}^{'})} = \sqrt{\text{tr}(\bs{b}\bs{a}^{'}\bs{a}\bs{b}^{'})}\\
+&= \sqrt{(\bs{a}^{'}\bs{a})\text{tr}(\bs{b}\bs{b}^{'})}= \sqrt{(\bs{a}^{'}\bs{a})\text{tr}(\bs{b}^{'}\bs{b})} \\
+&= \sqrt{\|\bs{a}\|^2\|\bs{b}\|^2}.
+\end{align}
+$$
+In particular, $\|\bs{a}\bs{a}^{'}\|_F=\|\bs{a}\|^2$.
+
+The **spectral norm** of real matrix $\bs{A}_{m\times k}$, denoted by $\|\bs{A}\|$, is the largest singular value of $\bs{A}$ and is defined as
+$$
+\begin{align}
+\|\bs{A}\| = \sigma_{\text{max}}(\bs{A}) = (\lambda_{\text{max}}(\bs{A}^{'}\bs{A}))^{1/2},
+\end{align}
+$$
+where $\lambda_{\text{max}}(\bs{A}^{'}\bs{A})$ is the largest eigenvalue of $\bs{A}^{'}\bs{A}$. 
+
+Assume that $\bs{A}_{n\times n}$ is a real symmetric matrix. Then, the spectral decompositions $\bs{A}=\bs{Q}\bs{\Lambda}\bs{Q}$ and $\bs{A}^{'}\bs{A}=\bs{Q}\bs{\Lambda}^2\bs{Q}^{'}$ suggest that the eigenvalues of $\bs{A}^{'}\bs{A}$ are the squares of the eigenvalues of $\bs{A}$. Thus, the spectral norm of $\bs{A}$ can be expressed as
+$$
+\begin{align}
+\|\bs{A}\| = \max_{1\leq i\leq n}|\lambda_i|,
+\end{align}
+$$
+where $\lambda_i$'s are the eigenvalues of $\bs{A}$.
+
+The two matrix norms are also related. Let $\bs{A}$ be a $m\times k$ matrix and $\lambda_j(\bs{A}^{'}\bs{A})$ be the $j$th eigenvalue of $\bs{A}^{'}\bs{A}$. Then,
+$$
+\begin{align}
+\|A\| = \sqrt{\lambda_{\text{max}}(\bs{A}^{'}\bs{A})} \leq \sqrt{\sum_{j=1}^k\lambda_j(\bs{A}^{'}\bs{A})} = \sqrt{\text{tr}(\bs{A}^{'}\bs{A})} = \|\bs{A}\|_F.
+\end{align}
+$$
+If $\bs{A}^{'}\bs{A}$ has rank $r$, then it has at most $r$ non-zero eigenvalues. Thus,
+$$
+\begin{align}
+\|\bs{A}\|_F = \sqrt{\sum_{j=1}^k\lambda_j(\bs{A}^{'}\bs{A})}=\sqrt{\sum_{j=1}^r\lambda_j(\bs{A}^{'}\bs{A})} \leq \sqrt{r\lambda_{\text{max}}(\bs{A}^{'}\bs{A})} = \sqrt{r}\|\bs{A}\|.
+\end{align}
+$$
+
+In Python, we can use the `np.linalg.norm()` function to compute the Frobenius and spectral norms of a matrix. The following code chunk demonstrates how to compute these norms for a given matrix $\bs{A}$.
+
+```{python}
+# Define a matrix
+A = np.array([[3,2],[2,4]])
+
+# Compute the Frobenius norm
+frobenius_norm = np.linalg.norm(A, ord='fro')  # 'fro' specifies the Frobenius norm
+
+# Alternatively, using the sum of squared elements
+frobenius_norm_manual = np.sqrt(np.sum(A**2))
+
+print("Frobenius Norm (using np.linalg.norm):", frobenius_norm.round(2))
+print("Frobenius Norm (manual calculation):", frobenius_norm_manual.round(2))
+```	
+
+```{python}
+# Compute the spectral norm (largest singular value)
+spectral_norm = np.linalg.norm(A, ord=2)  # 'ord=2' specifies the spectral norm
+
+# Alternatively, using singular value decomposition (SVD)
+U, S, Vt = np.linalg.svd(A)
+spectral_norm_svd = S[0]  # Largest singular value
+
+print("Spectral Norm (using np.linalg.norm):", spectral_norm.round(2))
+print("Spectral Norm (using SVD):", spectral_norm_svd.round(2))
+```
+
+## Vector Calculus
+In this section, we discuss some basic concepts of vector calculus. 
+
+:::{}
+:::{#def-gradient}
+## Gradient
+Let $f:\mb{R}^n\to\mb{R}$ be a function. The **gradient** of $f$ is defined as
+$$
+\begin{align}
+\bs{\nabla}f(\bs{x})=\frac{\partial f(\bs{x})}{\partial\bs{x}}=
+\begin{pmatrix}
+\frac{\partial f(\bs{x})}{\partial x_1}\\
+\vdots\\
+\frac{\partial f(\bs{x})}{\partial x_n}
+\end{pmatrix}_{n\times1}.
+\end{align}
+$$
+:::
+:::
+
+The gradient is a vector of partial derivatives of $f$ with respect to the components of $\bs{x}$. The gradient is also called the **first derivative** of $f$. Note that 
+$$
+\begin{align}
+\frac{\partial f(\bs{x})}{\partial\bs{x}^{'}}=\left(\frac{\partial f(\bs{x})}{\partial\bs{x}}\right)^{'}.
+\end{align}
+$${#eq-vector-calculus-1}
+
+In the special case where $f(\bs{x})=\bs{a}^{'}\bs{x}$, we have 
+$$
+\begin{align}
+&\frac{\partial\bs{a}^{'}\bs{x}}{\partial\bs{x}}=
+\begin{pmatrix}
+\frac{\partial \bs{a}^{'}\bs{x}}{\partial x_1}\\
+\vdots\\
+\frac{\partial \bs{a}^{'}\bs{x}}{\partial x_n}
+\end{pmatrix}
+=
+\begin{pmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{pmatrix}
+=\bs{a},\label{eq5}\\
+&\frac{\partial\bs{a}^{'}\bs{x}}{\partial\bs{x}^{'}}=
+\begin{pmatrix}
+\frac{\partial \bs{a}^{'}\bs{x}}{\partial x_1}&\ldots&\frac{\partial \bs{a}^{'}\bs{x}}{\partial x_n}
+\end{pmatrix}
+=
+\begin{pmatrix}
+a_1&\ldots&a_n
+\end{pmatrix}
+=\bs{a}^{'}.\label{eq6}
+\end{align}
+$$ {#eq-vector-calculus-2}
+
+Since $\bs{a}^{'}\bs{x}=\bs{x}^{'}\bs{a}$, we also have $\frac{\partial\bs{a}^{'}\bs{x}}{\partial\bs{x}}=\frac{\partial\bs{x}^{'}\bs{a}}{\partial\bs{x}}=\bs{a}$.  Similarly, $\frac{\partial\bs{a}^{'}\bs{x}}{\partial\bs{x}^{'}}=\frac{\partial\bs{x}^{'}\bs{a}}{\partial\bs{x}^{'}}=\bs{a}^{'}$.
+
+Let $\bs{A}$ be a $m\times n$ matrix, $\bs{A}=\begin{pmatrix}\bs{a}^{'}_1\\\vdots\\\bs{a}^{'}_m\end{pmatrix}$, where $\bs{a}_j\in \mb{R}^{n}$ for $j=1,\ldots,m$ and $\bs{x}\in\mathbb{R}^n$. Then,
+$$
+\begin{align}
+&\frac{\partial \bs{A}\bs{x}}{\partial\bs{x}^{'}}=
+\begin{pmatrix}
+\frac{\partial\bs{a}^{'}_1\bs{x}}{\partial\bs{x}^{'}}\\
+\vdots\\
+\frac{\partial\bs{a}^{'}_m\bs{x}}{\partial\bs{x}^{'}}
+\end{pmatrix}
+=\begin{pmatrix}
+\bs{a}^{'}_1\\
+\vdots\\
+\bs{a}^{'}_m
+\end{pmatrix}
+=\bs{A},\\
+&\frac{\partial \bs{x}^{'}\bs{A}^{'}}{\partial\bs{x}}=
+\begin{pmatrix}
+\frac{\partial\bs{x}^{'}\bs{a}_1}{\partial\bs{x}}&\ldots&\frac{\partial\bs{x}^{'}\bs{a}_m}{\partial\bs{x}}
+\end{pmatrix}
+=\begin{pmatrix}
+\bs{a}_1&\ldots&\bs{a}_m
+\end{pmatrix}
+=\bs{A}^{'}.
+\end{align}
+$$
+
+Let $\bs{x}\in\mb{R}^n$, $\bs{z}\in\mb{R}^m$, $\bs{A}$ be an $m\times n$ matrix, and consider the quadratic form $\bs{z}^{'}\bs{A}\bs{x}$. Let $\bs{c}=\bs{A}^{'}\bs{z}$. Then,
+$$
+\begin{align}
+\frac{\partial(\bs{z}^{'}\bs{A}\bs{x})}{\partial\bs{x}}=\frac{\partial(\bs{c}^{'}\bs{x})}{\partial\bs{x}}=\bs{c}=\bs{A}^{'}\bs{z},
+\end{align}
+$$
+where the second equality follows from @eq-vector-calculus-2. Let $\bs{d}=\bs{A}\bs{x}$, then
+$$
+\begin{align}
+\frac{\partial(\bs{z}^{'}\bs{A}\bs{x})}{\partial\bs{z}}=\frac{\partial(\bs{z}^{'}\bs{d})}{\partial\bs{z}}=\bs{d}=\bs{A}\bs{x},
+\end{align}
+$$
+where the second equality follows from @eq-vector-calculus-2.
+
+Now, we assume that $\bs{x}$ and $\bs{z}$ are functions of $\bs{\alpha}\in\mb{R}^r$, and consider the quadratic form $\bs{z}^{'}\bs{A}\bs{x}$. Then, we have
+$$
+\begin{align}
+\frac{\partial(\bs{z}^{'}\bs{A}\bs{x})}{\partial\bs{\alpha}}&=\frac{\partial\bs{x}^{'}}{\partial\bs{\alpha}}\bs{A}^{'}\bs{z}+\frac{\partial\bs{z}^{'}}{\partial\bs{\alpha}}\bs{A}\bs{x}.
+\end{align}
+$$
+For the special case with $\bs{x}^{'}\bs{A}\bs{x}$, we have
+$$
+\begin{align}
+\frac{\partial(\bs{x}^{'}\bs{A}\bs{x})}{\partial\bs{x}}=\frac{\partial\bs{x}^{'}}{\partial\bs{x}}\bs{A}^{'}\bs{x}+\frac{\partial\bs{x}^{'}}{\partial\bs{x}}\bs{A}\bs{x}=\bs{A}^{'}\bs{x}+\bs{A}\bs{x}=(\bs{A}^{'}+\bs{A})\bs{x}.
+\end{align}
+$$
+
+If $\bs{A}$ is symmetric in  the quadratic form $\bs{x}^{'}\bs{A}\bs{x}$, then
+$$
+\begin{align}
+\frac{\partial(\bs{x}^{'}\bs{A}\bs{x})}{\partial\bs{x}}=2\bs{A}\bs{x}.
+\end{align}
+$$
+
+## Random vectors
+Let $\bs{v}=(v_1,\ldots,v_m)^{'}$ be an $m\times1$ vector of random variables. Its first and second moments are summarized by its mean vector and variance-covariance matrix (or simply the variance matrix). The mean vector is given by
+$$
+\begin{align}
+\bs{\mu}_{\bs{v}}=\E(\bs{v})=
+\begin{pmatrix}
+\E(v_1)\\
+\E(v_2)\\
+\vdots\\
+\E(v_m)
+\end{pmatrix}.
+\end{align}
+$$
+The variance-covariance matrix of $\bs{v}$ is defined by $\bs{\Sigma}_{\bs{v}}=\E\left((\bs{v}-\bs{\mu}_{\bs{v}})(\bs{v}-\bs{\mu}_{\bs{v}})^{'}\right)$:
+$$
+\begin{align*}
+\bs{\Sigma}_{\bs{v}}&=\E\left((\bs{v}-\bs{\mu}_{\bs{v}})(\bs{v}-\bs{\mu}_{\bs{v}})^{'}\right)=
+\begin{pmatrix}
+\text{var}(v_1)&\cdots&\text{cov}(v_1,v_m)\\
+\vdots&\ddots&\vdots\\
+\text{cov}(v_m,v_1)&\cdots&\text{var}(v_m)
+\end{pmatrix}.
+\end{align*}
+$$
+
+Thus, $\bs{\Sigma}_{\bs{v}}$ is an $m \times m$ matrix with diagonal elements corresponding to the variance terms $\text{var}(v_i)$ and off-diagonal elements representing the covariances $\text{cov}(v_i, v_j)$. The variance-covariance matrix is also called the **second moment matrix** of $\bs{v}$. Note that $\bs{\Sigma}_{\bs{v}}$ is a symmetric matrix because $\text{cov}(v_i, v_j) = \text{cov}(v_j, v_i)$ for all $i$ and $j$.  If $\bs{\Sigma}_{\bs{v}}=\sigma^2\bs{I}_m$, where $\sigma^2$ is a constant and $\bs{I}_m$ is the $m\times m$ identity matrix, then the elements of $\bs{v}$ are uncorrelated.
+
+:::{#exm-random-vector}
+Let $\bs{x}$ be a $n\times1$ random vector with mean $\bs{\mu}_{\bs{x}}$ and variance-covariance matrix $\bs{\Sigma}_{\bs{x}}$, $\bs{a}$ be a $n\times1$ non-random vector, and $\bs{A}$ be a $n\times n$ nonrandom matrix. Define $\bs{y}=\bs{A}\bs{x}+\bs{a}$. Then, the mean and variance-covariance matrix of $\bs{y}$ are given by
+$$
+\begin{align}
+\bs{\mu}_{\bs{y}}&=\E(\bs{y})=\E(\bs{A}\bs{x}+\bs{a})=\E(\bs{A}\bs{x})+\E(\bs{a})=\bs{A}\E(\bs{x})+\bs{a}=\bs{A}\bs{\mu}_{\bs{x}}+\bs{a},\\
+\bs{\Sigma}_{\bs{y}}&=\E\left((\bs{y}-\bs{\mu}_{\bs{y}})(\bs{y}-\bs{\mu}_{\bs{y}})^{'}\right)=\E\left((\bs{A}\bs{x}+\bs{a}-\bs{\mu}_{\bs{y}})(\bs{A}\bs{x}+\bs{a}-\bs{\mu}_{\bs{y}})^{'}\right)\\
+&=\E\left((\bs{A}\bs{x}-\bs{A}\bs{\mu}_{\bs{x}})(\bs{A}\bs{x}-\bs{A}\bs{\mu}_{\bs{x}})^{'}\right)=\E(\bs{A}(\bs{x}-\bs{\mu}_{\bs{x}})(\bs{x}-\bs{\mu}_{\bs{x}})^{'}\bs{A}^{'})\\
+&=\bs{A}\E\left((\bs{x}-\bs{\mu}_{\bs{x}})(\bs{x}-\bs{\mu}_{\bs{x}})^{'}\right)\bs{A}^{'}=\bs{A}\bs{\Sigma}_{\bs{x}}\bs{A}^{'}.
+\end{align}
+$$
+:::
+
+:::{#def-multivariate-normal}
+## Multivariate normal distribution
+Let $\bs{v}_{m\times1}$ be a random vector with mean $\bs{\mu}_{\bs{v}}$ and covariance matrix $\bs{\Sigma}_{\bs{v}}$. Then, $\bs{v}$ has **multivariate normal distribution** if its density function is given by
+$$
+\begin{align}
+f(\bs{v})=(2\pi)^m\left|\bs{\Sigma}_{\bs{v}}\right|^{-1}\exp\left(-\frac{1}{2}(\bs{v}-\bs{\mu}_{\bs{v}})^{'}\bs{\Sigma}^{-1}_{\bs{v}}(\bs{v}-\bs{\mu}_{\bs{v}})\right).
+\end{align}
+$$
+We use the notation $\bs{v}\sim N(\bs{\mu}_{\bs{v}},\,\bs{\Sigma}_{\bs{v}})$ to denote that $\bs{v}$ follows a multivariate normal distribution with mean $\bs{\mu}_{\bs{v}}$ and variance matrix $\bs{\Sigma}_{\bs{v}}$.
+:::
+
+Some important properties of the multivariate normal distribution are:
+
+a. If $\bs{v}\sim N(\bs{\mu}_{\bs{v}},\,\bs{\Sigma}_{\bs{V}})$, then $v_i\sim N(\mu_i,\,\sigma^2_i)$ for $i=1,\ldots,m$, where $\mu_i$ is the $i$th element of $\bs{\mu}_{\bs{v}}$ and $\sigma^2_i$ is the $(i,i)$th element of $\bs{\Sigma}_{\bs{v}}$.
+b. If $\bs{v}\sim N(\bs{\mu}_{\bs{v}},\,\bs{\Sigma}_{\bs{V}})$, then $\bs{A}\bs{v}+\bs{d}\sim N(\bs{A}\bs{\mu}_{\bs{v}}+\bs{d},\,\bs{A}\bs{\Sigma}_{\bs{v}}\bs{A}^{'})$, where $\bs{A}$ is a non-random $a\times m$ matrix and $\bs{d}$ is a non-random $a\times1$ vector.
+
+(c) Let $\bs{v}_1$ be a $m_1\times1$ random vector with $\bs{v}_1\sim N(\bs{\mu}_{\bs{v}_1},\,\bs{\Sigma}_{\bs{v}_1})$ and $\bs{v}_2$ be a $m_2\times1$ random vector with $\bs{v}_2\sim N(\bs{\mu}_{\bs{v}_2},\,\bs{\Sigma}_{\bs{v}_2})$. Then, $\bs{v}_1$ and $\bs{v}_2$ are independent if and only if 
+$$
+\begin{align}
+\text{cov}(\bs{v}_1, \bs{v}_2) = \E\left((\bs{v}_1-\bs{\mu}_{\bs{v}_1})(\bs{v}_2- \bs{\mu}_{\bs{v}_2})^{'}\right)= \bs{0}_{m_1\times m_2}.
+\end{align}
+$$
+
+:::{#exm-multivariate-normal0}
+Let $\bs{v}\sim N(\bs{\mu}_{\bs{v}},\,\bs{\Sigma}_{\bs{v}})$ and $\bs{w}=\bs{\Sigma}^{-1/2}_\bs{v}(\bs{v}-\bs{\mu}_{\bs{v}})$, where $\bs{\Sigma}^{-1/2}$ is the inverse of the square root of $\bs{\Sigma}_{\bs{v}}$. Then, $\bs{w}\sim N(\bs{0}_m,\bs{I}_m)$. To see this, note that
+$$
+\begin{align*}
+\text{E}(\bs{w})&=\E\left(\bs{\Sigma}^{-1/2}_{\bs{v}}(\bs{v}-\bs{\mu}_{\bs{v}})\right)=\bs{\Sigma}^{-1/2}_{\bs{v}}\E\left(\bs{v}-\bs{\mu}_{\bs{v}}\right)=\bs{0}_m.
+\end{align*}
+$$
+$$
+\begin{align*}
+\text{cov}(\bs{w})&=\E\left((\bs{w}-\bs{\mu}_{\bs{w}})(\bs{w}-\bs{\mu}_{\bs{w}})^{'}\right)\\
+&=\E\left((\bs{\Sigma}^{-1/2}_{\bs{v}}(\bs{v}-\bs{\mu}_{\bs{v}}))(\bs{\Sigma}^{-1/2}_{\bs{v}}(\bs{v}-\bs{\mu}_{\bs{v}}))^{'}\right)\\
+&=\E\left(\bs{\Sigma}^{-1/2}_{\bs{v}}(\bs{v}-\bs{\mu}_{\bs{v}})(\bs{v}-\bs{\mu}_{\bs{v}})^{'}\bs{\Sigma}^{-1/2}_{\bs{v}}\right)\\
+&=\bs{\Sigma}^{-1/2}_{\bs{v}}\E\left((\bs{v}-\bs{\mu}_{\bs{v}})(\bs{v}-\bs{\mu}_{\bs{v}})^{'}\right)\bs{\Sigma}^{-1/2}_{\bs{v}}\\
+&=\bs{\Sigma}^{-1/2}_{\bs{v}}\bs{\Sigma}_{\bs{v}}\bs{\Sigma}^{-1/2}_{\bs{v}}=\bs{I}_m.
+\end{align*}
+$$
+Then, $\bs{w}\sim N(\bs{0}_m,\bs{I}_m)$ follows from the second property of the multivariate normal distribution.
+:::
+:::{#exm-multivariate-normal1}
+Let $y$ be an $m\times1$ random vector with $\bs{y}\sim N(\bs{\mu}_{\bs{y}},\,\bs{\Sigma}_{\bs{y}})$, and $\bs{A}$ and $\bs{B}$ be two non-random $m\times m$ matrices. Then, $\bs{A}\bs{y}$ and $\bs{B}\bs{y}$ are independent if and only if $\bs{A}\bs{\Sigma}_{\bs{y}}\bs{B}^{'}=\bs{0}$. To see this, note that
+$$
+\begin{align*}
+\text{cov}(\bs{A}\bs{y},\,\bs{B}\bs{y})&=\E\left((\bs{A}\bs{y}-\bs{A}\bs{\mu}_{\bs{y}})(\bs{B}\bs{y}-\bs{B}\bs{\mu}_{\bs{y}})^{'}\right)\\
+&=\E(\bs{A}(\bs{y}-\bs{\mu}_{\bs{y}})(\bs{y}-\bs{\mu}_{\bs{y}})^{'}\bs{B}^{'})\\
+&=\bs{A}\E\left((\bs{y}-\bs{\mu}_{\bs{y}})(\bs{y}-\bs{\mu}_{\bs{y}})^{'}\right)\bs{B}^{'}\\
+&=\bs{A}\bs{\Sigma}_{\bs{y}}\bs{B}^{'}\\
+&=\bs{0}_{m\times m}.
+\end{align*}
+$$
+Then, the result follows from the third property of the multivariate normal distribution.
+:::
+
+:::{}
+:::{#def-chi-squared}
+## Chi-squared distribution
+If $\bs{u}\sim N(\bs{0}_m,\bs{I}_m)$, then the random variable $\bs{u}^{'}\bs{u}$ has a chi-squared distribution with $m$ degrees of freedom, denoted by $\chi^2_m$. 
+:::
+:::
+
+:::{}
+:::{#exm-chi-squared0}
+Let $\bs{x}\sim N(\bs{\mu}_{\bs{x}},\,\bs{\Sigma}_{\bs{x}})$. Then, the random variable $\bs{y}=\left(\bs{x}-\bs{\mu}_{\bs{x}}\right)^{'}\bs{\Sigma}^{-1}_{\bs{x}}\left(\bs{x}-\bs{\mu}_{\bs{x}}\right)$ has a chi-squared distribution with $m$ degrees of freedom, where $m=\text{rank}(\bs{\Sigma}_{\bs{x}})$. To see this, first note that we can express $\bs{y}$ as $\bs{y}=\bs{u}^{'}\bs{u}$, where $\bs{u}=\bs{\Sigma}^{-1/2}\left(\bs{x}-\bs{\mu}_{\bs{x}}\right)$. Also, it follows from @exm-multivariate-normal0 that $\bs{u}\sim N(\bs{0}_m,\bs{I}_m)$, thus we have $\bs{y}\sim \chi^2_m$.
+:::
+:::
+
+:::{}
+:::{#thm-chi-squared}
+Let $\bs{u}\sim N(\bs{0}_m,\bs{I}_m)$ and $\bs{C}$ be an $m\times m$ symmetric idempotent matrix. Then, $\bs{y}=\bs{u}^{'}\bs{C}\bs{u}$ has a chi-squared distribution with $r$ degrees of freedom, where $r=\text{rank}(\bs{C})$.
+:::
+:::{.proof}
+## Proof of @thm-chi-squared
+Recall that the eigenvalues of $\bs{C}$ are either $0$ or $1$. Then, by the spectral decomposition of $\bs{C}$, we have $\bs{C}=\bs{Q}\bs{\Lambda}\bs{Q}^{'}$, where $\bs{Q}$ is an orthogonal matrix ($\bs{Q}^{'}\bs{Q}=\bs{Q}\bs{Q}^{'}=\bs{I}_m$) and $\bs{\Lambda}$ is a diagonal matrix with $r$ non-zero eigenvalues, i.e.,$\bs{\Lambda}=\text{diag}(1,\ldots,1,0,\ldots,0)$. Let $\bs{z}=\bs{Q}^{'}\bs{u}$. Since $\bs{Q}$ is an orthogonal matrix, $\bs{z}\sim N(\bs{0}_m,\bs{I}_m)$. Then, we have
+$$
+\begin{align*}
+\bs{y}=\bs{u}^{'}\bs{C}\bs{u}&=\bs{u}^{'}\bs{Q}\bs{\Lambda}\bs{Q}^{'}\bs{u}=\bs{z}^{'}\bs{\Lambda}\bs{z}\\
+&=\sum_{i=1}^m\lambda_i z_i^2=\sum_{i=1}^r z_i^2,
+\end{align*}
+$$
+where $z_i$'s are the elements of $\bs{z}$. Since $z_i$'s are independent and $z_i^2\sim \chi^2_1$, we have $\sum_{i=1}^r z_i^2\sim \chi^2_r$. Thus, $\bs{y}\sim \chi^2_r$.
+:::
+:::
+
+:::{}
+:::{#thm-independent-quadratics}
+## Independence of quadratic forms
+Let $\bs{u}$ be an $m\times1$ random vector with $\bs{u}\sim N(\bs{0}_m,\bs{I}_m)$. Let $\bs{A}$ and $\bs{B}$ be two non-random $m\times m$ matrices.
+
+a. Assume that $\bs{A}$ and $\bs{B}$ are symmetric and idempotent. Then, $\bs{u}^{'}\bs{A}\bs{u}$ and $\bs{u}^{'}\bs{B}\bs{u}$ are independent if and only if $\bs{A}\bs{B}=\bs{0}_{m\times m}$.
+b. Assume that $\bs{A}$ and $\bs{B}$ are symmetric matrices with $\bs{B}$ idempotent. Then, $\bs{A}\bs{u}$ and $\bs{u}^{'}\bs{B}\bs{u}$ are independent if and only if $\bs{A}\bs{B}=\bs{0}_{m\times m}$.
+:::
+:::{.proof}
+## Proof of @thm-independent-quadratics
+See Appendix B in @Greene2017.
+:::
+:::
+
+:::{}
+:::{#exm-multivariate-normal}
+In Appendix C, we introduce the bivariate normal distribution. The bivariate normal distribution is a special case of the multivariate normal distribution with $m=2$. Assume that $\bs{v}=(v_1,v_2)^{'}\sim N(\bs{\mu}_{\bs{v}}, \bs{\Sigma}_{\bs{v}})$, where $\bs{\mu}_{\bs{v}}=(\mu_1,\mu_2)^{'}$ and
+$$
+\begin{align*}
+\bs{\Sigma}_{\bs{v}}=\begin{pmatrix}
+\sigma^2_1&\sigma_{12}\\
+\sigma_{12}&\sigma^2_2
+\end{pmatrix}.
+\end{align*}
+$$
+
+Then, $\bs{v}$ has a bivariate normal distribution with joint density function
+$$
+\begin{align*}
+&f(\bs{v})=\frac{1}{2\pi\sigma_1\sigma_2\sqrt{1-\rho^2}}\\
+&\times\exp\left(-\frac{1}{2(1-\rho^2)}\left(\frac{(v_1-\mu_1)^2}{\sigma^2_1}+\frac{(v_2-\mu_2)^2}{\sigma^2_2}-\frac{2\rho(v_1-\mu_1)(v_2-\mu_2)}{\sigma_1\sigma_2}\right)\right),
+\end{align*}
+$$
+where $\rho=\frac{\sigma_{12}}{\sigma_1\sigma_2}$ is the correlation coefficient between $v_1$ and $v_2$. The marginal density functions of $v_1$ and $v_2$ are given by
+$$
+f_1(v_1)=\frac{1}{\sqrt{2\pi}\sigma_1}\exp\left(-\frac{(v_1-\mu_1)^2}{2\sigma^2_1}\right),
+$$
+$$
+f_2(v_2)=\frac{1}{\sqrt{2\pi}\sigma_2}\exp\left(-\frac{(v_2-\mu_2)^2}{2\sigma^2_2}\right).
+$$
+The conditional density of $v_1$ given $v_2$ is given by
+$$
+f(v_1|v_2)=\frac{1}{\sqrt{2\pi(1-\rho^2)\sigma^2_1}}\exp\left(-\frac{(v_1-\mu_1-\rho\frac{\sigma_1}{\sigma_2}(v_2-\mu_2))^2}{2(1-\rho^2)\sigma^2_1}\right).
+$$
+The conditional density of $v_2$ given $v_1$ is given by
+$$
+f(v_2|v_1)=\frac{1}{\sqrt{2\pi(1-\rho^2)\sigma^2_2}}\exp\left(-\frac{(v_2-\mu_2-\rho\frac{\sigma_2}{\sigma_1}(v_1-\mu_1))^2}{2(1-\rho^2)\sigma^2_2}\right).
+$$
+:::
+:::
+
+## Multivariate central limit theorem
+In @sec-chapter26, we introduce the multivariate central limit theorem, which is the multivariate version of the central limit theorem given in @sec-chapter25. To prove the multivariate central limit theorem, we need the following lemma.
+
+:::{#lem-multivariate-clt}
+## Cramer-Wold device
+Let $\{\bs{X}_n\}$ be a sequence of $m\times1$ random vectors. Then, $\{\bs{X}_n\}$ converges in distribution to a random vector $\bs{X}$ if and only if $\{\bs{u}^{'}\bs{X}_n\}$ converges in distribution to $\bs{u}^{'}\bs{X}$ for every non-random $m\times1$ vector $\bs{u}$.
+:::
+
+:::{.proof}
+## Proof of @lem-multivariate-clt
+We use Levy's continuity theorem introduced in @sec-appendixC to prove this lemma. Assume that $\bs{X}_n\xrightarrow{d}\bs{X}$. Let $\bs{u}\in\mathbb{R}^m$ and $\alpha\in\mathbb{R}$. Then, by Levy's continuity theorem, we have
+$$
+\begin{align*}
+\lim_{n\to\infty} \varphi_{\bs{X}_n}(\alpha \bs{u})=\varphi_{\bs{X}}(\alpha \bs{u}).
+\end{align*}
+$$
+
+We can rewrite this convergence result as
+$$
+\begin{align*}
+\lim_{n\to\infty} \varphi_{\bs{u}^{'}\bs{X}_n}(\alpha)=\varphi_{\bs{u}^{'}\bs{X}}(\alpha).
+\end{align*}
+$$
+
+Since $\alpha$ is arbitrary, by Levy's continuity theorem again, we have $\bs{u}^{'}\bs{X}_n\xrightarrow{d}\bs{u}^{'}\bs{X}$.
+
+Next, we assume that $\bs{u}^{'}\bs{X}_n\xrightarrow{d}\bs{u}^{'}\bs{X}$ for $\bs{u}\in\mathbb{R}^m$. Then, by Levy's continuity theorem, we have
+$$
+\begin{align*}
+\lim_{n\to\infty} \varphi_{\bs{u}^{'}\bs{X}_n}(\alpha)=\varphi_{\bs{u}^{'}\bs{X}}(\alpha).
+\end{align*}
+$$
+
+Setting $\alpha=1$ and rewriting the above convergence result, we obtain
+$$
+\begin{align*}
+\lim_{n\to\infty} \varphi_{\bs{X}_n}(\bs{u})=\varphi_{\bs{X}}(\bs{u}).
+\end{align*}
+$$
+
+Thus, by Levy's continuity theorem again, we have $\bs{X}_n\xrightarrow{d}\bs{X}$.
+:::
+
+We now provide the proof of the multivariate central limit theorem. Let $\bs{T}=\sqrt{n}(\bar{\bs{W}}-\bs{\mu}_{\bs{W}})$ and $\bs{Z}\sim N(\bs{0},\bs{\Sigma}_{\bs{W}})$. Then, the multivariate central limit theorem states that $\bs{T}\xrightarrow{d}\bs{Z}$ as $n\to\infty$. By @lem-multivariate-clt, it suffices to show that $\bs{u}^{'}\bs{T}\xrightarrow{d}\bs{u}^{'}\bs{Z}$ for every non-random $m\times1$ vector $\bs{u}$. Note that
+$$
+\begin{align*}
+\bs{u}^{'}\bs{T}=\sqrt{n}\bs{u}^{'}(\bar{\bs{W}}-\bs{\mu}_{\bs{W}})=\sqrt{n}(\bar{Y}-\mu_Y),
+\end{align*}
+$$
+
+where $\bar{Y}=\frac{1}{n}\sum_{i=1}^n Y_i$ with $Y_i=\bs{u}^{'}\bs{W}_i$ and $\mu_Y=\E(Y_i)=\bs{u}^{'}\bs{\mu}_{\bs{W}}$. Since $Y_i$'s are i.i.d. random variables with mean $\mu_Y$ and variance $\sigma^2_Y=\text{var}(Y_i)=\bs{u}^{'}\bs{\Sigma}_{\bs{W}}\bs{u}$, by the (univariate) central limit theorem given in @sec-chapter25, we have $\sqrt{n}(\bar{Y}-\mu_Y)\xrightarrow{d} N(0,\sigma^2_Y)$ as $n\to\infty$. Note that $\bs{u}^{'}\bs{Z}\sim N(0,\sigma^2_Y)$. Thus, we have $\bs{u}^{'}\bs{T}\xrightarrow{d}\bs{u}^{'}\bs{Z}$ for every non-random $m\times1$ vector $\bs{u}$. This completes the proof of the multivariate central limit theorem.
+
+## Heteroskedasticity-robust covariance matrix estimator
+In @thm-thm26-1, we show that
+$$
+\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})\xrightarrow{d}N\left(\bs{0}_{k+1},\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\right),
+$$
+where $\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}=\bs{Q}^{-1}_{\bs{X}}\bs{\Sigma}_{\bs{V}}\bs{Q}^{-1}_{\bs{X}}$. We can estimate $\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}$ by
+$$
+\begin{align}
+\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}=\left(\frac{\bs{X}^{'}\bs{X}}{n}\right)^{-1}\hat{\bs{\Sigma}}_{\bs{V}}\left(\frac{\bs{X}^{'}\bs{X}}{n}\right)^{-1},
+\end{align}
+$$
+where $\hat{\bs{\Sigma}}_{\bs{V}}=\frac{1}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_i\hat{u}^2_i$. 
+
+In this section, we show that $\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}$ is a consistent estimator of $\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}$. Since $\frac{1}{n}\bs{X}^{'}\bs{X}\xrightarrow{p}\bs{Q}_{\bs{X}}$ by @thm-thm26-1, it suffices to show that $\hat{\bs{\Sigma}}_{\bs{V}}\xrightarrow{p}\bs{\Sigma}_{\bs{V}}$. Note that $\hat{u}_i=Y_i-\hat{Y}_i=u_i-(\hat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i$. Then, we can express $\hat{\bs{\Sigma}}_{\bs{V}}$ as
+$$
+\begin{align*}
+\hat{\bs{\Sigma}}_{\bs{V}}&=\frac{1}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_i\hat{u}^2_i\\
+&=\frac{1}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_i\left(u_i-(\hat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i\right)^2\\
+&=\frac{1}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_iu^2_i-\frac{2}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_iu_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})\\
+&+\frac{1}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})\\
+&=\bs{A}_1-\bs{A}_2+\bs{A}_3,
+\end{align*}    
+$$
+where $\bs{A}_1=\frac{1}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_iu^2_i$, $\bs{A}_2=\frac{2}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_iu_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})$, and $\bs{A}_3=\frac{1}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})$. 
+
+Applying the law of large numbers to $\bs{A}_1$, we obtain 
+$$
+\bs{A}_1=\frac{1}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_iu^2_i\xrightarrow{p}\E(\bs{X}_i\bs{X}^{'}_iu^2_i)=\bs{\Sigma}_{\bs{V}}. 
+$$
+
+Next, we show that $\bs{A}_2\xrightarrow{p}\bs{0}$ and $\bs{A}_3\xrightarrow{p}\bs{0}$. Note that
+$$
+\begin{align*}
+\|\bs{A}_2\|&=\left\|\frac{2}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_iu_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})\right\|\\
+&\leq \frac{2}{n}\sum_{i=1}^{n}\left\|\bs{X}_i\bs{X}^{'}_iu_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})\right\|\\
+&\leq 2\|\hat{\bs{\beta}}-\bs{\beta}\|\frac{1}{n}\sum_{i=1}^{n}\|\bs{X}_i\bs{X}^{'}_iu_i\bs{X}_i\|\\
+&\leq 2\|\hat{\bs{\beta}}-\bs{\beta}\|\left(\frac{1}{n}\sum_{i=1}^{n}\|\bs{X}_i\bs{X}^{'}_i\|^2\right)^{1/2}\left(\frac{1}{n}\sum_{i=1}^{n}\|u_i\bs{X}_i\|^2\right)^{1/2},
+\end{align*}
+$$
+where the first inequality follows from the triangle inequality, the second inequality from the sub-multiplicative property of matrix norms, and the third inequality from the Cauchy-Schwarz inequality.
+
+Note that $\E\left(\|\bs{X}_i\bs{X}^{'}_i\|^2\right)=\E\left(\|\bs{X}_i\|^4\right)<\infty$ by Assumption 3. Thus, by the law of large numbers, we have $\frac{1}{n}\sum_{i=1}^{n}\|\bs{X}_i\bs{X}^{'}_i\|^2\xrightarrow{p}\E(\|\bs{X}_i\bs{X}^{'}_i\|^2)$. Also, by the Cauchy-Schwarz inequality, we have 
+$$
+\E\left(\|u_i\bs{X}_i\|^2\right)\leq \left(\E(u^4_i)\right)^{1/2}\left(\E(\|\bs{X}_i\|^4)\right)^{1/2}<\infty,
+$$
+by Assumption 3. Thus, by the law of large numbers again, we have $\frac{1}{n}\sum_{i=1}^{n}\|u_i\bs{X}_i\|^2\xrightarrow{p}\E(\|u_i\bs{X}_i\|^2)$.
+
+
+By @thm-thm26-1-0, we have $\|\hat{\bs{\beta}}-\bs{\beta}\|\xrightarrow{p}0$. Then, we obtain
+$$
+\begin{align*}
+\|\bs{A}_2\|&\leq 2\|\hat{\bs{\beta}}-\bs{\beta}\|\left(\frac{1}{n}\sum_{i=1}^{n}\|\bs{X}_i\bs{X}^{'}_i\|^2\right)^{1/2}\left(\frac{1}{n}\sum_{i=1}^{n}\|u_i\bs{X}_i\|^2\right)^{1/2}\\
+&\xrightarrow{p} 2\times 0 \times\left(\E(\|\bs{X}_i\bs{X}^{'}_i\|^2)\right)^{1/2}\times\left(\E(\|u_i\bs{X}_i\|^2)\right)^{1/2}=0,
+\end{align*}
+$$
+which implies that $\bs{A}_2\xrightarrow{p}\bs{0}$.
+
+Similarly,
+$$
+\begin{align*}
+\|\bs{A}_3\|&=\left\|\frac{1}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})\right\|\\
+&\leq \frac{1}{n}\sum_{i=1}^{n}\left\|\bs{X}_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i\bs{X}^{'}_i(\hat{\bs{\beta}}-\bs{\beta})\right\|\\
+&\leq \|\hat{\bs{\beta}}-\bs{\beta}\|^2\frac{1}{n}\sum_{i=1}^{n}\|\bs{X}_i\bs{X}^{'}_i\|^2.
+\end{align*}
+$$
+
+Then, by the same arguments used for $\bs{A}_2$, we have $\bs{A}_3\xrightarrow{p}\bs{0}$. This completes the proof.

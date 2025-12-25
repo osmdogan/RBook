@@ -1,0 +1,759 @@
+# Data Structures in R {#sec-chapter2}
+
+## Introduction
+
+In this chapter, we will introduce the basic data containers and types. There are various data structures in R to store and manipulate data. In this chapter, we discuss these data structures and their properties for effective data management.
+
+## Containers
+In R, there are several data structures to store collections of data. The most commonly used data structures are: vectors, matrices, arrays, lists, and data frames. In this part, we will focus on vectors, matrices, arrays, and lists, and cover data frames in Chapter 7.
+
+### Vectors
+In R, we use a vector to store an ordered collection of objects of the same type. We can create a vector using one of the following functions:
+
+- `c()` is the most general way to create a vector.
+- `:` creates a sequence of integers. 
+- `seq()` is used to generate regular sequences. 
+- `rep()` is useful to generate vectors of replicated elements.
+
+Some illustrative examples are given below. 
+
+```{r}
+# Creating a vector of numbers
+v1 = c(2.5, 4, 7.3, 0.1)
+v1
+```
+
+```{r}
+# Creating a character vector
+v2 = c("A", "B", "C", "D")
+v2
+```
+```{r}
+# Creating an integer sequence
+v3 = -3:3
+v3
+```
+```{r}
+# Creating a sequence with seq()
+seq(0, 2, by = 0.5) # increment by 0.5
+```
+
+```{r}
+# Creating a sequence with seq()
+seq(0, 2, len = 6) # length of the sequence is 6
+```
+```{r}
+
+rep(1:5, each = 2) 
+```
+```{r}
+# Creating a replicated vector with rep()
+rep(1:5, times = 2)
+```
+
+To index certain element(s) of a vector, we use `[ ]` with a vector/scalar of positions to reference the elements of the vector. Including a minus sign before the vector/scalar removes the indexed elements from the vector.
+
+```{r}
+# Referencing elements of a vector
+x <- c(4, 7, 2, 10, 1, 0)
+x[4] # return the fourth element
+```
+```{r}
+# Return elements from index 1 to 3
+x[1:3] 
+```
+```{r}
+# Return elements at indices 2, 5 and 6
+x[c(2,5,6)] 
+```
+```{r}
+# Remove the third element from x
+x[-3] 
+```
+```{r}
+# Remove multiple elements from x
+x[-c(4,5)] 
+```
+```{r}
+# Logical referencing
+x[x>4] # return elements bigger than 4
+```
+```{r}
+# Modifying elements of a vector
+x[3] <- 999 
+x
+```
+
+The following additional functions can be useful to return the indices of a vector.
+
+* `which()`: returns the position or the index of the value which satisfies the given condition.
+* `which.max()`: returns the location of the (first) maximum element of a numeric vector.
+* `which.min()`: returns the location of the (first) minimum element of a numeric vector.
+* `match()`: returns the first position of an element of a vector in another vector.
+
+```{r}
+x <- c(4, 7, 2, 10, 1, 0)
+x>=4 # return a logical vectors of TRUE and FALSE
+```
+```{r}
+# Return indices of elements satisfying the condition
+which(x>=4) # return indices
+```
+```{r}
+# Return indices of the maximum element
+which.max(x) 
+```
+```{r}
+# Return the maximum element using which.max()
+x[which.max(x)] # return the first maximum element
+```
+```{r}
+# Return the maximum element using max()
+max(x)
+```
+```{r}
+# Using match()
+y <- rep(1:5, times=5:1)
+y
+match(1:5, y) # return the first position of each element in y that matches with 1:5
+```
+```{r}
+# Return unique elements
+unique(y)
+```
+```{r}
+match(unique(y), y) # return the first position of each element in y that matches with unique(y)
+```
+
+When vectors are used in math expressions the operations are performed element-wise.
+
+```{r}
+# Element-wise operations
+x = c(4, 7, 2, 10, 1, 0)
+y = x^2 + 1
+y
+x*y # element-wise multiplication
+```
+
+In @tbl-chapter2-t1, we provide some useful functions for vector operations.
+
+::: {style="font-size: 85%"}
+| **Function**                         | **Description** |
+|:---------------------|:---------------------------|
+| `sum(x)`, `prod(x)`                  | Sum/product of the elements of `x` |
+| `cumsum(x)`, `cumprod(x)`            | Cumulative sum/product of the elements of `x` |
+| `min(x)`, `max(x)`                   | Minimum/maximum element of `x` |
+| `mean(x)`, `median(x)`               | Mean/median of `x` |
+| `var(x)`, `sd(x)`                    | Variance/standard deviation of `x` |
+| `cov(x, y)`, `cor(x, y)`             | Covariance/correlation of `x` and `y` |
+| `range(x)`                            | Range of `x` |
+| `quantile(x)`                         | Quantiles of `x` for the given probabilities |
+| `fivenum(x)`                          | Five number summary of `x` |
+| `length(x)`                           | Number of elements in `x` |
+| `unique(x)`                           | Unique elements of `x` |
+| `rev(x)`                              | Reverse the elements of `x` |
+| `sort(x)`                             | Sort the elements of `x` |
+| `which(x)`                            | Indices of `TRUE`s in a logical vector |
+| `which.max(x)`, `which.min(x)`        | Index of the max/min element of `x` |
+| `match(x)`                            | First position of an element in a vector |
+| `union(x, y)`                         | Union of `x` and `y` |
+| `intersect(x, y)`                     | Intersection of `x` and `y` |
+| `setdiff(x, y)`                       | Elements of `x` that are not in `y` |
+| `setequal(x, y)`                      | Do `x` and `y` contain the same elements? |
+: Useful functions for vectors {#tbl-chapter2-t1}
+:::
+
+Below, we provide some illustrative examples. 
+
+```{r}
+# Useful functions for vectors
+x <- c(4,7,2,10,1,0)
+y <- 3*x^2 + 1
+y
+sum(x) # sum of elements
+range(x) # range of elements
+length(x) # number of elements
+rev(x) # reverse the elements
+sort(x) # sort in increasing order
+sort(x, decreasing = TRUE) # sort in decreasing order
+which(x==7) # return indices
+union(x,y) # union(x,y)
+setdiff(x,y) # elements in x but not in y
+intersect(x,y) # intersection of x and y
+setequal(x,y) # do x and y contain the same elements?
+```
+
+
+### Matrices 
+
+A matrix is a two-dimensional generalization of a vector. To create a matrix, we use the function `matrix()`, with the syntax
+
+```{r}
+#| eval: false
+matrix(data=NA, nrow=1, ncol=1, byrow = FALSE, dimnames = NULL)
+```
+
+The arguments are as follows:
+
+- `data` is a vector that gives data to fill the matrix 
+- `nrow` is the desired number of rows 
+- `ncol` is the desired number of columns
+- `byrow` is set to `FALSE` by default, which means matrix is filled by columns. Otherwise, matrix is filled by rows. 
+- `dimnames` is an optional `list` of length 2 giving the row and column names, respectively. 
+
+Below, we provide some illustrative examples.
+
+```{r}
+# Creating a matrix
+y = matrix(nrow = 3, ncol = 4)
+y
+
+# Creating a matrix
+x = matrix(c(5,0,6,1,3,5,9,5,7,1,5,3), 
+           nrow = 3, ncol = 4, 
+           byrow = TRUE,
+           dimnames = list(rows = c("r.1", "r.2", "r.3"),
+                           cols = c("c.1", "c.2", "c.3", "c.4")))
+x
+```
+
+Some useful functions for matrices are given below.
+```{r}
+class(x) # class of x
+colnames(x) # access to column names
+rownames(x) # access to row names
+rownames(x)=c("A","B","C") # change the row names
+dimnames(x) # access to both row and column names
+dimnames(x)$rows # access to row names
+dimnames(x)$cols # access to column names
+
+dim(x) # dimensions of x
+nrow(x) # number of rows
+ncol(x) # number of columns
+```
+
+The elements of a matrix can be referenced using the `[ ]` just like with vectors, but now with 2-dimensions.
+
+```{r}
+x = matrix(c(5,0,6,1,3,5,9,5,7,1,5,3), 
+           nrow = 3, ncol = 4)
+x
+x[2, 3] # Element in Row 2, Column 3
+x[1, ] # Row 1, all Columns
+x[ , 2] # All Rows, Column 2
+x[c(1, 3), ] # Rows 1 and 3, all columns
+```
+
+When matrices are used in math expressions the operations are performed element-wise. 
+
+- For matrix multiplication use the `%*%` operator. 
+- If a vector is used in matrix multiplication, it will be coerced to either a row or column matrix to make the arguments conformable. 
+- Using `%*%` on two vectors will return the inner product as a matrix and not a scalar.
+
+```{r}
+A = matrix(1:4, nrow = 2)
+B = matrix(1, nrow = 2, ncol = 2)
+A*B # element-wise multiplication
+A%*%B # matrix multiplication
+y = 1:3
+y%*%y # inner product as a matrix
+A/c(y%*%y) 
+# A/(y%*%y) # Error: non-conformable arrays
+```
+
+We use the `apply` function for applying functions to the margins of a matrix, array, or dataframes. The syntax is 
+```{r}
+#| eval: false
+apply(X, MARGIN, FUN, ...)
+```
+
+where
+
+- `X` is a matrix, array or dataframe,
+- `MARGIN` is a vector of subscripts indicating which margins to apply the function to (`1`=rows, `2`=columns, `c(1,2)`=rows and columns),
+- `FUN` is the function to be applied, 
+- `...` stands for optional arguments for `FUN`.
+
+```{r}
+# Using apply function
+x = matrix(1:12, nrow = 3, ncol = 4)
+apply(x, MARGIN=1, sum)  # Row sums
+apply(x, 2, mean) # Column means
+```
+
+```{r}
+# Handling missing data with apply
+x[1,1] <- NaN
+apply(x, 2, mean, na.rm=TRUE) # Column means ignoring NaN
+```
+
+In @tbl-chapter2-t2, we list some useful functions for matrix operations.
+
+::: {style="font-size: 85%"}
+| **Function**                            | **Description** |
+|:--------------------|:------------------------------|
+| `t(A)`                                  | Transpose of `A` |
+| `det(A)`                                | Determinant of `A` |
+| `solve(A, b)`                           | Solves the equation `Ax = b` for `x` |
+| `solve(A)`                              | Matrix inverse of `A` |
+| `MASS::ginv(A)`                         | Generalized inverse of `A` (MASS package) |
+| `eigen(A)`                              | Eigenvalues and eigenvectors of `A` |
+| `chol(A)`                               | Cholesky factorization of `A` |
+| `diag(n)`                               | Creates an `n` by `n` identity matrix |
+| `diag(A)`                               | Returns the diagonal elements of a matrix `A` |
+| `diag(x)`                               | Create a diagonal matrix from a vector `x` |
+| `lower.tri(A)`, `upper.tri(A)`          | Matrix of logicals indicating lower/upper triangular matrix |
+| `apply`                                 | Apply a function to the margins of a matrix |
+| `rbind(...)`                             | Combines arguments by rows |
+| `cbind(...)`                             | Combines arguments by columns |
+| `dim(A)`                                 | Dimensions of `A` |
+| `nrow(A)`, `ncol(A)`                     | Number of rows/columns of `A` |
+| `colnames(A)`, `rownames(A)`             | Get or set the column/row names of `A` |
+| `dimnames(A)`                            | Get or set the dimension names of `A` |
+: Useful functions for matrices {#tbl-chapter2-t2 .stripped .hover}
+:::
+
+
+
+
+### Arrays
+
+An array is a multi-dimensional generalization of a vector. To create an array, we use `array(data = NA, dim = length(data), dimnames = NULL)`, where `data` is a vector that provides the values to fill the array; `dim` specifies the dimensions of the array (a vector of one or more elements giving the maximum indices in each dimension); and `dimnames` defines the names of the dimensions (a list with one component for each dimension, either `NULL` or a character vector of the length specified by `dim` for that dimension).
+
+We fill the array by columns, similar to matrices. The math operations on arrays are performed element-wise, similar to vectors and matrices. Also, all elements of an array must be of the same type.
+
+```{r}
+# Creating an array
+w = array(1:24, 
+          dim = c(4, 3, 2),
+          dimnames = list(c("A","B","C","D"), c("X","Y","Z"), c("N","M")))
+w
+```
+
+The option `dim = c(4, 3, 2)` specifies that the array has 4 rows, 3 columns, and 2 "pages" (or layers). Thus, the array `w` has 4 x 3 x 2 = 24 elements. We can think of `c("N","M")` as the names of the pages. Thus, `w[ , , "N"]` returns the first page and `w[ , , "M"]` returns the second page.
+
+```{r}
+# Referencing elements of an array
+w[ , , "N"] # First page
+w[2, , ] # Second row, all columns, all pages
+w[ , "Y", ] # All rows, second column, all pages
+w[1, 2, 2] # Element in Row 1, Column 2, Page 2
+```
+
+
+### Lists
+
+A list is a general form of a vector whose components can be of different types and dimensions. To create a list, we use `list(...)`.
+We can name the elements of a list using the `name = value` syntax. Arguments can be specified with or without names. In the example below, we create a list with three elements: the first element is named `num`, the second element has no name, and the third element is named `identity`.
+
+```{r}
+# Creating a list
+x = list(num = c(1,2,3), "Econometrics", identity=diag(2))
+x
+```
+
+```{r}
+# Names of list elements
+names(x)
+```
+
+
+We use `[ ]`, `[[ ]]` and `$` to reference elements of a list. Below, we provide some examples of referencing elements of the list `x`.
+
+```{r}
+x[[2]]     # the second element of x
+x[["num"]] # element named "num"
+x$identity # element named "identity"
+x[[3]][1,] # first row of the third element 
+x[1:2]     # a sublist from the first two elements
+```
+
+In @tbl-chapter2-t3, we provide some useful functions for lists.
+
+::: {style="font-size: 85%"}
+| **Function**       | **Description** |
+|:--------|:------------------------------------|
+| `lapply()`         | Apply a function to each element of a list; returns a list |
+| `sapply()`         | Same as `lapply()`, but returns a vector or matrix by default |
+| `vapply()`         | Similar to `sapply()`, but has a pre-specified type of return value |
+| `replicate()`      | Repeated evaluation of an expression; useful for replicating lists |
+| `unlist(x)`        | Produce a vector of all the components that occur in `x` |
+| `length(x)`        | Number of objects in `x` |
+| `names(x)`         | Names of the objects in `x` |
+: Useful functions for lists {#tbl-chapter2-t3}
+:::
+
+## Data types
+
+### Numeric data
+In R, we use `numeric` to represent real numbers. Numeric data can be either `double` or `integer`, but in practice numeric data is almost always double (type double refers to real numbers). We can use the `format()` function to format an object for pretty printing. See `?format()` for additional arguments.
+
+```{r}
+x = 123.456789
+is.numeric(x) # check if x is numeric
+is.double(x) # check if x is double
+is.integer(x) # check if x is integer
+
+format(13.7, nsmall = 3) # Minimum number of digits to the right of the decimal point
+
+format(2^16, scientific = TRUE) # scientific notation
+format(2^16, scientific = FALSE) # fixed notation
+```
+
+### Booleans
+
+Boolean (or logical) values are represented by the keywords `TRUE` and `FALSE` in all caps or simply `T` and `F`. We can use logical operators to compare numeric values or vectors element-wise. The result of a comparison is a logical value (`TRUE` or `FALSE`). In @tbl-chapter2-t4, we provide some useful functions for logical and relational operations.
+
+::: {style="font-size: 85%"}
+| **Function**         | **Description** |
+|:----------|:----------------------------|
+| `!x`                 | NOT `x` |
+| `x & y`              | `x` AND `y` element-wise; returns a vector |
+| `x && y`             | `x` AND `y`; returns a single value |
+| `x | y`              | `x` OR `y` element-wise; returns a vector |
+| `x || y`             | `x` OR `y`; returns a single value |
+| `xor(x, y)`          | Exclusive OR of `x` and `y`, element-wise |
+| `x %in% y`           | `x` IN `y` |
+| `x < y`              | `x < y` |
+| `x > y`              | `x > y` |
+| `x <= y`             | `x ≤ y` |
+| `x >= y`             | `x ≥ y` |
+| `x == y`             | `x = y` |
+| `x != y`             | `x ≠ y` |
+| `isTRUE(x)`          | `TRUE` if `x` is `TRUE` |
+| `all(...)`           | `TRUE` if all arguments are `TRUE` |
+| `any(...)`           | `TRUE` if at least one argument is `TRUE` |
+| `identical(x, y)`    | Safe and reliable way to test two objects for being EXACTLY equal |
+| `all.equal(x, y)`    | Test if two objects are NEARLY equal |
+: Useful functions for logical and relational operations {#tbl-chapter2-t4}
+:::
+
+Below, we provide some illustrative examples.
+
+```{r}
+x = 1:10
+(x%%2 == 0) | (x > 5) # Even numbers or greater than 5
+y = 5:15 
+x %in% y # Elements of x that are also in y
+x[x %in% y] # Elements of x that are also in y
+any(x > 5) # Is at least one element of x greater than 5?
+all(x > 5) # Are all elements of x greater than 5?
+```
+
+In general, logical operators may not produce a single value and may return an `NA` if an element is `NA` or `NaN`. 
+
+```{r}
+x = sqrt(2)
+x^2
+x^2 == 2 # Returns FALSE due to rounding error
+identical(x^2, 2) # Returns FALSE because not exactly equal
+all.equal(x^2, 2) # Returns TRUE because nearly equal
+all.equal(x^2, 1) # Returns a message indicating the difference
+isTRUE(all.equal(x^2, 1)) # Returns FALSE
+```
+
+### Characters
+In R, the text data type is called `character`. We use single or double quotes to create character strings.
+```{r}
+s1 = c("A", "B", "C")
+class(s1) # check the class of s1
+
+s2 = 'The world is beautiful'
+class(s2) # check the class of s2
+```
+
+In @tbl-chapter2-t5, we provide some useful functions for character vectors.
+
+::: {style="font-size: 85%"}
+| **Function**     | **Description** |
+|:--------------|:----------------------------------------------|
+| `cat()`                                | Concatenate objects and print to console (`\n` for newline) |
+| `paste()`                              | Concatenate objects and return a string |
+| `print()`                              | Print an object |
+| `substr()`                             | Extract or replace substrings in a character vector |
+| `strtrim()`                             | Trim character vectors to specified display widths |
+| `strsplit()`                            | Split elements of a character vector according to a substring |
+| `grep()`                                | Search for matches to a pattern within a character vector; returns a vector of the indices that matched |
+| `grepl()`                               | Like `grep()`, but returns a logical vector |
+| `arep()`                                | Similar to `grep()`, but searches for approximate matches |
+| `regexpr()`                             | Similar to `grep()`, but returns the position of the first instance of a pattern within a string |
+| `gsub()`                                | Replace all occurrences of a pattern with a character vector |
+| `sub()`                                 | Like `gsub()`, but only replaces the first occurrence |
+| `tolower()`, `toupper()`                | Convert to all lower/upper case |
+| `noquote()`                             | Print a character vector without quotations |
+| `nchar()`                               | Number of characters |
+| `letters`, `LETTERS`                    | Built-in vector of lower and upper case letters |
+: Some useful functions for character vectors {#tbl-chapter2-t5 .stripped .hover}
+:::
+
+Below, we provide some illustrative examples.
+
+```{r}
+animals = c("bird", "horse", "fish")
+home = c("tree", "barn", "lake")
+
+length(animals) # Number of elements in the vector
+nchar(animals) # Number of characters in each string
+
+cat("Animals:", animals) # Need \n to move cursor to a newline
+cat(animals, home, "\n") # Joins one vector after the other
+
+paste(animals, collapse=" ") # Create one long string of animals
+a = paste(animals, home, sep=".") # Pairwise joining of animals and home
+a
+
+unlist(strsplit(a, ".", fixed=TRUE)) # Split the strings back
+
+substr(animals, 2, 4) # Get characters 2-4 of each animal
+strtrim(animals, 3) # Print the first three characters
+
+toupper(animals) # Print animals in all upper case
+```
+
+In @tbl-chapter2-t5, we provide some functions for pattern matching and replacement: `grep()`, `grepl()`, `areg()`, `regexpr()`, `gsub()`, and `sub()`. We can use special characters in regular expressions to define search patterns. Some common special characters are listed below.
+
+* `^`: Beginning of character string
+* `$`: End of character string
+* `.`: Any single character
+* `*`: Zero or more of the preceding character
+* `+`: One or more of the preceding character
+* `?`: Zero or one of the preceding character
+* `{n}`: Exactly n of the preceding character
+* `[a -- c]`: Any one of the characters a, b, or c
+* `[^a -- c]`: Beginning with the characters a, b, or c
+
+To illustrate the use of these functions, we use the built-in `colors()` function that returns a vector of color names in R.
+
+```{r}
+# First ten colors
+colors()[1:10]
+# Number of colors
+length(colors())
+```
+
+```{r}
+colors()[grep("red", colors())] # All colors that contain "red"
+colors()[grep("^red", colors())] # Colors that start with "red"
+colors()[grep("red$", colors())] # Colors that end with "red"
+colors()[grep("red.", colors())] # Colors with one character after "red"
+colors()[grep("^[r-t]", colors())] # Colors that begin with r, s, or t
+colors()[grep("green.*", colors())] # Colors that contain "green" followed by zero or more characters
+colors()[grep("green.+", colors())] # Colors that contain "green" followed by one or more characters
+```
+
+Finally, we illustrate the use of `gsub()` and `sub()` functions for pattern replacement.
+
+```{r}
+places = c("home", "zoo", "school", "work", "park")
+gsub("o", "O", places) # Replace all "o" with "O"
+sub("o", "O", places)  # Replace the first "o" with "O"
+```
+
+
+### Factors
+In R, we use the `factor` data type to represent ordered or unordered categorical variables. The function `factor()` is used to create factor type variables. 
+
+```{r}
+factor(rep(1:2, 4), labels=c("BA", "BS")) # Unordered factor variable
+factor(rep(1:3, 4), labels=c("low", "med", "high"), ordered=TRUE) # Ordered factor variable
+```
+
+In the following example, we load the `STAR.csv` dataset that contains a variable `gender` indicating the gender of students. The initial class of `gender` is `character`. We convert `gender` to a factor variable with labels "0" and "1" using the `factor()` function.
+
+```{r}
+# Load STAR.csv dataset
+star = read.csv("data/STAR.csv")
+class(star$gender) # Check the class of gender
+star$gender0 = factor(star$gender, labels=c("0", "1"), ordered=FALSE) # Convert to factor variable
+class(star$gender0) # Check the class again
+head(star[, c("gender", "gender0")]) # View the first few rows
+```
+
+In @tbl-chapter2-t6, we provide some useful functions for factor variables.
+
+::: {style="font-size: 85%"}
+| **Function**               | **Description** |
+|:-------------|:------------------------------|
+| `levels(x)`                 | Retrieve or set the levels of `x` |
+| `nlevels(x)`                | Returns the number of levels in `x` |
+| `relevel(x, ref)`           | Levels of `x` are reordered so that the level specified by `ref` is first |
+| `reorder()`                 | Reorders levels based on the values of a second variable |
+| `gl()`                      | Generate factors by specifying the pattern of their levels |
+| `cut(x, breaks)`            | Divides the range of `x` into intervals (factors) determined by `breaks` |
+: Useful functions for factor variables {#tbl-chapter2-t6 .stripped .hover}
+:::
+
+If we want to convert a factor variable to a numeric variable, we can use `as.numeric(f)` as illustrated below. 
+
+```{r}
+star$gender1 = as.numeric(star$gender0) # Convert factor to numeric
+class(star$gender1)
+head(star[, c("gender", "gender1")]) # View the first few rows
+
+star$gender2 = as.numeric(as.character(star$gender0)) # Convert factor to numeric correctly
+head(star[, c("gender", "gender1", "gender2")]) # View the first few rows
+```
+
+In the following examples, we illustrate some of the functions listed in @tbl-chapter2-t6. 
+```{r}
+f = gl(3, 2, labels=paste("ECN", 1:3, sep="_")) # Create a factor variable 
+f
+levels(f) # Get the levels of f
+nlevels(f) # Get the number of levels of f
+relevel(f, "ECN_2") # Reorder levels so that "ECN_2" is first
+
+f = gl(3, 2, labels=1:3) # Create a factor variable 
+as.numeric(levels(f))[f] # Convert factor to numeric correctly
+#
+x = runif(10)
+cut(x, 3) # Cut x into three intervals
+cut(x, c(0,.25,.5,.75,1)) # Cut x at the given cut points
+```
+
+### Dates and Times
+We use the R date object for calendar dates (`Year--Month--Day`). We can add days to or subtract days from a date. We can also compare dates using logical operators. In @tbl-chapter2-t7, we provide some useful functions for date objects.
+
+::: {style="font-size: 85%"}
+| **Function**                     | **Description** |
+|:-------------|:-------------------------------------|
+| `Sys.Date()`                     | Current date |
+| `as.Date()`                      | Convert a character string to a date object |
+| `format.Date()`                  | Change the format of a date object |
+| `seq.Date()`                     | Generate sequence of dates |
+| `cut.Date()`                     | Cut dates into intervals |
+| `weekdays`, `months`, `quarters` | Extract parts of a date object |
+| `julian`                         | Number of days since a given origin |
+: Useful functions for date objects {#tbl-chapter2-t7 .stripped .hover}
+:::
+
+The `Date` suffix is optional for calling `format.Date()`, `seq.Date()` and `cut.Date()`, but is necessary for viewing the appropriate documentation. To convert a character string to a date object, we use `as.Date(x, format)`, where `x` is a character vector representing dates and `format` is a character string representing the date format of `x`. In @tbl-chapter2-t8, we list some common conversion specifications for date formats.
+
+::: {style="font-size: 85%"}
+| **Specifier** | **Description** |
+|:----|:-------------------|
+| `%a`          | Abbreviated weekday name |
+| `%A`          | Full weekday name |
+| `%d`          | Day of the month |
+| `%B`          | Full month name |
+| `%b`          | Abbreviated month name |
+| `%m`          | Numeric month (01-12) |
+| `%y`          | Year without century |
+| `%Y`          | Year with century |
+: Common date format specifiers {#tbl-chapter2-t8 .stripped .hover}
+:::
+
+Below, we provide some illustrative examples.
+
+```{r}
+d1 = c("5-01-2008", "19-08-2008", "2-02-2009", "29-09-2009")
+dates1 = as.Date(d1, format = "%d-%m-%Y") # Convert to date object
+class(dates1) # Check the class
+dates1 # View the date object
+```
+
+Here is an example with abbreviated month names.
+
+```{r}
+d2 = c("2008/01/05", "2008/08/19", "2009/02/02", "2009/09/29")
+dates2 = as.Date(d2, format="%Y/%m/%d")
+class(dates2) # Check the class
+dates2 # View the date object
+```
+
+To create a sequence of dates, we can use `seq.Date(from, to, by, length.out = NULL)`, where 
+
+* `from`, `to`: Start and ending date objects 
+* `by`        : A character string, containing one of `"day"`, `"week"`, `"month"` or `"year"` 
+* `length.out`: Integer, desired length of the sequence 
+
+Below, we provide some illustrative examples.
+
+```{r}
+seq.Date(as.Date("2011/1/1"), as.Date("2011/1/31"), by = "week")
+seq.Date(as.Date("2011/1/1"), as.Date("2011/1/31"), by = "3 days")
+seq.Date(as.Date("2011/1/1"), by = "week", length.out = 10)
+```
+
+To divide a sequence of dates into levels, we can use `cut.Date(x, breaks, start.on.monday = TRUE)`.
+```{r}
+jan = seq.Date(as.Date("2011/1/1"), as.Date("2011/1/31"), by="days")
+cut(jan, breaks="weeks")
+```
+
+Recall that date objects can be used in arithmetic operations. Specifically,
+
+- Days can be added or subtracted to a date.
+- Dates can be subtracted.
+- Dates can be compared using logical operators.
+
+Below, we provide some illustrative examples.
+
+```{r}
+jan1 = as.Date("2011/1/1")
+(jan8 = jan1 + 7) # Add 7 days to 2011/1/1
+jan1 - 14 # Subtract 2 weeks from 2011/1/8
+jan8 - jan1 # Number of days between 2011/1/1 and 2011/1/8
+jan8 > jan1 # Compare dates
+# Use format to extract parts of a date object or change the appearance
+format.Date(jan8, "%Y")
+format.Date(jan8, "%b-%d")
+```
+
+### Missing Data
+
+The missing data in R is represented by the keyword `NA`. The built-in functions in R generally handle missing data in different ways. For example, the `mean` function ignores `NA` only if the argument `na.rm=TRUE`, whereas the `which` function always ignores missing data.
+
+```{r}
+x = c(4, 7, 2, 0, 1, NA)
+mean(x)
+mean(x, na.rm=TRUE)
+which(x > 4)
+```
+
+We need to check the documentation of functions to see how they handle missing data. 
+
+We use `NaN` (Not a Number) to denote quantities that are not a number, such as 0/0. In R, `NaN` implies `NA` (`NaN` refers to unavailable numeric data and `NA` refers to any type of unavailable data). Undefined or null objects are denoted in R by `NULL`.
+
+```{r}
+# Undefined row names
+x = matrix(1:4, ncol=2, dimnames=list(NULL, c("c.1", "c.2")))
+x
+```
+
+```{r}
+# NULL value in a list
+x = list(a=1:5, b=NULL, c="Econometrics")
+x
+```
+
+```{r}
+# Empty list
+y = list()
+y
+```
+
+ In @tbl-chapter2-t9, we provide some useful functions for testing missing data.
+
+::: {style="font-size: 85%"}
+| **Function**       | **Description** |
+|:---------|:--------------------------------|
+| `is.na(x)`         | Tests for `NA` or `NaN` data in `x` |
+| `is.nan(x)`        | Tests for `NaN` data in `x` |
+| `is.null(x)`       | Tests if `x` is `NULL` |
+: Functions for testing null data {#tbl-chapter2-t9 .stripped .hover}
+:::
+
+
+```{r}
+x = c(4, 7, 2, 0, 1, NA)
+(x == NA) 
+is.na(x) # Check which elements are NA
+is.nan(x) # Check which elements are NaN
+any(is.na(x)) # Check if there is any NA in x
+y <- x/0 # Create NaN values
+y
+is.nan(y) 
+is.na(y)
+```
+
+The first example above shows that we cannot use the equality operator `==` to test for `NA` values. Instead, we should use the `is.na()` function.

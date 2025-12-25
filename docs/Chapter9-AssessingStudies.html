@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>19&nbsp; Assessing Studies Based on Multiple Regression – Introduction to Econometrics with Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Part3-FurtherTopics.html" rel="next">
+<link href="./Chapter8-NonlinearRegressions.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part2-FundamentalRegressionAnalysis.html">Fundamentals of Regression Analysis</a></li><li class="breadcrumb-item"><a href="./Chapter9-AssessingStudies.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Econometrics with Python</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part0-Python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroPython.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroNumpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-ControlStructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Control Structures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-CustomFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Custom Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-StatFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Statistical Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Pandas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-NumericalAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Applications in Numerical Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-SymbolicMath.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Symbolic Computing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and Review</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentals of Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Further Topics in Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Analysis of Economic Time Series Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theoretical Topics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#internal-and-external-validity" id="toc-internal-and-external-validity" class="nav-link active" data-scroll-target="#internal-and-external-validity"><span class="header-section-number">19.1</span> Internal and external validity</a></li>
+  <li><a href="#threats-to-internal-validity-of-multiple-regression-analysis" id="toc-threats-to-internal-validity-of-multiple-regression-analysis" class="nav-link" data-scroll-target="#threats-to-internal-validity-of-multiple-regression-analysis"><span class="header-section-number">19.2</span> Threats to internal validity of multiple regression analysis</a>
+  <ul class="collapse">
+  <li><a href="#omitted-variable-bias" id="toc-omitted-variable-bias" class="nav-link" data-scroll-target="#omitted-variable-bias"><span class="header-section-number">19.2.1</span> Omitted variable bias</a></li>
+  <li><a href="#functional-form-misspecification" id="toc-functional-form-misspecification" class="nav-link" data-scroll-target="#functional-form-misspecification"><span class="header-section-number">19.2.2</span> Functional form misspecification</a></li>
+  <li><a href="#measurement-error-and-errors-in-variables-bias" id="toc-measurement-error-and-errors-in-variables-bias" class="nav-link" data-scroll-target="#measurement-error-and-errors-in-variables-bias"><span class="header-section-number">19.2.3</span> Measurement error and errors in variables bias</a></li>
+  <li><a href="#missing-data-and-sample-selection-bias" id="toc-missing-data-and-sample-selection-bias" class="nav-link" data-scroll-target="#missing-data-and-sample-selection-bias"><span class="header-section-number">19.2.4</span> Missing data and sample selection bias</a></li>
+  <li><a href="#simultaneous-causality-bias" id="toc-simultaneous-causality-bias" class="nav-link" data-scroll-target="#simultaneous-causality-bias"><span class="header-section-number">19.2.5</span> Simultaneous causality bias</a></li>
+  <li><a href="#inconsistency-of-ols-standard-errors" id="toc-inconsistency-of-ols-standard-errors" class="nav-link" data-scroll-target="#inconsistency-of-ols-standard-errors"><span class="header-section-number">19.2.6</span> Inconsistency of OLS standard errors</a></li>
+  </ul></li>
+  <li><a href="#threats-to-external-validity-of-multiple-regression-analysis" id="toc-threats-to-external-validity-of-multiple-regression-analysis" class="nav-link" data-scroll-target="#threats-to-external-validity-of-multiple-regression-analysis"><span class="header-section-number">19.3</span> Threats to external validity of multiple regression analysis</a></li>
+  <li><a href="#internal-and-external-validity-when-the-regression-is-used-for-prediction" id="toc-internal-and-external-validity-when-the-regression-is-used-for-prediction" class="nav-link" data-scroll-target="#internal-and-external-validity-when-the-regression-is-used-for-prediction"><span class="header-section-number">19.4</span> Internal and external validity when the regression is used for prediction</a></li>
+  <li><a href="#example-test-scores-and-class-size" id="toc-example-test-scores-and-class-size" class="nav-link" data-scroll-target="#example-test-scores-and-class-size"><span class="header-section-number">19.5</span> Example: Test Scores and Class Size</a>
+  <ul class="collapse">
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">19.5.1</span> Data</a></li>
+  <li><a href="#models" id="toc-models" class="nav-link" data-scroll-target="#models"><span class="header-section-number">19.5.2</span> Models</a></li>
+  <li><a href="#estimation-results" id="toc-estimation-results" class="nav-link" data-scroll-target="#estimation-results"><span class="header-section-number">19.5.3</span> Estimation results</a></li>
+  <li><a href="#internal-validity-assessment" id="toc-internal-validity-assessment" class="nav-link" data-scroll-target="#internal-validity-assessment"><span class="header-section-number">19.5.4</span> Internal validity assessment</a></li>
+  <li><a href="#external-validity-assessment" id="toc-external-validity-assessment" class="nav-link" data-scroll-target="#external-validity-assessment"><span class="header-section-number">19.5.5</span> External validity assessment</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter9-AssessingStudies.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part2-FundamentalRegressionAnalysis.html">Fundamentals of Regression Analysis</a></li><li class="breadcrumb-item"><a href="./Chapter9-AssessingStudies.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-assess" class="quarto-section-identifier"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="7dfd6453" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.iolib.summary2 <span class="im">import</span> summary_col</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">'darkgrid'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="internal-and-external-validity" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="internal-and-external-validity"><span class="header-section-number">19.1</span> Internal and external validity</h2>
+<p>We use a framework based on <strong>internal validity</strong> and <strong>external validity</strong> to study whether a statistical model is useful for causal inference. To introduce these concepts, we first define what we mean by the <strong>population studied</strong>, the <strong>population of interest</strong>, and the <strong>setting</strong> of the study. The population studied consists of the entities from which the sample is drawn. The population of interest is the population to which the study results are intended to be generalized. The setting of the study refers to the environment in which the study is conducted. Thus, the setting encompasses institutional, legal, physical, and social conditions that may affect the study’s results.</p>
+<div id="def-def16.1" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 19.1 (Internal and external validity)</strong></span> A study has <strong>internal validity</strong> if its results for causal effects are valid for the population and setting studied. A study has <strong>external validity</strong> if its results can be generalized to the population of interest.</p>
+</div>
+<p>We use these concepts to assess the strengths and limitations of multiple regression studies in estimating the causal effect of a variable of interest on the dependent variable.</p>
+</section>
+<section id="threats-to-internal-validity-of-multiple-regression-analysis" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="threats-to-internal-validity-of-multiple-regression-analysis"><span class="header-section-number">19.2</span> Threats to internal validity of multiple regression analysis</h2>
+<p>There are two key requirements for the internal validity of a multiple regression analysis. First, the estimator used to estimate the causal effect must be unbiased and consistent. Second, the hypothesis tests and confidence intervals constructed for the causal effect must be valid. The following are common threats to internal validity of a multiple regression analysis:</p>
+<ul>
+<li>Omitted variable bias,</li>
+<li>Functional form misspecification,</li>
+<li>Errors in variables bias,</li>
+<li>Missing data and sample selection bias,</li>
+<li>Simultaneous causality bias.</li>
+</ul>
+<p>All five threats cause the variable of interest to be correlated with the error term, violating the zero conditional mean assumption (or the conditional mean independence assumption).</p>
+<section id="omitted-variable-bias" class="level3" data-number="19.2.1">
+<h3 data-number="19.2.1" class="anchored" data-anchor-id="omitted-variable-bias"><span class="header-section-number">19.2.1</span> Omitted variable bias</h3>
+<p>An omitted variable is a variable that affects the dependent variable <span class="math inline">\(Y\)</span> (i.e., is part of the error term) and is correlated with our variable of interest <span class="math inline">\(X\)</span>. The bias resulting from an omitted variable is referred to as omitted variable bias. Since omitted variable bias violates the zero-conditional mean assumption, the OLS estimator becomes biased and inconsistent.</p>
+<p><strong>Solution when the omitted variable is observed or control variables are available</strong>: In this case, the omitted variable can be included in the regression model to eliminate omitted variable bias. This approach is feasible if the omitted variable is observed and measurable. If the omitted variable is not available, we must instead rely on control variables and try to achieve the conditional mean independence assumption for the variable of interest. If the control variables are effective, then including them in the model can also address the omitted variable bias.</p>
+<p>It is important to keep in mind that adding a variable to the model involves a trade-off between bias and variance. On the one hand, adding a variable can reduce bias; on the other hand, it can increase the variance of the estimator. <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> suggests a four-step process for deciding whether to include a variable or a set of variables in the model:</p>
+<ul>
+<li><p>We first identify the variable of interest in the model. For example, in the test score example, the variable of interest is the student-teacher ratio.</p></li>
+<li><p>We then identify potential omitted variables that are correlated with the variable of interest. Using economic theory and expert knowledge, we determine plausible omitted variables as well as some questionable variables. Finally, we formulate a base specification that includes the variable of interest and plausible omitted variables.</p></li>
+<li><p>Next, we estimate our base specification and examine whether including questionable variables changes the coefficient of the variable of interest. If the coefficient of a questionable variable is statistically significant and/or the coefficient of the variable of interest changes substantially, the questionable variable should be retained in the model.</p></li>
+<li><p>Finally, we should provide full disclosure of the model selection process. This step is crucial for maintaining the transparency and credibility of the research.</p></li>
+</ul>
+<p><strong>Solutions to omitted variable bias when adequate control variables are not available</strong>: If the conditional mean independence assumption for the variable of interest is not satisfied-that is, when adequate control variables are unavailable-alternative estimation methods can be used to address omitted variable bias. These methods include panel data models, instrumental variable techniques, randomized controlled experiments, and quasi-experimental approaches. We introduce panel data methods in <a href="Chapter10-RegressionPanelData.html" class="quarto-xref"><span>Chapter 20</span></a>, instrumental variable methods in <a href="Chapter12-IVRegression.html" class="quarto-xref"><span>Chapter 22</span></a>, and experimental and quasi-experimental methods in <a href="Chapter13-Experiments.html" class="quarto-xref"><span>Chapter 23</span></a>.</p>
+</section>
+<section id="functional-form-misspecification" class="level3" data-number="19.2.2">
+<h3 data-number="19.2.2" class="anchored" data-anchor-id="functional-form-misspecification"><span class="header-section-number">19.2.2</span> Functional form misspecification</h3>
+<p>This type of misspecification arises when the estimated regression model does not match the population regression function. Assume that the true relationship (i.e., the population regression function) between the dependent variable and the variable of interest is nonlinear. If we specify a linear relationship between the variable of interest and the dependent variable, then we are committing a functional form misspecification. Such misspecification can lead to biased and inconsistent estimators.</p>
+<p>In the following example, we illustrate the effect of functional form misspecification on the OLS estimator. We simulate data from the following quadratic model: <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+\beta_2X^2_i+u_i\)</span>, where <span class="math inline">\(X_i\sim\text{Uniform}(0,10)\)</span>, <span class="math inline">\((\beta_0,\beta_1,\beta_2)^{'}=(3,2,1.5)^{'}\)</span>, and <span class="math inline">\(u_i\sim N(0,4)\)</span>. We then estimate two models: the misspecified linear model <span class="math inline">\(Y_i=\beta_0+\beta_1X_{i}+u_i\)</span> and the correctly specified quadratic model <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+\beta_2X^2_i+u_i\)</span>.</p>
+<div id="2cafcea5" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">300</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">10</span>, n)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> X <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> X<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> np.random.normal(<span class="dv">0</span>, <span class="dv">2</span>, n)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame({<span class="st">'X'</span>: X, <span class="st">'Y'</span>: Y})</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate linear model</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>linear_model <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"Y ~ X"</span>, data<span class="op">=</span>data).fit()</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate quadratic model</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>nonlinear_model <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"Y ~ X + I(X**2)"</span>, data<span class="op">=</span>data).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><a href="#fig-t16.1" class="quarto-xref">Figure&nbsp;<span>19.1</span></a> shows the scatterplot of data along with the line plots of predicted values. The figure shows that the nonlinear model accurately captures the quadratic relationship between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span>. The estimation results in the first column of <a href="#tbl-t16.1" class="quarto-xref">Table&nbsp;<span>19.1</span></a> indicate that the OLS estimator reports a large bias for the coefficient of <span class="math inline">\(X\)</span> under the linear specification. In contrast, the OLS estimator reports almost no bias under the quadratic specification, as shown in the second column of <a href="#tbl-t16.1" class="quarto-xref">Table&nbsp;<span>19.1</span></a>.</p>
+<div id="cell-fig-t16.1" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot results</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(X, Y, color<span class="op">=</span><span class="st">"steelblue"</span>, s<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>plt.plot(np.sort(X), np.sort(linear_model.predict()), label<span class="op">=</span><span class="st">"Linear model"</span>, color<span class="op">=</span><span class="st">"red"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>plt.plot(np.sort(X), np.sort(nonlinear_model.predict()), label<span class="op">=</span><span class="st">"Nonlinear model"</span>, color<span class="op">=</span><span class="st">"black"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"$X$"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"$Y$"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>plt.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-t16.1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-t16.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter9-AssessingStudies_files/figure-html/fig-t16.1-output-1.png" width="515" height="354" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t16.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19.1: Effect of Functional Form Misspecification
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Present linear_model and nonlinear_model results in a table</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>results_table <span class="op">=</span> summary_col(results<span class="op">=</span>[linear_model, nonlinear_model],</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                                     float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                                     stars<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                                     model_names<span class="op">=</span>[<span class="st">"Linear Model"</span>, <span class="st">"Nonlinear Model"</span>])</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>results_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="4" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t16.1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t16.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;19.1: Regression Results
+</figcaption>
+<div aria-describedby="tbl-t16.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="4">
+<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Linear Model</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Nonlinear Model</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
+<td style="text-align: left;">-22.615***</td>
+<td style="text-align: left;">2.945***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(1.350)</td>
+<td style="text-align: left;">(0.347)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">X</td>
+<td style="text-align: left;">16.989***</td>
+<td style="text-align: left;">1.951***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.236)</td>
+<td style="text-align: left;">(0.157)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">I(X ** 2)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">1.506***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.015)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
+<td style="text-align: left;">0.946</td>
+<td style="text-align: left;">0.998</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
+<td style="text-align: left;">0.946</td>
+<td style="text-align: left;">0.998</td>
+</tr>
+</tbody>
+</table>
+<br>
+Standard errors in parentheses.<br>
+* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Solution to Functional Form Misspecification</strong>: When the dependent variable is continuous, functional form misspecification can be addressed using polynomial and logarithmic transformations, as discussed in <a href="Chapter8-NonlinearRegressions.html" class="quarto-xref"><span>Chapter 18</span></a>. When the dependent variable is binary, we can instead use nonlinear models such as the probit and logit models discussed in <a href="Chapter11-BinaryDependentVariable.html" class="quarto-xref"><span>Chapter 21</span></a>.</p>
+</section>
+<section id="measurement-error-and-errors-in-variables-bias" class="level3" data-number="19.2.3">
+<h3 data-number="19.2.3" class="anchored" data-anchor-id="measurement-error-and-errors-in-variables-bias"><span class="header-section-number">19.2.3</span> Measurement error and errors in variables bias</h3>
+<p>Measurement error occurs when the observed value of a variable differs from its true value. It can arise from various sources, including data entry errors, rounding, recollection errors in surveys, ambiguous survey questions, or intentionally false responses in surveys. Measurement error can result in biased and inconsistent estimators.</p>
+<p>To illustrate the effect of measurement error on the OLS estimator, we consider the following model with one regressor: <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span>, where <span class="math inline">\(\E(u_i|X_i)=0\)</span>. We assume that <span class="math inline">\(X_i\)</span> is the unobserved true value and <span class="math inline">\(\tilde{X}_i\)</span> is its mismeasured version, i.e., the observed regressor. Then, <span class="math display">\[
+\begin{align}
+Y_i &amp;= \beta_0+\beta_1X_i+u_i=\beta_0+\beta_1\tilde{X}_i+(\beta_1(X_i-\tilde{X}_i)+u_i)\\
+&amp;=\beta_0+\beta_1\tilde{X}_i+\tilde{u}_i,
+\end{align}
+\]</span> where <span class="math inline">\(\tilde{u}_i=(\beta_1(X_i-\tilde{X}_i)+u_i)\)</span>. Since we only observe <span class="math inline">\(\tilde{X}_i\)</span>, we will estimate the following regression: <span id="eq-eq16.1"><span class="math display">\[
+\begin{align}
+Y_i = \beta_0+\beta_1\tilde{X}_i+\tilde{u}_i.
+\end{align}
+\tag{19.1}\]</span></span></p>
+<p>Note that the regression model written in terms of <span class="math inline">\(\tilde{X}_i\)</span> has the error term <span class="math inline">\(\tilde{u}_i\)</span> that contains the measurement error. In <a href="#eq-eq16.1" class="quarto-xref">Equation&nbsp;<span>19.1</span></a>, we can derive <span class="math inline">\(\text{cov}(\tilde{X}_i,\tilde{u}_i)\)</span> as follows: <span id="eq-eq16.2"><span class="math display">\[
+\begin{align}
+\text{cov}(\tilde{X}_i,\tilde{u}_i)&amp;=\text{cov}(\tilde{X}_i,\beta_1(X_i-\tilde{X}_i)+u_i)\\
+&amp;=\beta_1\text{cov}(\tilde{X}_i,(X_i-\tilde{X}_i))+\text{cov}(\tilde{X}_i, u_i).
+\end{align}
+\tag{19.2}\]</span></span></p>
+<p>It is often plausible that <span class="math inline">\(\text{cov}(\tilde{X}_i, u_i)=0\)</span>. However, <span class="math inline">\(\text{cov}(\tilde{X}_i,(X_i-\tilde{X}_i))\ne0\)</span> typically holds. Thus, our estimation equation in <a href="#eq-eq16.1" class="quarto-xref">Equation&nbsp;<span>19.1</span></a> does not satisfy the zero-conditional mean assumption. Consequently, the OLS estimator of <span class="math inline">\(\beta_1\)</span> is biased and inconsistent when <span class="math inline">\(\text{cov}(\tilde{X}_i,(X_i-\tilde{X}_i))\ne0\)</span>.</p>
+<p>To get more insight, we assume two measurement error models: (i) the <strong>classical measurement error model</strong> and (ii) the <strong>best guess model</strong>. In the case of the classical measurement error model, we assume the following relationship between the true value <span class="math inline">\(X_i\)</span> and the observed value <span class="math inline">\(\tilde{X}_i\)</span>: <span class="math display">\[
+\begin{align}
+\tilde{X}_i = X_i+v_i,
+\end{align}
+\]</span> where <span class="math inline">\(v_i\)</span> is an error term with <span class="math inline">\(\E(v_i)=0\)</span>, <span class="math inline">\(\text{var}(v_i)=\sigma^2_v\)</span>, <span class="math inline">\(\text{corr}(X_i, v_i) = 0\)</span>, and <span class="math inline">\(\text{corr}(u_i, v_i) = 0\)</span>. Thus, we have</p>
+<ul>
+<li><span class="math inline">\(\text{var}(\tilde{X}_i) = \text{var}(X_i+v_i)=\sigma^2_X+\sigma^2_v\)</span>,</li>
+<li><span class="math inline">\(\text{cov}(\tilde{X}_i,(X_i-\tilde{X}_i)) = \text{cov}\left(X_i+v_i,-v_i\right)=-\sigma^2_v\)</span>, and</li>
+<li><span class="math inline">\(\text{cov}(\tilde{X}_i, u_i) = \text{cov}(X_i+v_i, u_i)=\text{cov}(X_i, u_i)+\text{cov}(v_i, u_i)=0\)</span>.</li>
+</ul>
+<p>Then, using <a href="#eq-eq16.2" class="quarto-xref">Equation&nbsp;<span>19.2</span></a>, we obtain <span class="math display">\[
+\begin{align}
+\text{cov}(\tilde{X}_i,\tilde{u}_i)=\beta_1\text{cov}(\tilde{X}_i,(X_i-\tilde{X}_i))+\text{cov}(\tilde{X}_i, u_i)=-\beta_1\sigma^2_v.
+\end{align}
+\]</span></p>
+<p>Recall that we derived <span class="math inline">\(\hat{\beta}_1\xrightarrow{p}\beta_1+\frac{\sigma_{Xu}}{\sigma^2_X}\)</span> in the context of <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span>. Thus, in the context of <span class="math inline">\(Y_i=\beta_0+\beta_1\tilde{X}_i+\tilde{u}_i\)</span>, this results can be stated as <span id="eq-eq16.3"><span class="math display">\[
+\begin{align}
+\hat{\beta}_1\xrightarrow{p}\beta_1+\frac{\sigma_{\tilde{X}\tilde{u}}}{\sigma^2_{\tilde{X}}}=\beta_1-\frac{\beta_1\sigma^2_v}{\sigma^2_X+\sigma^2_v}=\left(\frac{\sigma^2_X}{\sigma^2_X+\sigma^2_v}\right)\beta_1.
+\end{align}
+\tag{19.3}\]</span></span></p>
+<p>Since <span class="math inline">\(\left(\frac{\sigma^2_X}{\sigma^2_X+\sigma^2_v}\right)&lt;1\)</span>, the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> is biased towards zero even when the sample size is large. In extreme case, where <span class="math inline">\(\sigma^2_v\rightarrow\infty\)</span>, the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> converges to zero. Also note when <span class="math inline">\(\sigma^2_v=0\)</span>, the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> is unbiased and consistent.</p>
+<p>In the following code chunk, we use the simulated data to illustrate the classical measurement error model. We assume that <span class="math inline">\(\tilde{X}_i=X_i+v_i\)</span>, where <span class="math inline">\(X_i\sim\text{Uniform}(0,10)\)</span> and <span class="math inline">\(v_i\sim N(0,4)\)</span>. We generate <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span>, where <span class="math inline">\(\beta_0=3\)</span>, <span class="math inline">\(\beta_1=2\)</span>, and <span class="math inline">\(u_i\sim N(0,4)\)</span>. Then, we estimate the error model <span class="math inline">\(Y_i=\beta_0+\beta_1\tilde{X}_i+\tilde{u}_i\)</span> and the true model <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span>.</p>
+<div id="77a75c32" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate data</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">300</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">10</span>, n)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> np.random.normal(<span class="dv">0</span>, <span class="dv">2</span>, n)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>X_tilde <span class="op">=</span> X <span class="op">+</span> v</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> X <span class="op">+</span> np.random.normal(<span class="dv">0</span>, <span class="dv">2</span>, n)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame({<span class="st">'X'</span>: X, <span class="st">'X_tilde'</span>: X_tilde, <span class="st">'Y'</span>: Y})</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate OLS model</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>error_model <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"Y ~ X_tilde"</span>, data<span class="op">=</span>data).fit()</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate true model</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>true_model <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"Y ~ X"</span>, data<span class="op">=</span>data).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Present ols_model and true_model results in a table</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>results_table <span class="op">=</span> summary_col(results<span class="op">=</span>[error_model, true_model],</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                                     float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                                     stars<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                                     model_names<span class="op">=</span>[<span class="st">"Error model"</span>, <span class="st">"True model"</span>])</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>results_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="6" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t16.2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t16.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;19.2: Regression Results
+</figcaption>
+<div aria-describedby="tbl-t16.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="6">
+<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Error model</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">True model</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
+<td style="text-align: left;">6.306***</td>
+<td style="text-align: left;">2.799***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.387)</td>
+<td style="text-align: left;">(0.240)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">X_tilde</td>
+<td style="text-align: left;">1.358***</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.065)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">X</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">2.037***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.042)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
+<td style="text-align: left;">0.598</td>
+<td style="text-align: left;">0.888</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
+<td style="text-align: left;">0.597</td>
+<td style="text-align: left;">0.887</td>
+</tr>
+</tbody>
+</table>
+<br>
+Standard errors in parentheses.<br>
+* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>The estimation results are presented in <a href="#tbl-t16.2" class="quarto-xref">Table&nbsp;<span>19.2</span></a>. The results in the first column indicate that the OLS estimator introduces a significant bias in <span class="math inline">\(\beta_1\)</span>. In contrast, the OLS estimator reports only a small bias in the second column. In <a href="#fig-t16.2" class="quarto-xref">Figure&nbsp;<span>19.2</span></a>, we plot the predicted values as line plots alongside the scatterplot of the data. The red line represents the fitted line based on the error model, while the black line represents the fitted line based on the true model. The figure shows that the predicted values based on the error model differ significantly from those based on the true model.</p>
+<div id="cell-fig-t16.2" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot results</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(X, Y, color<span class="op">=</span><span class="st">"steelblue"</span>, s<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>error_coef <span class="op">=</span> [<span class="fl">6.306</span>, <span class="fl">1.358</span>]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.plot(X, error_coef[<span class="dv">0</span>] <span class="op">+</span> error_coef[<span class="dv">1</span>] <span class="op">*</span> data[<span class="st">"X"</span>], label<span class="op">=</span><span class="st">"Error model"</span>, color<span class="op">=</span><span class="st">"red"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.plot(X, true_model.predict(), label<span class="op">=</span><span class="st">"True model"</span>, color<span class="op">=</span><span class="st">"black"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"$X$"</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"$Y$"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-t16.2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-t16.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter9-AssessingStudies_files/figure-html/fig-t16.2-output-1.png" width="507" height="354" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t16.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19.2: The effect of measurement error on the OLS estimator
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Note that we can use <span class="math inline">\(\hat{\beta}_1\xrightarrow{p}\left(\frac{\sigma^2_X}{\sigma^2_X+\sigma^2_v}\right)\beta_1\)</span> to construct a bias corrected estimator of <span class="math inline">\(\beta_1\)</span>, which is given by <span class="math inline">\(\hat{\beta}^{bc}_1=\hat{\beta}_1\left(\sigma^2_X+\sigma^2_v\right)/\sigma^2_X\)</span>. Using our simulated data and the estimation result in the first column of <a href="#tbl-t16.2" class="quarto-xref">Table&nbsp;<span>19.2</span></a>, we can get an estimate of <span class="math inline">\(\hat{\beta}^{bc}_1\)</span> as <span class="math display">\[
+\begin{align}
+\hat{\beta}^{bc}_1=\hat{\beta}_1\frac{\sigma^2_X+\sigma^2_v}{\sigma^2_X}=1.358\times\frac{10^2/12+4}{10^2/12}\approx 2.009,
+\end{align}
+\]</span> which is very close to the true value <span class="math inline">\(\beta_1=2\)</span>.</p>
+<p>In the best guess model, we assume that <span class="math inline">\(\tilde{X}_i\)</span> is related to <span class="math inline">\(X_i\)</span> through <span class="math inline">\(\tilde{X}_i = \E(X_i|W_i)\)</span>, where <span class="math inline">\(W_i\)</span> is a variable that satisfies <span class="math inline">\(\E(u_i|W_i) = 0\)</span>. In this model, <span class="math inline">\(\text{cov}(\tilde{X}_i, (X_i - \tilde{X}_i)) = 0\)</span> because the measurement error <span class="math inline">\((X_i - \tilde{X}_i)\)</span> is uncorrelated with <span class="math inline">\(\tilde{X}_i\)</span>. Also, since <span class="math inline">\(\E(u_i|W_i) = 0\)</span> and <span class="math inline">\(\tilde{X}_i\)</span> is a function of <span class="math inline">\(W_i\)</span>, it follows that <span class="math inline">\(\text{cov}(\tilde{X}_i, u_i) = 0\)</span>. As a result, under the best guess model, we have <span class="math inline">\(\text{cov}(\tilde{X}_i, \tilde{u}_i) = 0\)</span>.</p>
+<p>Then, under the best guess model, it follows that <span class="math inline">\(\hat{\beta}_1\xrightarrow{p}\beta_1+\frac{\sigma_{\tilde{X}\tilde{u}}}{\sigma^2_{\tilde{X}}}=\beta_1\)</span>. Thus, the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> is still consistent under the best guess model of measurement error. However, since <span class="math inline">\(\text{var}(\tilde{u}_i) &gt; \text{var}(u_i)\)</span>, the variance of <span class="math inline">\(\hat{\beta}_1\)</span> is larger than it would be without measurement error, reducing the precision of the estimator.</p>
+<p>So far we only consider measurement error in the independent variable. However, measurement error can also occur in the dependent variable. The classical measurement error in <span class="math inline">\(Y\)</span> does not cause bias in the OLS estimator of <span class="math inline">\(\beta_1\)</span>. To see this, assume that <span class="math inline">\(\tilde{Y}_i=Y_i+w_i\)</span>, where <span class="math inline">\(\E(w_i|X_i)=0\)</span>. Then, the estimation model becomes <span class="math inline">\(\tilde{Y}_i=\beta_0+\beta_1X_i+v_i\)</span> with <span class="math inline">\(v_i=u_i+w_i\)</span>. Since this model satisfies the zero-conditional mean assumption <span class="math inline">\(\E(v_i|X_i)=0\)</span>, the OLS estimator of <span class="math inline">\(\beta_1\)</span> is unbiased and consistent. Thus, in general, the measurement error in <span class="math inline">\(Y\)</span> that satisfies the zero-conditional mean assumption does not cause bias in the OLS estimator of <span class="math inline">\(\beta_1\)</span>. However, the variance of the OLS estimator becomes larger because <span class="math inline">\(\text{var}(v_i)&gt;\text{var}(u_i)\)</span>.</p>
+<p><strong>Solutions to errors-in-variables bias</strong>: The following approaches can be used to address errors-in-variables bias:</p>
+<ul>
+<li><p>When feasible, we can obtain accurate data to avoid errors-in-variables bias. For example, we can use administrative data or data from surveys with well-designed questions to minimize measurement error in the regressors.</p></li>
+<li><p>We can resort to the instrumental variables (IV) regression method to address errors-in-variables bias. The IV estimator is discussed in <a href="Chapter12-IVRegression.html" class="quarto-xref"><span>Chapter 22</span></a>.</p></li>
+<li><p>When information on the nature of measurement error is available, we can build a model of the measurement error process to correct the OLS estimator. For example, under the classical measurement error model, a bias-corrected estimator can be used to address errors-in-variables bias.</p></li>
+</ul>
+</section>
+<section id="missing-data-and-sample-selection-bias" class="level3" data-number="19.2.4">
+<h3 data-number="19.2.4" class="anchored" data-anchor-id="missing-data-and-sample-selection-bias"><span class="header-section-number">19.2.4</span> Missing data and sample selection bias</h3>
+<p>The effect of missing data on the OLS estimator depends on the mechanism generating the missing data. We consider three types of missing data mechanisms: (i) missing completely at random, (ii) missing data based on the value of a regressor, and (iii) missing data based on a selection process that depends on the dependent variable.</p>
+<p>The first case does not cause the OLS estimator to be biased or inconsistent. Recall that the variance of the OLS estimator is inversely proportional to the sample size. Therefore, under this case, the OLS estimator has a relatively larger variance due to the reduced sample size.</p>
+<p>The second case, where data is missing based on the value of a regressor, also does not cause the OLS estimator to be biased or inconsistent. For example, in our test score example, if data is missing for school districts whose student-teacher ratio is greater than 20, the OLS estimator will not be biased for districts with the student-teacher ratio less than 20. However, we cannot use our estimated model to predict the test scores of districts with the student-teacher ratio greater than 20.</p>
+<p>Under the third case, where data is missing due to a selection process that depends on the dependent variable, the OLS estimator is biased and inconsistent. In the literature, this is called the sample selection bias. The sample selection bias occurs when the sample used for estimation is not a random sample from the population of interest. For example, if data is missing for school districts with low test scores, our sample will no longer be a random sample from the population consisting of all school districts.</p>
+<p><strong>Solutions to missing data and sample selection bias</strong>: The following solutions can be used to address missing data and sample selection bias:</p>
+<ul>
+<li><p>We can resort to a design-based approach for collecting data to minimize the effect of missing data and sample selection bias. For example, through a randomized controlled experiment, we can ensure that the sample is representative of the population of interest. We discuss randomized controlled experiments in <a href="Chapter13-Experiments.html" class="quarto-xref"><span>Chapter 23</span></a>.</p></li>
+<li><p>We can use sample selection models in which we specify both the selection and outcome processes. For further details on these types of models, among others, see <span class="citation" data-cites="Greene2017">Greene (<a href="references.html#ref-Greene2017" role="doc-biblioref">2017</a>)</span> and <span class="citation" data-cites="Hansen2022">Hansen (<a href="references.html#ref-Hansen2022" role="doc-biblioref">2022</a>)</span>.</p></li>
+</ul>
+</section>
+<section id="simultaneous-causality-bias" class="level3" data-number="19.2.5">
+<h3 data-number="19.2.5" class="anchored" data-anchor-id="simultaneous-causality-bias"><span class="header-section-number">19.2.5</span> Simultaneous causality bias</h3>
+<p>In our regression models, we assume that <span class="math inline">\(X\)</span> causes <span class="math inline">\(Y\)</span>, but if <span class="math inline">\(Y\)</span> also causes <span class="math inline">\(X\)</span>, then <strong>simultaneous causality</strong> arises. For example, in our test score example, assume that federal government provides subsidies to school districts with low test scores. In that case, school districts can use these subsidies to hire more teachers and reduce their student-teacher ratio. Thus, we have a case of simultaneous causality because test scores affect the student-teacher ratio and the student-teacher ratio affects test scores.</p>
+<p>The zero-conditional mean assumption does not hold under simultaneous causality. To see this, we consider the following regressions:</p>
+<ul>
+<li><span class="math inline">\(Y_i = \beta_0 + \beta_1 X_i + u_i\)</span>,</li>
+<li><span class="math inline">\(X_i = \delta_0 + \delta_1 Y_i + v_i\)</span>,</li>
+</ul>
+<p>where <span class="math inline">\(u_i\)</span> and <span class="math inline">\(v_i\)</span> are the error terms. In the first equation, a large <span class="math inline">\(u_i\)</span> leads to a large <span class="math inline">\(Y_i\)</span>, which implies a large <span class="math inline">\(X_i\)</span> (if <span class="math inline">\(\delta_1 &gt; 0\)</span>) through the second equation. Thus, <span class="math inline">\(\cov(X_i, u_i) \neq 0\)</span> in the first model, i.e., the zero-conditional mean assumption does not hold. As a result, the OLS estimator of <span class="math inline">\(\beta_1\)</span> is biased and inconsistent.</p>
+<p><strong>Solutions to simultaneous causality bias</strong>: The following solutions can be used to address simultaneous causality bias:</p>
+<ul>
+<li><p>When feasible, we can conduct a randomized controlled experiment. The random assignment mechanism in such experiments ensures that <span class="math inline">\(X_i\)</span> is uncorrelated with <span class="math inline">\(u_i\)</span>. We discuss randomized controlled experiments in <a href="Chapter13-Experiments.html" class="quarto-xref"><span>Chapter 23</span></a>.</p></li>
+<li><p>We can use a simultaneous equation model to estimate a complete system that captures both directions of causality. For further details on these types of models, see <span class="citation" data-cites="Greene2017">Greene (<a href="references.html#ref-Greene2017" role="doc-biblioref">2017</a>)</span> and <span class="citation" data-cites="Hansen2022">Hansen (<a href="references.html#ref-Hansen2022" role="doc-biblioref">2022</a>)</span>.</p></li>
+<li><p>We can use the instrumental variable (IV) regression to estimate the causal effect of interest (i.e., the effect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span>). We cover this topic in <a href="Chapter12-IVRegression.html" class="quarto-xref"><span>Chapter 22</span></a>.</p></li>
+</ul>
+</section>
+<section id="inconsistency-of-ols-standard-errors" class="level3" data-number="19.2.6">
+<h3 data-number="19.2.6" class="anchored" data-anchor-id="inconsistency-of-ols-standard-errors"><span class="header-section-number">19.2.6</span> Inconsistency of OLS standard errors</h3>
+<p>The inconsistent standard errors invalidates hypothesis tests and confidence intervals.</p>
+<ul>
+<li><p>The standard errors derived under the homoscedasticity assumption are inconsistent in the presence of heteroscedasticity. The solution to this problem is to use heteroscedasticity-robust standard errors.</p></li>
+<li><p>The error terms in a regression model are often correlated across observations. This correlation can arise in models specified for time-series, spatial, and panel data. The standard errors derived under the assumption of independent and identically distributed (i.i.d.) errors are inconsistent in the presence of correlated errors. The solution to this problem is to use standard errors that are robust to both heteroskedasticity and correlation. In <a href="Chapter10-RegressionPanelData.html" class="quarto-xref"><span>Chapter 20</span></a> and <a href="Chapter16-DynamicCausalEffects.html" class="quarto-xref"><span>Chapter 26</span></a>, we discuss the estimation of models with correlated errors.</p></li>
+</ul>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Concept 16.1: Threats to the internal validity of a multiple regression study
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The threats to the internal validity of a multiple regression study are:</p>
+<ol type="1">
+<li>Omitted variables,</li>
+<li>Functional form misspecification,</li>
+<li>Errors in variables (measurement error in the regressors),</li>
+<li>Sample selection, and</li>
+<li>Simultaneous causality.</li>
+</ol>
+<p>Hypothesis tests and confidence intervals based on inconsistent standard errors are invalid. The inconsistency of OLS standard errors can arise from heteroscedasticity and correlation in the error terms. To handle heteroskedasticity, we can use heteroscedasticity-robust standard errors. To address the correlation in the error terms, we should use standard errors that are robust to both heteroskedasticity and correlation.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="threats-to-external-validity-of-multiple-regression-analysis" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="threats-to-external-validity-of-multiple-regression-analysis"><span class="header-section-number">19.3</span> Threats to external validity of multiple regression analysis</h2>
+<p>Recall that a study has external validity if its results can be generalized to the population of interest. Thus, differences between the population and setting studied and the population and setting of interest can pose threats to external validity.</p>
+<ul>
+<li><p>The results of a study may not be generalizable if the population studied differs from the population of interest. For example, our test score example uses data from California school districts on fifth-grade students. It is clear that the results of a regression analysis based on this sample can not be generalizable to the populations of high school or college students, since these populations differ significantly.</p></li>
+<li><p>The results of a study may not be generalizable if the setting of the study also differs from the setting of interest even if the population being studied and the population of interest are identical. For example, if the study is conducted in a specific time period, the results may not be generalizable to other time periods because of changes in the setting.</p></li>
+</ul>
+<p>We can use our expert knowledge of the populations and settings studied, as well as those of interest, to assess the external validity of a study. Caution should be exercised when generalizing results if significant differences exist between the two.</p>
+<p>In our test score example, the estimation results indicate that the student-teacher ratio has a statistically significant negative effect on the average test scores in school districts. For this estimation, we use data from California school districts based on standardized tests administered to fifth-grade students. Assuming for the moment that these results are internally valid, to what other populations and settings could this finding be generalized?</p>
+<p>For example, college students and college instruction differ significantly from elementary school students and instruction. Therefore, it is implausible that the effect of reducing class sizes estimated from the California elementary school district data would generalize to colleges. On the other hand, elementary school students, curricula, and organizational structures are broadly similar throughout the United States. Thus, it is plausible that our results from the California dataset might generalize to other U.S. elementary school districts.</p>
+</section>
+<section id="internal-and-external-validity-when-the-regression-is-used-for-prediction" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="internal-and-external-validity-when-the-regression-is-used-for-prediction"><span class="header-section-number">19.4</span> Internal and external validity when the regression is used for prediction</h2>
+<p>For prediction exercises, external validity is more important than internal validity. There are three key requirements for reliable prediction:</p>
+<ul>
+<li><p><strong>Estimation and prediction samples</strong>: The estimation sample (the training sample) and the prediction sample (the testing sample) must be drawn from the same population. This requirement ensures that the model estimated using the estimation sample applies to the prediction sample. If the two samples come from different populations, the model may fail to hold in the prediction sample.</p></li>
+<li><p><strong>Choice of predictors</strong>: Predictors should be selected to maximize the accuracy of out-of-sample predictions.</p></li>
+<li><p><strong>Estimation method</strong>: The estimation method must be suitable for handling high-dimensional data when there are many predictors. In such cases, specialized estimators can provide more accurate out-of-sample predictions than the OLS estimator. We discuss these specialized estimators in <a href="Chapter14-BigData.html" class="quarto-xref"><span>Chapter 24</span></a>.</p></li>
+</ul>
+</section>
+<section id="example-test-scores-and-class-size" class="level2" data-number="19.5">
+<h2 data-number="19.5" class="anchored" data-anchor-id="example-test-scores-and-class-size"><span class="header-section-number">19.5</span> Example: Test Scores and Class Size</h2>
+<section id="data" class="level3" data-number="19.5.1">
+<h3 data-number="19.5.1" class="anchored" data-anchor-id="data"><span class="header-section-number">19.5.1</span> Data</h3>
+<p>In this empirical application, we use the Massachusetts dataset, which contains district-level averages for public elementary school districts in 1998. The test scores are derived from the Massachusetts Comprehensive Assessment System (MCAS), administered to all fourth graders in Massachusetts public schools in the spring of 1998. We use the student–teacher ratio (<code>tchratio</code>), the percentage of students receiving a subsidized lunch (<code>lnch_pct</code>), the percentage of students still learning English (<code>pctel</code>), and the average district income (<code>percap</code>) as our main variables. The first three variables represent averages for each elementary school district over the 1997–1998 school year. For the average district income, the 1990 U.S. Census data is used. Below, we provide list some selected variables from the dataset:</p>
+<ul>
+<li><code>code</code>: District code (numerical)</li>
+<li><code>municipa</code>: Municipality (name)</li>
+<li><code>district</code>: District name</li>
+<li><code>totsc4</code>: Overall 4th-grade test score (math + English + science)</li>
+<li><code>tchratio</code>: Student–teacher ratio</li>
+<li><code>lnch_pct</code>: Percentage of students receiving a subsidized lunch</li>
+<li><code>percap</code>: Per-capita income</li>
+<li><code>pctel</code>: Percentage of students still learning English</li>
+</ul>
+<p>The following code chunk imports the data and displays the column names.</p>
+<div id="df233297" class="cell" data-message="false" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mcas <span class="op">=</span> pd.read_excel(<span class="st">"data/mcas.xlsx"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Column names</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>mcas.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>Index(['code', 'municipa', 'district', 'regday', 'specneed', 'bilingua',
+       'occupday', 'tot_day', 's_p_c', 'spec_ed', 'lnch_pct', 'tchratio',
+       'percap', 'totsc4', 'totsc8', 'avgsalry', 'pctel'],
+      dtype='object')</code></pre>
+</div>
+</div>
+<p>Previously, we used data from California school districts to study the relationship between test scores and class size. It will be useful to compare the Massachusetts dataset with the California dataset. In <a href="#tbl-t16.3" class="quarto-xref">Table&nbsp;<span>19.3</span></a>, we present descriptive statistics for selected variables from the Massachusetts and California datasets. For Massachusetts, the average test score is 709.83, the average student–teacher ratio is 17.34, the average percentage of English learners is <span class="math inline">\(1.12\%\)</span>, the average percentage of students receiving subsidized lunch is <span class="math inline">\(15.32\%\)</span>, and the average per-capita income is $18,750. For California, the corresponding averages are 654.16 for test scores, 19.64 for student–teacher ratio, <span class="math inline">\(15.77\%\)</span> for English learners, <span class="math inline">\(45.71\%\)</span> for subsidized lunch recipients, and $15,320 for per-capita income.</p>
+<p>While Massachusetts has a higher average test score, we cannot make a direct comparison because different tests are administered in both states. Massachusetts also has lower averages for the student–teacher ratio, the percentage of subsidized lunch recipients, and the percentage of English learners. Its average per-capita income is larger than that of California.</p>
+<div id="fbdaaf96" class="cell" data-message="false" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics for Massachusetts and California</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mcas_vars <span class="op">=</span> [<span class="st">"totsc4"</span>, <span class="st">"tchratio"</span>, <span class="st">"pctel"</span>, <span class="st">"lnch_pct"</span>, <span class="st">"percap"</span>]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mcas_stats <span class="op">=</span> mcas[mcas_vars].describe().<span class="bu">round</span>(<span class="dv">2</span>).T</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics for California</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>caschool <span class="op">=</span> pd.read_excel(<span class="st">"data/caschool.xlsx"</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>caschool_vars <span class="op">=</span> [<span class="st">"testscr"</span>, <span class="st">"str"</span>, <span class="st">"el_pct"</span>, <span class="st">"meal_pct"</span>, <span class="st">"avginc"</span>]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>caschool_stats <span class="op">=</span> caschool[caschool_vars].describe().<span class="bu">round</span>(<span class="dv">2</span>).T</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename index</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>caschool_stats.index <span class="op">=</span> [<span class="st">"Test Score"</span>, <span class="st">"Student-Teacher Ratio"</span>, <span class="st">"English Learners (%)"</span>, <span class="st">"Free/Reduced Lunch (%)"</span>, <span class="st">"Average Income"</span>]</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>mcas_stats.index <span class="op">=</span> [<span class="st">"Test Score"</span>, <span class="st">"Student-Teacher Ratio"</span>, <span class="st">"English Learners (%)"</span>, <span class="st">"Free/Reduced Lunch (%)"</span>, <span class="st">"Per Capita Income"</span>]</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine statistics</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>combined_stats <span class="op">=</span> pd.concat([mcas_stats, caschool_stats], keys<span class="op">=</span>[<span class="st">"Massachusetts"</span>, <span class="st">"California"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>combined_stats</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="10" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t16.3" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="10">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t16.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;19.3: Descriptive statistics for Massachusetts and California test score datasets
+</figcaption>
+<div aria-describedby="tbl-t16.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">count</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">mean</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">std</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">min</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">25%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">50%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">75%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td rowspan="5" style="text-align: left;" data-quarto-table-cell-role="th" data-valign="top">Massachusetts</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Test Score</td>
+<td style="text-align: left;">220.0</td>
+<td style="text-align: left;">709.83</td>
+<td style="text-align: left;">15.13</td>
+<td style="text-align: left;">658.00</td>
+<td style="text-align: left;">701.00</td>
+<td style="text-align: left;">711.00</td>
+<td style="text-align: left;">720.00</td>
+<td style="text-align: left;">740.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Student-Teacher Ratio</td>
+<td style="text-align: left;">220.0</td>
+<td style="text-align: left;">17.34</td>
+<td style="text-align: left;">2.28</td>
+<td style="text-align: left;">11.40</td>
+<td style="text-align: left;">15.80</td>
+<td style="text-align: left;">17.10</td>
+<td style="text-align: left;">19.03</td>
+<td style="text-align: left;">27.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">English Learners (%)</td>
+<td style="text-align: left;">220.0</td>
+<td style="text-align: left;">1.12</td>
+<td style="text-align: left;">2.90</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.89</td>
+<td style="text-align: left;">24.49</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Free/Reduced Lunch (%)</td>
+<td style="text-align: left;">220.0</td>
+<td style="text-align: left;">15.32</td>
+<td style="text-align: left;">15.06</td>
+<td style="text-align: left;">0.40</td>
+<td style="text-align: left;">5.30</td>
+<td style="text-align: left;">10.55</td>
+<td style="text-align: left;">20.02</td>
+<td style="text-align: left;">76.20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Per Capita Income</td>
+<td style="text-align: left;">220.0</td>
+<td style="text-align: left;">18.75</td>
+<td style="text-align: left;">5.81</td>
+<td style="text-align: left;">9.69</td>
+<td style="text-align: left;">15.22</td>
+<td style="text-align: left;">17.13</td>
+<td style="text-align: left;">20.38</td>
+<td style="text-align: left;">46.86</td>
+</tr>
+<tr class="even">
+<td rowspan="5" style="text-align: left;" data-quarto-table-cell-role="th" data-valign="top">California</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Test Score</td>
+<td style="text-align: left;">420.0</td>
+<td style="text-align: left;">654.16</td>
+<td style="text-align: left;">19.05</td>
+<td style="text-align: left;">605.55</td>
+<td style="text-align: left;">640.05</td>
+<td style="text-align: left;">654.45</td>
+<td style="text-align: left;">666.66</td>
+<td style="text-align: left;">706.75</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Student-Teacher Ratio</td>
+<td style="text-align: left;">420.0</td>
+<td style="text-align: left;">19.64</td>
+<td style="text-align: left;">1.89</td>
+<td style="text-align: left;">14.00</td>
+<td style="text-align: left;">18.58</td>
+<td style="text-align: left;">19.72</td>
+<td style="text-align: left;">20.87</td>
+<td style="text-align: left;">25.80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">English Learners (%)</td>
+<td style="text-align: left;">420.0</td>
+<td style="text-align: left;">15.77</td>
+<td style="text-align: left;">18.29</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">1.94</td>
+<td style="text-align: left;">8.78</td>
+<td style="text-align: left;">22.97</td>
+<td style="text-align: left;">85.54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Free/Reduced Lunch (%)</td>
+<td style="text-align: left;">420.0</td>
+<td style="text-align: left;">44.71</td>
+<td style="text-align: left;">27.12</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">23.28</td>
+<td style="text-align: left;">41.75</td>
+<td style="text-align: left;">66.86</td>
+<td style="text-align: left;">100.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Average Income</td>
+<td style="text-align: left;">420.0</td>
+<td style="text-align: left;">15.32</td>
+<td style="text-align: left;">7.23</td>
+<td style="text-align: left;">5.34</td>
+<td style="text-align: left;">10.64</td>
+<td style="text-align: left;">13.73</td>
+<td style="text-align: left;">17.63</td>
+<td style="text-align: left;">55.33</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>In <a href="#fig-t16.3" class="quarto-xref">Figure&nbsp;<span>19.3</span></a>, we examine the relationship between test scores and average district income based on the Massachusetts dataset. The scatter plot shows a positive relationship, with the slope being steeper for lower income values and flatter for higher income values. To model the relationship between test scores and average district income, we consider three regression models: (i) the linear regression model, (ii) the cubic regression model, and (iii) the linear-log regression model. The fitted regression functions in <a href="#fig-t16.3" class="quarto-xref">Figure&nbsp;<span>19.3</span></a> indicate that the cubic regression provides a better fit compared to the linear and linear-log regressions.</p>
+<div id="cell-fig-t16.3" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define dependent and independent variables</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> mcas[<span class="st">'percap'</span>]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> mcas[<span class="st">'totsc4'</span>]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear regression</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>X_linear <span class="op">=</span> sm.add_constant(x)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>model_linear <span class="op">=</span> sm.OLS(y, X_linear).fit()</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Cubic regression</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>X_cubic <span class="op">=</span> sm.add_constant(np.column_stack([x, x<span class="op">**</span><span class="dv">2</span>, x<span class="op">**</span><span class="dv">3</span>]))</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>model_cubic <span class="op">=</span> sm.OLS(y, X_cubic).fit()</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear-log regression</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>X_log <span class="op">=</span> sm.add_constant(np.log(x))</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>model_log <span class="op">=</span> sm.OLS(y, X_log).fit()</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate fitted values for plotting</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>x_range <span class="op">=</span> np.linspace(x.<span class="bu">min</span>(), x.<span class="bu">max</span>(), <span class="dv">500</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>linear_fit <span class="op">=</span> model_linear.predict(sm.add_constant(x_range))</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>cubic_fit <span class="op">=</span> model_cubic.predict(sm.add_constant(np.column_stack([x_range, x_range<span class="op">**</span><span class="dv">2</span>, x_range<span class="op">**</span><span class="dv">3</span>])))</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>log_fit <span class="op">=</span> model_log.predict(sm.add_constant(np.log(x_range)))</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot and fitted lines</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">'darkgrid'</span>)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot of data</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>plt.scatter(x, y, color<span class="op">=</span><span class="st">'steelblue'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitted lines</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>plt.plot(x_range, linear_fit, label<span class="op">=</span><span class="st">'Linear regression'</span>, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>plt.plot(x_range, cubic_fit, label<span class="op">=</span><span class="st">'Cubic regression'</span>, color<span class="op">=</span><span class="st">'green'</span>)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>plt.plot(x_range, log_fit, label<span class="op">=</span><span class="st">'Linear-log regression'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot formatting</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'District income'</span>)</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Test score'</span>)</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>plt.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-t16.3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-t16.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter9-AssessingStudies_files/figure-html/fig-t16.3-output-1.png" width="515" height="357" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t16.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19.3: The relationship between test scores and district income for the Massachusetts dataset
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="models" class="level3" data-number="19.5.2">
+<h3 data-number="19.5.2" class="anchored" data-anchor-id="models"><span class="header-section-number">19.5.2</span> Models</h3>
+<p>Following <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span>, we consider six models given below. The first model includes only the student–teacher ratio as a regressor. The second model adds the percentage of English learners, the percentage of students receiving subsidized lunch, and the logarithm of per-capita income as additional regressors. The third model incorporates the third-order polynomial terms of per-capita income as regressors. The fourth model extends this by including quadratic and cubic terms for the student–teacher ratio. The fifth model introduces an interaction term between the student–teacher ratio and the percentage of English learners. Finally, the sixth model includes both the percentage of students receiving subsidized lunch and the third-order polynomial terms of per-capita income.</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp;1.\, {\tt totsc4}=\beta_0+\beta_1{\tt tchratio}+u,\\
+&amp;2.\, {\tt totsc4}=\beta_0+\beta_1{\tt tchratio}+\beta_2{\tt pctel}+\beta_3{\tt lnch\_pct}+ \beta_4\log({\tt percap})+u,\\
+&amp;3.\,{\tt totsc4}=\beta_0+\beta_1{\tt tchratio}+\beta_2{\tt pctel}+\beta_3{\tt lnch\_pct}+{\color{steelblue}\beta_4{\tt percap}}\\
+&amp;\quad\quad\quad\quad\quad{\color{steelblue}+\beta_5{\tt percap}^2+ \beta_6{\tt percap}^3}+u,\\
+&amp;4.\, {\tt totsc4}=\beta_0+\beta_1{\tt tchratio}+\beta_2{\tt tchratio}^2+\beta_3{\tt tchratio}^3+\beta_4{\tt pctel}\\
+&amp;\quad\quad\quad\quad\quad+\beta_5{\tt lnch\_pct}+{\color{steelblue}\beta_6{\tt percap}+\beta_7{\tt percap}^2+ \beta_8{\tt percap}^3}+u,\\
+&amp;5.\,{\tt totsc4}=\beta_0+\beta_1{\tt tchratio}+\beta_2{\tt HiEL}+\beta_3\left({\tt HiEL}\times{\tt tchratio}\right)\\
+&amp;\quad\quad\quad\quad\quad+\beta_4{\tt lnch\_pct}+{\color{steelblue}\beta_5{\tt percap}}+{\color{steelblue}+\beta_6{\tt percap}^2+ \beta_7{\tt percap}^3}+u,\\
+&amp;6.\,{\tt totsc4}=\beta_0+\beta_1{\tt tchratio}+\beta_2{\tt lnch\_pct}+{\color{steelblue}\beta_3{\tt percap}}\\
+&amp;\quad\quad\quad\quad\quad{\color{steelblue}+\beta_4{\tt percap}^2+ \beta_5{\tt percap}^3}+u.\\
+\end{align*}
+\]</span></p>
+<p>In the fifth model, <code>HiEL</code> can be considered as the discrete version of <code>pctel</code>, and is defined in the following way: <span class="math display">\[
+\begin{align}
+\text{\tt HiEL}_i=
+\begin{cases}
+1\,\text{if {\tt pctel}}_i&gt;\text{Median}({\tt pctel}),\\
+0\,\text{if {\tt pctel}}_i\leq\text{Median}({\tt pctel}).
+\end{cases}
+\end{align}
+\]</span></p>
+<div id="8e9b8b68" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> mcas.copy()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create hiel</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>mydata[<span class="st">"hiel"</span>] <span class="op">=</span> mydata[<span class="st">"pctel"</span>] <span class="op">&gt;</span> np.median(mydata[<span class="st">"pctel"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="estimation-results" class="level3" data-number="19.5.3">
+<h3 data-number="19.5.3" class="anchored" data-anchor-id="estimation-results"><span class="header-section-number">19.5.3</span> Estimation results</h3>
+<p>We use the following code chunk can to estimate all models. Note that we use heteroskedasticity-robust standard errors in all models.</p>
+<div id="ed0fac3f" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>r1 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>            data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio+pctel+lnch_pct+np.log(percap)"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>             data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 3</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>r3 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio+pctel+lnch_pct+percap+I(percap**2)+I(percap**3)"</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>             data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>) </span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 4</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>r4 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio+I(tchratio**2)+I(tchratio**3)+pctel+lnch_pct+percap+I(percap**2)+I(percap**3)"</span>,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>             data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 5</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>r5 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio+hiel+hiel*tchratio +lnch_pct+percap+I(percap**2)+I(percap**3)"</span>,</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>             data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 6</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>r6 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio+lnch_pct+percap+I(percap**2)+I(percap**3)"</span>,</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>             data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>models<span class="op">=</span>[<span class="st">"Model 1"</span>,<span class="st">"Model 2"</span>, <span class="st">"Model 3"</span>,<span class="st">"Model 4"</span>,<span class="st">"Model 5"</span>,<span class="st">"Model 6"</span>]</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>results_table<span class="op">=</span>summary_col(results<span class="op">=</span>[r1,r2,r3,r4,r5,r6],</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                          float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>, </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                          stars<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                          model_names<span class="op">=</span>models)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>results_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="14" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t16.4" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="14">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t16.4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;19.4: Estimation Results for Models 1-6
+</figcaption>
+<div aria-describedby="tbl-t16.4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="14">
+<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 1</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 2</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 3</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 4</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 5</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
+<td style="text-align: left;">739.621***</td>
+<td style="text-align: left;">682.432***</td>
+<td style="text-align: left;">744.025***</td>
+<td style="text-align: left;">665.496***</td>
+<td style="text-align: left;">759.914***</td>
+<td style="text-align: left;">747.364***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(8.607)</td>
+<td style="text-align: left;">(11.497)</td>
+<td style="text-align: left;">(21.318)</td>
+<td style="text-align: left;">(81.332)</td>
+<td style="text-align: left;">(23.233)</td>
+<td style="text-align: left;">(20.278)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">tchratio</td>
+<td style="text-align: left;">-1.718***</td>
+<td style="text-align: left;">-0.689**</td>
+<td style="text-align: left;">-0.641**</td>
+<td style="text-align: left;">12.426</td>
+<td style="text-align: left;">-1.018***</td>
+<td style="text-align: left;">-0.672**</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.499)</td>
+<td style="text-align: left;">(0.270)</td>
+<td style="text-align: left;">(0.268)</td>
+<td style="text-align: left;">(14.010)</td>
+<td style="text-align: left;">(0.370)</td>
+<td style="text-align: left;">(0.271)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">pctel</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.411</td>
+<td style="text-align: left;">-0.437</td>
+<td style="text-align: left;">-0.434</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.306)</td>
+<td style="text-align: left;">(0.303)</td>
+<td style="text-align: left;">(0.300)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">lnch_pct</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.521***</td>
+<td style="text-align: left;">-0.582***</td>
+<td style="text-align: left;">-0.587***</td>
+<td style="text-align: left;">-0.709***</td>
+<td style="text-align: left;">-0.653***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.078)</td>
+<td style="text-align: left;">(0.097)</td>
+<td style="text-align: left;">(0.104)</td>
+<td style="text-align: left;">(0.091)</td>
+<td style="text-align: left;">(0.073)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">np.log(percap)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">16.529***</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(3.146)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">percap</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-3.067</td>
+<td style="text-align: left;">-3.382</td>
+<td style="text-align: left;">-3.867</td>
+<td style="text-align: left;">-3.218</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(2.353)</td>
+<td style="text-align: left;">(2.491)</td>
+<td style="text-align: left;">(2.488)</td>
+<td style="text-align: left;">(2.306)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">I(percap ** 2)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.164*</td>
+<td style="text-align: left;">0.174*</td>
+<td style="text-align: left;">0.184**</td>
+<td style="text-align: left;">0.165*</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.085)</td>
+<td style="text-align: left;">(0.089)</td>
+<td style="text-align: left;">(0.090)</td>
+<td style="text-align: left;">(0.085)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">I(percap ** 3)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.002**</td>
+<td style="text-align: left;">-0.002**</td>
+<td style="text-align: left;">-0.002**</td>
+<td style="text-align: left;">-0.002**</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.001)</td>
+<td style="text-align: left;">(0.001)</td>
+<td style="text-align: left;">(0.001)</td>
+<td style="text-align: left;">(0.001)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">I(tchratio ** 2)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.680</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.737)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">I(tchratio ** 3)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.011</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.013)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">hiel[T.True]</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-12.561</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(9.793)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">hiel[T.True]:tchratio</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.799</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.555)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
+<td style="text-align: left;">0.067</td>
+<td style="text-align: left;">0.676</td>
+<td style="text-align: left;">0.685</td>
+<td style="text-align: left;">0.687</td>
+<td style="text-align: left;">0.686</td>
+<td style="text-align: left;">0.681</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
+<td style="text-align: left;">0.063</td>
+<td style="text-align: left;">0.670</td>
+<td style="text-align: left;">0.676</td>
+<td style="text-align: left;">0.675</td>
+<td style="text-align: left;">0.675</td>
+<td style="text-align: left;">0.674</td>
+</tr>
+</tbody>
+</table>
+<br>
+Standard errors in parentheses.<br>
+* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>The estimation results for Models 1–6 are presented in <a href="#tbl-t16.4" class="quarto-xref">Table&nbsp;<span>19.4</span></a>. We list our key results below:</p>
+<ul>
+<li><p>The results in the first three columns show that the estimated coefficient on <code>tchratio</code> decreases from <span class="math inline">\(-1.72\)</span> to <span class="math inline">\(-0.64\)</span> in the second column and <span class="math inline">\(-0.641\)</span> in the third column when we control for student and district characteristics. This suggests that the first model suffers from omitted variable bias.</p></li>
+<li><p>The results in the second and third columns indicate that the class size effect is statistically significant at the 5% level after controlling for student and district characteristics. Comparing <span class="math inline">\(\bar{R}^2\)</span> values in Models 2 and 3, the cubic specification provides a better fit than the logarithmic specification.</p></li>
+<li><p>In Model 3, we can use the <span class="math inline">\(F\)</span>-statistic to test <span class="math inline">\(H_0:\beta_5=\beta_6=0\)</span> versus <span class="math inline">\(H_1\)</span>: At least one coefficient is non zero. The <span class="math inline">\(F\)</span>-statistic given below is <span class="math inline">\(7.74\)</span> with a p-value of <span class="math inline">\(0.0006\)</span>. Thus, we reject the null hyptohesis.</p></li>
+</ul>
+<div id="eb40041c" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Testing H_0: beta_5=beta_6=0 in Model 3</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>hypothesis <span class="op">=</span> <span class="st">"I(percap ** 2)=0, I(percap ** 3)=0"</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r3.f_test(hypothesis))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;F test: F=7.744799216984443, p=0.0005664381585529111, df_denom=213, df_num=2&gt;</code></pre>
+</div>
+</div>
+<ul>
+<li>The results for Model 4 show that there is no statistically significant evidence of a nonlinear relationship between test scores and the student–teacher ratio. The <span class="math inline">\(F\)</span>-statistic for <span class="math inline">\(H_0:\beta_2=\beta_3=0\)</span> can be obtained using the code chunk given below. The <span class="math inline">\(F\)</span>-statistic is <span class="math inline">\(0.45\)</span> with a <span class="math inline">\(p\)</span>-value of <span class="math inline">\(0.640\)</span>. Thus, we fail to reject the null hypothesis.</li>
+</ul>
+<div id="3889e674" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Testing H_0: beta_2=beta_3=0 in Model 4</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>hypothesis <span class="op">=</span> <span class="st">"I(tchratio ** 2)=0, I(tchratio ** 3)=0"</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r4.f_test(hypothesis))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;F test: F=0.44627810224037257, p=0.6406084508437917, df_denom=211, df_num=2&gt;</code></pre>
+</div>
+</div>
+<ul>
+<li>The results for Model 5 show that the estimated coefficents for both <code>HiEL</code> and <code>HiELxtchratio</code> are statistically insignifcant at the 5% significance level. The <span class="math inline">\(F\)</span>-statistic for <span class="math inline">\(H_0:\beta_5=\beta_6=0\)</span> can be obtained using the following code chunk. The <span class="math inline">\(F\)</span>-statistic is <span class="math inline">\(1.58\)</span> with a <span class="math inline">\(p\)</span>-value of <span class="math inline">\(0.207\)</span>. Thus, we fail to reject the null hypothesis and conclude that the percentage of English learners does not have a statistically significant effect on test scores after controlling for the student–teacher ratio and other variables.</li>
+</ul>
+<div id="eec5e746" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Testing H_0: beta_5=beta_6=0 in Model 5</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>hypothesis <span class="op">=</span> <span class="st">"hiel[T.True]=0, hiel[T.True]:tchratio=0"</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r5.f_test(hypothesis))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;F test: F=1.5834729215634233, p=0.2076789066396875, df_denom=212, df_num=2&gt;</code></pre>
+</div>
+</div>
+<ul>
+<li><p>The results for Model 6 indicate that the percentage of English learners can be omitted as a regressor.</p></li>
+<li><p>Finally, since Models 4–6 do not produce substantially different results compared to Model 3, we select Model 3 as the most suitable specification.</p></li>
+</ul>
+</section>
+<section id="internal-validity-assessment" class="level3" data-number="19.5.4">
+<h3 data-number="19.5.4" class="anchored" data-anchor-id="internal-validity-assessment"><span class="header-section-number">19.5.4</span> Internal validity assessment</h3>
+<p><strong>Omitted variable bias</strong>: We control for student characteristics such as the percentage of English learners and the percentage of students receiving subsidized lunch, as well as district characteristics such as per-capita income. If these control variables are effective for acheiving the conditional mean independence assumption, then the OLS estimator of the coefficient of the student-teacher ratio is unbiased and consistent. However, there can be some other omitted causal factors such as outside learning resources, parental involvement, and teacher quality that can affect test scores. If these omitted variables are also correlated with the student-teacher ratio, then the OLS estimator of the student-teacher ratio will be biased and inconsistent.</p>
+<p><strong>Functional form misspecification</strong>: We consider several different functional forms, including logarithmic and polynomial specifications. Our findings on the estimated coefficient for the student-teacher ratio are unlikely to be sensitive to the choice of nonlinear regression specifications.</p>
+<p><strong>Errors in variables bias</strong>: The data are administrative, so it is unlikely that there are substantial reporting or typographical errors. However, the student-teacher ratio is an average for the district, which may not accurately reflect the actual student-teacher ratio in each classroom. The district income is based on data from the 1990 Census, while the other data pertain to 1998. If the economic composition of the district changed substantially over the 1990s, this would result in an imprecise measure of the actual average district income.</p>
+<p><strong>Missing data and sample selection bias</strong>: The sample data cover all elementary public school districts in California and Massachusetts, and there are no missing values. Therefore, this threat is not a concern in our analysis.</p>
+<p><strong>Simultaneous causality bias</strong>: This threat could arise if the student-teacher ratio is influenced by test scores. For instance, school funding equalization based on test scores or policies that allocate resources according to test scores could lead to simultaneous causality. However, such policies were not in place in California or Massachusetts during the periods covered by these samples. Therefore, <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> conclude that simultaneous causality bias is arguably not a significant concern.</p>
+<p><strong>Inconsistency of OLS standard errors</strong>: We use heteroskedasticity-robust standard errors in all models to address this issue.</p>
+</section>
+<section id="external-validity-assessment" class="level3" data-number="19.5.5">
+<h3 data-number="19.5.5" class="anchored" data-anchor-id="external-validity-assessment"><span class="header-section-number">19.5.5</span> External validity assessment</h3>
+<p>Our results, presented in <a href="#tbl-t16.4" class="quarto-xref">Table&nbsp;<span>19.4</span></a>, suggest conclusions similar to those obtained in <a href="Chapter8-NonlinearRegressions.html" class="quarto-xref"><span>Chapter 18</span></a> based on the California dataset. Based on this observation, <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> conclude that the multiple linear regression models are externally valid and therefore the results can be generalized to other elementary school districts in the United States.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Greene2017" class="csl-entry" role="listitem">
+Greene, W. H. 2017. <em>Econometric Analysis</em>. 8th ed. Pearson.
+</div>
+<div id="ref-Hansen2022" class="csl-entry" role="listitem">
+Hansen, Bruce. 2022. <em>Econometrics</em>. Princeton University Press.
+</div>
+<div id="ref-Stock2020" class="csl-entry" role="listitem">
+Stock, James H., and Mark W. Watson. 2020. <em>Introduction to Econometrics</em>. Fourth edition. Pearson.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Chapter8-NonlinearRegressions.html" class="pagination-link" aria-label="Nonlinear Regression Functions">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Part3-FurtherTopics.html" class="pagination-link" aria-label="Further Topics in Regression Analysis">
+        <span class="nav-page-text">Further Topics in Regression Analysis</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter9-AssessingStudies.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

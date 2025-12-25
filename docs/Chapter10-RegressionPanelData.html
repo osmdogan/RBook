@@ -1,0 +1,2819 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>20&nbsp; Regression with Panel Data – Introduction to Econometrics with Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Chapter11-BinaryDependentVariable.html" rel="next">
+<link href="./Part3-FurtherTopics.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part3-FurtherTopics.html">Further Topics in Regression Analysis</a></li><li class="breadcrumb-item"><a href="./Chapter10-RegressionPanelData.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Econometrics with Python</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part0-Python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroPython.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroNumpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-ControlStructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Control Structures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-CustomFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Custom Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-StatFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Statistical Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Pandas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-NumericalAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Applications in Numerical Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-SymbolicMath.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Symbolic Computing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and Review</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentals of Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Further Topics in Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Analysis of Economic Time Series Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theoretical Topics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#panel-data" id="toc-panel-data" class="nav-link active" data-scroll-target="#panel-data"><span class="header-section-number">20.1</span> Panel data</a>
+  <ul class="collapse">
+  <li><a href="#example-traffic-deaths-and-alcohol-taxes" id="toc-example-traffic-deaths-and-alcohol-taxes" class="nav-link" data-scroll-target="#example-traffic-deaths-and-alcohol-taxes"><span class="header-section-number">20.1.1</span> Example: Traffic deaths and alcohol taxes</a></li>
+  </ul></li>
+  <li><a href="#fixed-effects-regression-model" id="toc-fixed-effects-regression-model" class="nav-link" data-scroll-target="#fixed-effects-regression-model"><span class="header-section-number">20.2</span> Fixed effects regression model</a>
+  <ul class="collapse">
+  <li><a href="#entity-fixed-effects" id="toc-entity-fixed-effects" class="nav-link" data-scroll-target="#entity-fixed-effects"><span class="header-section-number">20.2.1</span> Entity fixed effects</a></li>
+  <li><a href="#time-fixed-effects" id="toc-time-fixed-effects" class="nav-link" data-scroll-target="#time-fixed-effects"><span class="header-section-number">20.2.2</span> Time fixed effects</a></li>
+  <li><a href="#entity-and-time-fixed-effects" id="toc-entity-and-time-fixed-effects" class="nav-link" data-scroll-target="#entity-and-time-fixed-effects"><span class="header-section-number">20.2.3</span> Entity and time fixed effects</a></li>
+  <li><a href="#the-fixed-effects-regression-assumptions" id="toc-the-fixed-effects-regression-assumptions" class="nav-link" data-scroll-target="#the-fixed-effects-regression-assumptions"><span class="header-section-number">20.2.4</span> The fixed effects regression assumptions</a></li>
+  </ul></li>
+  <li><a href="#random-effects-regression-model" id="toc-random-effects-regression-model" class="nav-link" data-scroll-target="#random-effects-regression-model"><span class="header-section-number">20.3</span> Random effects regression model</a></li>
+  <li><a href="#traffic-deaths-and-alcohol-taxes" id="toc-traffic-deaths-and-alcohol-taxes" class="nav-link" data-scroll-target="#traffic-deaths-and-alcohol-taxes"><span class="header-section-number">20.4</span> Traffic deaths and alcohol taxes</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter10-RegressionPanelData.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part3-FurtherTopics.html">Further Topics in Regression Analysis</a></li><li class="breadcrumb-item"><a href="./Chapter10-RegressionPanelData.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-chapter17" class="quarto-section-identifier"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="fde92805" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> linearmodels <span class="im">import</span> PanelOLS</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> linearmodels <span class="im">import</span> PooledOLS</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> linearmodels <span class="im">import</span> RandomEffects</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>plt.rc(<span class="st">'text'</span>, usetex <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> stargazer.stargazer <span class="im">import</span> Stargazer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="panel-data" class="level2" data-number="20.1">
+<h2 data-number="20.1" class="anchored" data-anchor-id="panel-data"><span class="header-section-number">20.1</span> Panel data</h2>
+<p>We assume that we have a dataset that contains observations on a set of entities over multiple time periods. The entities can be individuals, firms, industries, or countries, and the time periods can be days, months, quarters, or years.</p>
+<div id="def-def17-1" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 20.1 (Panel data)</strong></span> <strong>Panel data</strong> (longitudinal data) contain observations on a set of entities over multiple time periods.</p>
+</div>
+<p>If we observe all entities in every time period, we call the panel a <strong>balanced panel</strong>, i.e., we have observations on all entities over the entire sample period. On the other hand, if we have missing observations on some entities at certain time periods, we call the panel an <strong>unbalanced panel</strong> or an <strong>incomplete panel</strong>.</p>
+<p>Panel data with many entities but only a few time periods are referred to as <strong>short panels</strong>. Conversely, panel data with many time periods but only a few entities are called <strong>long panels</strong>. When panel data include both a large number of entities and a large number of time periods, they are referred to as <strong>large panels</strong>.</p>
+<p>In this chapter, we study commonly used panel data models. These models have features that differ from the cross-sectional and time series models. The key features of panel data models are as follows:</p>
+<ul>
+<li>Panel data models can exploit the variation across entities and over time, which can lead to more efficient estimators.</li>
+<li>Panel data models allow controlling for unobserved factors that vary across entities but do not vary over time.</li>
+<li>Panel data models allow controlling for unobserved factors that vary across time but do not vary over entities.</li>
+<li>Panel data models can be used to study the dynamics of economic relationships over time.</li>
+</ul>
+<p>We assume that there are <span class="math inline">\(n\)</span> entities and <span class="math inline">\(T\)</span> time periods. Let <span class="math inline">\(i\)</span> and <span class="math inline">\(t\)</span> to denote entities and time periods, respectively. Suppose we have an outcome variable and <span class="math inline">\(k\)</span> explanatory variables in the dataset. Then, our dataset consists of the realizations of <span class="math display">\[
+\begin{align}
+(X_{1it},\,X_{2it},\dots,X_{kit},\,Y_{it}),\quad i=1,2,\dots,n,\quad t=1,2,\dots,T.
+\end{align}
+\]</span></p>
+<section id="example-traffic-deaths-and-alcohol-taxes" class="level3" data-number="20.1.1">
+<h3 data-number="20.1.1" class="anchored" data-anchor-id="example-traffic-deaths-and-alcohol-taxes"><span class="header-section-number">20.1.1</span> Example: Traffic deaths and alcohol taxes</h3>
+<p>We analyze the traffic fatality dataset (<strong>fatality.csv</strong>) provided by <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span>. This dataset covers annual observations for the lower 48 states (excluding Alaska and Hawaii) over the period 1982 to 1988. Consequently, the panel consists of <span class="math inline">\(n = 48\)</span> entities and <span class="math inline">\(T = 7\)</span> time periods, yielding a total of <span class="math inline">\(n \times T = 336\)</span> observations. The main variables are described in the following list.</p>
+<ul>
+<li><code>state</code>: state id (FIPS) code</li>
+<li><code>year</code>: year</li>
+<li><code>mrall</code>: per capita vehicle fatality (number of traffic deaths)</li>
+<li><code>beertax</code>: the real tax on a case of beer</li>
+<li><code>mlda</code>: minimum legal drinking age</li>
+<li><code>jaild</code>: a dummy variable that equals to 1 if state requires mandatory jail sentence for an initial drunk driving conviction, 0 otherwise</li>
+<li><code>comserd</code>: a dummy variable that equals 1 if state requires mandatory community service for an initial drunk driving conviction, 0 otherwise</li>
+<li><code>vmiles</code>: total vehicle miles traveled annually</li>
+<li><code>unrate</code>: unemployment rate</li>
+<li><code>perinc</code>: per capita personal income</li>
+</ul>
+<p>We will first change the measurement of the per capita vehicle fatality to vehicle fatality per 10,000 people.</p>
+<div id="ec14c15d" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fatality <span class="op">=</span> pd.read_csv(<span class="st">'data/fatality.csv'</span>, header <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the measurement of the per capita vehicle fatality</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>fatality[<span class="st">'mrall'</span>] <span class="op">=</span> <span class="fl">1e4</span><span class="op">*</span>fatality[<span class="st">'mrall'</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Column names</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>fatality.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>Index(['state', 'year', 'spircons', 'unrate', 'perinc', 'emppop', 'beertax',
+       'sobapt', 'mormon', 'mlda', 'dry', 'yngdrv', 'vmiles', 'breath',
+       'jaild', 'comserd', 'allmort', 'mrall', 'allnite', 'mralln', 'allsvn',
+       'a1517', 'mra1517', 'a1517n', 'mra1517n', 'a1820', 'a1820n', 'mra1820',
+       'mra1820n', 'a2124', 'mra2124', 'a2124n', 'mra2124n', 'aidall',
+       'mraidall', 'pop', 'pop1517', 'pop1820', 'pop2124', 'miles', 'unus',
+       'epopus', 'gspch'],
+      dtype='object')</code></pre>
+</div>
+</div>
+<p>The summary statistics for some of the variables are presented in <a href="#tbl-t17-1" class="quarto-xref">Table&nbsp;<span>20.1</span></a>. The average fatality rate (<code>mrall</code>) is roughly 2 per 10,000 people. The average real beer tax (<code>beertax</code>) is about $0.50 per case (in 1988 dollars). The sample means of <code>jaild</code> and <code>comserd</code> are 0.28 and 0.39, respectively, indicating that 28 percent of the states require mandatory jail sentence for an initial drunk driving conviction, while 39 percent mandate community service. The average annual vehicle miles (<code>vmiles</code>) traveled is about 7890 miles. Lastly, the average unemployment rate across states is 7.35 percent.</p>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Descriptive statistics</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fatality[[<span class="st">"mrall"</span>,<span class="st">"beertax"</span>,<span class="st">"jaild"</span>,<span class="st">"comserd"</span>,<span class="st">"vmiles"</span>,<span class="st">"unrate"</span>]].describe().<span class="bu">round</span>(<span class="dv">2</span>).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="3" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t17-1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t17-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;20.1: Descriptive statistics
+</figcaption>
+<div aria-describedby="tbl-t17-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">count</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">mean</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">std</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">min</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">25%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">50%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">75%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">mrall</td>
+<td style="text-align: left;">336.0</td>
+<td style="text-align: left;">2.04</td>
+<td style="text-align: left;">0.57</td>
+<td style="text-align: left;">0.82</td>
+<td style="text-align: left;">1.62</td>
+<td style="text-align: left;">1.96</td>
+<td style="text-align: left;">2.42</td>
+<td style="text-align: left;">4.22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">beertax</td>
+<td style="text-align: left;">336.0</td>
+<td style="text-align: left;">0.51</td>
+<td style="text-align: left;">0.48</td>
+<td style="text-align: left;">0.04</td>
+<td style="text-align: left;">0.21</td>
+<td style="text-align: left;">0.35</td>
+<td style="text-align: left;">0.65</td>
+<td style="text-align: left;">2.72</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">jaild</td>
+<td style="text-align: left;">335.0</td>
+<td style="text-align: left;">0.28</td>
+<td style="text-align: left;">0.45</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">1.00</td>
+<td style="text-align: left;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">comserd</td>
+<td style="text-align: left;">335.0</td>
+<td style="text-align: left;">0.19</td>
+<td style="text-align: left;">0.39</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">1.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">vmiles</td>
+<td style="text-align: left;">336.0</td>
+<td style="text-align: left;">7890.75</td>
+<td style="text-align: left;">1475.66</td>
+<td style="text-align: left;">4576.35</td>
+<td style="text-align: left;">7182.54</td>
+<td style="text-align: left;">7796.22</td>
+<td style="text-align: left;">8504.02</td>
+<td style="text-align: left;">26148.27</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">unrate</td>
+<td style="text-align: left;">336.0</td>
+<td style="text-align: left;">7.35</td>
+<td style="text-align: left;">2.53</td>
+<td style="text-align: left;">2.40</td>
+<td style="text-align: left;">5.48</td>
+<td style="text-align: left;">7.00</td>
+<td style="text-align: left;">8.90</td>
+<td style="text-align: left;">18.00</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Consider first the linear relationship between vehicle fatalities and the real tax on a case of beer, in 1982, and, in 1988. In the following code, we estimate the following simple linear regression model for 1982 and 1988 separately: <span class="math display">\[
+\text{FatalityRate}_{it} = \beta_0 + \beta_1 \text{BeerTax}_{it} + u_{it},
+\]</span></p>
+<p>where <span class="math inline">\(\text{FatalityRate}_{it}\)</span> is the vehicle fatality rate in state <span class="math inline">\(i\)</span> in year <span class="math inline">\(t\)</span>, and <span class="math inline">\(\text{BeerTax}_{it}\)</span> is the real tax on a case of beer in state <span class="math inline">\(i\)</span> in year <span class="math inline">\(t\)</span>.</p>
+<div id="3dbe3a02" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for 1982</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_1982 <span class="op">=</span> fatality[fatality[<span class="st">'year'</span>] <span class="op">==</span> <span class="dv">1982</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>res_1982 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'mrall ~ beertax'</span>, data<span class="op">=</span>df_1982).fit().params</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for 1988</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>df_1988 <span class="op">=</span> fatality[fatality[<span class="st">'year'</span>] <span class="op">==</span> <span class="dv">1988</span>]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>res_1988 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'mrall ~ beertax'</span>, data<span class="op">=</span>df_1988).fit().params</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The estimated coefficients for the relationship between the real beer tax and vehicle fatalities in 1982 and 1988 are presented in <a href="#fig-fig1982-1988" class="quarto-xref">Figure&nbsp;<span>20.1</span></a>, along with the scatter plots. The estimated coefficient on the real beer tax is 0.15 in 1982 and 0.44 in 1988. These results suggest a positive relationship between alcohol taxes and vehicle fatalities, which is contrary to what we would expect. Alcohol taxes are typically expected to lower the rate of traffic fatalities. This discrepancy may be due to omitted variable bias, as neither model includes factors such as vehicle quality, road quality, drinking and driving culture, car density, or the number of rainy or snowy days. Because of these omitted variables, the results are biased.</p>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Relationship between beer tax and fatal accidents</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Relationship in 1982</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>sns.<span class="bu">set</span>(style<span class="op">=</span><span class="st">'darkgrid'</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>axs.scatter(df_1982.beertax, df_1982.mrall, color<span class="op">=</span><span class="st">'steelblue'</span>, s<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>axs.plot(df_1982[<span class="st">'beertax'</span>], res_1982[<span class="dv">0</span>] <span class="op">+</span> res_1982[<span class="dv">1</span>]<span class="op">*</span>df_1982[<span class="st">'beertax'</span>], </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>         linestyle<span class="op">=</span><span class="st">'-'</span>, color<span class="op">=</span><span class="st">'black'</span>,linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>axs.text(<span class="fl">1.9</span>, <span class="fl">2.6</span>, <span class="vs">r'$\widehat</span><span class="sc">{FatalityRate}</span><span class="vs"> = 2.01 + 0.15 Beertax$'</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>         {<span class="st">'color'</span>: <span class="st">'k'</span>, <span class="st">'fontsize'</span>: <span class="dv">11</span>, <span class="st">'ha'</span>: <span class="st">'center'</span>, <span class="st">'va'</span>: <span class="st">'center'</span>})</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>axs.set_xlabel(<span class="st">'Beer Tax'</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>axs.set_ylabel(<span class="st">'Fatalities'</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Relationship in 1988</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(figsize <span class="op">=</span> (<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>axs.scatter(df_1988[<span class="st">'beertax'</span>], df_1988[<span class="st">'mrall'</span>], color<span class="op">=</span><span class="st">'steelblue'</span>,s<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>axs.plot(df_1988[<span class="st">'beertax'</span>], res_1988[<span class="dv">0</span>] <span class="op">+</span> res_1988[<span class="dv">1</span>]<span class="op">*</span>df_1988[<span class="st">'beertax'</span>], </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>         linestyle<span class="op">=</span><span class="st">'-'</span>, color<span class="op">=</span><span class="st">'black'</span>,linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>axs.text(<span class="fl">1.5</span>, <span class="fl">2.85</span>, <span class="vs">r'$\widehat</span><span class="sc">{FatalityRate}</span><span class="vs"> = 1.86 + 0.44 Beertax$'</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>         {<span class="st">'color'</span>: <span class="st">'k'</span>, <span class="st">'fontsize'</span>: <span class="dv">11</span>, <span class="st">'ha'</span>: <span class="st">'center'</span>, <span class="st">'va'</span>: <span class="st">'center'</span>})</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>axs.set_xlabel(<span class="st">'Beer Tax'</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>axs.set_ylabel(<span class="st">'Fatalities'</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-fig1982-1988" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig1982-1988-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-fig1982-1988" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-fig1982-1988-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fig1982-1988-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter10-RegressionPanelData_files/figure-html/fig-fig1982-1988-output-1.png" data-ref-parent="fig-fig1982-1988" width="516" height="360" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fig1982-1988-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Relationship in 1982
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-fig1982-1988" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-fig1982-1988-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fig1982-1988-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter10-RegressionPanelData_files/figure-html/fig-fig1982-1988-output-2.png" data-ref-parent="fig-fig1982-1988" width="561" height="369" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fig1982-1988-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Relationship in 1988
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig1982-1988-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20.1: The relationship between beer tax and fatal accidents
+</figcaption>
+</figure>
+</div>
+<p>This example shows that we cannot rely on the simple linear regression model due to omitted variable bias. If the omitted variables are state-specific or time-specific, we can resort to panel data models to control for their effects. We study two types of panel data models: fixed effects and random effects models.</p>
+</section>
+</section>
+<section id="fixed-effects-regression-model" class="level2" data-number="20.2">
+<h2 data-number="20.2" class="anchored" data-anchor-id="fixed-effects-regression-model"><span class="header-section-number">20.2</span> Fixed effects regression model</h2>
+<section id="entity-fixed-effects" class="level3" data-number="20.2.1">
+<h3 data-number="20.2.1" class="anchored" data-anchor-id="entity-fixed-effects"><span class="header-section-number">20.2.1</span> Entity fixed effects</h3>
+<p>Panel data can allow eliminating omitted variable bias when the omitted variables are constant over time within a given entity. Consider the following pane data model: <span id="eq-eq17-1"><span class="math display">\[
+\text{FatalityRate}_{it} = \beta_0 + \beta_1 \text{BeerTax}_{it} + \beta_2Z_i + u_{it},
+\tag{20.1}\]</span></span></p>
+<p>where <span class="math inline">\(Z_i\)</span> is a factor that does not change over time and <span class="math inline">\(\beta_2\)</span> is the associated parameter. Suppose <span class="math inline">\(Z_i\)</span> is not observed. Hence, its omission could result in omitted variable bias. However, the effect of <span class="math inline">\(Z_i\)</span> can be eliminated if have data over multiple time periods. For example, consider <a href="#eq-eq17-1" class="quarto-xref">Equation&nbsp;<span>20.1</span></a> when <span class="math inline">\(t=1982\)</span> and <span class="math inline">\(t=1988\)</span>: <span class="math display">\[
+\begin{align}
+{\tt FatalityRate}_{i1982} = \beta_0+\beta_1{\tt BeerTax}_{i1982}+\beta_2Z_i+u_{i1982},\\
+{\tt FatalityRate}_{i1988} = \beta_0+\beta_1{\tt BeerTax}_{i1988}+\beta_2Z_i+u_{i1988}.
+\end{align}
+\]</span></p>
+<p>Subtracting the first equation from the second one gives the following difference regression: <span class="math display">\[
+\begin{align*}
+\text{FatalityRate}_{i1988}&amp;-\text{FatalityRate}_{i1982}\\
+&amp;=\beta_1\left(\text{BeerTax}_{i1988} - \text{BeerTax}_{i1982}\right) + \left(u_{i1988}-u_{i1982}\right).
+\end{align*}
+\]</span></p>
+<p>Thus, any change in the fatality rate from 1982 to 1988 cannot be caused by <span class="math inline">\(Z_i\)</span>, because <span class="math inline">\(Z_i\)</span> (by assumption) does not change between 1982 and 1988. The difference regression eliminates the effect of <span class="math inline">\(Z_i\)</span> and can be estimated using the OLS estimator. Note that this difference regression does not include an intercept because it was eliminated during the subtraction step. However, we can still include an intercept in the estimation. In the following code, we estimate the difference regression model for the fatality rate and the real beer tax for the years 1982 and 1988.</p>
+<div id="ed259951" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Difference regression</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_1988 <span class="op">=</span> df_1988.reset_index().drop(<span class="st">"index"</span>, axis <span class="op">=</span> <span class="dv">1</span>) </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df_1982 <span class="op">=</span> df_1982.reset_index().drop(<span class="st">"index"</span>, axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the difference variables</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>tmp1 <span class="op">=</span> df_1988.mrall <span class="op">-</span> df_1982.mrall</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>tmp2 <span class="op">=</span> df_1988.beertax <span class="op">-</span> df_1982.beertax</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>df_diff <span class="op">=</span> pd.DataFrame({<span class="st">'Dmrall'</span>:tmp1, <span class="st">'Dbeertax'</span>:tmp2})</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate the difference regression</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>res_Diff <span class="op">=</span> smf.ols(formula <span class="op">=</span> <span class="st">'Dmrall ~ Dbeertax'</span>, data <span class="op">=</span> df_diff).fit()</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_Diff.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                 Dmrall   R-squared:                       0.119
+Model:                            OLS   Adj. R-squared:                  0.100
+Method:                 Least Squares   F-statistic:                     6.225
+Date:                Sat, 11 Oct 2025   Prob (F-statistic):             0.0162
+Time:                        11:39:50   Log-Likelihood:                -22.383
+No. Observations:                  48   AIC:                             48.77
+Df Residuals:                      46   BIC:                             52.51
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.0720      0.061     -1.188      0.241      -0.194       0.050
+Dbeertax      -1.0410      0.417     -2.495      0.016      -1.881      -0.201
+==============================================================================
+Omnibus:                       10.295   Durbin-Watson:                   2.408
+Prob(Omnibus):                  0.006   Jarque-Bera (JB):                9.784
+Skew:                          -1.017   Prob(JB):                      0.00751
+Kurtosis:                       3.867   Cond. No.                         7.36
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+</div>
+<p>The estimated effect of a change in the real beer tax is negative, as predicted by economic theory. Recall that the average real beer tax was roughly $0.50 and the average vehicle fatalities was 2 per 10,000 people. If a state with an average real beer tax decides to double its beer tax, then the predicted decline in vehicle fatalities is <span class="math inline">\(0.50\times 1.041\approx 0.52\)</span> death per 10,000. This is roughly a reduction of one-fourth in traffic deaths, and it is a large effect. It is also statistically significant at the 5% significance level.</p>
+<p>Of course using only data from two periods when we have data for more than 2 periods is not reasonable. We now consider the case <span class="math inline">\(T &gt; 2\)</span>. Because <span class="math inline">\(Z_i\)</span> varies from one state to the next but is constant over time, the model can be interpreted as having <span class="math inline">\(n\)</span> intercepts, one for each state. Let <span class="math inline">\(\alpha_i = \beta_0 + \beta_2 Z_i\)</span> in <a href="#eq-eq17-1" class="quarto-xref">Equation&nbsp;<span>20.1</span></a>, then the model can be written as <span id="eq-eq17-2"><span class="math display">\[
+Y_{it}=\beta_1X_{it}+\alpha_i+u_{it},\quad i=1,2,\dots,n,\quad t=1,2,\dots,T.
+\tag{20.2}\]</span></span></p>
+<div id="def-def17-2" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 20.2 (Fixed effects regression model)</strong></span> The model in <a href="#eq-eq17-2" class="quarto-xref">Equation&nbsp;<span>20.2</span></a> is called the <strong>fixed effects regression model</strong>, where <span class="math inline">\(\alpha_1,\alpha_2,\dots,\alpha_n\)</span> are treated as unknown intercepts to be estimated. These terms are also known as <strong>entity fixed effects</strong>.</p>
+</div>
+<p>Alternatively, we can express <a href="#eq-eq17-2" class="quarto-xref">Equation&nbsp;<span>20.2</span></a> as <span class="math display">\[
+Y_{it} = \beta_1X_{it} + \sum_{j=1}^n \mathbf{1}(j=i)\alpha_j + u_{it},
+\]</span></p>
+<p>where <span class="math inline">\(\mathbf{1}(j=i)\)</span> is the indicator function that equals to 1 if <span class="math inline">\(j=i\)</span>, and 0 otherwise. These indicators can be represented as dummy variables for each entity: <span id="eq-eq17-3"><span class="math display">\[
+Y_{it} = \beta_0 + \beta_1X_{it} + \gamma_2 D2_i + \gamma_3 D3_i + \ldots +\gamma_n Dn_i + u_{it},
+\tag{20.3}\]</span></span></p>
+<p>where the dummy variables <span class="math inline">\(D2,D3,\dots,Dn\)</span> are the entity dummies with the corresponding parameters <span class="math inline">\(\gamma_2,\gamma_3,\ldots, \gamma_n\)</span>. For example, <span class="math inline">\(D2_i\)</span> is a dummy variable that equals 1 if <span class="math inline">\(i=2\)</span> and 0 otherwise:</p>
+<p><span class="math display">\[
+D2_i =
+\begin{cases}
+1 &amp; \text{if } i=2,\\
+0 &amp; \text{otherwise}.
+\end{cases}
+\]</span></p>
+<p>Note that because there is a common intercept in <a href="#eq-eq17-3" class="quarto-xref">Equation&nbsp;<span>20.3</span></a>, the dummy for the first entity <span class="math inline">\(D1\)</span> is not included in the specification to avoid the dummy variable trap. Also, comparing <a href="#eq-eq17-2" class="quarto-xref">Equation&nbsp;<span>20.2</span></a> and <a href="#eq-eq17-3" class="quarto-xref">Equation&nbsp;<span>20.3</span></a>, we have <span class="math inline">\(\alpha_1 = \beta_0\)</span> and <span class="math inline">\(\alpha_i = \beta_0 + \gamma_i\)</span> for <span class="math inline">\(i=2,\dots,n\)</span>.</p>
+<p>If the set of regressors includes <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, , <span class="math inline">\(X_k\)</span>, then the fixed effects regression model can be extended to include multiple regressors. The model with multiple regressors can be expressed in the following forms:</p>
+<ul>
+<li><p>Fixed effects form with multiple regressors: <span class="math display">\[
+\begin{align}
+Y_{it}=\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}+\alpha_i+u_{it}.
+\end{align}
+\]</span></p></li>
+<li><p>Dummy variable form with multiple regressors: <span class="math display">\[
+\begin{align}
+Y_{it}&amp;=\beta_0+\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}\nonumber\\
+&amp;+\gamma_2D2_i+\gamma_3D3_i+\ldots+\gamma_nDn_i+u_{it}.
+\end{align}
+\]</span></p></li>
+</ul>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Concept 17.1: Fixed effects regression model
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The fixed effects regression model includes entity fixed effects, which are treated as unknown intercepts to be estimated. The model can be expressed in alternative forms:</p>
+<ol type="1">
+<li>The fixed effects form: <span class="math display">\[
+Y_{it}=\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}+\alpha_i+u_{it},
+\]</span></li>
+</ol>
+<p>where <span class="math inline">\(\alpha_i\)</span> is the entity fixed effect for entity <span class="math inline">\(i\)</span>.</p>
+<ol start="2" type="1">
+<li>The indicator function form: <span class="math display">\[
+Y_{it}=\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}+\sum_{j=1}^n \mathbf{1}(j=i)\alpha_j+u_{it},
+\]</span></li>
+</ol>
+<p>where <span class="math inline">\(\mathbf{1}(j=i)\)</span> is the indicator function that equals 1 if <span class="math inline">\(j=i\)</span>, and 0 otherwise.</p>
+<ol start="3" type="1">
+<li>The dummy variables form: <span class="math display">\[
+\begin{align}
+Y_{it}&amp;=\beta_0+\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}\\
+&amp;+\gamma_2D2_i+\gamma_3D3_i+\ldots+\gamma_nDn_i+u_{it},
+\end{align}
+\]</span></li>
+</ol>
+<p>where <span class="math inline">\(D2,D3,\dots,Dn\)</span> are the entity dummies. For example, <span class="math inline">\(D2_i\)</span> is a dummy variable that equals 1 if <span class="math inline">\(i=2\)</span> and 0 otherwise.</p>
+</div>
+</div>
+<p>There are two approaches that can be used to estimate the fixed effects regression model: the least squares dummy variables (LSDV) method and the within (or entity-demeaned) transformation. The LSDV method is based on estimating <a href="#eq-eq17-3" class="quarto-xref">Equation&nbsp;<span>20.3</span></a> by the OLS estimator.</p>
+<p>In the case of the within transformation, we first consider the following time-averaged version of <a href="#eq-eq17-2" class="quarto-xref">Equation&nbsp;<span>20.2</span></a>: <span class="math display">\[
+\frac{1}{T}\sum_{t=1}^TY_{it}=\beta_0+\beta_1\frac{1}{T}\sum_{t=1}^TX_{it}+\alpha_i+\frac{1}{T}\sum_{t=1}^Tu_{it}.
+\]</span></p>
+<p>To eliminate the fixed effects, we subtract this equation from <a href="#eq-eq17-2" class="quarto-xref">Equation&nbsp;<span>20.2</span></a> and obtain the following within transformed model: <span id="eq-eq17-4"><span class="math display">\[
+\widetilde{Y}_{it}=\beta_1\widetilde{X}_{it}+\widetilde{u}_{it},
+\tag{20.4}\]</span></span></p>
+<p>where <span class="math inline">\(\widetilde{Y}_{it}=Y_{it}-\frac{1}{T}\sum_{t=1}^TY_{it}\)</span>, <span class="math inline">\(\widetilde{X}_{it}\)</span>, and <span class="math inline">\(\widetilde{u}_{it}\)</span> are defined similarly. Note that the same transformation can also be applied when there are multiple regressors in the model. We can then resort to the OLS estimator to estimate <a href="#eq-eq17-4" class="quarto-xref">Equation&nbsp;<span>20.4</span></a>.</p>
+<p>For our traffic fatality dataset, we consider the following versions:</p>
+<p><span class="math display">\[
+\begin{align}
+&amp;{\tt FatalityRate}_{it} = \beta_0+\beta_1{\tt BeerTax}_{it}+\gamma_2D2_i+\gamma_3D3_i+\ldots+\gamma_nD47_i+u_{it},\\
+&amp;{\tt FatalityRate}_{it} = \beta_0+\beta_1{\tt BeerTax}_{it}+\alpha_i+u_{it}.
+\end{align}
+\]</span></p>
+<p>We can use the following code chunk to estimate the first model by the LSDV method. Note that the entity dummy variables are created using the <code>C()</code> function in the formula: <code>C(state)</code> function creates dummy variables for each state. The <code>cov_type='cluster'</code> and <code>cov_kwds={'groups': fatality['state']}</code> options are used to compute the clustered standard errors. We discuss the clustered standard errors in more detail in Section 17.2.4.</p>
+<div id="f927032e" class="cell" data-message="false" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LSDV method</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>LSDVreg <span class="op">=</span> smf.ols(formula <span class="op">=</span> <span class="st">'mrall ~ beertax + C(state)'</span>, data <span class="op">=</span> fatality)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>LSDVres <span class="op">=</span> LSDVreg.fit(cov_type<span class="op">=</span><span class="st">'cluster'</span>, cov_kwds<span class="op">=</span>{<span class="st">'groups'</span>: fatality[<span class="st">'state'</span>]})</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(LSDVres.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  mrall   R-squared:                       0.905
+Model:                            OLS   Adj. R-squared:                  0.889
+Method:                 Least Squares   F-statistic:                     9.944
+Date:                Sat, 11 Oct 2025   Prob (F-statistic):            0.00281
+Time:                        11:39:50   Log-Likelihood:                 107.97
+No. Observations:                 336   AIC:                            -117.9
+Df Residuals:                     287   BIC:                             69.09
+Df Model:                          48                                         
+Covariance Type:              cluster                                         
+==================================================================================
+                     coef    std err          z      P&gt;|z|      [0.025      0.975]
+----------------------------------------------------------------------------------
+Intercept          3.4776      0.511      6.802      0.000       2.476       4.480
+C(state)[T.4]     -0.5677      0.413     -1.374      0.170      -1.378       0.242
+C(state)[T.5]     -0.6550      0.325     -2.013      0.044      -1.293      -0.017
+C(state)[T.6]     -1.5095      0.481     -3.139      0.002      -2.452      -0.567
+C(state)[T.8]     -1.4843      0.451     -3.294      0.001      -2.367      -0.601
+C(state)[T.9]     -1.8623      0.438     -4.248      0.000      -2.721      -1.003
+C(state)[T.10]    -1.3076      0.462     -2.828      0.005      -2.214      -0.401
+C(state)[T.12]    -0.2681      0.160     -1.676      0.094      -0.582       0.045
+C(state)[T.13]     0.5246      0.257      2.040      0.041       0.021       1.029
+C(state)[T.16]    -0.6690      0.398     -1.683      0.092      -1.448       0.110
+C(state)[T.17]    -1.9616      0.458     -4.283      0.000      -2.859      -1.064
+C(state)[T.18]    -1.4615      0.424     -3.447      0.001      -2.292      -0.631
+C(state)[T.19]    -1.5439      0.389     -3.967      0.000      -2.307      -0.781
+C(state)[T.20]    -1.2232      0.375     -3.266      0.001      -1.957      -0.489
+C(state)[T.21]    -1.2175      0.450     -2.704      0.007      -2.100      -0.335
+C(state)[T.22]    -0.8471      0.267     -3.178      0.001      -1.370      -0.325
+C(state)[T.23]    -1.1079      0.271     -4.082      0.000      -1.640      -0.576
+C(state)[T.24]    -1.7064      0.443     -3.851      0.000      -2.575      -0.838
+C(state)[T.25]    -2.1097      0.430     -4.902      0.000      -2.953      -1.266
+C(state)[T.26]    -1.4845      0.357     -4.157      0.000      -2.185      -0.785
+C(state)[T.27]    -1.8972      0.410     -4.622      0.000      -2.702      -1.093
+C(state)[T.28]    -0.0291      0.182     -0.160      0.873      -0.385       0.327
+C(state)[T.29]    -1.2963      0.413     -3.136      0.002      -2.106      -0.486
+C(state)[T.30]    -0.3604      0.408     -0.882      0.378      -1.161       0.440
+C(state)[T.31]    -1.5222      0.382     -3.989      0.000      -2.270      -0.774
+C(state)[T.32]    -0.6008      0.448     -1.341      0.180      -1.479       0.277
+C(state)[T.33]    -1.2545      0.308     -4.079      0.000      -1.857      -0.652
+C(state)[T.34]    -2.1057      0.486     -4.333      0.000      -3.058      -1.153
+C(state)[T.35]     0.4264      0.391      1.091      0.275      -0.340       1.192
+C(state)[T.36]    -2.1867      0.471     -4.640      0.000      -3.110      -1.263
+C(state)[T.37]    -0.2905      0.107     -2.719      0.007      -0.500      -0.081
+C(state)[T.38]    -1.6234      0.390     -4.163      0.000      -2.388      -0.859
+C(state)[T.39]    -1.6744      0.390     -4.294      0.000      -2.439      -0.910
+C(state)[T.40]    -0.5451      0.227     -2.404      0.016      -0.989      -0.101
+C(state)[T.41]    -1.1680      0.448     -2.609      0.009      -2.045      -0.291
+C(state)[T.42]    -1.7675      0.430     -4.107      0.000      -2.611      -0.924
+C(state)[T.44]    -2.2651      0.462     -4.902      0.000      -3.171      -1.359
+C(state)[T.45]     0.5572      0.071      7.835      0.000       0.418       0.697
+C(state)[T.46]    -1.0037      0.307     -3.265      0.001      -1.606      -0.401
+C(state)[T.47]    -0.8757      0.416     -2.106      0.035      -1.691      -0.061
+C(state)[T.48]    -0.9175      0.375     -2.448      0.014      -1.652      -0.183
+C(state)[T.49]    -1.1640      0.282     -4.130      0.000      -1.716      -0.612
+C(state)[T.50]    -0.9660      0.310     -3.113      0.002      -1.574      -0.358
+C(state)[T.51]    -1.2902      0.297     -4.345      0.000      -1.872      -0.708
+C(state)[T.53]    -1.6595      0.444     -3.741      0.000      -2.529      -0.790
+C(state)[T.54]    -0.8968      0.377     -2.380      0.017      -1.635      -0.158
+C(state)[T.55]    -1.7593      0.462     -3.805      0.000      -2.666      -0.853
+C(state)[T.56]    -0.2285      0.496     -0.461      0.645      -1.201       0.744
+beertax           -0.6559      0.315     -2.083      0.037      -1.273      -0.039
+==============================================================================
+Omnibus:                       53.045   Durbin-Watson:                   1.517
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              219.863
+Skew:                           0.585   Prob(JB):                     1.81e-48
+Kurtosis:                       6.786   Cond. No.                         187.
+==============================================================================
+
+Notes:
+[1] Standard Errors are robust to cluster correlation (cluster)</code></pre>
+</div>
+</div>
+<p>According to the estimation results, the estimated model is <span class="math display">\[
+\widehat{\text{FatalityRate}}_{it} = 3.48 - 0.66 \text{BeerTax}_{it} -0.57 D2_i -0.66D3_i + \ldots -0.23 D47_i.
+\]</span></p>
+<p>The estimated coefficient on <span class="math inline">\({\tt BeerTax}_{it}\)</span> is negative and statistically significant at the 5% significance level. This estimate indicates that if the real beer tax increases by $1 dollar, then on average the traffic fatalities decline by 0.66 per 10,000 people.</p>
+<p>The fixed effects form can be estimated using the <code>PanelOLS()</code> function from the <code>linearmodels</code> package. We first set the index of the dataset to the entity and time variables using the <code>set_index()</code> function. The entity fixed effects are included in the model by specifying the <code>EntityEffects</code> option in the formula. We use the <code>cov_type='clustered'</code> and <code>cluster_entity = True</code> options to compute the clustered standard errors. The following code chunk estimates the fixed effects model using the within transformation.</p>
+<div id="e5597c0f" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> fatality.set_index([<span class="st">'state'</span>,<span class="st">'year'</span>])</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Withinreg <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + EntityEffects'</span>, data <span class="op">=</span> df)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Withinres <span class="op">=</span> Withinreg.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Withinres)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                          PanelOLS Estimation Summary                           
+================================================================================
+Dep. Variable:                  mrall   R-squared:                        0.0407
+Estimator:                   PanelOLS   R-squared (Between):             -0.7126
+No. Observations:                 336   R-squared (Within):               0.0407
+Date:                Sat, Oct 11 2025   R-squared (Overall):             -0.6380
+Time:                        11:39:50   Log-likelihood                    107.97
+Cov. Estimator:             Clustered                                           
+                                        F-statistic:                      12.190
+Entities:                          48   P-value                           0.0006
+Avg Obs:                       7.0000   Distribution:                   F(1,287)
+Min Obs:                       7.0000                                           
+Max Obs:                       7.0000   F-statistic (robust):             5.1423
+                                        P-value                           0.0241
+Time periods:                       7   Distribution:                   F(1,287)
+Avg Obs:                       48.000                                           
+Min Obs:                       48.000                                           
+Max Obs:                       48.000                                           
+                                                                                
+                             Parameter Estimates                              
+==============================================================================
+            Parameter  Std. Err.     T-stat    P-value    Lower CI    Upper CI
+------------------------------------------------------------------------------
+Intercept      2.3771     0.1484     16.013     0.0000      2.0849      2.6693
+beertax       -0.6559     0.2892    -2.2677     0.0241     -1.2252     -0.0866
+==============================================================================
+
+F-test for Poolability: 52.179
+P-value: 0.0000
+Distribution: F(47,287)
+
+Included effects: Entity</code></pre>
+</div>
+</div>
+<p>The estimated model is <span class="math display">\[
+\widehat{\text{FatalityRate}}_{it} = 3.48 -0.66 \text{BeerTax}_{it} + \hat{\gamma}_i.
+\]</span></p>
+<p>The coefficient on <code>BeerTax</code> is negative and statistically significant at the 5% significance level. The estimated coefficient is identical to the one obtained using the LSDV method. However, the standard errors are different. The standard errors are relatively larger in the LSDV method because the entity dummy variables are included in the regression, which increases the number of parameters to be estimated. In contrast, the entity fixed effects are not estimated in the within transformation method.</p>
+<p>Overall, including state fixed effects in the regression helps avoid omitted variable bias caused by unobserved factors, such as cultural attitudes toward drinking and driving, that vary across states but remain constant over time within a state. Therefore, we obtain a negative relationship between the real beer tax and traffic fatalities, as expected.</p>
+</section>
+<section id="time-fixed-effects" class="level3" data-number="20.2.2">
+<h3 data-number="20.2.2" class="anchored" data-anchor-id="time-fixed-effects"><span class="header-section-number">20.2.2</span> Time fixed effects</h3>
+<p>Along the same lines in the previous section, we can also consider potential omitted variable bias due to unobserved variables that vary over time but do not vary across entities. Let <span class="math inline">\(S_t\)</span> denote the combined effect of variables which changes over time but not over states. For example, <span class="math inline">\(S_t\)</span> could represent technological improvements that reduce traffic fatalities, or government regulations that lead to the production of safer cars. All of these factors are assumed to be constant across states but change over time. Using <span class="math inline">\(S_t\)</span>, consider the following panel data model: <span class="math display">\[
+Y_{it}=\beta_0+\beta_1X_{it}+\beta_3S_t+u_{it},\quad i=1,2,\dots,n,\quad t=1,2,\dots,T.
+\]</span></p>
+<p>In this model, setting <span class="math inline">\(\lambda_t = \beta_0 + \beta_3S_t\)</span>, we can recast the model as having an intercept that varies from one year to the next: <span id="eq-eq17-5"><span class="math display">\[
+Y_{it}=\beta_1X_{it}+\lambda_t+u_{it},
+\tag{20.5}\]</span></span></p>
+<p>where <span class="math inline">\(\lambda_t = \beta_0 + \beta_3S_t\)</span> for <span class="math inline">\(t=1,2,\dots,T\)</span>.</p>
+<div id="def-def17-3" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 20.3 (Time fixed effects regression model)</strong></span> The model in <a href="#eq-eq17-5" class="quarto-xref">Equation&nbsp;<span>20.5</span></a> is called the <strong>time fixed effects regression model</strong>, where <span class="math inline">\(\lambda_1,\lambda_2,\dots,\lambda_T\)</span> are treated as unknown time-varying intercepts to be estimated. These terms are called <strong>time fixed effects</strong>.</p>
+</div>
+<p>Using the indicator function, we can alternatively express this model as <span class="math display">\[
+Y_{it}=\beta_1X_{it}+\sum_{s=1}^T\mathbf{1}(t=s)\lambda_s+u_{it},
+\]</span></p>
+<p>where <span class="math inline">\(\mathbf{1}(t=s)\)</span> is the indicator function that equals 1 if <span class="math inline">\(t=s\)</span>, and 0 otherwise.</p>
+<p>Also, using the period dummy variables, the model alternatively can be expressed as <span id="eq-eq17-6"><span class="math display">\[
+Y_{it}=\beta_0+\beta_1X_{it}+\delta_2 B2_t+\delta_3 B3_t+\dots+\delta_T BT_t+u_{it},
+\tag{20.6}\]</span></span></p>
+<p>where <span class="math inline">\(B2,B3,\ldots,BT\)</span> are the period dummies and <span class="math inline">\(\delta_2,\delta_3,\dots,\delta_T\)</span> are the corresponding unknown coefficients. The period dummies are defined as <span class="math display">\[
+\begin{align}
+B2_t=
+\begin{cases}
+1 \quad\text{if}\quad t=2,\\
+0,\quad\text{otherwise},
+\end{cases}
+\end{align}
+\]</span></p>
+<p>and other dummy variables <span class="math inline">\(B3_t,\ldots,BT_t\)</span> are defined similarly.</p>
+<p>Note that because there is a common intercept in <a href="#eq-eq17-6" class="quarto-xref">Equation&nbsp;<span>20.6</span></a>, the first time period <span class="math inline">\(B1\)</span> is not included in the specification to prevent the dummy variable trap. Also, by comparing the two representations, we have <span class="math inline">\(\lambda_1 = \beta_0\)</span> and <span class="math inline">\(\lambda_t = \beta_0 + \delta_t\)</span> for <span class="math inline">\(t=2,\ldots,T\)</span>. If additional explanatory variables are available, then these specifications can be extended to include multiple regressors.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Concept 17.1: Time fixed effects regression model
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The time fixed effects regression model includes time fixed effects, which are treated as unknown intercepts to be estimated. The model can be expressed in alternative forms:</p>
+<ol type="1">
+<li>The fixed effects form: <span class="math display">\[
+Y_{it}=\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}+\lambda_t+u_{it},
+\]</span></li>
+</ol>
+<p>where <span class="math inline">\(\lambda_t\)</span> is the time fixed effect for time <span class="math inline">\(t\)</span>.</p>
+<ol start="2" type="1">
+<li>The indicator function form: <span class="math display">\[
+Y_{it}=\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}+\sum_{s=1}^T \mathbf{1}(s=t)\lambda_s+u_{it},
+\]</span></li>
+</ol>
+<p>where <span class="math inline">\(\mathbf{1}(s=t)\)</span> is the indicator function that equals 1 if <span class="math inline">\(s=t\)</span>, and 0 otherwise.</p>
+<ol start="3" type="1">
+<li>The dummy variables form: <span class="math display">\[
+\begin{align}
+Y_{it} &amp;= \beta_0+\beta_1X_{1it}+\beta_2X_{2it}+\ldots+\beta_kX_{kit}\\
+&amp;+\delta_2B2_t+\delta_3B3_t+\ldots+\delta_n BT_t+u_{it},
+\end{align}
+\]</span></li>
+</ol>
+<p>where <span class="math inline">\(B2,B3,\dots,BT\)</span> are the period dummies. For example, <span class="math inline">\(B2_t\)</span> is a dummy variable that equals 1 if <span class="math inline">\(t=2\)</span> and 0 otherwise. The other dummy variables <span class="math inline">\(B3_t,\dots,BT_t\)</span> are defined similarly.</p>
+</div>
+</div>
+<p>The estimation can be based on two approaches: the least squares dummy variables (LSDV) method and the within (or time-demeaned) transformation. The LSDV method is based on estimating <a href="#eq-eq17-6" class="quarto-xref">Equation&nbsp;<span>20.6</span></a> by the OLS estimator. The within transformation involves estimating the following transformation of <a href="#eq-eq17-5" class="quarto-xref">Equation&nbsp;<span>20.5</span></a>: <span class="math display">\[
+\widetilde{Y}_{it}=\beta_1\widetilde{X}_{it}+\widetilde{u}_{it},
+\]</span></p>
+<p>where <span class="math inline">\(\widetilde{Y}_{it}=Y_{it}-\frac{1}{n}\sum_{j=1}^nY_{jt}\)</span>, <span class="math inline">\(\widetilde{X}_{it}\)</span> and <span class="math inline">\(\widetilde{u}_{it}\)</span> are defined similarly. We can then resort to the OLS estimator to estimate this transformed model.</p>
+<p>For the traffic fatality dataset, we consider the following versions:</p>
+<p><span class="math display">\[
+\begin{align}
+&amp;{\tt FatalityRate}_{it}=\beta_0+\beta_1{\tt BeerTax}_{it}+\delta_2B2_t+\delta_3B3_t+\ldots+\delta_7B7_t+u_{it},\\
+&amp;{\tt FatalityRate}_{it}=\beta_0+\beta_1{\tt BeerTax}_{it}+\lambda_t+u_{it}.
+\end{align}
+\]</span></p>
+<p>We can use the following code chunk to estimate the first model by the LSDV method. The period dummy variables are created using the <code>C()</code> function in the formula: <code>C(year)</code> function creates dummy variables for each year. The <code>cov_type='cluster'</code> and <code>cov_kwds={'groups': fatality['state']}</code> options are used to compute the clustered standard errors. According to the estimation results, the estimated model is <span class="math display">\[
+\widehat{\text{FatalityRate}}_{it} = 1.89 + 0.37 \text{BeerTax}_{it} -0.08 B2_t -0.07B3_t + \ldots -0.001 B7_t.
+\]</span></p>
+<p>The estimated coefficient on <span class="math inline">\({\tt BeerTax}_{it}\)</span> is positive and statistically significant at the 5% significance level. This estimate indicates that if the real beer tax increases by $1 dollar, then on average the traffic fatalities increase by <span class="math inline">\(0.37\)</span> per <span class="math inline">\(10.000\)</span> people, which is contrary to what we would expect.</p>
+<div id="189b293c" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>LSDVreg <span class="op">=</span> smf.ols(formula <span class="op">=</span> <span class="st">'mrall ~ beertax + C(year)'</span>, data <span class="op">=</span> fatality)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>LSDVres <span class="op">=</span> LSDVreg.fit(cov_type<span class="op">=</span><span class="st">'cluster'</span>, cov_kwds<span class="op">=</span>{<span class="st">'groups'</span>: fatality[<span class="st">'state'</span>]})</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(LSDVres.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  mrall   R-squared:                       0.099
+Model:                            OLS   Adj. R-squared:                  0.079
+Method:                 Least Squares   F-statistic:                     6.534
+Date:                Sat, 11 Oct 2025   Prob (F-statistic):           2.12e-05
+Time:                        11:39:50   Log-Likelihood:                -270.06
+No. Observations:                 336   AIC:                             556.1
+Df Residuals:                     328   BIC:                             586.6
+Df Model:                           7                                         
+Covariance Type:              cluster                                         
+===================================================================================
+                      coef    std err          z      P&gt;|z|      [0.025      0.975]
+-----------------------------------------------------------------------------------
+Intercept           1.8948      0.141     13.408      0.000       1.618       2.172
+C(year)[T.1983]    -0.0820      0.035     -2.359      0.018      -0.150      -0.014
+C(year)[T.1984]    -0.0717      0.045     -1.580      0.114      -0.161       0.017
+C(year)[T.1985]    -0.1105      0.048     -2.316      0.021      -0.204      -0.017
+C(year)[T.1986]    -0.0161      0.060     -0.269      0.788      -0.133       0.101
+C(year)[T.1987]    -0.0155      0.066     -0.234      0.815      -0.145       0.114
+C(year)[T.1988]    -0.0010      0.065     -0.016      0.987      -0.128       0.126
+beertax             0.3663      0.121      3.018      0.003       0.128       0.604
+==============================================================================
+Omnibus:                       66.542   Durbin-Watson:                   0.459
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              112.368
+Skew:                           1.133   Prob(JB):                     3.98e-25
+Kurtosis:                       4.701   Cond. No.                         8.92
+==============================================================================
+
+Notes:
+[1] Standard Errors are robust to cluster correlation (cluster)</code></pre>
+</div>
+</div>
+<p>The time fixed effects form can be estimated using the <code>PanelOLS</code> function from the <code>linearmodels</code> package. We first set the index of the dataset to the entity and time variables using the <code>set_index</code> function. The time fixed effects are included in the model by specifying the <code>TimeEffects</code> option in the formula. Again, we use the <code>cov_type='clustered'</code> and <code>cluster_entity = True</code> options to compute the clustered standard errors. The following code chunk can be used to estimate the time fixed effects model.</p>
+<div id="3c5350de" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Withinreg <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + TimeEffects'</span>, data <span class="op">=</span> df)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Withinres <span class="op">=</span> Withinreg.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Withinres)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                          PanelOLS Estimation Summary                           
+================================================================================
+Dep. Variable:                  mrall   R-squared:                        0.0945
+Estimator:                   PanelOLS   R-squared (Between):              0.1100
+No. Observations:                 336   R-squared (Within):              -0.0582
+Date:                Sat, Oct 11 2025   R-squared (Overall):              0.0934
+Time:                        11:39:50   Log-likelihood                   -270.06
+Cov. Estimator:             Clustered                                           
+                                        F-statistic:                      34.246
+Entities:                          48   P-value                           0.0000
+Avg Obs:                       7.0000   Distribution:                   F(1,328)
+Min Obs:                       7.0000                                           
+Max Obs:                       7.0000   F-statistic (robust):             9.2722
+                                        P-value                           0.0025
+Time periods:                       7   Distribution:                   F(1,328)
+Avg Obs:                       48.000                                           
+Min Obs:                       48.000                                           
+Max Obs:                       48.000                                           
+                                                                                
+                             Parameter Estimates                              
+==============================================================================
+            Parameter  Std. Err.     T-stat    P-value    Lower CI    Upper CI
+------------------------------------------------------------------------------
+Intercept      1.8524     0.1188     15.591     0.0000      1.6187      2.0862
+beertax        0.3663     0.1203     3.0450     0.0025      0.1297      0.6030
+==============================================================================
+
+F-test for Poolability: 0.3205
+P-value: 0.9261
+Distribution: F(6,328)
+
+Included effects: Time</code></pre>
+</div>
+</div>
+<p>The estimated model is <span class="math display">\[
+\widehat{\text{FatalityRate}}_{it} = 1.89 + 0.37 \text{BeerTax}_{it} + \hat{\delta}_t.
+\]</span></p>
+<p>The coefficient on <code>BeerTax</code> is the same as the one obtained using the LSDV method. This estimated positive coefficient is due to the omission of entity fixed effects.</p>
+</section>
+<section id="entity-and-time-fixed-effects" class="level3" data-number="20.2.3">
+<h3 data-number="20.2.3" class="anchored" data-anchor-id="entity-and-time-fixed-effects"><span class="header-section-number">20.2.3</span> Entity and time fixed effects</h3>
+<p>We now consider omitted variable bias problem due to unobserved factors that vary over entities but do not vary across time, as well as unobserved factors that vary over time but do not vary across entities. Hence, the regression model include both entity and time fixed effects: <span id="eq-eq17-7"><span class="math display">\[
+Y_{it} = \beta_1X_{it}+\alpha_i+\lambda_t+u_{it},
+\tag{20.7}\]</span></span></p>
+<p>for <span class="math inline">\(i=1,2,\dots,n\)</span> and <span class="math inline">\(t=1,2,\dots,T\)</span>, where <span class="math inline">\(\alpha_i\)</span> and <span class="math inline">\(\lambda_t\)</span> are the entity and time fixed effects, respectively.</p>
+<div id="def-def17-4" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 20.4 (Entity and time fixed effects regression model)</strong></span> The model in <a href="#eq-eq17-7" class="quarto-xref">Equation&nbsp;<span>20.7</span></a> is called the <strong>entity and time fixed effects regression model</strong> (or two-way fixed effects panel data model, or the panel data model with both entity and time fixed effects).</p>
+</div>
+<p>Note that we can also use the indicator function to express the model in <a href="#eq-eq17-7" class="quarto-xref">Equation&nbsp;<span>20.7</span></a> as <span class="math display">\[
+Y_{it} = \beta_1X_{it}+\sum_{j=1}^n\mathbf{1}(j=i)\alpha_j+\sum_{s=1}^T\mathbf{1}(s=t)\lambda_s+u_{it}.
+\]</span></p>
+<p>The model can equivalently be represented using <span class="math inline">\(n-1\)</span> entity dummies and <span class="math inline">\(T-1\)</span> period dummies, along with an intercept: <span id="eq-eq17-8"><span class="math display">\[
+\begin{align*}
+Y_{it} &amp;= \beta_0+\beta_1X_{it}+\gamma_2D2_i+\gamma_3D3_i+\dots+\gamma_nDn_i\\
+       &amp;\quad+\delta_2B2_t+\delta_3B3_t+\dots+\delta_TBT_t+u_{it},
+\end{align*}
+\tag{20.8}\]</span></span></p>
+<p>where <span class="math inline">\(D2,D3,\dots,Dn\)</span> are the entity dummies and <span class="math inline">\(B2,B3,\dots,BT\)</span> are the period dummies.</p>
+<p>The estimation of the entity and time fixed effects regression model can be carried out by estimating the dummy specification above (LSDV method) by the OLS estimator. The within approach involves estimating the following transformed model by the OLS estimator:</p>
+<p><span class="math display">\[
+\widetilde{Y}_{it} = \beta_1\widetilde{X}_{it}+\widetilde{u}_{it}
+\]</span></p>
+<p>where <span class="math inline">\(\widetilde{Y}_{it}=Y_{it}-\frac{1}{T}\sum_{t=1}^TY_{it}-\frac{1}{n}\sum_{j=1}^nY_{jt}+\frac{1}{nT}\sum_{j=1}^n\sum_{t=1}^TY_{jt}\)</span>, <span class="math inline">\(\widetilde{X}_{it}\)</span> and <span class="math inline">\(\widetilde{u}_{it}\)</span> are defined similarly. The addition term at the end appears because time demeaning after entity demeaning (or vice versa) results in taking out the grand mean of the variable and it must be added back.</p>
+<p>For the traffic fatality dataset, we consider the following versions:</p>
+<p><span class="math display">\[
+\begin{align}
+{\tt FatalityRate}_{it} &amp;= \beta_0+\beta_1{\tt BeerTax}_{it}+\gamma_2D2_i+\gamma_3D3_i+\ldots+\gamma_nD47_i\\
+&amp;+\delta_2B2_t+\delta_3B3_t+\ldots+\delta_7B7_t+u_{it},\\
+\end{align}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}
+{\tt FatalityRate}_{it} &amp;= \beta_0+\beta_1{\tt BeerTax}_{it}+\alpha_i+\lambda_t+u_{it}.
+\end{align}
+\]</span></p>
+<p>We can use the following code chunk to estimate the first model by the LSDV method. In the formula, the entity and period dummy variables are added by the <code>C(state)+C(year)</code> term. According to the estimation results, the estimated model is <span class="math display">\[
+\begin{align}
+\widehat{\text{FatalityRate}}_{it} &amp;= 3.51 - 0.64 \text{BeerTax}_{it} -0.54 D2_i -0.64D3_i + \ldots -0.20 D47_i\\
+&amp; -0.08 B2_t -0.07B3_t + \ldots -0.05 B7_t.
+\end{align}
+\]</span></p>
+<div id="0cb16efa" class="cell" data-message="false" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LSDV method</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>LSDVreg <span class="op">=</span> smf.ols(formula <span class="op">=</span> <span class="st">'mrall ~ beertax + C(state) + C(year)'</span>, data <span class="op">=</span> fatality)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>LSDVres <span class="op">=</span> LSDVreg.fit(cov_type<span class="op">=</span><span class="st">'cluster'</span>, cov_kwds<span class="op">=</span>{<span class="st">'groups'</span>: fatality[<span class="st">'state'</span>]})</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(LSDVres.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  mrall   R-squared:                       0.909
+Model:                            OLS   Adj. R-squared:                  0.891
+Method:                 Least Squares   F-statistic:                     4.555
+Date:                Sat, 11 Oct 2025   Prob (F-statistic):           0.000604
+Time:                        11:39:50   Log-Likelihood:                 115.04
+No. Observations:                 336   AIC:                            -120.1
+Df Residuals:                     281   BIC:                             89.86
+Df Model:                          54                                         
+Covariance Type:              cluster                                         
+===================================================================================
+                      coef    std err          z      P&gt;|z|      [0.025      0.975]
+-----------------------------------------------------------------------------------
+Intercept           3.5114      0.644      5.455      0.000       2.250       4.773
+C(state)[T.4]      -0.5469      0.506     -1.080      0.280      -1.539       0.446
+C(state)[T.5]      -0.6385      0.399     -1.602      0.109      -1.420       0.143
+C(state)[T.6]      -1.4852      0.589     -2.520      0.012      -2.640      -0.330
+C(state)[T.8]      -1.4615      0.552     -2.647      0.008      -2.544      -0.379
+C(state)[T.9]      -1.8401      0.537     -3.426      0.001      -2.893      -0.787
+C(state)[T.10]     -1.2843      0.567     -2.267      0.023      -2.395      -0.174
+C(state)[T.12]     -0.2601      0.196     -1.326      0.185      -0.644       0.124
+C(state)[T.13]      0.5116      0.315      1.624      0.104      -0.106       1.129
+C(state)[T.16]     -0.6490      0.487     -1.332      0.183      -1.604       0.306
+C(state)[T.17]     -1.9385      0.561     -3.454      0.001      -3.038      -0.839
+C(state)[T.18]     -1.4401      0.519     -2.772      0.006      -2.458      -0.422
+C(state)[T.19]     -1.5243      0.477     -3.196      0.001      -2.459      -0.589
+C(state)[T.20]     -1.2043      0.459     -2.624      0.009      -2.104      -0.305
+C(state)[T.21]     -1.1948      0.552     -2.166      0.030      -2.276      -0.113
+C(state)[T.22]     -0.8337      0.327     -2.552      0.011      -1.474      -0.193
+C(state)[T.23]     -1.0942      0.333     -3.290      0.001      -1.746      -0.442
+C(state)[T.24]     -1.6841      0.543     -3.101      0.002      -2.748      -0.620
+C(state)[T.25]     -2.0880      0.527     -3.960      0.000      -3.122      -1.054
+C(state)[T.26]     -1.4665      0.438     -3.351      0.001      -2.324      -0.609
+C(state)[T.27]     -1.8765      0.503     -3.731      0.000      -2.862      -0.891
+C(state)[T.28]     -0.0199      0.223     -0.089      0.929      -0.456       0.416
+C(state)[T.29]     -1.2754      0.506     -2.518      0.012      -2.268      -0.283
+C(state)[T.30]     -0.3398      0.500     -0.679      0.497      -1.321       0.641
+C(state)[T.31]     -1.5029      0.468     -3.214      0.001      -2.419      -0.586
+C(state)[T.32]     -0.5782      0.549     -1.053      0.292      -1.654       0.498
+C(state)[T.33]     -1.2389      0.377     -3.288      0.001      -1.978      -0.500
+C(state)[T.34]     -2.0812      0.595     -3.495      0.000      -3.248      -0.914
+C(state)[T.35]      0.4461      0.479      0.931      0.352      -0.493       1.385
+C(state)[T.36]     -2.1629      0.577     -3.746      0.000      -3.295      -1.031
+C(state)[T.37]     -0.2851      0.131     -2.178      0.029      -0.542      -0.029
+C(state)[T.38]     -1.6038      0.478     -3.357      0.001      -2.540      -0.667
+C(state)[T.39]     -1.6547      0.478     -3.463      0.001      -2.591      -0.718
+C(state)[T.40]     -0.5336      0.278     -1.921      0.055      -1.078       0.011
+C(state)[T.41]     -1.1454      0.549     -2.088      0.037      -2.220      -0.070
+C(state)[T.42]     -1.7457      0.527     -3.311      0.001      -2.779      -0.712
+C(state)[T.44]     -2.2417      0.566     -3.960      0.000      -3.351      -1.132
+C(state)[T.45]      0.5536      0.087      6.353      0.000       0.383       0.724
+C(state)[T.46]     -0.9882      0.377     -2.623      0.009      -1.726      -0.250
+C(state)[T.47]     -0.8547      0.509     -1.678      0.093      -1.853       0.144
+C(state)[T.48]     -0.8986      0.459     -1.957      0.050      -1.799       0.001
+C(state)[T.49]     -1.1497      0.345     -3.329      0.001      -1.827      -0.473
+C(state)[T.50]     -0.9504      0.380     -2.500      0.012      -1.696      -0.205
+C(state)[T.51]     -1.2752      0.364     -3.505      0.000      -1.988      -0.562
+C(state)[T.53]     -1.6371      0.544     -3.012      0.003      -2.702      -0.572
+C(state)[T.54]     -0.8777      0.462     -1.902      0.057      -1.782       0.027
+C(state)[T.55]     -1.7359      0.567     -3.064      0.002      -2.846      -0.625
+C(state)[T.56]     -0.2035      0.608     -0.335      0.738      -1.395       0.988
+C(year)[T.1983]    -0.0799      0.038     -2.108      0.035      -0.154      -0.006
+C(year)[T.1984]    -0.0724      0.047     -1.528      0.127      -0.165       0.020
+C(year)[T.1985]    -0.1240      0.050     -2.492      0.013      -0.222      -0.026
+C(year)[T.1986]    -0.0379      0.062     -0.614      0.539      -0.159       0.083
+C(year)[T.1987]    -0.0509      0.069     -0.741      0.459      -0.186       0.084
+C(year)[T.1988]    -0.0518      0.070     -0.745      0.457      -0.188       0.085
+beertax            -0.6400      0.386     -1.659      0.097      -1.396       0.116
+==============================================================================
+Omnibus:                       38.201   Durbin-Watson:                   1.484
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              164.359
+Skew:                           0.333   Prob(JB):                     2.04e-36
+Kurtosis:                       6.361   Cond. No.                         207.
+==============================================================================
+
+Notes:
+[1] Standard Errors are robust to cluster correlation (cluster)</code></pre>
+</div>
+</div>
+<p>The entity and time fixed effects form can be estimated using the <code>PanelOLS</code> function from the <code>linearmodels</code> package. The entity and time fixed effects are included in the model by specifying the <code>EntityEffects</code> and <code>TimeEffects</code> options in the formula. The following code chunk estimates the entity and time fixed effects model using the within transformation.</p>
+<div id="ad72c8b0" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Withinreg <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + EntityEffects + TimeEffects'</span>, data <span class="op">=</span> df)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>Withinres <span class="op">=</span> Withinreg.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Withinres)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                          PanelOLS Estimation Summary                           
+================================================================================
+Dep. Variable:                  mrall   R-squared:                        0.0361
+Estimator:                   PanelOLS   R-squared (Between):             -0.6875
+No. Observations:                 336   R-squared (Within):               0.0407
+Date:                Sat, Oct 11 2025   R-squared (Overall):             -0.6154
+Time:                        11:39:50   Log-likelihood                    115.04
+Cov. Estimator:             Clustered                                           
+                                        F-statistic:                      10.513
+Entities:                          48   P-value                           0.0013
+Avg Obs:                       7.0000   Distribution:                   F(1,281)
+Min Obs:                       7.0000                                           
+Max Obs:                       7.0000   F-statistic (robust):             2.8021
+                                        P-value                           0.0953
+Time periods:                       7   Distribution:                   F(1,281)
+Avg Obs:                       48.000                                           
+Min Obs:                       48.000                                           
+Max Obs:                       48.000                                           
+                                                                                
+                             Parameter Estimates                              
+==============================================================================
+            Parameter  Std. Err.     T-stat    P-value    Lower CI    Upper CI
+------------------------------------------------------------------------------
+Intercept      2.3689     0.1962     12.072     0.0000      1.9827      2.7552
+beertax       -0.6400     0.3823    -1.6740     0.0953     -1.3925      0.1126
+==============================================================================
+
+F-test for Poolability: 47.479
+P-value: 0.0000
+Distribution: F(53,281)
+
+Included effects: Entity, Time</code></pre>
+</div>
+</div>
+<p>The estimated model is <span class="math display">\[
+\widehat{\text{FatalityRate}}_{it} = 3.51 -0.64 \text{BeerTax}_{it} + \hat{\gamma}_i + \hat{\delta}_t.
+\]</span></p>
+<p>The coefficient on <code>BeerTax</code> is -0.64 is close to the estimated coefficient for the regression model including only entity fixed effects. The coefficient is estimated less precisely and is not statistically significant at the 5% significance level.</p>
+</section>
+<section id="the-fixed-effects-regression-assumptions" class="level3" data-number="20.2.4">
+<h3 data-number="20.2.4" class="anchored" data-anchor-id="the-fixed-effects-regression-assumptions"><span class="header-section-number">20.2.4</span> The fixed effects regression assumptions</h3>
+<p>In the previous sections, we show that fixed effects regressions can be estimated by the OLS estimator. In this section, we state the assumptions that ensure the OLS estimator is unbiased, consistent, and asymptotically normally distributed. To present these assumptions, we consider a panel data regression model with entity fixed effects and one explanatory variable.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled" title="The fixed effects regression assumptions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The fixed effects regression assumptions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>The zero-conditional mean assumption: <span class="math inline">\(\E\left(u_{it}|X_{i1},X_{i2},\ldots,X_{iT},\alpha_i \right)=0\)</span>.</li>
+<li>The random sampling assumption: <span class="math inline">\((X_{i1},\,X_{i2},\ldots,X_{iT}, u_{i1},u_{i2},\dots,u_{iT})\)</span>, <span class="math inline">\(i=1,2,\ldots,n\)</span>, are <span class="math inline">\(i.i.d.\)</span> draws from their joint distribution.</li>
+<li>The no large outliers assumption: <span class="math inline">\((X_{it},u_{it})\)</span> have finite fourth moments.</li>
+<li>The no perfect multicollinearity assumption: There is no perfect multicollinearity (if there are multiple <span class="math inline">\(X\)</span>’s).</li>
+</ol>
+</div>
+</div>
+<p>In the case of the model with multiple regressors <span class="math inline">\(X_1,X_2,\ldots,X_k\)</span>, we need to replace <span class="math inline">\(X_{it}\)</span> with <span class="math inline">\(X_{1it},X_{2it},\ldots,X_{kit}\)</span> in these assumptions. Assumption 1 requires that for any entity the conditional mean of <span class="math inline">\(u\)</span> can not depend on past, present and future values of <span class="math inline">\(X\)</span>. This assumption is violated if current <span class="math inline">\(u\)</span> for an entity is correlated with past, present, or future values of <span class="math inline">\(X\)</span>. This assumption is also known as the <strong>strict exogeneity assumption</strong> or simply the <strong>exogeneity assumption</strong>.</p>
+<p>Assumption 2 indicates that the variables for one entity are distributed identically to, but independently of, the variables for another entity; that is, the variables are i.i.d. across entities for <span class="math inline">\(i=1,\dots,n\)</span>. Assumption 2 holds if entities are selected by simple random sampling from the population. Note that Assumption 2 requires that the variables are independent across entities but makes no such restriction within an entity. Therefore, it allows <span class="math inline">\(u\)</span> to be correlated over time within an entity (i.e.&nbsp;it allows for serial correlation).</p>
+<p>The third and fourth assumptions for fixed effects regression are analogous to the third and fourth least squares assumptions for the multiple linear regression model.</p>
+<div id="thm-thm17-1" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 20.1 (Properties of the fixed effects OLS estimator)</strong></span> Under the fixed effects regression assumptions, we have the following results.</p>
+<ol type="1">
+<li>The fixed effects OLS estimator is consistent and is normally distributed when <span class="math inline">\(n\)</span> is large.</li>
+<li>The usual OLS standard errors (both homoskedasticity-only and heteroskedasticity-robust standard errors) will in general be biased because of serially correlated error terms.</li>
+</ol>
+</div>
+<p>According to <a href="#thm-thm17-1" class="quarto-xref">Theorem&nbsp;<span>20.1</span></a>, the fixed-effects OLS estimator is consistent and normally distributed when <span class="math inline">\(n\)</span> is large. However, the usual OLS standard errors are biased due to serially correlated error terms. To address this issue, we need to compute clustered standard errors, which account for potential serial correlation in the error terms. The term “clustered” refers to allowing correlation within a cluster of observations (within an entity) while assuming no correlation across clusters (entities).</p>
+<p>In panel data regressions, clustered standard errors remain valid regardless of the presence of heteroskedasticity and/or serial correlation in the error terms. Such standard errors, which are robust to both heteroskedasticity and serial correlation, are referred to as <strong>heteroskedasticity- and autocorrelation-robust (HAR) standard errors</strong>. In the <code>PanelOLS</code> function, the <code>cov_type='clustered'</code> and <code>cluster_entity=True</code> options are used to compute clustered standard errors.</p>
+<p>We consider the within-transformed model in <a href="#eq-eq17-4" class="quarto-xref">Equation&nbsp;<span>20.4</span></a> and show how clustered standard errors can be derived. Using a derivation analogous to that in the simple linear regression model, we can derive the following expression for <span class="math inline">\(\hat{\beta}_1\)</span>: <span class="math display">\[
+\begin{align}
+\hat{\beta}_1&amp;=\beta_1+\frac{\frac{1}{nT}\sum_{i=1}^n\sum_{t=1}^T\widetilde{X}_{it}\widetilde{u}_{it}}{\frac{1}{nT}\sum_{i=1}^n\sum_{t=1}^T\widetilde{X}_{it}^2}.
+\end{align}
+\]</span> We use this expression and derive <span class="math inline">\(\sqrt{nT}(\hat{\beta}_1-\beta_1)\)</span> as follows: <span class="math display">\[
+\begin{align}
+\sqrt{nT}(\hat{\beta}_1-\beta_1)&amp;=\frac{\frac{1}{\sqrt{nT}}\sum_{i=1}^n\sum_{t=1}^T\widetilde{X}_{it}\widetilde{u}_{it}}{\frac{1}{nT}\sum_{i=1}^n\sum_{t=1}^T\widetilde{X}_{it}^2}= \frac{\sqrt{\frac{1}{n}}\sum_{i=1}^n\eta_i}{\hat{Q}_{\tilde{X}}},
+\end{align}
+\]</span> where <span class="math inline">\(\eta_i=\sqrt{\frac{1}{T}}\sum_{t=1}^T\widetilde{X}_{it}\widetilde{u}_{it}\)</span> and <span class="math inline">\(\hat{Q}_{\tilde{X}}=\frac{1}{nT}\sum_{i=1}^n\sum_{t=1}^T\widetilde{X}_{it}^2\)</span>. Under the asymptotic setting where <span class="math inline">\(n\)</span> is large and <span class="math inline">\(T\)</span> is fixed, we have <span class="math inline">\(\hat{Q}_{\tilde{X}}=\frac{1}{nT}\sum_{i=1}^n\sum_{t=1}^T\widetilde{X}_{it}^2\xrightarrow{p}Q_{\tilde{X}}=T^{-1}\sum_{t=1}^T\E(\tilde{X}^2_{it})\)</span> by the law of large numbers. Similarly, we have <span class="math inline">\(\sqrt{\frac{1}{n}}\sum_{i=1}^n\eta_i\xrightarrow{d}N(0,\sigma^2_{\eta})\)</span> by the central limit theorem. Therefore, we have <span class="math display">\[
+\begin{align}
+\sqrt{nT}(\hat{\beta}_1-\beta_1)&amp;\xrightarrow{d}N\left(0,\frac{\sigma^2_{\eta}}{Q^2_{\tilde{X}}}\right),
+\end{align}
+\]</span> which suggests that <span class="math display">\[
+\begin{align}
+\var(\hat{\beta}_1)&amp;=\frac{1}{nT}\frac{\sigma^2_{\eta}}{Q^2_{\tilde{X}}}.
+\end{align}
+\]</span></p>
+<p>Using the sample counterparts, we can estimate the variance of <span class="math inline">\(\hat{\beta}_1\)</span> as <span class="math display">\[
+\begin{align}
+\widehat{\var}(\hat{\beta}_1)&amp;=\frac{1}{nT}\frac{\hat{\sigma}^2_{\eta}}{\hat{Q}^2_{\tilde{X}}},
+\end{align}
+\]</span> where <span class="math inline">\(\hat{\sigma}^2_{\eta}\)</span> is the sample variance given by <span class="math inline">\(\hat{\sigma}^2_{\eta}=\frac{1}{n-1}\sum_{i=1}^n(\hat{\eta}_i-\bar{\hat{\eta}})^2\)</span>, where <span class="math inline">\(\hat{\eta}_i=\sqrt{\frac{1}{T}}\sum_{t=1}^T\widetilde{X}_{it}\hat{u}_{it}\)</span> and <span class="math inline">\(\bar{\eta}=\frac{1}{n}\sum_{i=1}^n\hat{\eta}_i\)</span>, and <span class="math inline">\(\hat{u}_{it}\)</span> is the OLS residual from the regression of <span class="math inline">\(\widetilde{Y}_{it}\)</span> on <span class="math inline">\(\widetilde{X}_{it}\)</span>. Then, the estimator of the clustered standard error is given by <span class="math display">\[
+\begin{align}
+\text{SE}(\hat{\beta}_1)&amp;=\sqrt{\frac{1}{nT}\frac{\hat{\sigma}^2_{\eta}}{\hat{Q}^2_{\tilde{X}}}}.
+\end{align}
+\]</span> Since <span class="math inline">\(\hat{\sigma}^2_{\eta}\)</span> is a consistent estimator of <span class="math inline">\(\sigma^2_{\eta}\)</span> even if the error terms are serially correlated and heteroskedastic, the clustered standard errors are robust to serial correlation and heteroskedasticity in the error terms.</p>
+</section>
+</section>
+<section id="random-effects-regression-model" class="level2" data-number="20.3">
+<h2 data-number="20.3" class="anchored" data-anchor-id="random-effects-regression-model"><span class="header-section-number">20.3</span> Random effects regression model</h2>
+<p>In fixed-effects regression models, we assume that the entity- and time-invariant unobserved factors (the entity and time fixed effects) are arbitrarily correlated with the included regressors. However, if we are willing to assume that these unobserved factors are uncorrelated with the regressors, they can be treated as random variables, leading to random-effects regression models. The <em>two-way</em> random effects regression model is <span id="eq-eq17-9"><span class="math display">\[
+Y_{it}=\beta_0 + \beta_1X_{1it} + \beta_2X_{2it} + \dots + \beta_k X_{kit} + \alpha_i + \lambda_t + u_{it},
+\tag{20.9}\]</span></span></p>
+<p>where <span class="math inline">\(\alpha_i\)</span> and <span class="math inline">\(\lambda_t\)</span> are the entity and time random effects, respectively. The random effects are assumed to be uncorrelated with the regressors. For example, we may assume that <span class="math inline">\(\alpha_i \sim N(0, \sigma^2_{\alpha})\)</span> for <span class="math inline">\(i = 1, 2, \dots, n\)</span> and <span class="math inline">\(\lambda_t \sim N(0, \sigma^2_{\lambda})\)</span> for <span class="math inline">\(t = 1, 2, \dots, T\)</span>, where <span class="math inline">\(\alpha_i\)</span> and <span class="math inline">\(\lambda_t\)</span> are independent of each other and of the regressors. Here, <span class="math inline">\(\sigma^2_{\alpha}\)</span> and <span class="math inline">\(\sigma^2_{\lambda}\)</span> represent the unknown variances of the random effects. The random effects model can be estimated using the maximum likelihood estimator or the generalized least squares estimator. For the details of the estimation, see <span class="citation" data-cites="Hansen2022">Hansen (<a href="references.html#ref-Hansen2022" role="doc-biblioref">2022</a>)</span>.</p>
+<p>For our traffic fatality dataset, we consider the following random effects model: <span class="math display">\[
+\begin{align}
+{\tt FatalityRate}_{it}=\beta_0+\beta_1{\tt BeerTax}_{it}+\alpha_i+\lambda_t+u_{it}.
+\end{align}
+\]</span></p>
+<p>The <code>RandomEffects()</code> function from the <code>linearmodels</code> package is used to estimate the random effects model. The <code>from_formula</code> method is used to specify the model formula.</p>
+<div id="1cbb8194" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Randomreg <span class="op">=</span> RandomEffects.from_formula(<span class="st">'mrall ~ 1 + beertax + EntityEffects + TimeEffects'</span>, data <span class="op">=</span> df)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>Randomres <span class="op">=</span> Randomreg.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Randomres)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                        RandomEffects Estimation Summary                        
+================================================================================
+Dep. Variable:                  mrall   R-squared:                        0.0005
+Estimator:              RandomEffects   R-squared (Between):             -0.0324
+No. Observations:                 336   R-squared (Within):               0.0062
+Date:                Sat, Oct 11 2025   R-squared (Overall):             -0.0285
+Time:                        11:39:50   Log-likelihood                    74.298
+Cov. Estimator:             Clustered                                           
+                                        F-statistic:                      0.1755
+Entities:                          48   P-value                           0.6756
+Avg Obs:                       7.0000   Distribution:                   F(1,334)
+Min Obs:                       7.0000                                           
+Max Obs:                       7.0000   F-statistic (robust):             0.2263
+                                        P-value                           0.6346
+Time periods:                       7   Distribution:                   F(1,334)
+Avg Obs:                       48.000                                           
+Min Obs:                       48.000                                           
+Max Obs:                       48.000                                           
+                                                                                
+                             Parameter Estimates                              
+==============================================================================
+            Parameter  Std. Err.     T-stat    P-value    Lower CI    Upper CI
+------------------------------------------------------------------------------
+Intercept      2.0671     0.1201     17.206     0.0000      1.8308      2.3035
+beertax       -0.0520     0.1093    -0.4757     0.6346     -0.2671      0.1631
+==============================================================================</code></pre>
+</div>
+</div>
+<p>In practice, entity- and time-invariant unobserved factors (i.e., entity and time fixed effects) are often expected to be correlated with the regressors. Therefore, we recommend using fixed effects regression models rather than random effects models, unless there are strong reasons to believe that the unobserved factors are uncorrelated with the regressors.</p>
+</section>
+<section id="traffic-deaths-and-alcohol-taxes" class="level2" data-number="20.4">
+<h2 data-number="20.4" class="anchored" data-anchor-id="traffic-deaths-and-alcohol-taxes"><span class="header-section-number">20.4</span> Traffic deaths and alcohol taxes</h2>
+<p>Traffic fatalities are the second largest cause of accidental deaths in the United States. In 2023, there were more than 40,000 highway traffic fatalities nationwide. A significant portion of fatal crashes involved drivers who were drinking, and this fraction increases during peak drinking periods. Therefore, it is important for policymakers to evaluate the effectiveness of various government policies designed to discourage drunk driving.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>In this section, we consider the relationship between the real beer tax and the traffic fatality rate. We consider the following panel data models:</p>
+<ol type="1">
+<li><p>The pooled OLS model with only the beer tax as the explanatory variable: <span class="math display">\[
+\text{FatalityRate}_{it} = \beta_0 + \beta_1 \text{BeerTax}_{it} + u_{it}.
+\]</span></p></li>
+<li><p>The fixed effects model with entity fixed effects: <span class="math display">\[
+\text{FatalityRate}_{it} = \beta_0 + \beta_1 \text{BeerTax}_{it} + \alpha_i + u_{it}.
+\]</span></p></li>
+<li><p>The fixed effects model with entity and time fixed effects: <span class="math display">\[
+\text{FatalityRate}_{it} = \beta_0 + \beta_1 \text{BeerTax}_{it} + \alpha_i + \lambda_t + u_{it}.
+\]</span></p></li>
+<li><p>The fixed effects model with multiple regressors including the beer tax, the minimal drinking age, the punishment for drunk driving, vehicle miles traveled, the unemployment rate, and the log of personal income: <span class="math display">\[
+\begin{align}
+&amp;\text{FatalityRate}_{it} = \beta_0 + \beta_1 \text{BeerTax}_{it} + \beta_2 \text{drink18}_{it} + \beta_3 \text{drink19}_{it} + \beta_4 \text{drink20}_{it} \\
+&amp;\quad + \beta_5 \text{punish}_{it} + \beta_6 \text{vmiles}_{it} + \beta_7 \text{unrate}_{it} + \beta_8 \log(\text{perinc}_{it}) + \alpha_i + \lambda_t + u_{it},
+\end{align}
+\]</span> where <span class="math inline">\(\text{drink18}\)</span>, <span class="math inline">\(\text{drink19}\)</span>, and <span class="math inline">\(\text{drink20}\)</span> are discretized version of the minimal drinking age that classifies states into four categories of minimal drinking age. The omitted category is when the minimal drinking age is 21. The punishment (<code>punish</code>) variable is a dummy variable that equals 1 if the state has either a jail sentence or community service as a punishment for drunk driving.</p></li>
+<li><p>The fixed effects model with multiple regressors including the beer tax, the minimal drinking age, the punishment for drunk driving, and vehicle miles traveled: <span class="math display">\[
+\begin{align}
+&amp;\text{FatalityRate}_{it} = \beta_0 + \beta_1 \text{BeerTax}_{it} + \beta_2 \text{drink18}_{it} + \beta_3 \text{drink19}_{it} + \beta_4 \text{drink20}_{it}\\
+&amp;+ \beta_5 \text{punish}_{it} + \beta_6 \text{vmiles}_{it} + \alpha_i + \lambda_t + u_{it}.
+\end{align}
+\]</span></p></li>
+<li><p>The fixed effects model with multiple regressors including the beer tax, the minimal drinking age, the punishment for drunk driving, vehicle miles traveled, the unemployment rate, and the log of personal income: <span class="math display">\[
+\begin{align}
+&amp;\text{FatalityRate}_{it} = \beta_0 + \beta_1 \text{BeerTax}_{it} + \beta_2 \text{mlda}_{it} + \beta_3 \text{punish}_{it} + \beta_4 \text{unrate}_{it}\\
+&amp; + \beta_5 \text{vmiles}_{it} + \beta_6 \log(\text{perinc}_{it}) + \alpha_i + \lambda_t + u_{it}.
+\end{align}
+\]</span></p></li>
+<li><p>The fixed effects model in (4) based on the data from 1982 and 1988 only: <span class="math display">\[
+\begin{align}
+&amp;\text{FatalityRate}_{it} = \beta_0 + \beta_1 \text{BeerTax}_{it} + \beta_2 \text{drink18}_{it} + \beta_3 \text{drink19}_{it} + \beta_4 \text{drink20}_{it}\\
+&amp; + \beta_5 \text{punish}_{it} + \beta_6 \text{vmiles}_{it} + \beta_7 \text{unrate}_{it} + \beta_8 \log(\text{perinc}_{it}) + \alpha_i + \lambda_t + u_{it}.
+\end{align}
+\]</span></p></li>
+</ol>
+<p>We consider the fourth model as our base model and other models with additional regressors for sensitivity checks. The minimum legal drinking age and the punishment for drunk driving are related to drunk driving laws. Vehicle miles traveled is used as a proxy for the amount of driving, and the unemployment rate and the log of personal income are used as proxies for overall state economic conditions.</p>
+<div id="b9d59e09" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the log of personal income</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'lperinc'</span>] <span class="op">=</span> np.log(df[<span class="st">'perinc'</span>])</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the dummy variables for the minimal drinking age</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'vmiles'</span>] <span class="op">=</span> df[<span class="st">'vmiles'</span>]<span class="op">/</span><span class="fl">1e3</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'drink18'</span>] <span class="op">=</span> (df[<span class="st">'mlda'</span>] <span class="op">==</span> <span class="dv">18</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'drink19'</span>] <span class="op">=</span> (df[<span class="st">'mlda'</span>] <span class="op">==</span> <span class="dv">19</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'drink20'</span>] <span class="op">=</span> (df[<span class="st">'mlda'</span>] <span class="op">==</span> <span class="dv">20</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the punishment variable</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'punish'</span>] <span class="op">=</span> ((df[<span class="st">'jaild'</span>] <span class="op">==</span> <span class="dv">1</span>)<span class="op">|</span>(df[<span class="st">'comserd'</span>] <span class="op">==</span> <span class="dv">1</span>)).astype(<span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We use the <code>PooledOLS()</code> and <code>PanelOLS()</code> functions from the <code>linearmodels</code> package to estimate all models. The models are specified using the <code>from_formula</code> method, and clustered standard errors are computed by setting <code>cov_type='clustered'</code> and <code>cluster_entity=True</code>.</p>
+<div id="c747f7d7" class="cell" data-message="false" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1: Pooled OLS with only the beer tax</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>reg1 <span class="op">=</span> PooledOLS.from_formula(<span class="st">'mrall ~ 1 + beertax'</span>, df)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>reg1 <span class="op">=</span> reg1.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2: Fixed effects with entity fixed effects</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>reg2 <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + EntityEffects'</span>, df)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>reg2 <span class="op">=</span> reg2.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 3: Fixed effects with entity and time fixed effects</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>reg3 <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + EntityEffects + TimeEffects'</span>, df)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>reg3 <span class="op">=</span> reg3.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 4: Fixed effects with multiple regressors</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>reg4 <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + drink18 + drink19+</span><span class="ch">\</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="st">                             drink20 + punish + vmiles + unrate + lperinc +</span><span class="ch">\</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="st">                                 EntityEffects + TimeEffects'</span>, df)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>reg4 <span class="op">=</span> reg4.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>) </span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 5: Fixed effects with multiple regressors</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>reg5 <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + drink18 + drink19 + drink20 +</span><span class="ch">\</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="st">                             punish + vmiles + EntityEffects + TimeEffects'</span>, df)</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>reg5 <span class="op">=</span> reg5.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>) </span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 6: Fixed effects with multiple regressors</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>reg6 <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + mlda + punish + vmiles + unrate +</span><span class="ch">\</span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="st">                             lperinc + EntityEffects + TimeEffects'</span>, df)</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>reg6 <span class="op">=</span> reg6.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>) </span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 7: Fixed effects with multiple regressors based on the data from 1982 and 1988 only</span></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>reg7 <span class="op">=</span> PanelOLS.from_formula(<span class="st">'mrall ~ 1 + beertax + drink18 + drink19 +</span><span class="ch">\</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a><span class="st">                             drink20 + punish + vmiles + unrate + lperinc +</span><span class="ch">\</span></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a><span class="st">                             EntityEffects + TimeEffects'</span>,</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>                                 df.loc[(<span class="bu">slice</span>(<span class="va">None</span>), <span class="bu">slice</span>(<span class="dv">1982</span>, <span class="dv">1988</span>, <span class="dv">6</span>)), :])</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>reg7 <span class="op">=</span> reg7.fit(cov_type <span class="op">=</span> <span class="st">'clustered'</span>, cluster_entity <span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> Stargazer([reg1, reg2, reg3, reg4, reg5, reg6, reg7])</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>table.significant_digits(<span class="dv">3</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>table.show_degrees_of_freedom(<span class="va">False</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>table.render_html()  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="16" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="tbl-t17.2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="16">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t17.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;20.2: Estimation Results
+</figcaption>
+<div aria-describedby="tbl-t17.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="16">
+<table style="text-align:center">
+<tbody><tr>
+<td colspan="8" style="border-bottom: 1px solid black">
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="7">
+<em>Dependent variable: mrall</em>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+</tr><tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+<td>
+(4)
+</td>
+<td>
+(5)
+</td>
+<td>
+(6)
+</td>
+<td>
+(7)
+</td>
+</tr>
+
+<tr>
+<td colspan="8" style="border-bottom: 1px solid black">
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+Intercept
+</td>
+<td>
+1.853<sup>***</sup>
+</td>
+<td>
+2.377<sup>***</sup>
+</td>
+<td>
+2.369<sup>***</sup>
+</td>
+<td>
+-15.878<sup>***</sup>
+</td>
+<td>
+2.226<sup>***</sup>
+</td>
+<td>
+-14.337<sup>**</sup>
+</td>
+<td>
+-8.127<sup></sup>
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.117)
+</td>
+<td>
+(0.148)
+</td>
+<td>
+(0.196)
+</td>
+<td>
+(6.088)
+</td>
+<td>
+(0.203)
+</td>
+<td>
+(6.752)
+</td>
+<td>
+(9.169)
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+beertax
+</td>
+<td>
+0.365<sup>***</sup>
+</td>
+<td>
+-0.656<sup>**</sup>
+</td>
+<td>
+-0.640<sup>*</sup>
+</td>
+<td>
+-0.416<sup></sup>
+</td>
+<td>
+-0.662<sup>*</sup>
+</td>
+<td>
+-0.458<sup></sup>
+</td>
+<td>
+-0.902<sup>*</sup>
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.119)
+</td>
+<td>
+(0.289)
+</td>
+<td>
+(0.382)
+</td>
+<td>
+(0.315)
+</td>
+<td>
+(0.379)
+</td>
+<td>
+(0.329)
+</td>
+<td>
+(0.508)
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+drink18
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+-0.040<sup></sup>
+</td>
+<td>
+0.017<sup></sup>
+</td>
+<td>
+</td>
+<td>
+-0.053<sup></sup>
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.063)
+</td>
+<td>
+(0.090)
+</td>
+<td>
+</td>
+<td>
+(0.145)
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+drink19
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+0.000<sup></sup>
+</td>
+<td>
+-0.023<sup></sup>
+</td>
+<td>
+</td>
+<td>
+-0.073<sup></sup>
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.047)
+</td>
+<td>
+(0.070)
+</td>
+<td>
+</td>
+<td>
+(0.128)
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+drink20
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+0.076<sup></sup>
+</td>
+<td>
+-0.058<sup></sup>
+</td>
+<td>
+</td>
+<td>
+-0.114<sup></sup>
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.084)
+</td>
+<td>
+(0.075)
+</td>
+<td>
+</td>
+<td>
+(0.181)
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+lperinc
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+1.944<sup>***</sup>
+</td>
+<td>
+</td>
+<td>
+1.788<sup>***</sup>
+</td>
+<td>
+1.095<sup></sup>
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.630)
+</td>
+<td>
+</td>
+<td>
+(0.689)
+</td>
+<td>
+(0.946)
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+mlda
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+-0.002<sup></sup>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.023)
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+punish
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+0.038<sup></sup>
+</td>
+<td>
+0.085<sup></sup>
+</td>
+<td>
+0.039<sup></sup>
+</td>
+<td>
+0.091<sup></sup>
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.107)
+</td>
+<td>
+(0.116)
+</td>
+<td>
+(0.111)
+</td>
+<td>
+(0.248)
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+unrate
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+-0.062<sup>***</sup>
+</td>
+<td>
+</td>
+<td>
+-0.063<sup>***</sup>
+</td>
+<td>
+-0.091<sup>***</sup>
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.014)
+</td>
+<td>
+</td>
+<td>
+(0.014)
+</td>
+<td>
+(0.031)
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+vmiles
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+0.007<sup></sup>
+</td>
+<td>
+0.017<sup></sup>
+</td>
+<td>
+0.009<sup></sup>
+</td>
+<td>
+0.112<sup></sup>
+</td>
+</tr>
+
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+(0.007)
+</td>
+<td>
+(0.012)
+</td>
+<td>
+(0.008)
+</td>
+<td>
+(0.075)
+</td>
+</tr>
+
+<tr><td colspan="8" style="border-bottom: 1px solid black">
+</td>
+</tr>
+
+<tr>
+<td style="text-align: left">
+Observations
+</td>
+<td>
+336
+</td>
+<td>
+336
+</td>
+<td>
+336
+</td>
+<td>
+336
+</td>
+<td>
+336
+</td>
+<td>
+336
+</td>
+<td>
+96
+</td>
+</tr>
+<tr>
+<td style="text-align: left">
+N. of groups
+</td>
+<td>
+48
+</td>
+<td>
+48
+</td>
+<td>
+48
+</td>
+<td>
+48
+</td>
+<td>
+48
+</td>
+<td>
+48
+</td>
+<td>
+48
+</td>
+</tr>
+<tr>
+<td style="text-align: left">
+R<sup>2</sup>
+</td>
+<td>
+0.093
+</td>
+<td>
+0.041
+</td>
+<td>
+0.036
+</td>
+<td>
+0.363
+</td>
+<td>
+0.052
+</td>
+<td>
+0.357
+</td>
+<td>
+0.660
+</td>
+</tr>
+<tr>
+<td style="text-align: left">
+Residual Std. Error
+</td>
+<td>
+0.174
+</td>
+<td>
+0.039
+</td>
+<td>
+0.036
+</td>
+<td>
+0.117
+</td>
+<td>
+0.044
+</td>
+<td>
+0.115
+</td>
+<td>
+0.262
+</td>
+</tr>
+<tr>
+<td style="text-align: left">
+F Statistic
+</td>
+<td>
+34.394<sup>***</sup>
+</td>
+<td>
+12.190<sup>***</sup>
+</td>
+<td>
+10.513<sup>***</sup>
+</td>
+<td>
+19.539<sup>***</sup>
+</td>
+<td>
+2.541<sup>**</sup>
+</td>
+<td>
+25.510<sup>***</sup>
+</td>
+<td>
+9.447<sup>***</sup>
+</td>
+</tr>
+
+<tr>
+<td colspan="8" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align: left">
+Note:
+</td>
+<td colspan="7" style="text-align: right">
+<sup><em></em></sup><em>p&lt;0.1; <sup><strong></strong></sup><strong>p&lt;0.05; <sup></sup></strong></em>p&lt;0.01
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>The estimation results are presented in Table <a href="#tbl-t17.2" class="quarto-xref">Table&nbsp;<span>20.2</span></a>. We summarize the results as follows:</p>
+<ul>
+<li><p>Model 1 presents the results of an OLS regression of the fatality rate on the real beer tax, without state or time fixed effects. The estimated coefficient on the real beer tax is positive (0.365). In Model 2, which includes state fixed effects, the coefficient changes to -0.656, suggesting that the positive coefficient in Model 1 is likely driven by omitted variable bias. Model 3 incorporates both state and time fixed effects. While the magnitude of the estimated coefficient on the real beer tax remains unchanged, the inclusion of time fixed effects affects the standard errors, making the coefficient significant only at the 10% level. Overall, the results in the first three columns highlight the importance of omitted fixed factors—such as historical and cultural influences, general road conditions, population density, and attitudes toward drinking and driving—as key determinants of traffic fatalities.</p></li>
+<li><p>The next four regressions incorporate additional potential determinants of fatality rates, alongside state and time fixed effects. Model 4 includes variables related to drunk driving laws, as well as controls for the amount of driving and overall state economic conditions. The estimated coefficient on the real beer tax is -0.416 and is not statistically significant at the 5% level. Similarly, the estimated coefficients on the minimum legal drinking age dummies and the penalties for drunk driving dummy are not statistically significant at any conventional level. In Model 4, we can test for the joint significance of drinking age dummies by testing the following hypothesis: <span class="math display">\[
+\begin{align*}
+&amp;H_0:\beta_2=\beta_3=\beta_4=0,\\
+&amp;H_1:\text{At least one coefficient is nonzero}.
+\end{align*}
+\]</span></p></li>
+</ul>
+<div id="8eeec53e" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>reg4.wald_test(formula<span class="op">=</span><span class="st">'drink18 = drink19 = drink20 = 0'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>Linear Equality Hypothesis Test
+H0: Linear equality constraint is valid
+Statistic: 1.3148
+P-value: 0.7256
+Distributed: chi2(3)
+WaldTestStatistic, id: 0x203c9464650</code></pre>
+</div>
+</div>
+<p>The reported p-value is 0.73. Thus, we fail to reject the null hypothesis at any conventional level. We can also test if the employment rate and per capita income are jointly significant in Model 4 by testing the following hypothesis: <span class="math display">\[
+\begin{align*}
+&amp; H_0:\beta_7=\beta_8=0,\\
+&amp; H_1:\text{At least one coefficient is nonzero}.
+\end{align*}
+\]</span></p>
+<div id="16f0cdf1" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>reg4.wald_test(formula<span class="op">=</span><span class="st">'unrate = lperinc= 0'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>Linear Equality Hypothesis Test
+H0: Linear equality constraint is valid
+Statistic: 57.0821
+P-value: 0.0000
+Distributed: chi2(2)
+WaldTestStatistic, id: 0x203c9465310</code></pre>
+</div>
+</div>
+<p>We reject the null hypothesis at the 5% level. Thus, the economic indicators are jointly significant in explaining traffic fatalities.</p>
+<ul>
+<li><p>Model 5 excludes the economic indicators, resulting in an estimated coefficient on the real beer tax of -0.640, which is statistically significant only at the 10% level. Results in column (5) demonstrate that economic indicators should remain in the model as the coefficient on beer tax is sensitive to their inclusion.</p></li>
+<li><p>Model 6 reintroduces the economic indicators and replaces the minimum drinking age dummy variables with the continuous version (mlda). In this specification, the estimated coefficient on the real beer tax is -0.458 and is not statistically significant.</p></li>
+<li><p>Model 7 uses data from 1982 and 1988 only, with an estimated coefficient on the real beer tax of -0.902, which is statistically significant only at the 10% level. This model reveals that using data from 1982 and 1988 increases the magnitude of the beer tax effect but also inflates the standard errors.</p></li>
+</ul>
+<p>In assessing the results, <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> conclude that “Taken together, these results present a provocative picture of measures to control drunk driving and traffic fatalities. According to these estimates, neither stiff punishments nor increases in the minimum legal drinking age have important effects on fatalities. In contrast, there is evidence that increasing alcohol taxes, as measured by the real tax on beer, does reduce traffic deaths, presumably through reduced alcohol consumption. The imprecision of the estimated beer tax coefficient means, however, that we should be cautious about drawing policy conclusions from this analysis and that additional research is warranted.”</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Hansen2022" class="csl-entry" role="listitem">
+Hansen, Bruce. 2022. <em>Econometrics</em>. Princeton University Press.
+</div>
+<div id="ref-Stock2020" class="csl-entry" role="listitem">
+Stock, James H., and Mark W. Watson. 2020. <em>Introduction to Econometrics</em>. Fourth edition. Pearson.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>See Wikipedia page on <a href="https://en.wikipedia.org/wiki/Drunk_driving_in_the_United_States">Drunk driving in the United States</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Part3-FurtherTopics.html" class="pagination-link" aria-label="Further Topics in Regression Analysis">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Further Topics in Regression Analysis</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Chapter11-BinaryDependentVariable.html" class="pagination-link" aria-label="Regression with a Binary Dependent Variable">
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter10-RegressionPanelData.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

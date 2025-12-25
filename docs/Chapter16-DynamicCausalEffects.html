@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>26&nbsp; Estimation of Dynamic Causal Effects – Introduction to Econometrics with Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Chapter17-AdditionalTopicsTimeSeries.html" rel="next">
+<link href="./Chapter15-TimeSeriesRegression.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part4-TimeSeriesData.html">Regression Analysis of Economic Time Series Data</a></li><li class="breadcrumb-item"><a href="./Chapter16-DynamicCausalEffects.html"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Econometrics with Python</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part0-Python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroPython.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroNumpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-ControlStructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Control Structures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-CustomFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Custom Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-StatFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Statistical Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Pandas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-NumericalAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Applications in Numerical Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-SymbolicMath.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Symbolic Computing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and Review</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentals of Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Further Topics in Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Analysis of Economic Time Series Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theoretical Topics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#dynamic-causal-effects" id="toc-dynamic-causal-effects" class="nav-link active" data-scroll-target="#dynamic-causal-effects"><span class="header-section-number">26.1</span> Dynamic causal effects</a></li>
+  <li><a href="#estimation-of-dynamic-causal-effects-with-exogenous-regressors" id="toc-estimation-of-dynamic-causal-effects-with-exogenous-regressors" class="nav-link" data-scroll-target="#estimation-of-dynamic-causal-effects-with-exogenous-regressors"><span class="header-section-number">26.2</span> Estimation of dynamic causal effects with exogenous regressors</a></li>
+  <li><a href="#heteroskedasticity--and-autocorrelation-consistent-hac-standard-errors" id="toc-heteroskedasticity--and-autocorrelation-consistent-hac-standard-errors" class="nav-link" data-scroll-target="#heteroskedasticity--and-autocorrelation-consistent-hac-standard-errors"><span class="header-section-number">26.3</span> Heteroskedasticity- and autocorrelation-consistent (HAC) standard errors</a></li>
+  <li><a href="#estimation-of-dynamic-causal-effects-with-strictly-exogenous-regressors" id="toc-estimation-of-dynamic-causal-effects-with-strictly-exogenous-regressors" class="nav-link" data-scroll-target="#estimation-of-dynamic-causal-effects-with-strictly-exogenous-regressors"><span class="header-section-number">26.4</span> Estimation of dynamic causal effects with strictly exogenous regressors</a></li>
+  <li><a href="#application-orange-juice-prices-and-cold-weather" id="toc-application-orange-juice-prices-and-cold-weather" class="nav-link" data-scroll-target="#application-orange-juice-prices-and-cold-weather"><span class="header-section-number">26.5</span> Application: Orange juice prices and cold weather</a>
+  <ul class="collapse">
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">26.5.1</span> Data</a></li>
+  <li><a href="#distributed-lag-models" id="toc-distributed-lag-models" class="nav-link" data-scroll-target="#distributed-lag-models"><span class="header-section-number">26.5.2</span> Distributed lag models</a></li>
+  <li><a href="#estimation-results" id="toc-estimation-results" class="nav-link" data-scroll-target="#estimation-results"><span class="header-section-number">26.5.3</span> Estimation results</a></li>
+  <li><a href="#sensitivity-checks" id="toc-sensitivity-checks" class="nav-link" data-scroll-target="#sensitivity-checks"><span class="header-section-number">26.5.4</span> Sensitivity checks</a></li>
+  <li><a href="#checking-exogeneity-assumption" id="toc-checking-exogeneity-assumption" class="nav-link" data-scroll-target="#checking-exogeneity-assumption"><span class="header-section-number">26.5.5</span> Checking exogeneity assumption</a></li>
+  </ul></li>
+  <li><a href="#some-examples-on-exogeneity-assumption" id="toc-some-examples-on-exogeneity-assumption" class="nav-link" data-scroll-target="#some-examples-on-exogeneity-assumption"><span class="header-section-number">26.6</span> Some examples on exogeneity assumption</a>
+  <ul class="collapse">
+  <li><a href="#example-1-the-effect-of-u.s.-income-on-australian-exports" id="toc-example-1-the-effect-of-u.s.-income-on-australian-exports" class="nav-link" data-scroll-target="#example-1-the-effect-of-u.s.-income-on-australian-exports"><span class="header-section-number">26.6.1</span> Example 1: The effect of U.S. income on Australian exports</a></li>
+  <li><a href="#example-2-the-effect-of-oil-prices-on-u.s.-inflation" id="toc-example-2-the-effect-of-oil-prices-on-u.s.-inflation" class="nav-link" data-scroll-target="#example-2-the-effect-of-oil-prices-on-u.s.-inflation"><span class="header-section-number">26.6.2</span> Example 2: The effect of oil prices on U.S. inflation</a></li>
+  <li><a href="#example-3-the-effect-of-interest-rate-on-the-inflation-rate" id="toc-example-3-the-effect-of-interest-rate-on-the-inflation-rate" class="nav-link" data-scroll-target="#example-3-the-effect-of-interest-rate-on-the-inflation-rate"><span class="header-section-number">26.6.3</span> Example 3: The effect of interest rate on the inflation rate</a></li>
+  <li><a href="#example-4-the-effect-of-term-spread-on-the-gdp-growth-rate" id="toc-example-4-the-effect-of-term-spread-on-the-gdp-growth-rate" class="nav-link" data-scroll-target="#example-4-the-effect-of-term-spread-on-the-gdp-growth-rate"><span class="header-section-number">26.6.4</span> Example 4: The effect of term spread on the GDP growth rate</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter16-DynamicCausalEffects.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part4-TimeSeriesData.html">Regression Analysis of Economic Time Series Data</a></li><li class="breadcrumb-item"><a href="./Chapter16-DynamicCausalEffects.html"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-chapter23" class="quarto-section-identifier"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="ed6cc682" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.iolib.summary2 <span class="im">import</span> summary_col</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> stargazer.stargazer <span class="im">import</span> Stargazer</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.style.use('ggplot')</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">'seaborn-v0_8-darkgrid'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="dynamic-causal-effects" class="level2" data-number="26.1">
+<h2 data-number="26.1" class="anchored" data-anchor-id="dynamic-causal-effects"><span class="header-section-number">26.1</span> Dynamic causal effects</h2>
+<p>The dynamic causal effect of a regressor on a dependent variable is the causal effect of a change in the regressor on the dependent variable over time. For example, we may be interested in the effect of a change in the interest rate on the output of the economy in this quarter, next quarter, and four quarters ahead. Similarly, we may be interested in the effect of a change in the temperature on the demand for heating oil in the current month, next month, and two months ahead. In these examples, the dynamic effects take place over different time horizons, suggesting that our econometric model should include the current value and lags of the regressor. In this chapter, we use distributed lag models to estimate the dynamic causal effects of regressors on the dependent variable.</p>
+<div id="def-dlm" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 26.1 (Distributed lag model)</strong></span> The distributed lag model is a regression model that relates <span class="math inline">\(Y_t\)</span> to the current value and lags of the regressor <span class="math inline">\(X_t\)</span>: <span id="eq-eq23-1"><span class="math display">\[
+\begin{align}
+Y_t=\beta_0+\beta_1X_t+\beta_2X_{t-1}+\ldots+\beta_{r+1}X_{t-r}+u_t,
+\end{align}
+\tag{26.1}\]</span></span> where <span class="math inline">\(u_t\)</span> is the error term and the coefficients <span class="math inline">\(\beta_1,\ldots,\beta_{r+1}\)</span> are called the dynamic multipliers.</p>
+</div>
+<p>In <a href="#eq-eq23-1" class="quarto-xref">Equation&nbsp;<span>26.1</span></a>, the dynamic multipliers measure the dynamic causal effects:</p>
+<ul>
+<li><span class="math inline">\(\beta_1\)</span>: the impact effect of a one-unit change in <span class="math inline">\(X_t\)</span> on <span class="math inline">\(Y_t\)</span>.</li>
+<li><span class="math inline">\(\beta_2\)</span>: the impact effect of a one-unit change in <span class="math inline">\(X_{t-1}\)</span> on <span class="math inline">\(Y_t\)</span>, or equivalently, the impact of one-unit change in <span class="math inline">\(X_t\)</span> on <span class="math inline">\(Y_{t+1}\)</span>.</li>
+<li>In general, <span class="math inline">\(\beta_{j+1}\)</span> is the impact effect of a one-unit change in <span class="math inline">\(X_{t-j}\)</span> on <span class="math inline">\(Y_t\)</span>, or equivalently, the impact of a one-unit change in <span class="math inline">\(X_t\)</span> on <span class="math inline">\(Y_{t+j}\)</span>.</li>
+</ul>
+<div id="def-dlm2" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 26.2 (Dynamic causal effect)</strong></span> The <strong>dynamic causal effect</strong> of a one-unit change in <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span> is the sequence of coefficients <span class="math inline">\(\beta_1,\ldots,\beta_{r+1}\)</span> in <a href="#eq-eq23-1" class="quarto-xref">Equation&nbsp;<span>26.1</span></a>.</p>
+</div>
+<div id="def-dlm2" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 26.3 (Cumulative dynamic multipliers)</strong></span> The <strong><span class="math inline">\(h\)</span>-period cumulative dynamic multiplier</strong> is the sum <span class="math inline">\(\beta_1+\beta_2+\ldots+\beta_{h+1}\)</span>. The sum of all the individual dynamic multipliers, <span class="math inline">\(\beta_1+\beta_2+\ldots+\beta_{r+1}\)</span>, is the cumulative long-run effect of a change in <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span> and is called the <strong>long-run cumulative dynamic multiplier</strong>.</p>
+</div>
+<p>If there are multiple regressors <span class="math inline">\(X_1,\ldots,X_k\)</span>, then the distributed lag model that relates <span class="math inline">\(Y_t\)</span> to <span class="math inline">\(r_1\)</span> lags of <span class="math inline">\(X_1\)</span>, <span class="math inline">\(r_2\)</span> lags of <span class="math inline">\(X_2\)</span>, and so on is given by <span id="eq-eq23-2"><span class="math display">\[
+\begin{align}
+Y_t&amp;=\beta_0+\beta_{11}X_{1t}+\beta_{12}X_{1,t-1}+\ldots+\beta_{1,r_1+1}X_{k,t-r_1}\\
+&amp;+\beta_{21}X_{2t}+\beta_{22}X_{2,t-1}+\ldots+\beta_{2,r_2+1}X_{2,t-r_2}\\
+&amp;+\ldots+\beta_{k1}X_{kt}+\beta_{k2}X_{k,t-1}+\ldots+\beta_{k,r_k+1}X_{k,t-r_k}+u_t.
+\end{align}
+\tag{26.2}\]</span></span></p>
+<p>In <a href="#eq-eq23-2" class="quarto-xref">Equation&nbsp;<span>26.2</span></a>, the dynamic multipliers <span class="math inline">\(\beta_{11},\ldots,\beta_{1,r_1+1}\)</span> measure the dynamic causal effects of <span class="math inline">\(X_1\)</span> on <span class="math inline">\(Y\)</span>, the dynamic multipliers <span class="math inline">\(\beta_{21},\ldots,\beta_{2,r_2+1}\)</span> measure the dynamic causal effects of <span class="math inline">\(X_2\)</span> on <span class="math inline">\(Y\)</span>, and so on. Using these dynamic multipliers, we can also determine the <span class="math inline">\(h\)</span>-period cumulative dynamic multipliers and the long-run cumulative dynamic multipliers for each regressor.</p>
+</section>
+<section id="estimation-of-dynamic-causal-effects-with-exogenous-regressors" class="level2" data-number="26.2">
+<h2 data-number="26.2" class="anchored" data-anchor-id="estimation-of-dynamic-causal-effects-with-exogenous-regressors"><span class="header-section-number">26.2</span> Estimation of dynamic causal effects with exogenous regressors</h2>
+<p>We can use the OLS estimator to estimate distributed lag models. The assumptions required for the OLS estimation are stated in the following callout block.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The distributed lag model assumptions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Exogeneity assumption: <span class="math inline">\(\E(u_t|X_t, X_{t-1}, X_{t-2}, \ldots) = 0\)</span>.</li>
+<li>Stationarity and weak dependence assumption: (i) <span class="math inline">\(Y_t\)</span> and <span class="math inline">\(X_t\)</span> have a stationary distribution, and (ii) <span class="math inline">\((Y_t, X_{t})\)</span> and <span class="math inline">\((Y_{t-k}, X_{t-k})\)</span> become independent as <span class="math inline">\(k\)</span> gets larger.</li>
+<li>No large outliers assumption: <span class="math inline">\(X_{t}\)</span> and <span class="math inline">\(Y_t\)</span> have more than eight nonzero finite moments.</li>
+<li>No perfect multicollinearity assumption: There is no perfect multicollinearity.</li>
+</ol>
+</div>
+</div>
+<p>The exogeneity assumption requires that <span class="math inline">\(u_t\)</span> has a conditional mean of zero given the current and lagged values of the regressor. In particular, under this assumption, <span class="math inline">\(\E(u_t|X_t, X_{t-1}, X_{t-2}, \ldots,X_{t-r}) = 0\)</span> holds, suggesting that <span class="math inline">\(u_t\)</span> is uncorrelated with the included regressors. This assumption is also called the <strong>past and present exogeneity assumption</strong>. There is also a strong version requiring that <span class="math inline">\(\E(u_t|\ldots,X_{t+2},X_{t+1},X_t,X_{t-1},X_{t-2},\ldots)=0\)</span>. This version is called the <strong>strict exogeneity assumption</strong> or the <strong>past, present, and future exogeneity assumption</strong>. This assumption implies that <span class="math inline">\(u_t\)</span> is uncorrelated with the past, current and future values of <span class="math inline">\(X\)</span>.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Concept 23.1: Exogeneity and strict exogeneity
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The distributed lag model in <a href="#eq-eq23-1" class="quarto-xref">Equation&nbsp;<span>26.1</span></a> can be considered under two types of exogeneity assumptions:</p>
+<ul>
+<li>The past and present exogeneity assumption: <span class="math inline">\(\E(u_t|X_t, X_{t-1}, X_{t-2}, \ldots) = 0\)</span>.</li>
+<li>The past, present, and future exogeneity (strict exogeneity) assumption: <span class="math inline">\(\E(u_t|\ldots,X_{t+2},X_{t+1},X_t,X_{t-1},X_{t-2},\ldots)=0\)</span>.</li>
+</ul>
+</div>
+</div>
+<p>The second assumption requires that <span class="math inline">\((Y_t, X_t)\)</span> have a joint stationary distribution and to be weakly dependent. This assumption is the same as the one required for the OLS estimation of the AR and ADL models considered in <a href="Chapter15-TimeSeriesRegression.html" class="quarto-xref"><span>Chapter 25</span></a>.</p>
+<p>The third assumption requires that the dependent variable and the regressor have more than eight nonzero finite moments. This assumption is stronger than the one required for the OLS estimation of the AR and ADL models, where we require only nonzero finite fourth moments. This relatively strong assumption in the distributed lag model is required for formulating a heteroskedasticity- and autocorrelation-consistent (HAC) standard error estimator. We discuss the HAC standard error estimator in the next section.</p>
+<p>The fourth assumption, no perfect multicollinearity, is the same as the one required in the multiple linear regression model.</p>
+<div id="thm-ols-forecasting" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 26.1 (Properties of OLS estimator using time series data)</strong></span> Under these four assumptions, the OLS estimator is consistent and has an asymptotic normal distribution when <span class="math inline">\(T\)</span> is large. Therefore, inference on the regression coefficients using the OLS estimator proceeds as usual.</p>
+</div>
+<p>We can reformulate the distributed lag model in <a href="#eq-eq23-1" class="quarto-xref">Equation&nbsp;<span>26.1</span></a> such that it is suitable to directly estimate the cumulative dynamic multipliers. We start with a distributed lag model that has only one lag of the regressor <span class="math inline">\(X_t\)</span>. By adding and subtracting <span class="math inline">\(\beta_1X_{t-1}\)</span>, we can rewrite the model as <span class="math display">\[
+\begin{align*}
+Y_t&amp;=\beta_0+\beta_1X_t+\beta_2X_{t-1}+u_t=\beta_0+\beta_1X_t-\beta_1X_{t-1}+\beta_1X_{t-1}+\beta_2X_{t-1}+u_t\\
+&amp;=\beta_0+\beta_1(X_t-X_{t-1})+(\beta_1+\beta_2)X_{t-1}+u_t\\
+&amp;=\delta_0+\delta_1\Delta X_t+\delta_2X_{t-1}+u_t,
+\end{align*}
+\]</span> where <span class="math inline">\(\delta_0=\beta_0\)</span>, <span class="math inline">\(\delta_1=\beta_1\)</span>, and <span class="math inline">\(\delta_2=\beta_1+\beta_2\)</span>, which is the first cumulative multiplier.</p>
+<p>We generalize this reformulation to the distributed lag model with <span class="math inline">\(r\)</span> lags of the regressor <span class="math inline">\(X_t\)</span>. Thus, we can rewrite <a href="#eq-eq23-1" class="quarto-xref">Equation&nbsp;<span>26.1</span></a> as <span id="eq-eq23-3"><span class="math display">\[
+\begin{align}
+Y_t&amp;=\delta_0+\delta_1\Delta X_t+\delta_2\Delta X_{t-1}+\ldots+\delta_{r} \Delta X_{t-r+1}+\delta_{r+1}X_{t-r}+u_t,
+\end{align}
+\tag{26.3}\]</span></span> where <span class="math inline">\(\delta_1,\ldots,\delta_{r+1}\)</span> are the cumulative dynamic multipliers. The relationship between the coefficients in <a href="#eq-eq23-1" class="quarto-xref">Equation&nbsp;<span>26.1</span></a> and <a href="#eq-eq23-3" class="quarto-xref">Equation&nbsp;<span>26.3</span></a> is given by <span class="math display">\[
+\begin{align}
+&amp;\delta_0=\beta_0,\\
+&amp;\delta_1=\beta_1,\\
+&amp;\delta_2=\beta_1+\beta_2,\\
+&amp;\vdots\\
+&amp;\delta_{r+1}=\beta_1+\beta_2+\ldots+\beta_{r+1}.
+\end{align}
+\]</span> Thus, the <span class="math inline">\(h\)</span>-period cumulative dynamic multiplier is <span class="math inline">\(\delta_h\)</span>. We can use the OLS estimator to estimate <a href="#eq-eq23-3" class="quarto-xref">Equation&nbsp;<span>26.3</span></a> and formulate hypothesis tests and confidence intervals for the cumulative dynamic multipliers.</p>
+</section>
+<section id="heteroskedasticity--and-autocorrelation-consistent-hac-standard-errors" class="level2" data-number="26.3">
+<h2 data-number="26.3" class="anchored" data-anchor-id="heteroskedasticity--and-autocorrelation-consistent-hac-standard-errors"><span class="header-section-number">26.3</span> Heteroskedasticity- and autocorrelation-consistent (HAC) standard errors</h2>
+<p>The error terms in distributed lag models can be autocorrelated. Although the OLS estimator still remains unbiased and consistent, the OLS standard errors are not valid in the presence of autocorrelation. To address this issue, we use the <strong>heteroskedasticity- and autocorrelation-consistent (HAC)</strong> standard error estimator.</p>
+<p>For simplicity, we consider the following distributed lag model without any lag terms: <span class="math display">\[
+Y_t=\beta_0+\beta_1X_t+u_t.
+\]</span> Let <span class="math inline">\(v_t=(X_t-\mu_{X})u_t\)</span> and <span class="math inline">\(\bar{v}=\frac{1}{T}\sum_{t=1}^Tv_t\)</span>. Then, the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> of <span class="math inline">\(\beta_1\)</span> can be written as <span class="math display">\[
+\begin{align}
+\hat{\beta}_1-\beta_1&amp;=\frac{\frac{1}{T}\sum_{t=1}^T(X_t-\bar{X})u_t}{\frac{1}{T}\sum_{t=1}^T(X_t-\bar{X})^2}\approx\frac{\frac{1}{T}\sum_{t=1}^T(X_t-\mu_{X})u_t}{\sigma^2_X}\\
+&amp;=\frac{\frac{1}{T}\sum_{t=1}^Tv_t}{\sigma^2_X}=\frac{\bar{v}}{\sigma^2_X},
+\end{align}
+\]</span> where the approximation follows from <span class="math inline">\(\bar{X}\xrightarrow{p}\mu_{X}\)</span> and <span class="math inline">\(\frac{1}{T}\sum_{t=1}^T(X_t-\bar{X})^2\xrightarrow{p}\sigma^2_X\)</span>. Since <span class="math inline">\(v_t\)</span> is autocorrelated, we have <span class="math display">\[
+\begin{align}
+\var(\bar{v})&amp;=(\var(v_1)+\cov(v_1,v_2)+\ldots+\cov(v_1,v_T)\\
+&amp;+\cov(v_2,v_1),\var(v_2),\ldots,\cov(v_2,v_T)\\
+&amp;+\ldots\\
+&amp;+\cov(v_T,v_1),\cov(v_T,v_2),\ldots,\var(v_T))/T^2.
+\end{align}
+\]</span> We can express <span class="math inline">\(\var(\bar{v})\)</span> as <span class="math display">\[
+\begin{align}
+\var(\bar{v})&amp;=(T\var(v_t)+2(T-1)\cov(v_t,v_{t-1})+2(T-2)\cov(v_{t},v_{t-2})+\ldots+2\cov(v_t,v_{t-T+1}))/T^2\\
+&amp;=\frac{\sigma^2_v}{T}f_T,
+\end{align}
+\]</span> where <span class="math inline">\(\sigma^2_v\)</span> is the variance of <span class="math inline">\(v_t\)</span> and <span class="math inline">\(f_T=1+2\sum_{j=1}^{T-1}(\frac{T-j}{T})\rho_j\)</span> with <span class="math inline">\(\rho_j=\corr(v_t,v_{t-j})\)</span>. Thus, we can write the variance of the OLS estimator as <span class="math display">\[
+\begin{align}
+\sigma^2_{\hat{\beta}_1}=\var(\hat{\beta}_1)=\left(\frac{\sigma^2_v}{T(\sigma^2_X)^2}\right)f_T.
+\end{align}
+\]</span> Using this last expression, we can formulate the HAC estimator of the variance of the OLS estimator as <span id="eq-eq23-13"><span class="math display">\[
+\begin{align}
+\tilde{\sigma}^2_{\hat{\beta}_1}=\hat{\sigma}^2_{\hat{\beta}_1}\hat{f}_T,
+\end{align}
+\tag{26.4}\]</span></span> where <span class="math inline">\(\hat{\sigma}^2_{\hat{\beta}_1}\)</span> is the heteroskedasticity-robust estimator of the variance of <span class="math inline">\(\hat{\beta}_1\)</span> given in <a href="Chapter5-LinearRegressionOneRegressorInference.html" class="quarto-xref"><span>Chapter 15</span></a> in the absence of autocorrelation. The second term <span class="math inline">\(\hat{f}_T\)</span> is an estimator of <span class="math inline">\(f_T\)</span> given by <span class="math display">\[
+\begin{align}
+\hat{f}_T=1+2\sum_{j=1}^{m-1}\left(\frac{m-j}{m}\right)\tilde{\rho}_j,
+\end{align}
+\]</span> where <span class="math inline">\(\tilde{\rho}_j=\sum_{t=j+1}^T\hat{v}_t\hat{v}_{t-j}/\sum_{t=1}^T\hat{v}^2_t\)</span>, <span class="math inline">\(\hat{v}_t=(X_t-\bar{X})\hat{u}_t\)</span>, and <span class="math inline">\(m\)</span> is the <strong>truncation parameter</strong>. A benchmark value for <span class="math inline">\(m\)</span> based on the assumption that there is at most a moderate degree of autocorrelation in <span class="math inline">\(v_t\)</span> is <span class="math inline">\(m= 0.75T^{1/3}\)</span>, rounded to an integer.</p>
+<p>The estimator <span class="math inline">\(\tilde{\sigma}^2_{\hat{\beta}_1}=\hat{\sigma}_{\hat{\beta}_1}\hat{f}_T\)</span> with <span class="math inline">\(m= 0.75T^{1/3}\)</span> is also called the <strong>Newey-West estimator</strong>. Under our stated assumptions given in Section 23.2, it can be shown that <span class="math inline">\(\tilde{\sigma}^2_{\hat{\beta}_1}\)</span> is a consistent estimator of <span class="math inline">\(\sigma^2_{\hat{\beta}_1}\)</span>. In practice, the truncation parameter <span class="math inline">\(m\)</span> should be chosen by considering the autocorrelation in the regressor and the error term. <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> suggest that we should estimate the model with different values of <span class="math inline">\(m\)</span> to ensure that our results are not sensitive to the choice of <span class="math inline">\(m\)</span>.</p>
+<p>The generalization of the HAC estimator to distributed lag models with multiple lag terms or regressors requires a matrix algebra formulation. Details of this generalization are provided in <span class="citation" data-cites="Hayashi2000">Hayashi (<a href="references.html#ref-Hayashi2000" role="doc-biblioref">2000</a>)</span> and <span class="citation" data-cites="Hansen2022">Hansen (<a href="references.html#ref-Hansen2022" role="doc-biblioref">2022</a>)</span>.</p>
+</section>
+<section id="estimation-of-dynamic-causal-effects-with-strictly-exogenous-regressors" class="level2" data-number="26.4">
+<h2 data-number="26.4" class="anchored" data-anchor-id="estimation-of-dynamic-causal-effects-with-strictly-exogenous-regressors"><span class="header-section-number">26.4</span> Estimation of dynamic causal effects with strictly exogenous regressors</h2>
+<p>When the regressors are strictly exogenous, we can also use two alternative methods to estimate the dynamic causal effects:</p>
+<ul>
+<li>the ADL approach, and</li>
+<li>the generalized least squares (GLS) approach.</li>
+</ul>
+<p>Consider the following distributed lag model: <span id="eq-eq23-4"><span class="math display">\[
+\begin{align}
+Y_t=\beta_0+\beta_1X_t+\beta_2X_{t-1}+u_t.
+\end{align}
+\tag{26.5}\]</span></span> In the ADL approach, we assume an autoregressive model for the serial correlation in the error term: <span id="eq-eq23-5"><span class="math display">\[
+\begin{align}
+u_t=\phi_1 u_{t-1}+\tilde{u}_t,
+\end{align}
+\tag{26.6}\]</span></span> where <span class="math inline">\(\phi_1\)</span> is the autoregressive parameter and <span class="math inline">\(\tilde{u}_t\)</span> is an uncorrelated error term. Multiplying both sides of <a href="#eq-eq23-4" class="quarto-xref">Equation&nbsp;<span>26.5</span></a> by <span class="math inline">\(\phi_1\)</span> and lagging one period, we obtain <span class="math inline">\(\phi_1Y_{t-1}=\phi_1\beta_0+\phi_1\beta_1X_{t-1}+\phi_1\beta_2X_{t-2}+\phi_1u_{t-1}\)</span>. Then, subtracting this equation from <a href="#eq-eq23-4" class="quarto-xref">Equation&nbsp;<span>26.5</span></a>, we obtain <span id="eq-eq23-6"><span class="math display">\[
+\begin{align}
+&amp;Y_t-\phi_1Y_{t-1}=\beta_0(1-\phi_1)+\beta_1X_t+ (\beta_2-\phi_1\beta_1)X_{t-1}-\phi_1\beta_2X_{t-2}+u_t-\phi_1u_{t-1}.
+\end{align}
+\tag{26.7}\]</span></span></p>
+<p>Using <a href="#eq-eq23-6" class="quarto-xref">Equation&nbsp;<span>26.7</span></a>, we can express <span class="math inline">\(Y_t\)</span> as <span id="eq-eq23-7"><span class="math display">\[
+\begin{align}
+Y_t=\alpha_0+\phi_1Y_{t-1}+\delta_0X_t+\delta_1X_{t-1}+\delta_2X_{t-2}+\tilde{u}_t,
+\end{align}
+\tag{26.8}\]</span></span> where <span class="math inline">\(\alpha_0=\beta_0(1-\phi_1)\)</span>, <span class="math inline">\(\delta_0=\beta_1\)</span>, <span class="math inline">\(\delta_1=\beta_2-\phi_1\beta_1\)</span>, <span class="math inline">\(\delta_2=-\phi_1\beta_2\)</span>. Thus, the distributed lag model in <a href="#eq-eq23-4" class="quarto-xref">Equation&nbsp;<span>26.5</span></a> with <a href="#eq-eq23-5" class="quarto-xref">Equation&nbsp;<span>26.6</span></a> is equivalent to the ADL model in <a href="#eq-eq23-7" class="quarto-xref">Equation&nbsp;<span>26.8</span></a>. We call <a href="#eq-eq23-7" class="quarto-xref">Equation&nbsp;<span>26.8</span></a> the ADL representation of the distributed lag model.</p>
+<p>Also, we can use <a href="#eq-eq23-6" class="quarto-xref">Equation&nbsp;<span>26.7</span></a> to get another representation of <a href="#eq-eq23-4" class="quarto-xref">Equation&nbsp;<span>26.5</span></a>. Let <span class="math inline">\(\tilde{Y}_t=Y_t-\phi_1Y_{t-1}\)</span> and <span class="math inline">\(\tilde{X}_t=X_t-\phi_1X_{t-1}\)</span>. Then, we can write <a href="#eq-eq23-6" class="quarto-xref">Equation&nbsp;<span>26.7</span></a> as <span id="eq-eq23-8"><span class="math display">\[
+\begin{align}
+\tilde{Y}_t=\alpha_0+\beta_1\tilde{X}_t+\beta_2\tilde{X}_{t-1}+\tilde{u}_t.
+\end{align}
+\tag{26.9}\]</span></span> We call this equation the quasi-difference representation of <a href="#eq-eq23-4" class="quarto-xref">Equation&nbsp;<span>26.5</span></a>.</p>
+<p>Since these representations are equivalent, the conditions required for the OLS estimation are also the same for both representations. Consider the quasi-difference representation in <a href="#eq-eq23-8" class="quarto-xref">Equation&nbsp;<span>26.9</span></a>. The OLS estimation requires that <span class="math inline">\(\E(\tilde{u}_t|\tilde{X}_t,\tilde{X}_{t-1},\ldots)=0\)</span>. Since <span class="math inline">\(\tilde{X}_t=X_t-\phi_1X_{t-1}\)</span>, this condition is equivalent to <span class="math inline">\(\E(\tilde{u}_t|X_t,X_{t-1},\ldots)=0\)</span>. Also, using <span class="math inline">\(\tilde{u}_t=u_t-\phi_1u_{t-1}\)</span>, we can express <span class="math inline">\(\E(\tilde{u}_t|X_t,X_{t-1},\ldots)\)</span> as <span class="math display">\[
+\E(\tilde{u}_t|X_t,X_{t-1},\ldots)=\E(u_t|X_t,X_{t-1},\ldots)-\phi_1\E(u_{t-1}|X_t,X_{t-1},\ldots).
+\]</span> Thus, in order to achieve the exogeneity assumption for any value of <span class="math inline">\(\phi_1\)</span>, we need to assume that <span class="math inline">\(\E(u_t|X_t,X_{t-1},\ldots)=0\)</span> and <span class="math inline">\(\E(u_{t-1}|X_t,X_{t-1},\ldots)=0\)</span>. The last condition can be rewritten as <span class="math display">\[
+\E(u_t|X_{t+1},X_{t},X_{t-1},\ldots)=0,
+\]</span> which holds if we assume that <span class="math inline">\(X_t\)</span> is strictly exogenous.</p>
+<p>As a result, to consistently estimate <a href="#eq-eq23-4" class="quarto-xref">Equation&nbsp;<span>26.5</span></a> with <a href="#eq-eq23-5" class="quarto-xref">Equation&nbsp;<span>26.6</span></a>, the ADL representation in <a href="#eq-eq23-7" class="quarto-xref">Equation&nbsp;<span>26.8</span></a>, or the quasi-difference representation in <a href="#eq-eq23-8" class="quarto-xref">Equation&nbsp;<span>26.9</span></a>, we need to assume that the regressor is strictly exogenous.</p>
+<p>In the ADL approach, to estimate the dynamic multipliers, we use the OLS estimator to estimate <a href="#eq-eq23-7" class="quarto-xref">Equation&nbsp;<span>26.8</span></a>. Since the error term in <a href="#eq-eq23-7" class="quarto-xref">Equation&nbsp;<span>26.8</span></a> is not autocorrelated, we do not need to use HAC standard errors for inference. From the estimated coefficients, we can obtain the estimates of the dynamic multipliers by using the relationships between the coefficients in <a href="#eq-eq23-4" class="quarto-xref">Equation&nbsp;<span>26.5</span></a> and <a href="#eq-eq23-7" class="quarto-xref">Equation&nbsp;<span>26.8</span></a>.</p>
+<p>An alternative way to obtain the estimates of the dynamic multipliers is to use a continuous substitution method. Consider the following estimated equation: <span id="eq-eq23-9"><span class="math display">\[
+\begin{align}
+\hat{Y}_t=\hat{\phi}_1Y_{t-1}+\hat{\delta}_0X_t+\hat{\delta}_1X_{t-1}+\hat{\delta}_2X_{t-2},
+\end{align}
+\tag{26.10}\]</span></span> where we omit the estimated intercept term as the intercept term does not affect the dynamic multipliers. By continuously substituting <span class="math inline">\(Y_{t-1}\)</span>, <span class="math inline">\(Y_{t-2}\)</span>, and so on into <a href="#eq-eq23-9" class="quarto-xref">Equation&nbsp;<span>26.10</span></a>, we can obtain the following equation: <span class="math display">\[
+\begin{align}
+\hat{Y}_t&amp;= \hat{\delta}_0X_t+(\hat{\delta}_1+\hat{\phi}_1\hat{\delta}_0)X_{t-1}+(\hat{\delta}_2+\hat{\phi}_1\hat{\delta}_1+\hat{\phi}^2_1\hat{\delta}_0)X_{t-2}\\
+&amp;+\hat{\phi}_1(\hat{\delta}_2+\hat{\phi}_1\hat{\delta}_1+\hat{\phi}^2_1\hat{\delta}_0)X_{t-3}+\ldots.
+\end{align}
+\]</span> The coefficients on <span class="math inline">\(X_t\)</span>, <span class="math inline">\(X_{t-1}\)</span>, and so on in this equation are the estimates of the dynamic multipliers.</p>
+<p>In the GLS approach, we use the OLS estimator to estimate the quasi-difference representation in <a href="#eq-eq23-8" class="quarto-xref">Equation&nbsp;<span>26.9</span></a>. We first assume that <span class="math inline">\(\phi_1\)</span> is known. Then, under the assumption that <span class="math inline">\(X_t\)</span> is strictly exogenous, we can use the OLS estimator to estimate <span class="math inline">\(\alpha_0\)</span>, <span class="math inline">\(\beta_1\)</span>, and <span class="math inline">\(\beta_2\)</span>. This estimator is called the <strong>infeasible GLS estimator</strong> because we do not know <span class="math inline">\(\phi_1\)</span> in practice.</p>
+<p>The <strong>feasible GLS estimator</strong> is the OLS estimator of the quasi-difference representation in <a href="#eq-eq23-8" class="quarto-xref">Equation&nbsp;<span>26.9</span></a>, using an estimate <span class="math inline">\(\hat{\phi}_1\)</span> of <span class="math inline">\(\phi_1\)</span>. To obtain an estimate of <span class="math inline">\(\phi_1\)</span>, we can first estimate the ADL representation in <a href="#eq-eq23-4" class="quarto-xref">Equation&nbsp;<span>26.5</span></a> by the OLS estimator to obtain residuals <span class="math inline">\(\hat{u}_t\)</span>. Then, we estimate <span class="math inline">\(\phi_1\)</span> by regressing <span class="math inline">\(\hat{u}_t\)</span> on <span class="math inline">\(\hat{u}_{t-1}\)</span>. Once we have <span class="math inline">\(\hat{\phi}_1\)</span>, we can construct <span class="math inline">\(\hat{\tilde{Y}}_t=Y_t-\hat{\phi}_1Y_{t-1}\)</span>, <span class="math inline">\(\hat{\tilde{X}}_t=X_t-\hat{\phi}_1X_{t-1}\)</span>, and <span class="math inline">\(\hat{\tilde{X}}_{t-1}=X_{t-1}-\hat{\phi}_1X_{t-2}\)</span>. Finally, we can regress <span class="math inline">\(\hat{\tilde{Y}}_t\)</span> on <span class="math inline">\(\hat{\tilde{X}}_t\)</span> and <span class="math inline">\(\hat{\tilde{X}}_{t-1}\)</span> to get estimates of <span class="math inline">\(\alpha_0\)</span>, <span class="math inline">\(\beta_1\)</span>, and <span class="math inline">\(\beta_2\)</span>. This version of the feasible GLS estimator is called the Cochrane-Orcutt estimator.</p>
+<p>Under the assumptions that <span class="math inline">\(X_t\)</span> is strictly exogenous and the error term in <a href="#eq-eq23-8" class="quarto-xref">Equation&nbsp;<span>26.9</span></a> is homoskedastic, the GLS estimator is efficient among the class of linear unbiased estimators, which follows from the Gauss-Markov theorem.</p>
+</section>
+<section id="application-orange-juice-prices-and-cold-weather" class="level2" data-number="26.5">
+<h2 data-number="26.5" class="anchored" data-anchor-id="application-orange-juice-prices-and-cold-weather"><span class="header-section-number">26.5</span> Application: Orange juice prices and cold weather</h2>
+<p>In this section, we study the dynamic causal effects of cold weather on the price of frozen concentrated orange juice. We use distributed lag models to estimate the dynamic multipliers and cumulative dynamic multipliers. Additionally, we consider a model with monthly dummy variables to account for seasonal effects.</p>
+<section id="data" class="level3" data-number="26.5.1">
+<h3 data-number="26.5.1" class="anchored" data-anchor-id="data"><span class="header-section-number">26.5.1</span> Data</h3>
+<p>We consider a dataset on frozen concentrated orange juice prices collected from Orlando, Florida. The dataset is monthly and spans from January 1950 to December 2000. It contains the following variables:</p>
+<ul>
+<li><code>price</code>: Average producer price for frozen orange juice concentrate.</li>
+<li><code>ppi</code>: Producer price index for finished goods.</li>
+<li><code>fdd</code>: Number of freezing degree days at the Orlando, Florida, airport.</li>
+</ul>
+<p>The number of freezing degree days (<code>fdd</code>) is computed from the sum of the number of degrees below 31 degrees Fahrenheit for each day in the month. For example, assume that there were three days in a month with temperatures of 30, 29, and 28 degrees Fahrenheit. Then, the number of freezing degree days for that month is <span class="math inline">\((31-30)+(31-29)+(31-28)=6\)</span>.</p>
+<p>The dataset is available in the <code>frozenjuice.csv</code> file. We use the following code to load the data set and define real prices and percentage changes in real prices.</p>
+<div id="cbdbab7d" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data set</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'data/FrozenJuice.csv'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df.index <span class="op">=</span> pd.date_range(start<span class="op">=</span><span class="st">'1950-01-01'</span>, periods<span class="op">=</span><span class="bu">len</span>(df), freq<span class="op">=</span><span class="st">'ME'</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Real prices</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'rprice'</span>] <span class="op">=</span> df[<span class="st">'price'</span>] <span class="op">/</span> df[<span class="st">'ppi'</span>]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Percentage change in real prices</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#df['dprice'] = df['rprice'].pct_change() * 100 </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'dprice'</span>] <span class="op">=</span> <span class="dv">100</span><span class="op">*</span>(np.log(df[<span class="st">'rprice'</span>]) <span class="op">-</span> np.log(df[<span class="st">'rprice'</span>].shift(<span class="dv">1</span>)))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Columns names</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>df.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>Index(['price', 'ppi', 'fdd', 'rprice', 'dprice'], dtype='object')</code></pre>
+</div>
+</div>
+<p>The descriptive statistics of the variables are shown in <a href="#tbl-t23-1" class="quarto-xref">Table&nbsp;<span>26.1</span></a>. The time series plots of the variables are displayed in <a href="#fig-f23-1" class="quarto-xref">Figure&nbsp;<span>26.1</span></a>. There are large changes in the real prices of frozen concentrated orange juice, and these changes coincide with variations in the freezing degree days.</p>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df.describe().<span class="bu">round</span>(<span class="dv">2</span>).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="3" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t23-1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t23-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;26.1: Summary statistics
+</figcaption>
+<div aria-describedby="tbl-t23-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">count</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">mean</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">std</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">min</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">25%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">50%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">75%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">price</td>
+<td style="text-align: left;">612.0</td>
+<td style="text-align: left;">72.95</td>
+<td style="text-align: left;">35.58</td>
+<td style="text-align: left;">26.30</td>
+<td style="text-align: left;">41.30</td>
+<td style="text-align: left;">59.20</td>
+<td style="text-align: left;">106.43</td>
+<td style="text-align: left;">162.80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">ppi</td>
+<td style="text-align: left;">612.0</td>
+<td style="text-align: left;">71.37</td>
+<td style="text-align: left;">39.53</td>
+<td style="text-align: left;">27.20</td>
+<td style="text-align: left;">33.50</td>
+<td style="text-align: left;">58.25</td>
+<td style="text-align: left;">106.48</td>
+<td style="text-align: left;">140.10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">fdd</td>
+<td style="text-align: left;">612.0</td>
+<td style="text-align: left;">0.61</td>
+<td style="text-align: left;">3.33</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">37.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">rprice</td>
+<td style="text-align: left;">612.0</td>
+<td style="text-align: left;">1.09</td>
+<td style="text-align: left;">0.26</td>
+<td style="text-align: left;">0.71</td>
+<td style="text-align: left;">0.91</td>
+<td style="text-align: left;">1.07</td>
+<td style="text-align: left;">1.19</td>
+<td style="text-align: left;">1.96</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">dprice</td>
+<td style="text-align: left;">611.0</td>
+<td style="text-align: left;">-0.13</td>
+<td style="text-align: left;">5.05</td>
+<td style="text-align: left;">-28.40</td>
+<td style="text-align: left;">-1.05</td>
+<td style="text-align: left;">-0.28</td>
+<td style="text-align: left;">0.33</td>
+<td style="text-align: left;">41.02</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="cell-fig-f23-1" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the time series</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot price index for frozen concentrated orange juice</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>,<span class="dv">0</span>].plot(df.index, df[<span class="st">'rprice'</span>], color<span class="op">=</span><span class="st">'steelblue'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>,<span class="dv">0</span>].set_xlabel(<span class="st">'Date'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>,<span class="dv">0</span>].set_ylabel(<span class="st">'Price index'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>,<span class="dv">0</span>].set_title(<span class="st">'Price index for frozen concentrated orange juice'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot monthly percentage change in the price of frozen concentrated orange juice</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>,<span class="dv">1</span>].plot(df.index, df[<span class="st">'dprice'</span>], color<span class="op">=</span><span class="st">'steelblue'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>,<span class="dv">1</span>].set_xlabel(<span class="st">'Date'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>,<span class="dv">1</span>].set_ylabel(<span class="st">'Percent'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>,<span class="dv">1</span>].set_title(<span class="st">'Monthly percentage change in the prices'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot monthly freezing degree days</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>,<span class="dv">0</span>].plot(df.index, df[<span class="st">'fdd'</span>], color<span class="op">=</span><span class="st">'steelblue'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>,<span class="dv">0</span>].set_xlabel(<span class="st">'Date'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>,<span class="dv">0</span>].set_ylabel(<span class="st">'Freezing degree days'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>,<span class="dv">0</span>].set_title(<span class="st">'Monthly freezing degree days'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Hide the unused subplot (ax[1,1])</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>,<span class="dv">1</span>].axis(<span class="st">'off'</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-f23-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-f23-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter16-DynamicCausalEffects_files/figure-html/fig-f23-1-output-1.png" width="758" height="567" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f23-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;26.1: Orange juice prices and cold weather
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="distributed-lag-models" class="level3" data-number="26.5.2">
+<h3 data-number="26.5.2" class="anchored" data-anchor-id="distributed-lag-models"><span class="header-section-number">26.5.2</span> Distributed lag models</h3>
+<p>We consider the following distributed lag models: <span id="eq-eq23-10"><span class="math display">\[
+\begin{align}
+\text{Model 1}:\,\text{ChgP}_t=\beta_0+\beta_1\text{FDD}_t+\beta_2\text{FDD}_{t-1}+\ldots+\beta_{19}\text{FDD}_{t-18}+u_t,
+\end{align}
+\tag{26.11}\]</span></span> <span id="eq-eq23-11"><span class="math display">\[
+\begin{align}
+\text{Model 2}: \,\text{ChgP}_t&amp;=\delta_0+\delta_1\Delta\text{FDD}_t+\delta_2\Delta\text{FDD}_{t-1}+\ldots+\delta_{18}\Delta\text{FDD}_{t-17}\\
+&amp;+\delta_{19}\text{FDD}_{t-18}+u_t,
+\end{align}
+\tag{26.12}\]</span></span></p>
+<p><span id="eq-eq23-12"><span class="math display">\[
+\begin{align}
+\text{Model 3}: \,\text{ChgP}_t&amp;=\delta_0+\delta_1\Delta\text{FDD}_t+\delta_2\Delta\text{FDD}_{t-1}+\ldots+\delta_{18}\Delta\text{FDD}_{t-17}\\
+&amp;+\delta_{19}\text{FDD}_{t-18}+\gamma_1D_{1t}+\ldots+\gamma_{11}D_{11t}+u_t,
+\end{align}
+\tag{26.13}\]</span></span></p>
+<p>where <span class="math inline">\(\text{ChgP}_t\)</span> is the percentage change in the real price of frozen concentrated orange juice, <span class="math inline">\(\text{FDD}_t\)</span> is the freezing degree days, and <span class="math inline">\(D_{1t},\ldots,D_{11t}\)</span> are monthly dummy variables. We use <a href="#eq-eq23-10" class="quarto-xref">Equation&nbsp;<span>26.11</span></a> to estimate the <strong>dynamic multipliers</strong> and <a href="#eq-eq23-11" class="quarto-xref">Equation&nbsp;<span>26.12</span></a> to estimate the <strong>cumulative dynamic multipliers</strong>. The relationships between the coefficients in <a href="#eq-eq23-10" class="quarto-xref">Equation&nbsp;<span>26.11</span></a> and <a href="#eq-eq23-11" class="quarto-xref">Equation&nbsp;<span>26.12</span></a> are given by</p>
+<ul>
+<li><span class="math inline">\(\delta_0=\beta_0\)</span></li>
+<li><span class="math inline">\(\delta_1=\beta_1\)</span>: impact effect</li>
+<li><span class="math inline">\(\delta_2=\beta_1+\beta_2\)</span>: one-period cumulative dynamic multiplier</li>
+<li><span class="math inline">\(\cdots\)</span></li>
+<li><span class="math inline">\(\delta_{19}=\beta_1+\beta_2+\ldots+\beta_{19}\)</span>: long-run cumulative dynamic multiplier</li>
+</ul>
+<p>We use the HAC standard errors to obtain valid inference on the dynamic multipliers and cumulative dynamic multipliers. The truncation parameter for the HAC standard errors is <span class="math inline">\(m=0.75T^{1/3}=0.75\times612^{1/3}=6.37\)</span>. Therefore, we consider <span class="math inline">\(m=7\)</span> and <span class="math inline">\(m=14\)</span> for the HAC standard errors, where the latter is used to check the robustness of the results. The following code chunk shows how to estimate the models and obtain the HAC standard errors. The HAC standard errors estimates are obtained using the <code>cov_type='HAC'</code> and <code>cov_kwds={'maxlags': 7}</code> options, where the latter option specifies the truncation parameter.</p>
+<div id="3d0cc454" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the data for the models</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'dFDD'</span>] <span class="op">=</span> df[<span class="st">'fdd'</span>].diff()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>formula1 <span class="op">=</span> <span class="st">'dprice ~ '</span> <span class="op">+</span> <span class="st">' + '</span>.join([<span class="ss">f'fdd.shift(</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">)'</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">19</span>)])</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>model1 <span class="op">=</span> smf.ols(formula<span class="op">=</span>formula1, data<span class="op">=</span>df).fit(cov_type<span class="op">=</span><span class="st">'HAC'</span>, cov_kwds<span class="op">=</span>{<span class="st">'maxlags'</span>: <span class="dv">7</span>})</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>formula2 <span class="op">=</span> <span class="st">'dprice ~ '</span> <span class="op">+</span> <span class="st">' + '</span>.join([<span class="ss">f'dFDD.shift(</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">)'</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">18</span>)]) <span class="op">+</span> <span class="st">' + fdd.shift(18)'</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> smf.ols(formula<span class="op">=</span>formula2, data<span class="op">=</span>df).fit(cov_type<span class="op">=</span><span class="st">'HAC'</span>, cov_kwds<span class="op">=</span>{<span class="st">'maxlags'</span>: <span class="dv">7</span>})</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2 with m=14</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>model2_14 <span class="op">=</span> smf.ols(formula<span class="op">=</span>formula2, data<span class="op">=</span>df).fit(cov_type<span class="op">=</span><span class="st">'HAC'</span>, cov_kwds<span class="op">=</span>{<span class="st">'maxlags'</span>: <span class="dv">14</span>})</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 3 with monthly indicators</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>month_dummies <span class="op">=</span> pd.get_dummies(df.index.month, prefix<span class="op">=</span><span class="st">'month'</span>, drop_first<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>month_dummies.index <span class="op">=</span> df.index</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> pd.merge(df, month_dummies,  left_index<span class="op">=</span><span class="va">True</span>, right_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>formula3 <span class="op">=</span> formula2 <span class="op">+</span> <span class="st">' + '</span> <span class="op">+</span> <span class="st">' + '</span>.join(month_dummies.columns)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> df1.dropna(subset<span class="op">=</span>[col <span class="cf">for</span> col <span class="kw">in</span> df1.columns <span class="cf">if</span> <span class="st">'shift'</span> <span class="kw">in</span> col <span class="kw">or</span> col.startswith(<span class="st">'month'</span>)])</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>model3 <span class="op">=</span> smf.ols(formula<span class="op">=</span>formula3, data<span class="op">=</span>df1).fit(cov_type<span class="op">=</span><span class="st">'HAC'</span>, cov_kwds<span class="op">=</span>{<span class="st">'maxlags'</span>: <span class="dv">7</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="estimation-results" class="level3" data-number="26.5.3">
+<h3 data-number="26.5.3" class="anchored" data-anchor-id="estimation-results"><span class="header-section-number">26.5.3</span> Estimation results</h3>
+<p>We use the <code>Stargazer</code> package to present the estimation results. The following code chunk shows how to present the results in a table. <a href="#tbl-t23-2" class="quarto-xref">Table&nbsp;<span>26.2</span></a> includes the estimates of the dynamic multipliers and cumulative dynamic multipliers.</p>
+<div id="c533fba4" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the table</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>v1 <span class="op">=</span> [<span class="ss">f'fdd.shift(</span><span class="sc">{</span>lag<span class="sc">}</span><span class="ss">)'</span> <span class="cf">for</span> lag <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">19</span>)] </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>v2 <span class="op">=</span> [<span class="ss">f'dFDD.shift(</span><span class="sc">{</span>lag<span class="sc">}</span><span class="ss">)'</span> <span class="cf">for</span> lag <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">18</span>)]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> v1<span class="op">+</span>v2</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>HAC_truncation<span class="op">=</span> [<span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">7</span>]</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the table</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>table1 <span class="op">=</span> Stargazer([model1, model2, model2_14, model3])</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>table1.custom_columns([<span class="st">'Model 1'</span>, <span class="st">'Model 2 (m=7)'</span>, <span class="st">"Model 2 (m=14)"</span>, <span class="st">"Model 3"</span>])</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>table1.significant_digits(<span class="dv">2</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>table1.show_model_numbers(<span class="va">False</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>table1.show_degrees_of_freedom(<span class="va">False</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>table1.covariate_order(v)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>table1.add_line(<span class="st">'HAC truncation'</span>, HAC_truncation)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>table1.add_line(<span class="st">'Monthly dummies'</span>, [<span class="st">'No'</span>, <span class="st">'No'</span>, <span class="st">'No'</span>, <span class="st">'Yes'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the table</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>table1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="7" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="tbl-t23-2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="7">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t23-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;26.2: The dynamic effect of a freezing degree day on the price of orange juice
+</figcaption>
+<div aria-describedby="tbl-t23-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="7">
+<table style="text-align:center"><tbody><tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align:left"></td><td colspan="4"><em>Dependent variable: dprice</em></td></tr><tr><td style="text-align:left"></td></tr><tr><td></td><td colspan="1">Model 1</td><td colspan="1">Model 2 (m=7)</td><td colspan="1">Model 2 (m=14)</td><td colspan="1">Model 3</td></tr>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr>
+
+<tr><td style="text-align:left">fdd.shift(0)</td><td>0.51<sup>***</sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.14)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(1)</td><td>0.17<sup>**</sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.09)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(2)</td><td>0.07<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.06)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(3)</td><td>0.07<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.04)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(4)</td><td>0.02<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.03)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(5)</td><td>0.03<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.03)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(6)</td><td>0.03<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.05)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(7)</td><td>0.02<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.02)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(8)</td><td>-0.04<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.03)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(9)</td><td>-0.01<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.05)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(10)</td><td>-0.12<sup>*</sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.07)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(11)</td><td>-0.07<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.05)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(12)</td><td>-0.14<sup>*</sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.08)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(13)</td><td>-0.08<sup>*</sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.04)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(14)</td><td>-0.06<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.03)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(15)</td><td>-0.03<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.03)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(16)</td><td>-0.01<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.05)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(17)</td><td>0.00<sup></sup></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left"></td><td>(0.02)</td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">fdd.shift(18)</td><td>0.00<sup></sup></td><td>0.37<sup></sup></td><td>0.37<sup></sup></td><td>0.39<sup></sup></td></tr>
+<tr><td style="text-align:left"></td><td>(0.02)</td><td>(0.29)</td><td>(0.30)</td><td>(0.29)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(0)</td><td></td><td>0.51<sup>***</sup></td><td>0.51<sup>***</sup></td><td>0.52<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.14)</td><td>(0.14)</td><td>(0.14)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(1)</td><td></td><td>0.68<sup>***</sup></td><td>0.68<sup>***</sup></td><td>0.72<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.13)</td><td>(0.13)</td><td>(0.14)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(2)</td><td></td><td>0.75<sup>***</sup></td><td>0.75<sup>***</sup></td><td>0.78<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.17)</td><td>(0.16)</td><td>(0.17)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(3)</td><td></td><td>0.82<sup>***</sup></td><td>0.82<sup>***</sup></td><td>0.86<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.18)</td><td>(0.18)</td><td>(0.19)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(4)</td><td></td><td>0.84<sup>***</sup></td><td>0.84<sup>***</sup></td><td>0.89<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.18)</td><td>(0.18)</td><td>(0.19)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(5)</td><td></td><td>0.87<sup>***</sup></td><td>0.87<sup>***</sup></td><td>0.90<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.19)</td><td>(0.19)</td><td>(0.20)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(6)</td><td></td><td>0.90<sup>***</sup></td><td>0.90<sup>***</sup></td><td>0.92<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.20)</td><td>(0.21)</td><td>(0.21)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(7)</td><td></td><td>0.91<sup>***</sup></td><td>0.91<sup>***</sup></td><td>0.94<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.20)</td><td>(0.21)</td><td>(0.21)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(8)</td><td></td><td>0.87<sup>***</sup></td><td>0.87<sup>***</sup></td><td>0.90<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.21)</td><td>(0.22)</td><td>(0.22)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(9)</td><td></td><td>0.86<sup>***</sup></td><td>0.86<sup>***</sup></td><td>0.88<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.24)</td><td>(0.24)</td><td>(0.24)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(10)</td><td></td><td>0.75<sup>***</sup></td><td>0.75<sup>***</sup></td><td>0.75<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.26)</td><td>(0.26)</td><td>(0.26)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(11)</td><td></td><td>0.68<sup>**</sup></td><td>0.68<sup>**</sup></td><td>0.68<sup>**</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.27)</td><td>(0.27)</td><td>(0.27)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(12)</td><td></td><td>0.54<sup>**</sup></td><td>0.54<sup>**</sup></td><td>0.55<sup>**</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.27)</td><td>(0.27)</td><td>(0.27)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(13)</td><td></td><td>0.45<sup>*</sup></td><td>0.45<sup>*</sup></td><td>0.49<sup>*</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.27)</td><td>(0.27)</td><td>(0.27)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(14)</td><td></td><td>0.40<sup></sup></td><td>0.40<sup></sup></td><td>0.43<sup></sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.27)</td><td>(0.28)</td><td>(0.28)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(15)</td><td></td><td>0.37<sup></sup></td><td>0.37<sup></sup></td><td>0.41<sup></sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.28)</td><td>(0.29)</td><td>(0.28)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(16)</td><td></td><td>0.36<sup></sup></td><td>0.36<sup></sup></td><td>0.41<sup></sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.28)</td><td>(0.29)</td><td>(0.29)</td></tr>
+<tr><td style="text-align:left">dFDD.shift(17)</td><td></td><td>0.36<sup></sup></td><td>0.36<sup></sup></td><td>0.40<sup></sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.29)</td><td>(0.29)</td><td>(0.29)</td></tr>
+
+<tr><td style="text-align: left">HAC truncation</td><td>7</td><td>7</td><td>14</td><td>7</td></tr><tr><td style="text-align: left">Monthly dummies</td><td>No</td><td>No</td><td>No</td><td>Yes</td></tr><tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align: left">Observations</td><td>594</td><td>594</td><td>594</td><td>594</td></tr><tr><td style="text-align: left">R<sup>2</sup></td><td>0.14</td><td>0.14</td><td>0.14</td><td>0.15</td></tr><tr><td style="text-align: left">Adjusted R<sup>2</sup></td><td>0.11</td><td>0.11</td><td>0.11</td><td>0.10</td></tr><tr><td style="text-align: left">Residual Std. Error</td><td>4.71</td><td>4.71</td><td>4.71</td><td>4.73</td></tr><tr><td style="text-align: left">F Statistic</td><td>2.33<sup>***</sup></td><td>2.33<sup>***</sup></td><td>2.75<sup>***</sup></td><td>2.20<sup>***</sup></td></tr>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align: left">Note:</td><td colspan="4" style="text-align: right"><sup>*</sup>p&lt;0.1; <sup>**</sup>p&lt;0.05; <sup>***</sup>p&lt;0.01</td></tr></tbody></table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>The results in the first column of <a href="#tbl-t23-2" class="quarto-xref">Table&nbsp;<span>26.2</span></a> show the effect of a one-unit increase in the number of freezing degree days in a month on the percentage change in real prices. If the number of freezing degree days increases by one, real prices increase by 0.51% over the month in which the freezing degree days occur. The other estimated coefficients in this column shows the subsequent effects in later months. For example, the estimated coefficient for the first lag is 0.17, which indicates that real prices increase by a further 0.17% in the month following the month with the freezing degree days. Similarly, the estimated coefficient 0.07 for the second lag term indicates that real prices increase by a further 0.07% in the second month following the month with the freezing degree days.</p>
+<p>It is more convenient to present dynamic multipliers through a plot. <a href="#fig-f23-2" class="quarto-xref">Figure&nbsp;<span>26.2</span></a> displays point estimates of dynamic multipliers along with upper and lower bounds of their 95% confidence intervals computed using the HAC standard errors. The figure indicates that the effect of an initial increase in the number of freezing degree days on real prices remains positive for the first six months. However, apart from the first month, the dynamic multipliers are not statistically different from zero at the 5% significance level, i.e., the confidence intervals include the zero line.</p>
+<div id="cell-fig-f23-2" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot of dynamic multipliers</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>point_estimates <span class="op">=</span> model1.params[<span class="dv">1</span>:]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>CI_bounds <span class="op">=</span> np.vstack((point_estimates <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> model1.bse[<span class="dv">1</span>:], </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                       point_estimates <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> model1.bse[<span class="dv">1</span>:])).T</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the point estimates and confidence intervals</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>ax.plot(<span class="bu">range</span>(<span class="dv">19</span>), point_estimates, </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>         color<span class="op">=</span><span class="st">'steelblue'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Point estimate'</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>ax.fill_between(<span class="bu">range</span>(<span class="dv">19</span>), CI_bounds[:, <span class="dv">0</span>], CI_bounds[:, <span class="dv">1</span>], </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                 color<span class="op">=</span><span class="st">'lightsteelblue'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'95% CI'</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>ax.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Lag'</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Dynamic multiplier'</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="op">-</span><span class="fl">0.4</span>, <span class="dv">1</span>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-f23-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-f23-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter16-DynamicCausalEffects_files/figure-html/fig-f23-2-output-1.png" width="514" height="354" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f23-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;26.2: Dynamic Effect of FDD on Orange Juice Price
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The second column of <a href="#tbl-t23-2" class="quarto-xref">Table&nbsp;<span>26.2</span></a> presents the estimated cumulative dynamic multipliers. The estimated coefficient on dFDD.shift(1) suggests that the cumulative effect of a one-unit increase in the number of freezing degree days over the first two months is a 0.68% increase in real prices. Similarly, the estimated coefficient on <code>dFDD.shift(2)</code> indicates that the cumulative effect over the first three months is a 0.75% increase in real prices. The long-run cumulative dynamic multiplier is given by the estimated coefficient on fdd.shift(18), which is 0.37. This implies that a one-unit increase in the number of freezing degree days over 18 months leads to a 0.37% increase in real prices. However, this effect is not statistically different from zero at the 5% significance level.</p>
+<p><a href="#fig-f23-3" class="quarto-xref">Figure&nbsp;<span>26.3</span></a> displays the estimated cumulative dynamic multipliers along with their 95% confidence intervals. The figure shows that the cumulative multipliers increase over the first seven months, as the dynamic multipliers remain positive during this period. It also indicates that the cumulative multipliers for the first 12 months are statistically different from zero at the 5% significance level. However, the cumulative multipliers for the remaining months are not statistically different from zero, i.e., the confidence intervals include the zero line.</p>
+<div id="cell-fig-f23-3" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot of cumulative dynamic multipliers</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the cumulative dynamic multipliers and their 95% confidence bounds</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>point_estimates <span class="op">=</span> model2.params[<span class="dv">1</span>:]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>CI_bounds <span class="op">=</span> np.vstack((point_estimates <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> model2.bse[<span class="dv">1</span>:], </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                                  point_estimates <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> model2.bse[<span class="dv">1</span>:])).T</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the cumulative point estimates and confidence intervals</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>ax.plot(<span class="bu">range</span>(<span class="dv">19</span>), point_estimates, </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>         color<span class="op">=</span><span class="st">'steelblue'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">'Point estimate'</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>ax.fill_between(<span class="bu">range</span>(<span class="dv">19</span>), CI_bounds[:, <span class="dv">0</span>], CI_bounds[:, <span class="dv">1</span>], </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                 color<span class="op">=</span><span class="st">'lightsteelblue'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'95% CI'</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>ax.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Lag'</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Cumulative multiplier'</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-f23-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-f23-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter16-DynamicCausalEffects_files/figure-html/fig-f23-3-output-1.png" width="514" height="353" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f23-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;26.3: Cumulative Dynamic Effect of FDD on Orange Juice Price
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sensitivity-checks" class="level3" data-number="26.5.4">
+<h3 data-number="26.5.4" class="anchored" data-anchor-id="sensitivity-checks"><span class="header-section-number">26.5.4</span> Sensitivity checks</h3>
+<p>We now consider three sensitivity checks to see whether the estimation results are robust. In this first check, we estimate Model 2 by assuming that the truncation parameter for the HAC standard errors is <span class="math inline">\(m=14\)</span>. The results are presented in the third column of <a href="#tbl-t23-2" class="quarto-xref">Table&nbsp;<span>26.2</span></a>. The estimated HAC standard errors do not change too much, indicating that the results are robust to the choice of the truncation parameter.</p>
+<p>In the second check, we estimate Model 3 by adding monthly dummy variables to account for seasonal effects. The results are presented in the fourth column of <a href="#tbl-t23-2" class="quarto-xref">Table&nbsp;<span>26.2</span></a>. We do not provide the estimated coefficients on the monthly dummy variables for the sake of simplicity. We consider the following joint null and alternative hypotheses: <span class="math display">\[
+\begin{align*}
+&amp;H_0:\gamma_1=\gamma_2=\ldots=\gamma_{11}=0,\\
+&amp;H_1:\,\text{At least one coefficient is not zero}.
+\end{align*}
+\]</span></p>
+<p>We use the <span class="math inline">\(F\)</span>-statistic to test the joint null hypothesis. The <span class="math inline">\(p\)</span>-value for the test is 0.47, indicating that the monthly dummy variables do not have a statistically significant effect on the percentage change in real prices.</p>
+<div id="366ae89b" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># F-test for the joint null hypothesis</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>restrictions <span class="op">=</span> [<span class="st">'month_2[T.True]=0'</span>, <span class="st">'month_3[T.True]=0'</span>, <span class="st">'month_4[T.True]=0'</span>, <span class="st">'month_5[T.True]=0'</span>, <span class="st">'month_6[T.True]=0'</span>, <span class="st">'month_7[T.True]=0'</span>, </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                <span class="st">'month_8[T.True]=0'</span>, <span class="st">'month_9[T.True]=0'</span>, <span class="st">'month_10[T.True]=0'</span>, <span class="st">'month_11[T.True]=0'</span>, <span class="st">'month_12[T.True]=0'</span>]</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>f_test <span class="op">=</span> model3.f_test(restrictions)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>f_test.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>'&lt;F test: F=0.9682947074579008, p=0.4742606374507512, df_denom=563, df_num=11&gt;'</code></pre>
+</div>
+</div>
+<p>Finally, we examine whether the dynamic multipliers have remained stable over time. One way to assess this is by estimating these multipliers for different subperiods of the sample. For example, we consider the periods 1950–1966, 1967–1983, and 1984–2000. If the multipliers are consistent across all three periods, their estimates should be similar, and the estimated cumulative multipliers should also align. To investigate this, we re-estimate Model 2 for each subperiod and compare the estimated cumulative dynamic multipliers in <a href="#fig-f23-4" class="quarto-xref">Figure&nbsp;<span>26.4</span></a>. The figure shows that the estimated cumulative dynamic multipliers are relatively larger in the first subperiod compared to the other two subperiods. This suggests that the effect of freezing degree days on real prices has decreased over time.</p>
+<div id="5c6e32d9" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define subperiods</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> df.loc[<span class="st">'1950-01-01'</span>:<span class="st">'1966-12-01'</span>]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> df.loc[<span class="st">'1967-01-01'</span>:<span class="st">'1983-12-01'</span>]</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>df3 <span class="op">=</span> df.loc[<span class="st">'1984-01-01'</span>:<span class="st">'2000-12-01'</span>]</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>m1 <span class="op">=</span> smf.ols(formula<span class="op">=</span>formula2, data<span class="op">=</span>df1).fit(cov_type<span class="op">=</span><span class="st">'HAC'</span>, cov_kwds<span class="op">=</span>{<span class="st">'maxlags'</span>: <span class="dv">7</span>})</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>m2 <span class="op">=</span> smf.ols(formula<span class="op">=</span>formula2, data<span class="op">=</span>df2).fit(cov_type<span class="op">=</span><span class="st">'HAC'</span>, cov_kwds<span class="op">=</span>{<span class="st">'maxlags'</span>: <span class="dv">7</span>})</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>m3 <span class="op">=</span> smf.ols(formula<span class="op">=</span>formula2, data<span class="op">=</span>df3).fit(cov_type<span class="op">=</span><span class="st">'HAC'</span>, cov_kwds<span class="op">=</span>{<span class="st">'maxlags'</span>: <span class="dv">7</span>})</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>point_estimates1 <span class="op">=</span> m1.params[<span class="dv">1</span>:]</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>point_estimates2 <span class="op">=</span> m2.params[<span class="dv">1</span>:]</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>point_estimates3 <span class="op">=</span> m3.params[<span class="dv">1</span>:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-fig-f23-4" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot of cumulative dynamic multipliers for different subperiods</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>ax.plot(<span class="bu">range</span>(<span class="dv">19</span>), point_estimates1, label<span class="op">=</span><span class="st">'1950-1966'</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>ax.plot(<span class="bu">range</span>(<span class="dv">19</span>), point_estimates2, label<span class="op">=</span><span class="st">'1967-1983'</span>, color<span class="op">=</span><span class="st">'orange'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>ax.plot(<span class="bu">range</span>(<span class="dv">19</span>), point_estimates3, label<span class="op">=</span><span class="st">'1984-2000'</span>, color<span class="op">=</span><span class="st">'darkgreen'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>ax.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Lag'</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Cumulative dynamic multiplier'</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-f23-4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-f23-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter16-DynamicCausalEffects_files/figure-html/fig-f23-4-output-1.png" width="506" height="349" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f23-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;26.4: Cumulative Dynamic Effect of FDD on Orange Juice Price for Different Subperiods
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="checking-exogeneity-assumption" class="level3" data-number="26.5.5">
+<h3 data-number="26.5.5" class="anchored" data-anchor-id="checking-exogeneity-assumption"><span class="header-section-number">26.5.5</span> Checking exogeneity assumption</h3>
+<p>We assume that the number of freezing degree days is exogenous. That is, all factors affecting the price of frozen concentrated orange juice are uncorrelated with both the present and past values of freezing degree days. This assumption is plausible because the number of freezing degree days is determined by the weather, which is unlikely to be correlated with the error term.</p>
+<p>What about future values of freezing degree days? In other words, is the number of freezing degree days strictly exogenous? If orange juice market participants use forecasts of freezing degree days when deciding how much to buy or sell at a given price, then orange juice prices—and consequently, the error term <span class="math inline">\(u_t\)</span>—could reflect information about future freezing degree days. This would imply that <span class="math inline">\(u_t\)</span> is correlated with future values of freezing degree days.</p>
+<p>Following this logic, because <span class="math inline">\(u_t\)</span> incorporates forecasts of future Florida weather, freezing degree days would not be strictly exogenous. This issue also suggests that the ADL and GLS approaches discussed in Section 23.4 will not yield consistent estimators for the dynamic multipliers.</p>
+</section>
+</section>
+<section id="some-examples-on-exogeneity-assumption" class="level2" data-number="26.6">
+<h2 data-number="26.6" class="anchored" data-anchor-id="some-examples-on-exogeneity-assumption"><span class="header-section-number">26.6</span> Some examples on exogeneity assumption</h2>
+<p>In this section, we provide examples to illustrate how to think about the exogeneity assumption. For each example, we consider the factors that are captured by the error term and examine whether these factors are correlated with the past, present, or future values of the regressor of interest.</p>
+<section id="example-1-the-effect-of-u.s.-income-on-australian-exports" class="level3" data-number="26.6.1">
+<h3 data-number="26.6.1" class="anchored" data-anchor-id="example-1-the-effect-of-u.s.-income-on-australian-exports"><span class="header-section-number">26.6.1</span> Example 1: The effect of U.S. income on Australian exports</h3>
+<p>In the first example, we consider a distributed lag model that relates Australian exports to U.S. income. The model is given by <span id="eq-eq23-13"><span class="math display">\[
+\begin{align}
+\text{Exports}_t=\beta_0+\beta_1\text{Income}_t+\beta_2\text{Income}_{t-1}+\ldots+\beta_{5}\text{Income}_{t-4}+u_t,
+\end{align}
+\tag{26.14}\]</span></span> where <span class="math inline">\(\text{Exports}_t\)</span> is the real value of Australian exports to the U.S. in quarter <span class="math inline">\(t\)</span>, and <span class="math inline">\(\text{Income}_t\)</span> is the real U.S. income in quarter <span class="math inline">\(t\)</span>. The error term <span class="math inline">\(u_t\)</span> captures factors affecting Australian exports to the U.S. other than U.S. income.</p>
+<p>Due to international movements in goods and capital, there is a simultaneous relationship between U.S. income and Australian exports. For instance, an increase in U.S. income may lead to a rise in Australian exports, and an increase in Australian exports may, in turn, lead to a rise in U.S. income. This simultaneity implies that the error term <span class="math inline">\(u_t\)</span> in <a href="#eq-eq23-13" class="quarto-xref">Equation&nbsp;<span>26.14</span></a> may be correlated with U.S. income in both the current and past quarters. However, since the Australian economy is small relative to the U.S. economy, it is unlikely that Australian exports significantly affect U.S. income. Therefore, U.S. income is likely to be exogenous in this model.</p>
+<p>However, if we consider European Union exports to the U.S., the simultaneity issue may be more pronounced. This is because the European Union is a major trading partner of the U.S., and changes in European Union exports to the U.S. could influence U.S. income. In this case, U.S. income may not be exogenous in the model.</p>
+</section>
+<section id="example-2-the-effect-of-oil-prices-on-u.s.-inflation" class="level3" data-number="26.6.2">
+<h3 data-number="26.6.2" class="anchored" data-anchor-id="example-2-the-effect-of-oil-prices-on-u.s.-inflation"><span class="header-section-number">26.6.2</span> Example 2: The effect of oil prices on U.S. inflation</h3>
+<p>In the second example, we consider a distributed lag model that relates U.S. inflation to oil prices. The model is given by <span id="eq-eq23-14"><span class="math display">\[
+\begin{align}
+\text{Inflation}_t=\beta_0+\beta_1\text{OilPrice}_t+\beta_2\text{OilPrice}_{t-1}+\ldots+\beta_{13}\text{OilPrice}_{t-12}+u_t,
+\end{align}
+\tag{26.15}\]</span></span> where <span class="math inline">\(\text{Inflation}_t\)</span> is the U.S. inflation rate in month <span class="math inline">\(t\)</span>, and <span class="math inline">\(\text{OilPrice}_t\)</span> is the price of oil in month <span class="math inline">\(t\)</span>.</p>
+<p>In this example, we need to consider how oil prices are determined. The price of oil is set by the members of the Organization of the Petroleum Exporting Countries (OPEC) and other oil-producing countries. These countries may adjust oil prices in response to both the current and future state of the world economy. Since the current and future state of the world economy also includes the U.S. inflation rate, oil prices become endogenous in the model.</p>
+</section>
+<section id="example-3-the-effect-of-interest-rate-on-the-inflation-rate" class="level3" data-number="26.6.3">
+<h3 data-number="26.6.3" class="anchored" data-anchor-id="example-3-the-effect-of-interest-rate-on-the-inflation-rate"><span class="header-section-number">26.6.3</span> Example 3: The effect of interest rate on the inflation rate</h3>
+<p>In the third example, we consider a distributed lag model that relates the U.S. inflation rate to the interest rate. The model is given by <span id="eq-eq23-15"><span class="math display">\[
+\begin{align}
+\text{Inflation}_t=\beta_0+\beta_1\text{InterestRate}_t+\beta_2\text{InterestRate}_{t-1}+\ldots+\beta_{5}\text{InterestRate}_{t-4}+u_t,
+\end{align}
+\tag{26.16}\]</span></span> where <span class="math inline">\(\text{InterestRate}_t\)</span> is the U.S. interest rate in month <span class="math inline">\(t\)</span>.</p>
+<p>In this example, we need to consider how the central bank sets the interest rate. The central bank adjusts the interest rate in response to the current and future state of the economy, including the current and future inflation rates. As a result, the interest rate is endogenous in the model, and we cannot use this model to estimate the dynamic causal effect of the interest rate on the inflation rate.</p>
+</section>
+<section id="example-4-the-effect-of-term-spread-on-the-gdp-growth-rate" class="level3" data-number="26.6.4">
+<h3 data-number="26.6.4" class="anchored" data-anchor-id="example-4-the-effect-of-term-spread-on-the-gdp-growth-rate"><span class="header-section-number">26.6.4</span> Example 4: The effect of term spread on the GDP growth rate</h3>
+<p>In the fourth example, we consider the following ADL model from <a href="Chapter15-TimeSeriesRegression.html" class="quarto-xref"><span>Chapter 25</span></a>: <span id="eq-eq23-16"><span class="math display">\[
+\begin{align}
+\text{GDPGR}_t=\beta_0+\beta_1{\tt GDPGR}_{t-1}+\beta_2{\tt GDPGR}_{t-2}+\delta_1{\tt TSpread}_{t-1}+\delta_2{\tt TSpread}_{t-2}+u_t,
+\end{align}
+\tag{26.17}\]</span></span></p>
+<p>where <span class="math inline">\(\text{GDPGR}_t\)</span> is the GDP growth rate in quarter <span class="math inline">\(t\)</span>, and <span class="math inline">\(\text{TSpread}_t\)</span> is the term spread in quarter <span class="math inline">\(t\)</span>. Although we are only using the past values of the term spread in this model, the term spread is likely to be endogenous. <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> write “… past values of the term spread were not randomly assigned in an experiment; instead, the past term spread was simultaneously determined with past values of the growth rate of GDP. Because GDP and the interest rates making up the term spread are simultaneously determined, the other factors that determine the growth rate of GDP contained in <span class="math inline">\(u_t\)</span> are correlated with past values of the term spread; that is, the term spread is not exogenous.”</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Hansen2022" class="csl-entry" role="listitem">
+Hansen, Bruce. 2022. <em>Econometrics</em>. Princeton University Press.
+</div>
+<div id="ref-Hayashi2000" class="csl-entry" role="listitem">
+Hayashi, Fumio. 2000. <em>Econometrics</em>. Princeton University Press.
+</div>
+<div id="ref-Stock2020" class="csl-entry" role="listitem">
+Stock, James H., and Mark W. Watson. 2020. <em>Introduction to Econometrics</em>. Fourth edition. Pearson.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Chapter15-TimeSeriesRegression.html" class="pagination-link" aria-label="Introduction to Time Series Regression and Forecasting">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="pagination-link" aria-label="Additional Topics in Time Series Regression">
+        <span class="nav-page-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter16-DynamicCausalEffects.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,171 @@
+# Appendix for Chapter 24 {#sec-bigdataDerivations}
+
+## Introduction
+In this appendix, we derive the mean squared prediction error (MSPE) of the OLS estimator. We then show the connection between the Ridge and Lasso estimators and the OLS estimator. Finally, we show how the principal components are determined when $k>2$. Throughout all derivations, we use the matrix notation introduced in Chapter 26. Therefore, we recommend that readers review Chapter 26 and the accompanying Appendix D for a refresher on matrix notation before proceeding.
+
+## MSPE of the OLS estimator {#sec-OLS_MSPE}
+
+In this section, we show the MSPE of the OLS estimator is approximately given by $\sigma_{u}^2\left(1+\frac{k}{n}\right)$. Let $\bs{X}^{oos}_i=(X_{1i}^{oos},X_{2i}^{oos},...,X_{ki}^{oos})^{'}$ be the $i$th observation of the out-of-sample data and $\hat{\bs{\beta}}=(\widehat{\beta}_1,\widehat{\beta}_2,...,\widehat{\beta}_k)^{'}$ be the OLS estimator of $\bs{\beta}=(\beta_1,\beta_2,...,\beta_k)^{'}$. The MSPE of the OLS estimator is given by
+
+$$
+\begin{align*}
+\text{MSPE} &= \sigma_{u}^2 + \E\left(\left[(\widehat{\beta}_1-\beta_1)X_{1i}^{oos}+\cdots+(\widehat{\beta}_k-\beta_k)X_{ki}^{oos}\right]^2\right)\\
+&=\sigma_{u}^2 + \E\left(\left(\bs{X}_i^{oos'}(\widehat{\bs{\beta}}-\bs{\beta})\right)^2\right)\\
+&=\sigma_{u}^2 + \E\left(\bs{X}_i^{oos'}(\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i^{oos}\right)\\
+&=\sigma_{u}^2 + \E\left(\tr\left(\bs{X}_i^{oos'}(\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i^{oos}\right)\right)\\
+&=\sigma_{u}^2 + \E\left(\tr\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i^{oos}\bs{X}_i^{oos'}\right)\right)\\
+&=\sigma_{u}^2 + \tr\left(\E\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i^{oos}\bs{X}_i^{oos'}\right)\right)\\
+&=\sigma_{u}^2 + \tr\left(\E\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\right)\E\left(\bs{X}_i^{oos}\bs{X}_i^{oos'}\right)\right)\\
+&=\sigma_{u}^2 + \tr\left(\E\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\right)\bs{Q}_{xx}\right),
+\end{align*}
+$$
+where the seventh equality is by independence under the external validity assumption, and the last equality holds under the assumption that $\E\left(\bs{X}_i^{oos}\bs{X}_i^{oos'}\right)\equiv\bs{Q}_{xx}$ exists and finite. Using the argument in Section 26.6 of Chapter 26, we can show that the covariance matrix of the OLS estimator is given by
+$$
+\begin{align*}
+\E\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\right)
+&=\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{u}\bs{u}^{'}\bs{X}(\bs{X}^{'}\bs{X})^{-1}\right)\\
+&=\E\left(\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{u}\bs{u}^{'}\bs{X}(\bs{X}^{'}\bs{X})^{-1}|\bs{X}\right)\right)\\
+&=\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\E\left(\bs{u}\bs{u}^{'}|\bs{X}\right)\bs{X}(\bs{X}^{'}\bs{X})^{-1}\right)\\
+&=\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\sigma_{u}^2\mathbf{I}_n\bs{X}(\bs{X}^{'}\bs{X})^{-1}\right)\\
+&= \sigma_{u}^2\E\left((\bs{X}^{'}\bs{X})^{-1}\right).
+\end{align*}
+$$
+Hence, we have
+$$
+\begin{align*}
+\text{MSPE}&=\sigma_{u}^2 + \tr\left(\E\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\right)\bs{Q}_{xx}\right)\\
+&=\sigma_{u}^2 + \tr\left(\sigma_{u}^2\E\left((\bs{X}^{'}\bs{X})^{-1}\right)\bs{Q}_{xx}\right)\\
+&=\sigma_{u}^2 + \tr\left(\sigma_{u}^2\E\left(\left(n\frac{1}{n}\bs{X}^{'}\bs{X}\right)^{-1}\right)\bs{Q}_{xx}\right)\\
+&=\sigma_{u}^2 + \frac{1}{n}\sigma_{u}^2\tr\left(\E\left(\left(\frac{1}{n}\bs{X}^{'}\bs{X}\right)^{-1}\right)\bs{Q}_{xx}\right).
+\end{align*}
+$$
+
+By the law of large numbers, we have $\frac{1}{n}\bs{X}^{'}\bs{X}=\frac{1}{n}\sum_{i=1}^n\bs{X}_i\bs{X}^{'}_i\xrightarrow{p}\bs{Q}_{xx}$. Thus, for large $n$,
+$$
+\begin{align*}
+\text{MSPE} &\approx \sigma_{u}^2 + \frac{1}{n}\sigma_{u}^2\tr\left(\E\left(\bs{Q}_{xx}^{-1}\right)\bs{Q}_{xx}\right)\\
+&=\sigma_{u}^2 + \frac{1}{n}\sigma_{u}^2\tr\left(\bs{Q}_{xx}^{-1}\bs{Q}_{xx}\right)\\
+&=\sigma_{u}^2 + \frac{1}{n}\sigma_{u}^2\tr\left(\mathbf{I}_{k}\right)=\sigma_{u}^2,\left(1+\frac{k}{n}\right).
+\end{align*}
+$$
+
+## Connection between the Ridge and OLS estimators {#sec-RidgeOLSconnect}
+
+In this section, we focus on the connection between the Ridge and OLS estimators. In matrix form, the Ridge estimator minimizes the following expression:
+$$
+\left(\bs{Y} - \bs{X}\bs{b}\right)^{'}\left(\bs{Y} - \bs{X}\bs{b}\right) + \lambda_R \bs{b}^{'}\bs{b}. 
+$$
+From the first-order conditions, we have 
+$$
+-2\bs{X}^{'}\left(\bs{Y} - \bs{X}\bs{b}\right) + 2 \lambda_R \bs{b} = 0.
+$$
+Then, the Ridge estimator is
+$$
+\widehat{\bs{\beta}}_{R} = \left(\bs{X}^{'}\bs{X} + \lambda_R\mathbf{I}_k\right)^{-1}\bs{X}^{'}\bs{Y}.
+$$
+Note that when the regressors are uncorrelated, $\bs{X}^{'}\bs{X}$ is a diagonal matrix, where the $j$-th diagonal element is given by $\sum_{i=1}^n X_{ji}^2$. In that case, the Ridge estimator for the $j$-th regressor is
+$$ 
+\begin{align*}
+\widehat{\beta}_{R,j} &= \left(\sum_{i=1}^n X_{ji}^2 + \lambda_R\right)^{-1}\sum_{i=1}^n X_{ji}Y_i\\ 
+&= \left(1 + \lambda_R/\sum_{i=1}^n X_{ji}^2\right)^{-1}\left(\sum_{i=1}^n X_{ji}^2\right)^{-1}\sum_{i=1}^n X_{ji}Y_i\\
+&=\left(1 + \lambda_R/\sum_{i=1}^n X_{ji}^2\right)^{-1}\widehat{\beta}_{OLS,j}.
+\end{align*}
+$$
+
+This expression shows that the Ridge estimator shrinks the OLS estimator toward zero by $\left(1 + \lambda_R/\sum_{i=1}^n X_{ji}^2\right)^{-1}$ when the regressors are uncorrelated. Further, if the regressors are standardized, then $\sum_{i=1}^n X_{ji}^2=n-1$ and the Ridge shrinkage is by the factor $\left(1 + \lambda_R/(n-1)\right)^{-1}$.
+
+## Connection between the Lasso and OLS estimators {#sec-LassoOLSconnect}
+
+In this section, we focus on the connection between the Lasso and OLS estimators. In matrix form, the Lasso estimator minimizes the following expression
+$$
+\left(\bs{Y} - \bs{X}\bs{b}\right)^{'}\left(\bs{Y} - \bs{X}\bs{b}\right) + \lambda_L \sum_{j=1}^k|b_j|. 
+$$
+From the first-order conditions, for the $j$-th regressor we have
+$$
+-2 X_j^{'}\left(\bs{Y} - \bs{X}\bs{b}\right) + \lambda_L \sgn(b_j) = 0.
+$$
+Then, the Lasso estimator satisfies
+$$
+-2 X_j^{'}\left(\bs{Y} - \bs{X}\widehat{\bs{\beta}}_{L}\right) + \lambda_L \sgn(\widehat{\beta}_{L,j}) = 0
+$$
+for $j=1,2,...,k$. Note that when the regressors are uncorrelated, $\bs{X}^{'}\bs{X}$ is a diagonal matrix, where the $j$-th diagonal element is given by $\sum_{i=1}^n X_{ji}^2$. In that case,
+$$
+-2 \sum_{i=1}^n X_{ji}Y_i + 2 \sum_{i=1}^n X_{ji}^2 \widehat{\beta}_{L,j} + \lambda_L \sgn(\widehat{\beta}_{L,j}) = 0 .
+$$
+Hence,
+$$
+\widehat{\beta}_{L,j} = \widehat{\beta}_{OLS,j} - \frac{\lambda_L}{2\sum_{i=1}^n X_{ji}^2} \sgn(\widehat{\beta}_{L,j}).
+$$
+Further, if the regressors are standardized, then $\sum_{i=1}^n X_{ji}^2=n-1$, then we have
+$$
+\widehat{\beta}_{L,j} = \left\{\begin{array}{ll}
+\widehat{\beta}_{OLS,j} - \frac{\lambda_L}{2(n-1)}, & \widehat{\beta}_{OLS,j} > \frac{\lambda_L}{2(n-1)},\\
+0,& |\widehat{\beta}_{OLS,j}| \le \frac{\lambda_L}{2(n-1)},\\
+\widehat{\beta}_{OLS,j} + \frac{\lambda_L}{2(n-1)}, & \widehat{\beta}_{OLS,j} < -\frac{\lambda_L}{2(n-1)}.
+\end{array}\right.
+$$
+This result shows that the Lasso estimator is a transformation of the OLS estimator. In particular, it sets the small OLS estimate to zero and moves the other estimates toward zero by $\lambda_L/2(n-1)$.
+
+## Derivation of the Principal Components when $k>2$ {#sec-PCderive}
+
+In this section, we show how the principal components can be obtained when $k > 2$. The argument requires a basic understanding of eigenvalues and eigenvectors. Therefore, we recommend that readers refer to Appendix D for a brief review of eigenvalues and eigenvectors before proceeding.
+
+Let $PC_j$ be the $j$th principal component and let $\bs{w}_j$ denote the corresponding $k\times 1$ vector of weights, i.e., $PC_j = \bs{X}\bs{w}_j$. The variance of the $j$th principal component is $PC_j^{'}PC_j=\bs{w}_j^{'}\bs{X}^{'}\bs{X}\bs{w}_j$ and the sum of the squared weights is $\bs{w}_j^{'}\bs{w}_j$. Note also that since $\bs{X}$ is standardized, $PC_j^{'}PC_j/(n-1)$ is the sample variance of the $j$th principal component.
+
+We can obtain the $j$th principal component from the following constrained optimization problem:
+$$
+\max_{\bs{w}_j} \bs{w}_j^{'}\bs{X}^{'}\bs{X}\bs{w}_j\quad \text{s.t.}\,\,\bs{w}_j^{'}\bs{w}_j=1\,\, \text{and}\,\, PC_j^{'}PC_i=0\,\,\, \text{for}\,\, i<j.
+$$
+
+The linear combination weights for the first principal component $\bs{w}_1$ can be chosen  to maximize $\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_1$ subject to $\bs{w}_1^{'}\bs{w}_1=1$. The constrained maximization problem can be solved by maximizing the Lagrangian, $\mathcal{L}=\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_1-\lambda_1(\bs{w}_1^{'}\bs{w}_1-1)$, where $\lambda_1$ is the Lagrange multiplier. Taking the derivative of the Lagrangian with respect to $\bs{w}_1$, we obtain
+$$
+\begin{align*}
+&\frac{\partial\mathcal{L}}{\partial\bs{w}_1} = 2\bs{X}^{'}\bs{X}\bs{w}_1-2\lambda_1\bs{w}_1=0\Rightarrow \bs{X}^{'}\bs{X}\bs{w}_1=\lambda_1\bs{w}_1.
+\end{align*}
+$$
+
+Thus, the first-order condition suggests that $\bs{w}_1$ is an eigenvector of $\bs{X}^{'}\bs{X}$ and $\lambda_1$ is the corresponding eigenvalue, where the eigenvector is normalized to have unit length. If we pre-multiply both sides of $\bs{X}^{'}\bs{X}\bs{w}_1=\lambda_1\bs{w}_1$ by $\bs{w}_1^{'}$, we obtain 
+$$
+PC_1^{'}PC_1=\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_1=\lambda_1\bs{w}_1^{'}\bs{w}_1=\lambda_1.
+$$
+
+This expression suggests that $PC_1^{'}PC_1$ is maximized when  $\lambda_1$ is the largest eigenvalue of $\bs{X}^{'}\bs{X}$ and $\bs{w}_1$ is the corresponding eigenvector of $\bs{X}^{'}\bs{X}$.
+
+Next, we consider the second principal component. We need to choose $\bs{w}_2$ to maximize $\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_2$ such that $\bs{w}_2^{'}\bs{w}_2=1$ and $PC_2^{'}PC_1=\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_1=0$. This can be solved by maximizing the Lagrangian, 
+$$
+\mathcal{L}=\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_2-\lambda_2(\bs{w}_2^{'}\bs{w}_2-1)-\gamma_{21}\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_1,
+$$ 
+where $\lambda_2$ and $\gamma_{21}$ are Lagrange multipliers. Taking the derivative of the Lagrangian with respect to $\bs{w}_2$, we have
+
+$$
+\begin{align*}
+&\frac{\partial\mathcal{L}}{\partial\bs{w}_2}=2\bs{X}^{'}\bs{X}\bs{w}_2-2\lambda_2\bs{w}_2-\gamma_{21}\bs{X}^{'}\bs{X}\bs{w}_1 = 0\\
+&\Rightarrow \bs{X}^{'}\bs{X}\bs{w}_2=\lambda_2\bs{w}_2+\frac{1}{2}\gamma_{21}\bs{X}^{'}\bs{X}\bs{w}_1.
+\end{align*}
+$$
+
+Using $\bs{X}^{'}\bs{X}\bs{w}_1=\lambda_1\bs{w}_1$ and the fact that $\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_1=0$, we have  $\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_1=\lambda_1\bs{w}_2^{'}\bs{w}_1=0$. Hence, 
+
+$$
+\begin{align*}
+&\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_2=\lambda_2\bs{w}_1^{'}\bs{w}_2+\frac{1}{2}\gamma_{21}\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_1\\
+&\implies\frac{1}{2}\gamma_{21}\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_1=0.
+\end{align*}
+$$
+
+Therefore, $\gamma_{21}$ must be zero. Hence, we obtain 
+$$
+\bs{X}^{'}\bs{X}\bs{w}_2=\lambda_2\bs{w}_2.
+$$
+Thus, the Lagrangian is maximized by choosing $\bs{w}_2$ to be the eigenvector corresponding to the largest of the remaining eigenvalues, that is, to the second largest eigenvalue of $\bs{X}^{'}\bs{X}$. Notice again that $PC_2^{'}PC_2=\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_2=\lambda_2\bs{w}_2^{'}\bs{w}_2=\lambda_2$. 
+
+If we continue in the same manner, we can show that $\bs{w}_j$ is the $j$th largest eigenvalue of $\bs{X}^{'}\bs{X}$, $PC_j^{'}PC_j=\lambda_j$, and $PC_j^{'}PC_i=0$ for $i\ne j$. If $k<n$, only the first $k$ eigenvalues of $\bs{X}^{'}\bs{X}$ are non-zero so the total number of principal components is $\min(k,n)$.
+
+Finally, note that since trace of a matrix is the sum of its eigenvalues, we have
+$$
+\begin{align*}
+&\tr(\bs{X}^{'}\bs{X})=\sum_{j=1}^{\min(k,n)}\lambda_j=\sum_{j=1}^{\min(k,n)}PC_j^{'}PC_j\\
+&\implies \frac{1}{n-1}\tr(\bs{X}^{'}\bs{X})=\sum_{j=1}^{\min(k,n)}\frac{PC_j^{'}PC_j}{n-1}.
+\end{align*}
+$$
+Note that the $j$th diagonal element of $\tr(\bs{X}^{'}\bs{X})/(n-1)$ is the variance of the $j$th predictor. Thus, we have $\sum_{j=1}^{k}\var(X_j) = \sum_{j=1}^{\min(k,n)}\var(PC_j)$.

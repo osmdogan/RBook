@@ -1,0 +1,672 @@
+# Dataframes {#sec-chapter7}
+
+## Introduction
+In R, a dataframe is a matrix-like structure used for storing datasets. It has rows and columns, where each column can contain different types of data (e.g., numeric, character, factor). In this chapter, we will explore how to create, manipulate, and analyze dataframes in R. We will cover two approaches: the base R approach and the tidyverse approach.
+
+```{r}
+#| warning: false
+#| message: false
+# Load necessary libraries
+library(tidyverse)
+library(readxl)
+```
+
+## The base R approach
+### Using the `data.frame` function
+In the base R approach, we use the `data.frame` function to create a dataframe and the `str` function to examine its structure. The syntax of `data.frame` is
+
+```{r}
+#| eval: false
+data.frame(..., row.names = NULL, check.rows = FALSE,
+           check.names = TRUE, fix.empty.names = TRUE,
+           stringsAsFactors = FALSE)
+```
+
+where
+
+- `...` : these are the columns of the dataframe specified as `name = value` pairs.
+- `row.names` : this specifies the row names of the dataframe.
+- `check.rows` : if TRUE, checks that the rows have the same length.
+- `check.names` : if TRUE, checks that the column names are valid R variable names.
+- `fix.empty.names` : if TRUE, converts empty column names to `V1`, `V2`, etc.
+- `stringsAsFactors` : if TRUE, converts character vectors to factors.
+
+Below, we provide some illustrative examples.
+
+
+```{r}
+# Create a simple dataframe
+df1 <- data.frame(
+  Name = c("Alice", "Bob", "Charlie"),
+  Age = c(25, 30, 35),
+  Height = c(5.5, 6.0, 5.8)
+)
+
+# Print the dataframe
+df1
+
+# Examine the structure of the dataframe
+str(df1)
+```
+
+Note that the row names are automatically assigned as 1, 2, 3, etc. if not specified. We can use the `row.names` argument to assign custom row names.
+```{r}
+# Create a dataframe with custom row names
+df2 <- data.frame(
+  Name = c("Alice", "Bob", "Charlie"),
+  Age = c(25, 30, 35),
+  Height = c(5.5, 6.0, 5.8),
+  row.names = c("A", "B", "C")
+)
+# Print the dataframe with custom row names
+df2
+```
+
+In the following table, we summarize some useful functions to examine dataframes in R.
+
+
+:::{layout-ncol=1}
+::: {style="font-size: 85%"}
+| Function        | Description                                      |
+|-----------------|--------------------------------------------------|
+| `str()`         | Displays the structure of the dataframe          |
+| `is.data.frame()` | Checks if an object is a dataframe                |
+| `as.data.frame()` | Converts an object to a dataframe                  |
+| `head()`        | Displays the first few rows of the dataframe     |
+| `tail()`        | Displays the last few rows of the dataframe      |
+| `dim()`         | Returns the dimensions (rows and columns)        |
+| `nrow()`        | Returns the number of rows                        |
+| `ncol()`        | Returns the number of columns                     |
+| `names()`       | Returns the column names                          |
+| `summary()`     | Provides a summary of each column                 |
+| `colnames()`    | Gets or sets the column names                     |
+| `rownames()`    | Gets or sets the row names                        |
+: Some useful functions to examine dataframes {#tbl-chapter7-t1 .stripped .hover}
+:::
+:::
+
+Below are some examples of using these functions.
+```{r}
+# Create a dataframe
+x <- runif(10)
+y <- letters[1:10]
+z <- sample(c(rep(T,5),rep(F,5)))
+df3 <- data.frame(x, y, z)
+# Display the structure of the dataframe
+str(df3)
+# Display the first few rows of the dataframe
+head(df3)
+# Display the dimensions of the dataframe
+dim(df3)
+# Get the column names of the dataframe
+names(df3)
+# Get a summary of the dataframe
+summary(df3)
+# Change the column names of the dataframe
+colnames(df3) <- c("RandomNumbers", "Letters", "LogicalValues")
+head(df3)
+# Check if df3 is a dataframe
+is.data.frame(df3)
+# Convert a matrix to a dataframe
+mat <- matrix(data = 10:18, nrow = 3)
+df4 <- as.data.frame(mat)
+df4
+```
+
+### Importing and exporting dataframes
+The R native format for saving dataframes is `.Rdata` or `.rda`. To save a dataframe in this format, we use the `save` function, which has the following syntax:
+```{r}
+#| eval: false
+save(..., list = character(),
+     file = stop("'file' must be specified"),
+     ascii = FALSE, version = NULL, envir = parent.frame(),
+     compress = isTRUE(!ascii), compression_level,
+     eval.promises = TRUE, precheck = TRUE)
+```
+where `...` are the objects to be saved, `list` is a character vector of object names to be saved, and `file` is the name of the file to save the objects to.
+
+```{r}
+# Save df2 and df3 to Rdata file
+save(df2, df3, file = "data/dataframes.Rdata")
+```
+
+To load data from an `.Rdata` or `.rda` file, we use the `load` function.
+
+```{r}
+# Load data from Rdata file
+load("data/dataframes.Rdata")
+```
+
+The `read.table` function can be used to import data from the following text file formats: space delimited, tab delimited, and comma separated values (CSV). The syntax of `read.table` is as follows:
+```{r}
+#| eval: false
+read.table(file, header = FALSE, sep = "", quote = "\"'",
+           dec = ".", numerals = c("allow.loss", "warn.loss", "no.loss"),
+           row.names, col.names, as.is = !stringsAsFactors,
+           na.strings = "NA", colClasses = NA, nrows = -1,
+           skip = 0, check.names = TRUE, fill = !blank.lines.skip,
+           strip.white = FALSE, blank.lines.skip = TRUE,
+           comment.char = "#", allowEscapes = FALSE,
+           flush = FALSE, stringsAsFactors = default.stringsAsFactors(),
+           fileEncoding = "", encoding = "unknown", text, skipNul = FALSE)
+```
+
+Some of the important arguments are:
+
+- `file` : the name of the file with the extension to be read.
+- `header` : if TRUE, the first line of the file contains the column names.
+- `sep` : the character that separates the values in the file (e.g., comma, tab, space).
+- `as.is` : if TRUE, character columns are not converted to factors.
+- `na.strings` : a character vector of strings to be interpreted as NA values.
+- `skip` : the number of lines to skip before reading the data.
+
+In the following example, we load the data from the `caschool.csv` file located in the data folder. This dataset contains information on kindergarten through eighth-grade students across 420 California school districts in 1999. It is a district-level dataset that includes variables on average student performance and demographic characteristics. In @tbl-chapter7-t2, we describe the variables in this dataset.
+
+::: {layout-ncol=1}
+::: {style="font-size: 85%"}
+| Variable     | Description |
+|---------------|-------------|
+| `dist_code`   | District code |
+| `read_scr`    | Average reading score |
+| `math_scr`    | Average math score |
+| `county`      | County |
+| `district`    | District |
+| `gr_span`     | Grade span of district |
+| `enrl_tot`    | Total enrollment |
+| `teachers`    | Number of teachers |
+| `computer`    | Number of computers |
+| `testscr`     | Average test score (= (read_scr + math_scr)/2) |
+| `comp_stu`    | Computers per student (= computer / enrl_tot) |
+| `expn_stu`    | Expenditures per student |
+| `str`         | Student-teacher ratio (= teachers / enrl_tot) |
+| `el_pct`      | Percent of English learners |
+| `meal_pct`    | Percent qualifying for reduced-price lunch |
+| `clw_pct`     | Percent qualifying for CalWorks |
+| `avginc`       | District average income (in \$1000s) |
+: Description of variables in the caschool dataframe {#tbl-chapter7-t2 .stripped .hover}
+:::
+:::
+
+
+```{r}
+# Load the caschool.csv file
+caschool <- read.table("data/caschool.csv", header = TRUE, sep = ",", as.is = TRUE)
+# Examine the structure of the caschool dataframe
+str(caschool)
+```
+
+To export a dataframe to a text file, we can use the `write.table` function. The syntax of this function is as follows:
+```{r}
+#| eval: false
+write.table(x, file = "", append = FALSE, quote = TRUE,
+            sep = " ", eol = "\n", na = "NA", dec = ".",
+            row.names = TRUE, col.names = TRUE,
+            qmethod = c("escape", "double"),
+            fileEncoding = "")
+```
+
+where `x` is the dataframe to be exported, `file` is the name of the file to write to, `sep` is the character that separates the values in the file, `na` is the string to represent NA values, and `row.names` and `col.names` indicate whether to include row and column names in the output file.
+
+```{r}
+#| eval: false
+# Export the caschool dataframe to a CSV file
+write.table(x=caschool, file = "data/caschool_exported.csv", sep = ",")
+```
+
+
+The simplest and recommended way to import Excel files is to use the `read_excel` function from the `readxl` package. The `haven` package provides functions `read_sas()` and `read_stata()` to import SAS and Stata files, respectively.
+
+### Selecting rows and columns
+We use `[ , ]` operator to select rows and columns from a dataframe: `data[row_indices, column_indices]`. The `row_indices` and `column_indices` can be specified using numeric indices, logical vectors, or character vectors (column names).  For column selection, we can also use the `$` operator to access a specific column by its name.
+
+```{r}
+# Column names
+colnames(caschool)
+# Selecting the 'testscr' column using the $ operator
+summary(caschool$testscr)
+# Selecting testscr and meal_pct columns using [ ] operator with column names
+head(caschool[,c("testscr", "meal_pct")])
+# Selecting the 11th and 16th columns using [ ] operator with numeric indices
+head(caschool[, c(11,16)]) 
+# Selecting the first 5 rows of the columns 'testscr' and 'meal_pct'
+head(caschool[1:5, c("testscr", "meal_pct")])
+# Accessing specific rows using a logical condition
+head(caschool[caschool$meal_pct > 90, c("district", "meal_pct")]) # rows where meal_pct > 90
+```
+
+In @tbl-chapter7-t3, we summarize some common dataframe indexing operations in R.
+
+:::{layout-ncol=1}
+::: {style="font-size: 85%"}
+
+| Command                |Meaning |
+|-------------------------|-----------------------------------------------------------------------------|
+| `data[n,]`              | Select the nth row of the dataframe|
+| `data[-n,]`             | Remove the nth row of the dataframe|
+| `data[1:n,]`            | Select all of the columns from rows 1 to *n* of the dataframe |
+| `data[-(1:n),]`         | Remove rows from 1 to *n* of the dataframe |
+| `data[c(i,j,k),]`       | Select rows *i*, *j*, and *k* of the dataframe |
+| `data[x > y,]`          | Select rows where *x > y* |
+| `data[,m]`              | Select the mth column of the dataframe |
+| `data[,-m]`             | Remove the mth column of the dataframe |
+| `data[,1:m]`            | Select columns 1 to *m* of the dataframe |
+| `data[,-(1:m)]`         | Remove all columns from 1 to *m* of the dataframe |
+| `data[,c(i,j,k)]`       | Select columns *i*, *j*, and *k* of the dataframe |
+| `data[,x > y]`          | Select columns where *x > y* |
+| `data[x > y,a != b]`    | Select rows where *x > y* and columns where *a != b* |
+: Some common dataframe indexing operations {#tbl-chapter7-t3 .stripped .hover}
+:::
+:::
+
+### Adding and removing columns and rows
+We can add new columns to a dataframe by assigning values to a new column name using the `$` operator or the `[ ]` operator.
+```{r}
+# Adding a new column using the $ operator
+caschool$meal_pct_squared <- caschool$meal_pct^2
+# Adding a new column using the [ ] operator
+caschool[,"log_testscr"] <- log(caschool$testscr)
+```
+
+Alternatively, we can use the `cbind` function to add new columns to a dataframe. In the following example, we add a new column `sqrt_testscr` to the `caschool` dataframe using `cbind`.
+```{r}
+# Adding a new column using cbind
+caschool <- cbind(caschool, sqrt_testscr = sqrt(caschool$testscr))
+head(caschool[, c("testscr", "log_testscr", "sqrt_testscr")])
+```
+
+We can remove columns from a dataframe by assigning `NULL` to the column using the `$` operator or the `[ ]` operator.
+```{r}
+# Removing a column using the $ operator
+caschool$meal_pct_squared <- NULL
+# Removing a column using the [ ] operator
+caschool[,"log_testscr"] <- NULL
+```
+
+The `subset` function can also be used to select specific columns from a dataframe. The syntax of the `subset` function is as follows:
+```{r}
+#| eval: false
+subset(x, subset, select, drop = FALSE, ...)
+```
+
+where `x` is the dataframe, `subset` is a logical expression to filter rows, and `select` is a vector of column names or indices to select specific columns. In the following example, we use the `subset` function to create a new dataframe with only the `testscr`, `meal_pct`, and `enrl_tot` columns from the `caschool` dataframe.
+
+```{r}
+# Selecting specific columns using subset
+caschool_subset <- subset(caschool, select = c("testscr", "meal_pct", "enrl_tot"))
+head(caschool_subset)
+```
+
+We use the `rbind` function to combine two dataframes by rows. The dataframes must have the same columns. In the following example, we create two dataframes `df_a` and `df_b`, and then combine them using `rbind`.
+```{r}
+# Create two dataframes
+df_a <- data.frame(
+  Name = c("David", "Eva"),
+  Age = c(28, 32),
+  Height = c(5.9, 5.6)
+)
+df_b <- data.frame(
+  Name = c("Frank", "Grace"),
+  Age = c(27, 29),
+  Height = c(6.1, 5.7)
+)
+# Combine the dataframes using rbind
+df_combined <- rbind(df_a, df_b)
+# Print the combined dataframe
+df_combined
+```
+
+### Sorting
+We can use the `order` function to sort a dataframe by one or more columns. The `order` function returns the indices that would sort the specified columns. In the following example, we sort the `caschool` dataframe by the `testscr` column in descending order.
+
+```{r}
+# Sort the caschool dataframe by testscr in descending order
+caschool_sorted <- caschool[order(caschool$testscr, decreasing = TRUE), ]
+head(caschool_sorted[, c("district", "testscr")])
+```
+
+In the following example, we sort the `caschool` dataframe first by the `avginc` and `testscr` columns in descending order.
+```{r}
+# Sort the caschool dataframe by avginc and testscr (both descending)
+caschool_sorted1 <- caschool[order(-caschool$avginc, -caschool$testscr), ]
+# Display the first 10 rows of the sorted dataframe
+caschool_sorted1[1:10, c("district", "avginc", "testscr")]
+```
+
+### Missing values
+In R, missing values are represented by `NA`. To see whether there are any missing values in the `caschool` dataframe, we can use the `any` function along with `is.na`.
+```{r}
+# Check if there are any missing values in the caschool dataframe
+any(is.na(caschool))
+```
+
+The `na.omit` function can be used to remove rows with missing values from a dataframe. In the following example, we create a dataframe with some missing values and then use `is.na` and `na.omit` to handle the missing values.
+
+```{r}
+# Create a dataframe with missing values
+df_missing <- data.frame(
+  Name = c("Alice", "Bob", "John", "David"),
+  Age = c(25, NA, 30, NA),
+  Height = c(5.5, 6.0, 5.8, NA)
+)
+# Check for missing values
+is.na(df_missing)
+# Remove rows with missing values
+df_no_missing <- na.omit(df_missing)
+df_no_missing
+```
+
+To see how many missing values are in each column of a dataframe, we can use the `colSums` function along with `is.na`.
+```{r}
+# Count missing values in each column
+colSums(is.na(df_missing))
+```
+
+In the following example, we replace missing values in a dataframe with a specific value (e.g., 0).
+```{r}
+# Replace missing values with 0
+df <- df_missing
+df[is.na(df)] <- 0
+df
+```
+
+In the following example, we replace missing values in `df_missing` with the mean of the respective columns.
+```{r}
+# Replace missing values with column means
+df <- df_missing
+df$Age[is.na(df$Age)] <- mean(df$Age, na.rm = TRUE)
+df$Height[is.na(df$Height)] <- mean(df$Height, na.rm = TRUE)
+df
+```
+
+### Merging and reshaping
+The `merge` function in R is used to combine two dataframes by common columns or row names. The syntax of the `merge` function is as follows:
+```{r}
+#| eval: false
+merge(x, y, by = intersect(names(x), names(y)),
+      by.x = by, by.y = by,
+      all = FALSE, all.x = FALSE, all.y = FALSE,
+      sort = TRUE, suffixes = c(".x", ".y"),
+      incomparables = NULL, ...)
+```
+
+
+where `x` and `y` are the dataframes to be merged, `by` specifies the common columns to merge on, and `all`, `all.x`, and `all.y` control the type of join (inner, left, right, or full).
+
+In the following example, we create two dataframes and merge them by a common column `ID`. The `all = TRUE` argument specifies a full outer join, which includes all rows from both dataframes.
+
+```{r}
+# Create two dataframes to merge
+df1 <- data.frame(
+  ID = c(1, 2, 3),
+  Name = c("Alice", "Bob", "Charlie")
+)
+df1
+
+df2 <- data.frame(
+  ID = c(2, 3, 4),
+  Age = c(30, 35, 40)
+)
+df2
+
+# Merge the dataframes by the 'ID' column
+merged_df <- merge(df1, df2, by = "ID", all = TRUE)
+merged_df
+```
+
+In the following example, we perform an inner join by setting the `all = FALSE` argument, which includes only the rows with matching `ID` values in both dataframes.
+```{r}
+# Merge the dataframes by the 'ID' column (inner join)
+inner_merged_df <- merge(df1, df2, by = "ID", all = FALSE)
+inner_merged_df
+```
+
+In the following example, we perform a left join by setting the `all.x = TRUE` argument, which includes all rows from the first dataframe (`df1`) and only the matching rows from the second dataframe (`df2`).
+
+```{r}
+# Merge the dataframes by the 'ID' column (left join)
+left_merged_df <- merge(df1, df2, by = "ID", all.x = TRUE)
+left_merged_df
+```
+
+Finally, we perform a right join by setting the `all.y = TRUE` argument, which includes all rows from the second dataframe (`df2`) and only the matching rows from the first dataframe (`df1`).
+
+```{r}
+# Merge the dataframes by the 'ID' column (right join)
+right_merged_df <- merge(df1, df2, by = "ID", all.y = TRUE)
+right_merged_df
+```
+
+We use the `reshape` function to reshape dataframes from wide format to long format and vice versa. The syntax of the `reshape` function is as follows:
+```{r}
+#| eval: false
+reshape(data, varying = NULL, v.names = NULL, timevar = "time",
+        idvar = "id", ids = 1:NROW(data),
+        times = seq_along(varying[[1]]),
+        drop = NULL, direction, new.row.names = NULL,
+        sep = ".",
+        split = if (sep == "") {
+            list(regexp = "[A-Za-z][0-9]", include = TRUE)
+        } else {
+            list(regexp = sep, include = FALSE, fixed = TRUE)}
+        )
+```
+
+where 
+
+- `data` : the dataframe to be reshaped.
+- `varying` : names of sets of variables in the wide format that correspond to single variables in long format (‘time-varying’).
+- `v.names` : names of variables in the long format that correspond to multiple variables in the wide format.
+- `timevar` : the name of the variable in the long format that indicates time or measurement occasions.
+- `times` : the values to use for a newly created timevar variable in long format.
+- `idvar` : the name of the variable that identifies the subjects or units.
+- `direction` : the direction of reshaping, either "long" or "wide".
+
+In the following example, we create a dataframe in wide format and then reshape it to long format.
+```{r}
+# Create a dataframe in wide format
+wide_df <- data.frame(
+  ID = c(1, 2, 3),
+  Name = c("Alice", "Bob", "Charlie"),
+  Score_2020 = c(85, 90, 95),
+  Score_2021 = c(88, 92, 96)
+)
+wide_df
+
+# Reshape the dataframe from wide to long format
+long_df <- reshape(wide_df, varying = c("Score_2020", "Score_2021"),
+                   v.names = "Score",
+                   timevar = "Year",
+                   times = c(2020, 2021),
+                   idvar = c("ID", "Name"),
+                   direction = "long")
+
+long_df
+```
+
+Finally, we reshape the long format dataframe back to wide format.
+```{r}
+wide_df2 <- reshape(long_df, 
+                    v.names = "Score",
+                    timevar = "Year",
+                    idvar = c("ID", "Name"),
+                    direction = "wide")
+
+wide_df2
+```
+
+
+## The tidyverse approach
+### Using the `tibble` function
+In the tidyverse approach, the dataframes are referred to as tibbles. We use the `tibble` function to create tibbles. The syntax of the `tibble` function is as follows:
+```{r}
+#| eval: false
+tibble(
+  ...,
+  .rows = NULL,
+  .name_repair = c("check_unique", "unique", "universal", "minimal")
+)
+```
+where `...` are the columns of the tibble specified as `name = value` pairs, `.rows` specifies the number of rows, and `.name_repair` controls how to handle column names.
+
+In the following example, we create a simple tibble with three columns: `Name`, `Age`, and `Height`. The row after the column names shows the data types of each column.
+```{r}
+# Create a simple tibble
+tb1 <- tibble(
+  Name = c("Alice", "Bob", "Charlie"),
+  Age = c(25, 30, 35),
+  Height = c(5.5, 6.0, 5.8)
+)
+# Check the class of the tibble
+class(tb1)
+# Print the tibble
+tb1
+```
+
+We can use `$`, `[]` and `[[ ]]` to select columns from a tibble. The operators `$` and `[[ ]]` return a vector, while `[]` returns a tibble.
+
+```{r}
+# Selecting the 'Age' column using the $ operator
+tb1$Age
+# Selecting the 'Height' column 
+tb1[,"Height"]
+# Selecting the 'Height' column using [[ ]]
+tb1[["Height"]]
+# Selecting the 2nd column
+tb1[,2]  
+# Selecting multiple columns
+tb1[,c("Name", "Height")] 
+```
+
+### Importing and exporting tibbles
+The `read_csv` function from the `readr` package is used to import CSV files as tibbles. The syntax of the `read_csv` function is as follows:
+```{r}
+#| eval: false
+read_csv(file, col_names = TRUE, col_types = NULL,
+         locale = default_locale(), na = c("", "NA"),
+         quoted_na = TRUE, quote = "\"", comment = "",
+         trim_ws = TRUE, skip = 0, n_max = Inf,
+         guess_max = min(1000, n_max), progress = show_progress(),
+         skip_empty_rows = TRUE)
+```
+
+In the following example, we load the `caschool.csv` file as a tibble.
+```{r}
+#| warning: false
+#| message: false
+# Load the caschool.csv file as a tibble
+caschool_tb <- read_csv("data/caschool.csv", col_names = TRUE, na = c("", "NA"),
+                        skip = 0)
+# Check the class of the tibble
+class(caschool_tb)
+# Examine the structure of the tibble
+glimpse(caschool_tb)
+```
+
+To export a tibble to a CSV file, we can use the `write_csv` function from the `readr` package. The syntax of this function is as follows:
+```{r}
+#| eval: false
+write_csv(x, file, na = "NA", append = FALSE,
+          col_names = !append, quote_escape = "double")
+```
+where `x` is the tibble to be exported, `file` is the name of the file to write to, `na` is the string to represent NA values, and `col_names` indicates whether to include column names in the output file.
+
+In the following example, we export the `caschool_tb` tibble to a CSV file.
+```{r}
+#| eval: false
+# Export the caschool_tb tibble to a CSV file
+write_csv(caschool_tb, "data/caschool_export.csv")
+```
+
+The `read_excel` function from the `readxl` package can be used to import Excel files as tibbles. The syntax of the `read_excel` function is as follows:
+
+```{r}
+#| eval: false
+read_excel(path, sheet = NULL, range = NULL, col_names = TRUE,
+           col_types = NULL, na = "", trim_ws = TRUE,
+           skip = 0, n_max = Inf, guess_max = min(1000, n_max),
+           progress = readxl_progress(), .name_repair = "unique")
+```
+
+In the following example, we load the `caschool.xlsx` file as a tibble.
+```{r}
+caschool_tb <- read_excel("data/caschool.xlsx", col_names = TRUE, sheet = 1)
+class(caschool_tb)
+glimpse(caschool_tb)
+```
+
+The `haven` package provides functions `read_sas()` and `read_stata()` to import SAS and Stata files, respectively, as tibbles.
+
+### Selecting rows and columns
+As in the base R approach, we can use indexing operations stated in @tbl-chapter7-t3 to select rows and columns from a tibble. In the following, we provide some illustrative examples.
+```{r}
+# Selecting the 'testscr' column
+summary(caschool_tb$testscr)
+# Selecting the first 5 rows of the columns 'testscr' and 'meal_pct'
+head(caschool_tb[1:5, c("testscr", "meal_pct")])
+# Accessing specific rows using a logical condition
+head(caschool_tb[caschool_tb$meal_pct > 90, c("district", "meal_pct")]) # rows where meal_pct > 90
+```
+
+### Adding and removing columns and rows
+We can use the approach in the base R approach to add and remove columns and rows, sort, handle missing values, and merge and reshape tibbles. Below, we provide some illustrative examples.
+
+```{r}
+# Adding a new column using the $ operator
+caschool_tb$meal_pct_squared <- caschool_tb$meal_pct^2
+head(caschool_tb[, c("meal_pct", "meal_pct_squared")])
+# Removing a column using the $ operator
+caschool_tb$meal_pct_squared <- NULL
+# Selecting specific columns using subset
+caschool_subset_tb <- subset(caschool_tb, select = c("testscr", "meal_pct", "enrl_tot"))
+head(caschool_subset_tb)
+# Check for missing values
+any(is.na(caschool_tb))
+```
+
+### Manipulating tibbles with dplyr
+The `dplyr` package provides a set of functions to manipulate tibbles. Some of the commonly used functions are:
+
+- `filter()` : to filter rows based on conditions.
+- `select()` : to select specific columns.
+- `mutate()` : to add new columns or modify existing columns.
+- `arrange()` : to sort the tibble by one or more columns.
+- `summarize()` : to summarize the tibble by calculating summary statistics.
+- `group_by()` : to group the tibble by one or more columns for summary operations.
+- `join()` : to merge two tibbles by common columns.
+- `bind_rows()` : to combine two tibbles by rows.
+- `bind_cols()` : to combine two tibbles by columns.
+- `rename()` : to rename columns in a tibble.
+- `relocate()` : to change the order of columns in a tibble.
+- `slice_function()` : to select rows by their position.
+- `count()` : to count the number of occurrences of unique values in a column.
+
+The `dplyr` functions can be used with the pipe operator `%>%` or `|>` to create a sequence of operations. This operator takes the input before the pipe and uses it as the first argument of the function after the pipe. For example, `x|> f(y)` is equivalent to `f(x, y)` and `x |> f(y) |> g(z)` is equivalent to `g(f(x, y), z)`.
+
+In the following example, we first filter the rows where `meal_pct` is greater than 90, and then select the `district` and `meal_pct` columns.
+
+```{r}
+# Filter rows where meal_pct > 90 and select specific columns
+caschool_tb_filtered <- caschool_tb |>
+  filter(meal_pct > 90) |>
+  select(district, meal_pct)
+```
+
+```{r}
+# Display the first few rows of the filtered tibble
+head(caschool_tb_filtered)
+```
+
+In the following example, we add a new column `log_avginc` that is the logarithm of the `avginc` column, locate the `log_avginc` column before the `avginc` column, and finally sort the tibble by the `log_avginc` column in descending order.
+```{r}
+# Add a new column, relocate it, and sort the tibble
+caschool_tb_filtered <- caschool_tb |>
+  mutate(log_avginc = log(avginc)) |>
+  relocate(log_avginc, .before = avginc) |>
+  arrange(desc(log_avginc))
+# Examine the structure of the filtered tibble
+glimpse(caschool_tb_filtered)
+```
+
+
+## Further Readings
+For further reading on dataframes, we recommend @Jones:2022 for the base R approach and @Wickham:2023 for the tidyverse approach.

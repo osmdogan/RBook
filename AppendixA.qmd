@@ -1,0 +1,118 @@
+# Appendix for Chapter 14 {#sec-OlsProperties}
+
+## Derivation of the OLS estimators {#sec-OlsDerivation}
+Consider a linear regression model with an intercept and only one explanatory variable:
+$$
+Y_i=\beta_0+\beta_1 X_i+ u_i,
+$$
+for $i=1,\dots,n$. In this section, we derive the following OLS estimators:
+$$
+\begin{align}
+&\hat{\beta}_1=\frac{\sum_{i=1}^n\big(X_i-\bar{X}\big)\big(Y_i-\bar{Y}\big)}{\sum_{i=1}^n\big(X_i-\bar{X}\big)^2} \quad\text{and}\quad \hat{\beta}_0=\bar{Y}-\hat{\beta}_1\bar{X},
+\end{align}
+$$ {#eq-A1}
+where $\bar{Y}=\frac{1}{n}\sum_{i=1}^nY_i$ and $\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$. 
+
+The least-squares estimators are defined as
+$$
+\begin{align}
+(\hat{\beta}_0,\,\hat{\beta}_1)^{'}&=\argmin_{\beta_0,\,\beta_1}\sum_{i=1}^n\big(Y_i-\beta_0-\beta_1X_i\big)^2.
+\end{align}
+$$
+We set the first-order conditions of the objective function with respect to $\beta_0$ and $\beta_1$ equal to zero:
+$$
+\begin{align*}
+\frac{\partial \sum_{i=1}^n\big(Y_i-\beta_0-\beta_1X_i\big)^2}{\partial\beta_0}&=-2\sum_{i=1}^n\big(Y_i-\beta_0-\beta_1X_i\big)=0,\\
+\frac{\partial \sum_{i=1}^n\big(Y_i-\beta_0-\beta_1X_i\big)^2}{\partial\beta_1}&=-2\sum_{i=1}^nX_i\big(Y_i-\beta_0-\beta_1X_i\big)=0.
+\end{align*}
+$$
+
+From the first equation, we can solve for $\beta_0$ as
+$$
+\begin{align*}
+&-2\sum_{i=1}^n\big(Y_i-\beta_0-\beta_1X_i\big)=0\implies \sum_{i=1}^n\big(Y_i-\beta_0-\beta_1X_i\big)=0,\\
+&\implies \sum_{i=1}^n\big(Y_i-\beta_1X_i\big)-\sum_{i=1}^n\beta_0=0\implies \sum_{i=1}^n\big(Y_i-\beta_1X_i\big)=n\beta_0.
+\end{align*}
+$$
+Thus, the solution for $\beta_0$ yields
+$$
+\begin{align*}
+\hat{\beta}_0=\frac{1}{n}\sum_{i=1}^n\big(Y_i-\beta_1X_i\big)=\frac{1}{n}\sum_{i=1}^nY_i -\beta_1\frac{1}{n}\sum_{i=1}^nX_i=\bar{Y}-\beta_1\bar{X}.
+\end{align*}
+$$
+
+Substituting the solution for $\beta_0$ into the second equation yields
+$$
+\begin{align*}
+&-2\sum_{i=1}^nX_i\big(Y_i-[\bar{Y}-\beta_1\bar{X}]-\beta_1X_i\big)=0\implies\sum_{i=1}^nX_i\big(Y_i-[\bar{Y}-\beta_1\bar{X}]-\beta_1X_i\big)=0\\
+&\implies\sum_{i=1}^nX_i\big(Y_i-\bar{Y})-\beta_1\sum_{i=1}^nX_i\big(X_i-\bar{X}\big)=0.
+\end{align*}
+$$
+
+Hence, solution for $\beta_1$ is 
+$$
+\begin{align}
+\hat{\beta}_1=\frac{\sum_{i=1}^nX_i\big(Y_i-\bar{Y})}{\sum_{i=1}^nX_i\big(X_i-\bar{X}\big)}.
+\end{align}
+$$ {#eq-A2}
+
+The numerator $\sum_{i=1}^nX_i\big(Y_i-\bar{Y})$ can be expressed as $\sum_{i=1}^n\big(X_i-\bar{X}\big)\big(Y_i-\bar{Y}\big)$, because
+$$
+\begin{align*}
+\sum_{i=1}^nX_i\big(Y_i-\bar{Y})&=\sum_{i=1}^nX_iY_i-\sum_{i=1}^nX_i\bar{Y}=\sum_{i=1}^nX_iY_i-\bar{Y}\sum_{i=1}^nX_i-n\bar{X}\bar{Y}+n\bar{X}\bar{Y}\\
+&=\sum_{i=1}^nX_iY_i-\bar{Y}\sum_{i=1}^nX_i-\bar{X}\sum_{i=1}^nY_i+n\bar{X}\bar{Y}\\
+&=\sum_{i=1}^nX_iY_i-\bar{Y}\sum_{i=1}^nX_i-\bar{X}\sum_{i=1}^nY_i+\sum_{i=1}^n\bar{X}\bar{Y}\\
+&=\sum_{i=1}^n\big(X_iY_i-\bar{Y}X_i-\bar{X}Y_i+\bar{X}\bar{Y}\big)=\sum_{i=1}^n\big(X_i-\bar{X}\big)\big(Y_i-\bar{Y}\big).
+\end{align*}
+$$
+
+Similarly, the denominator of $\hat{\beta}_1$ can be expressed as
+$$
+\begin{align*}
+&\sum_{i=1}^nX_i\big(X_i-\bar{X}\big)=\sum_{i=1}^nX_i^2-\sum_{i=1}^nX_i\bar{X}=\sum_{i=1}^nX_i^2-\sum_{i=1}^nX_i\bar{X}-n\bar{X}^2+n\bar{X}^2\\
+&=\sum_{i=1}^nX_i^2-\bar{X}\sum_{i=1}^nX_i-\sum_{i=1}^n\bar{X}\bar{X}+\sum_{i=1}^n\bar{X}^2=\sum_{i=1}^nX_i^2-\bar{X}\sum_{i=1}^nX_i-\bar{X}\sum_{i=1}^nX_i+\sum_{i=1}^n\bar{X}^2\\
+&=\sum_{i=1}^n\big(X_i^2-2\bar{X}X_i+\bar{X}^2\big)=\sum_{i=1}^n\big(X_i-\bar{X}\big)^2.
+\end{align*}
+$$
+
+Thus, @eq-A2 is equivalent to @eq-A1. Finally, we can substitute $\hat{\beta}_1$ back to $\hat{\beta}_0$ to obtain the solution for $\beta_0$:
+$$
+\begin{align*}
+\hat{\beta}_0=\bar{Y}-\hat{\beta}_1\bar{X}.
+\end{align*}
+$$
+
+## Algebraic properties of the OLS estimators {#sec-AlgebraicProperties}
+We show that the least squares residuals sum to zero, i.e., $\sum_{i=1}^n\hat{u}_i=0$. Using $\hat{u}_i=(Y_i-\hat{\beta}_0-\hat{\beta}_1X_i)$, we have
+$$
+\begin{align*}
+\sum_{i=1}^n\hat{u}_i &=\sum_{i=1}^n\big(Y_i-\hat{\beta}_0-\hat{\beta}_1X_i\big)=\sum_{i=1}^n\big(Y_i-[\bar{Y}-\hat{\beta}_1\bar{X}]-\hat{\beta}_1X_i\big)\\
+&=\sum_{i=1}^n\big(Y_i-\bar{Y}\big)-\hat{\beta}_1\sum_{i=1}^n\big(X_i-\bar{X}\big)\\
+&=\sum_{i=1}^n\big(Y_i-\bar{Y}\big)-\left(\frac{\sum_{i=1}^nX_i\big(Y_i-\bar{Y})}{\sum_{i=1}^nX_i\big(X_i-\bar{X}\big)}\right)\sum_{i=1}^n\big(X_i-\bar{X}\big)=0,
+\end{align*}
+$$
+because $\sum_{i=1}^n\big(Y_i-\bar{Y}\big)=\sum_{i=1}^nY_i-\sum_{i=1}^n\bar{Y}=n\bar{Y}-n\bar{Y}=0$ and $\sum_{i=1}^n\big(X_i-\bar{X}\big)=\sum_{i=1}^nX_i-\sum_{i=1}^n\bar{X}=n\bar{X}-n\bar{X}=0$.
+
+Next, we show that the correlation between residuals and regressors is zero, i.e., $\sum_{i=1}^nX_i\hat{u}_i=0$. Using $\hat{u}_i=(Y_i-\hat{\beta}_0-\hat{\beta}_1X_i)$, we obtain
+$$
+\begin{align*}
+\sum_{i=1}^nX_i\hat{u}_i &=\sum_{i=1}^nX_i\big(Y_i-\hat{\beta}_0-\hat{\beta}_1X_i\big)=\sum_{i=1}^nX_i\big(Y_i-[\bar{Y}-\hat{\beta}_1\bar{X}]-\hat{\beta}_1X_i\big)\\
+&=\sum_{i=1}^nX_i\big(Y_i-\bar{Y}\big)-\hat{\beta}_1\sum_{i=1}^nX_i\big(X_i-\bar{X}\big)\\
+&=\sum_{i=1}^nX_i\big(Y_i-\bar{Y}\big)-\left(\frac{\sum_{i=1}^nX_i\big(Y_i-\bar{Y})}{\sum_{i=1}^nX_i\big(X_i-\bar{X}\big)}\right)\sum_{i=1}^nX_i\big(X_i-\bar{X}\big)\\
+&=\sum_{i=1}^nX_i\big(Y_i-\bar{Y}\big)-\sum_{i=1}^nX_i\big(Y_i-\bar{Y}\big)=0.
+\end{align*}
+$$
+
+Finally, we show that the regression line passes through the sample mean, i.e., $\bar{Y}=\hat{\beta}_0+\hat{\beta}_1\bar{X}=\bar{\hat{Y}}$. Using  
+$Y_i=(\hat{Y}_i+\hat{u}_i)$ and $\hat{Y}_i=(\hat{\beta}_0+\hat{\beta}_1X_i)$, we obtain
+
+$$
+\begin{align*}
+\bar{Y}&=\frac{1}{n}\sum_{i=1}^nY_i=\frac{1}{n}\sum_{i=1}^n(\hat{Y}_i+\hat{u}_i)=\frac{1}{n}\sum_{i=1}^n\hat{Y}_i +\frac{1}{n}\sum_{i=1}^n\hat{u}_i\\
+&=\frac{1}{n}\sum_{i=1}^n(\hat{\beta}_0+\hat{\beta}_1X_i) +\frac{1}{n}\sum_{i=1}^n\hat{u}_i
+=\frac{1}{n}\sum_{i=1}^n\hat{\beta}_0+\frac{1}{n}\sum_{i=1}^n\hat{\beta}_1X_i +\frac{1}{n}\sum_{i=1}^n\hat{u}_i\\
+&=\frac{1}{n}\sum_{i=1}^n\hat{\beta}_0+\hat{\beta}_1\frac{1}{n}\sum_{i=1}^nX_i +\frac{1}{n}\sum_{i=1}^n\hat{u}_i
+=\hat{\beta}_0+\hat{\beta}_1\bar{X}+0\\
+&=\hat{\beta}_0+\hat{\beta}_1\bar{X}.
+\end{align*}
+$$

@@ -1,0 +1,128 @@
+# Preface {.unnumbered}
+
+This book serves as an R companion to the well-known textbook by @Stock2020, which we use in our undergraduate econometrics courses. In our courses, we cover Chapters 1 to 9 in the first semester and  Chapters 10 to 17 in the second semester. We collect our teaching and lab materials in this book. Our aim is to provide students with practical guidance on implementing econometric methods presented in @Stock2020 using R.
+
+We organize the book into six parts: (i) R Basics, (ii) Introduction and Review, (iii) Fundamentals of Regression Analysis, (iv) Further Topics in Regression Analysis, (v) Regression Analysis of Economic Time Series Data, and (vi) Theoretical Topics. Except for the part on R Basics, the other parts are named as in @Stock2020. Each part consists of several chapters, with each chapter covering a specific topic.
+
+In the first part, which consists of nine chapters, we introduce the fundamentals of R for econometric analysis. This part assumes that readers have no prior exposure to R. In the first chapter, we show how to install R and provide a brief overview of its history. We also demonstrate how R can be used as a calculator and how to create objects and functions. The second chapter introduces commonly used data containers and data types. The third chapter focuses on the main control structures in R, such as conditional statements and loops. In the fourth chapter, we show how to write efficient custom functions. The fifth chapter introduces key statistical functions for random number generation and for evaluating probability density and cumulative distribution functions. The sixth chapter introduces graphics using both base R and tidyverse approaches. In the seventh chapter, we introduce data frames for data management. In the eighth chapter, we cover some useful numerical methods for statistics and econometrics. Finally, the ninth chapter introduces the basics of object-oriented programming (OOP) in R based on the R6 system.
+
+There are three chapters in Introduction and Review. In this part, we define key econometric concepts, discuss data types, and provide a brief review of the probability theory and statistics required for econometric analysis. 
+
+The part titled Fundamentals of Regression Analysis consists of six chapters. Here, we introduce regression models with one and multiple regressors, cover hypothesis testing and confidence intervals in regression models, explore nonlinear regression models, and discuss a framework for identifying the strengths and limitations of regression studies. 
+
+In Further Topics in Regression Analysis, we explore extensions of the multiple linear regression model across five chapters. We begin with commonly used panel data models, then examine regression models with binary dependent variables. Next, we discuss the instrumental variable method when the error term is correlated with the regressor of interest, explore experimental and quasi-experimental methods, and finally cover widely used machine learning techniques for prediction when many regressors are present.
+
+The part titled Regression Analysis of Economic Time Series Data covers time series methods and consists of three chapters. In the first chapter, we introduce basic time series concepts, including unit root testing, autoregressions, and autoregressive distributed lag models for forecasting. In the second chapter, we demonstrate how to use time series analysis to estimate dynamic causal effects. Finally, in the third chapter, we cover some additional time series models, including vector autoregressions, cointegration, vector error correction models, and volatility models. 
+
+The final part, Theoretical Topics, contains two chapters on econometric theory. In the first chapter, we present formal results along with their proofs for the regression model with one regressor. In the second chapter, using linear algebra notation, we provide theoretical results for the multiple linear regression model, instrumental variables regression, generalized method of moments estimation for the linear models.
+
+Finally, we provide some technical details related to Chapters 14, 24, 28, and 29 in the appendices.
+
+# Notation
+We adopt the standard notation used in @Stock2020. In particular, for an econometric model, we use Latin letters such as $Y$, $X$, $W$, and $Z$ to denote variables, and Greek letters such as $\beta$, $\gamma$, and $\delta$ to denote unknown parameters.^[According to econometrician Anil K. Bera, the English phrase “It is all Greek to me”, meaning “I do not understand it at all”, played a role in establishing the tradition of using Greek letters for unknown quantities in econometrics. There are also similar formulations in other languages. See the [Wikipedia page](https://en.wikipedia.org/wiki/Greek_to_me) for more details. ] For the convenience of readers, we list the Greek letters in the following table. 
+
+::: {style="font-size: 80%"}
+| Greek Letter              | Name    | Greek Letter                    | Name    |
+|---------------------------|---------|---------------------------------|---------|
+| $\alpha$                  | alpha   | $\beta$                         | beta    |
+| $\gamma$                  | gamma   | $\delta$, $\Delta$              | delta   |
+| $\epsilon$, $\varepsilon$ | epsilon | $\zeta$                         | zeta    |
+| $\eta$                    | eta     | $\theta$, $\Theta$              | theta   |
+| $\iota$                   | iota    | $\kappa$                        | kappa   |
+| $\lambda$, $\Lambda$      | lambda  | $\mu$                           | mu      |
+| $\nu$                     | nu      | $\xi$, $\Xi$                    | xi      |
+| $o$                       | omicron | $\pi$, $\Pi$                    | pi      |
+| $\rho$, $\varrho$         | rho     | $\sigma$, $\varsigma$, $\Sigma$ | sigma   |
+| $\tau$                    | tau     | $\upsilon$, $\Upsilon$          | upsilon |
+| $\varphi$, $\phi$, $\Phi$ | phi     | $\chi$                          | chi     |
+| $\psi$, $\Psi$            | psi     | $\omega$, $\Omega$              | omega   |
+: Greek Letters {#tbl-GreekLetters .striped .hover}
+:::
+
+The notation used for the error term (or disturbance term) is not uniform in the literature. Some authors use Latin letters because it is a random variable, while others use Greek letters because it is an unknown term. Following @Stock2020, we use lowercase $u$, $v$, or $e$ to denote the error term.
+
+For vectors, we use lowercase boldface letters such as $\bs{y}$, $\bs{x}$, $\bs{w}$, and $\bs{z}$, and for matrices, we use uppercase boldface letters such as $\bs{X}$, $\bs{W}$, and $\bs{Z}$. However, this convention does not apply exactly to the regression model in matrix form. Following @Stock2020, we use $\bs{Y}$ to denote the $n\times1$ vector of observations on the dependent variable, $\bs{X}$ the $n\times k$ matrix of independent variables, $\bs{\beta}$ the $k\times1$ vector of coefficients, and $\bs{U}$ the $n\times1$ vector of error terms.
+
+
+We use hat or tilde notation to denote estimators. For example, $\hat{\beta}_0$ and $\hat{\beta}_1$ are estimators of $\beta_0$ and $\beta_1$, respectively. In scalar form, $\hat{Y}$ denotes the predicted value of the dependent variable, and $\hat{u}$ denotes the residual. In vector form, $\hat{\bs{Y}}$ denotes the $n\times1$ vector of predicted values, and $\hat{\bs{U}}$ denotes the $n\times1$ vector of residuals.
+
+We denote a random sample on the random variable $Y$ by $\{Y_1, Y_2, \ldots, Y_n\}$ or $\{Y_i\}_{i=1}^n$, where $n$ is the sample size. In the case of time series data, we use $\{Y_t\}_{t=1}^T$ to denote the random sample. In the case of panel data, we use double subscripts to denote observations, such as ${Y_{it}}$ for the $i$th entity at time $t$.
+
+# Import Conventions 
+In each chapter, we first load all packages that are required for the econometric analysis introduced in that chapter. Thus, each chapter starts with a code chunk such as:
+
+```{r}
+#| eval: false
+library(tidyverse)
+library(broom)
+library(lmtest)
+library(sandwich)
+library(plm)
+library(AER)
+library(car)
+```
+
+When we use a function from a package, we state the name of the package in the text before the function call. For example, if we use the `linearHypothesis` function to compute an F-statistic, we indicate that this function is provided by the `car` package. This convention allows us to clearly track the source of each function and helps readers identify which package it belongs to.
+
+# Code Examples
+We use the conventional code font for displaying code in the text. Code chunks are presented in highlighted cells, as shown in the following example:
+
+```{r}
+# Defining the variable x
+x <- 2
+```
+
+The output of a code cell is shown in the subsequent cell, as shown in the following example:
+
+```{r}
+# Defining the vector x
+x <- c(1, 2, 3, 4)
+# Adding 99 to the vector x
+x <- c(x, 99)
+# Displaying the updated vector x
+x
+```
+
+The above cell displays the updated vector `x`. If a code cell returns multiple outputs, these outputs are displayed in separate cells, in the order they are produced. For example, the code below returns `class(x) = numeric` and `class(y) = character` in separate cells:
+
+```{r}
+x <- c(10, 2, 35, 11, 12)
+class(x)
+y <- c("3", "5", "7")
+class(y)
+```
+
+# Callout Blocks
+In each chapter, we use callout blocks to highlight key concepts and important information. For example, we use the following callout block for introducing variance and standard deviation:
+
+::: {.callout-note icon=false}
+## Key Concept 9.2: Variance and standard deviation
+Let $Y$ be a random variable with mean $\mu_Y$. The variance of $Y$ is defined as:
+
+* Discrete case: $\sigma^2_Y=\E\left[(Y-\mu_Y)^2\right]=\sum_{i=1}^k(y_i-\mu_Y)^2\times P(Y=y_i)$, where $y_i$ are the possible values of $Y$.
+* Continuous case: $\sigma^2_Y=\E\left[(Y-\mu_Y)^2\right]=\int_D (y-\mu_Y)^2f_Y(y)\text{d}y$, where $D$ is the support of $Y$.
+
+The square root of the variance is called the standard deviation of $Y$ and is denoted by $\sigma_Y$. The units of the standard deviation are the same as the units of $Y$.
+:::
+
+We also use a callout block to state econometric assumptions. For example, we use the following callout block for introducing the least squares assumptions:
+
+::: {.callout-important icon=false title="Assumptions"}
+1. Zero-conditional mean assumption: $\E(u_i |X_i) = 0$, i.e., the conditional distribution of $u_i$ given $X_i$ has a mean of $0$. 
+2. Random sampling assumption: $(X_i, Y_i):\, i =1,2,\dots,n$ are independently and identically distributed (i.i.d.) across observations.
+3. No large outliers assumption: $\E(X_i^4)<\infty$ and $\E(Y_i^4)<\infty$.
+:::
+
+# Definitions, Examples, and Theorems
+To separate definitions, examples, and theorems from the main text, we use boxes with a white background, as illustrated in the following example:
+
+:::{#def-definition0-index}
+A **random variable** is a real-valued function defined on the sample space of an experiment. 
+:::
+
+
+# Data for Applications
+For each methodological topic, @Stock2020 provide an application based on real-world data. We reproduce all tables, figures, and estimation results using the same datasets provided on the textbook's [web page](https://www.princeton.edu/~mwatson/Stock-Watson_4E/Stock-Watson-Resources-4e.html). We also provide all datasets used in this book in the GitHub repository: [Datasets](https://github.com/osmdogan/datasets.git).
+
+# Acknowledgements
+We use the theme from the book [R for Data Science (2e)](https://r4ds.hadley.nz/) as the foundation for producing this book. 

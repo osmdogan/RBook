@@ -1,0 +1,71 @@
+# Statistical Functions {#sec-chapter5}
+
+## Introduction
+R provides built-in functions for generating random numbers, evaluating probability density and cumulative distribution functions, and determining quantiles/percentiles. These functions are available for a variety of probability distributions.
+
+## Statistical functions
+R has several built-in statistical distributions. For each distribution, we have four functions each of which is prefixed by a letter indicating its purpose. These prefixes are:
+
+* `r`: random number generator,
+* `d`: density function,
+* `p`: cumulative distribution function,
+* `q`: quantile function.
+
+Each of these prefixes is followed by a short abbreviation of the name of the distribution. In @tbl-chapter5-t1, we summarize some of the most commonly used distributions in R along with their corresponding function name abbreviations.
+
+::: {style="font-size: 85%"}
+| R function | Distribution      | R function | Distribution | R function | Distribution |
+| ---------- | ----------------- | ---------- | ------------ | ---------- | ------------ |
+| `beta`     | Beta              | `logis`    | Logistic     | `binom`    | Binomial     |
+| `nbinom`   | Negative binomial | `cauchy`   | Cauchy       | `norm`     | Normal       |
+| `exp`      | Exponential       | `pois`     | Poisson      | `chisq`    | Chi-squared  |
+| `f`        | Fisher's F        | `t`        | Student's t  | `gamma`    | Gamma        |
+| `unif`     | Uniform           | `geom`     | Geometric    | `weibull`  | Weibull      |
+| `hyper`    | Hypergeometric    | `mvnorm`   | Multivariate normal | `wilcox` | Wilcoxon     |
+: Distributions available in R {#tbl-chapter5-t1 .stripped .hover}
+:::
+
+Below, we provide some illustrative examples of how to use these functions in R.
+
+
+```{r}
+# Density function of normal distribution evaluated at 1.96
+dnorm(1.96, mean=0, sd=1) 
+```
+```{r}
+# Cumulative distribution of normal distribution evaluated at 1.96
+pnorm(1.96, mean=0, sd=1) 
+```
+```{r}
+# Cumulative distribution of normal distribution evaluated at 1.96, upper tail
+pnorm(1.96, mean=0, sd=1, lower.tail=F)
+```
+```{r}
+# The 97.5th percentile (or the 0.95th quantile) of the normal distribution
+qnorm(0.975, mean=0, sd=1) 
+```
+```{r}
+# Generate 5 random numbers from the normal distribution
+rnorm(5, mean=0, sd=1) 
+```
+
+## Setting the seed for random number generation
+In simulation studies, it is often important to ensure that the results are reproducible. This means that if the same analysis is run multiple times, it should produce the same results each time. One way to achieve this is by setting a seed for the random number generator. The simplest way to specify the initial state or seed is to use, `set.seed(seed)`, where the argument `seed` is a single integer value and different seeds give different pseudo-random values. If we call the `set.seed` function with the same seed, we will obtain the same results, if the sequence of calls is repeated exactly. If a seed is not specified then the random number generator is initialized using the time of day.
+
+```{r}
+set.seed(17632)
+rnorm(5)
+```
+
+In the example above, we set the seed to 17632 before generating 5 random numbers from the standard normal distribution. If we run this code multiple times, we will get the same set of random numbers each time.
+
+```{r}
+set.seed(17632)
+rnorm(5)
+```
+
+If we change the seed value, we will get a different set of random numbers.
+```{r}
+set.seed(12345)
+rnorm(5)
+```

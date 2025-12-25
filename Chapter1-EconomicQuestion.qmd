@@ -1,0 +1,182 @@
+# Economic Questions and Data {#sec-chapter11}
+
+```{r}
+#| warning: false
+#| message: false
+library(modelsummary)
+library(tidyverse)
+library(readr)
+library(readxl)
+library(zoo)
+library(knitr)
+```
+
+## Econometrics and economic questions
+The word **econometrics** is a [neologism](https://en.wikipedia.org/wiki/Neologism) formed by combining the Greek words oikonomia (administration, or economics) and metron (measure) (@Gerhard1953). According to @Ragnar1933, as a field, its definition is embedded in the scope of [The Econometric Society](https://en.wikipedia.org/wiki/Econometric_Society), founded in 1930 for the advancement of economic theory through statistical and mathematical methods. Article 1 of the Society's original Constitution states: “The Econometric Society is an international society for the advancement of economic theory in its relation to statistics and mathematics... Its main object shall be to promote studies that aim at a unification of the theoretical-quantitative and the empirical-quantitative approach to economic problems and that are penetrated by constructive and rigorous thinking similar to that which has come to dominate in the natural sciences. Any activity which promises ultimately to further such unification of theoretical and factual studies in economics shall be within the sphere of interest of the Society.” In line with this, @Ragnar1933 defines econometrics as the unification of economic theory, statistics, and mathematics for understanding quantitative relations in an economy. 
+
+Since @Ragnar1933, there have been alternative definitions of econometrics, depending on how statistics and mathematics are applied to economic data. For example, from a statistical perspective, econometrics can be defined as the science of testing economic theories or as the process of fitting mathematical equations to economic data. From a mathematical perspective, it can be defined as the application of mathematical methods for developing estimation and testing techniques for economic models. @Gerhard1953 provides an early survey of alternative definitions and suggests confining econometrics to studies that utilize economic theory, statistics, and mathematics, as envisioned by @Ragnar1933.
+
+At a broader level, @Stock2020 define econometrics as “the science and art of using economic theory and statistical techniques to analyze economic data.” According to @Stock2020, irrespective of the specific definition adopted, econometrics provides a framework through which we can provide quantitative answers to economic questions. In this respect, some of the economic questions that we will address in the upcoming chapters include:
+
+* What is the quantitative effect of a reduction in class size on test scores?
+* What is the quantitative effect of race on home loan approval?
+* What is the quantitative effect of an increase in cigarette taxes on cigarette consumption?
+* What is the quantitative effect of an increase in the minimum wage on employment?
+* What is the quantitative effect of an increase in freezing degree days on the price of frozen concentrated orange juice?
+* What is the forecast for the U.S. GDP growth rate next year?
+* What is the forecast for volatility in the stock market next month?
+
+We will show that these questions can be answered by estimating econometric models that describe the relationships between economic variables.
+
+## Causal effects and experiments
+Econometrics primarily focuses on causal relationships among economic variables. Let $X$ and $Y$ be two variables. According to @Stock2020, we say that $X$ causes $Y$ if $Y$ is a direct result or consequence of $X$. More precisely, we can define the causal effect of $X$ on $Y$ as the effect of $X$ on $Y$ when all other factors that can affect $Y$ are held constant.
+
+One way to measure the causal effect is by conducting a **randomized controlled experiment**. In a randomized controlled experiment, we measure the effect of a treatment or a policy intervention on an outcome variable by randomly assigning experimental units to a treatment group and a control group, and then compare the groups based on the measured outcome variable. A randomized controlled experiment has the following features:
+
+* It is *controlled* because the treatment group receive the treatment whereas the control group does not participate in the treatment.
+* It is *randomized* in the sense that the experimental units are assigned to the control and treatment groups randomly. In this way, we aim to *eliminate systematic differences* between the control and treatment groups.
+
+According to @Stock2020, "the **causal effect** is defined to be the effect on an outcome of a given action or treatment, as measured in an ideal randomized controlled experiment." We will return to this topic in @sec-chapter20 and use the **potential outcomes framework** to formalize our understanding of causal effects.
+
+## Estimation, prediction and forecasting
+In @sec-lrmone and @sec-inference1, we will study the following regression model:
+$$  
+\begin{align}\label{eq1}
+Y=\beta_0+\beta_1X+u,
+\end{align}
+$$
+where
+
+* $Y$ is the dependent variable and $X$ is the independent variable,
+* $\beta_0$ is the intercept parameter and $\beta_1$ is the slope parameter, and
+* $u$ is the error term.
+
+**Estimation** is the process of using data on $Y$ and $X$ to learn about the unknown coefficients $\beta_0$ and $\beta_1$.  Let $\hat{\beta}_0$ and $\hat{\beta}_1$ be the estimated coefficients. We can use the estimated regression model to obtain a **predicted value** on the dependent variable:
+$$
+\begin{align}
+\hat{Y}=\hat{\beta}_0+\hat{\beta}_1X,
+\end{align}
+$$
+where $\hat{Y}$ denotes the predicted value. Thus, **prediction** is the process of using a model to make a statement about the value of a dependent variable.
+
+A **forecast** is a prediction about the value of the dependent variable in the future. In @sec-chapter22 and @sec-chapter24, we will study econometric models for forecasting.
+
+It is important to note that prediction and forecasting does not necessitate a causal relationship between $X$ and $Y$. This is an important distinction that will be clarified in later chapters.
+
+## Data types
+There are two types of data: **experimental data** and **nonexperimental data**. Experimental data are collected through experiments specifically designed to evaluate the effect of a treatment or an intervention. Nonexperimental data, also known as **observational data**, are obtained by observing actual behavior outside of an experimental setting. 
+
+Except for @sec-chapter20, where we cover econometric models for experimental data, we focus on econometric models for nonexperimental data. We consider three types of data: (i) **cross-sectional data**, (ii) **time-series data**, and (iii) **panel data** or **longitudinal data**.
+
+### Cross-sectional data
+**Cross-sectional data** consist of observations on entities at a single point in time. For example, consider the California school district data in the `caschool.csv` file. These data were collected in 1999 on $n=420$ school districts and include measurements on several district-level variables. We consider the following variables: District Average Test Score, Student-Teacher Ratio, Expenditure per Pupil, and Percentage of Students Learning English. These variables are derived from district-level average measurements. A section of this data is shown in @tbl-t8.1. For example, for the first school district, the average test score is 690.8, the average student-teacher ratio is 17.89, the average expenditure per pupil is 6384.91 dollars, and the average percentage of students learning English is 0 percent.  
+
+```{r}
+#| warning: false
+#| message: false
+# Import data
+CAschool <- read_csv('data/caschool.csv')
+# Select columns
+names <- c('Observation Number', 'testscr', 'str', 'expn_stu', 'el_pct')
+data <- CAschool[names]
+# Set the column names
+colnames(data) <- c("Observation Number", "District Average Test Score",
+                    "Student-Teacher Ratio", "Expenditure per Pupil",
+                    "Percentage of Students Learning English")
+```
+
+```{r}
+#| tbl-cap: Selected observations on test scores and other variables for California School Districts in 1999
+#| label: tbl-t8.1
+# Print data
+subset_df <- rbind(head(data, 5), tail(data, 5))
+# datasummary_df(subset_df)
+kable(subset_df, digits = 2, format = "html", align = "c")
+```
+
+The econometric models we will cover in @sec-lrmone-@sec-assess and @sec-chapter18-@sec-chapter19, including the simple linear regression model, multiple linear regression, non-linear regression models, and binary dependent variable models, are based on cross-sectional data.
+
+### Time Series Data
+Time series data consist of observations on the same entity collected at multiple time periods. We consider the time series data in the `tsdata.xlsx` file on the US GDP growth rate and the term spread (the difference between long-term and short-term interest rates). The dataset is quarterly and covers the period 1960Q1-2017Q4. In @tbl-t8.2, we show a section of the data, where each row corresponds to a different time period. In the last quarter of 2017, the GDP growth rate was 2.5\% and the term spread was 1.16 percentage points.
+
+```{r}
+# Import data
+tsdata <- read_excel("data/tsdata.xlsx")
+# Create Quarter column
+tsdata$Quarter <- as.yearqtr(tsdata$Date, format = "%Y Q%q")
+names <- c("Quarter", "YGROWTH", "RSPREAD")
+data <- tsdata[names]
+# Set the column names
+colnames(data) <- c("Date (YearQuarter)", "GDP Growth Rate", "Term Spread")
+```
+
+```{r}
+#| tbl-cap: The GDP growth rate and term spread in the United States
+#| label: tbl-t8.2
+# Print data
+# datasummary_df(data[1:10, ])
+kable(data[1:10, ], digits = 2, format = "html", align = "c")
+```
+
+In @fig-f8.1, we show the time series plots of the GDP growth rate and the term spread.
+
+```{r}
+#| label: fig-f8.1
+#| fig-cap: "Growth Rate of GDP and the Term Spread in the United States"
+#| layout-nrow: 2
+#| fig-subcap: 
+#|   - "GDP growth rate"
+#|   - "Term spread"
+#| fig-width: 6
+#| fig-height: 3
+
+# GDP Growth Rate plot
+p1 <- ggplot(tsdata, aes(x = Date, y = YGROWTH)) +
+    geom_line(color = "steelblue", linewidth = 1) +
+    geom_hline(yintercept = 0, color = "black", linewidth = 0.5, alpha = 0.5) +
+    labs(x = "Date", y = "Percentage Point") +
+    ylim(min(tsdata$YGROWTH) - 0.5, max(tsdata$YGROWTH) + 0.5)
+
+# Term Spread plot
+p2 <- ggplot(tsdata, aes(x = Date, y = RSPREAD)) +
+    geom_line(color = "steelblue", linewidth = 1) +
+    geom_hline(yintercept = 0, color = "black", linewidth = 0.5, alpha = 0.5) +
+    labs(x = "Date", y = "Percentage Point") +
+    ylim(-2, 4)
+p1
+p2
+```
+
+The part titled Regression Analysis of Economic Time Series Data is devoted to econometric models that use time series data. These models include autoregressions (AR), autoregressive distributed lag (ARDL) models, distributed lag models, vector autoregression (VAR) models, vector error correction models (VECM), and volatility models.
+
+### Panel Data
+**Panel data**, also known as **longitudinal data**, consist of data for multiple entities, with each entity observed at two or more time periods. We consider the panel data on the cigarette consumption in the `cig_ch12.xlsx` file. The data set consists of annual data for the 48 U.S. states over the period 1985-1995. Thus, in this data set, the number of entities is $n=48$ and the number of time periods is $T=11$. In total, we have $48\times 11=528$ observations. In @tbl-t8.3, we show a section of the data.
+
+```{r}
+# Import data
+pdata <- read_excel("data/cig_ch12.xlsx")
+# Select columns
+names <- c("state", "year", "packpc", "avgprs", "taxs")
+pdata <- pdata[names]
+# Set column names
+colnames(pdata) <- c("State", "Year", "Cigarette Sales (packs per capita)",
+                     "Average Price per Pack(including taxes)",
+                     "Total Taxes (cigarette excise tax + sales tax)")
+```
+
+```{r}
+#| tbl-cap: Cigarette sales, prices, and taxes
+#| label: tbl-t8.3
+# Print data
+#datasummary_df(pdata[1:10, ])
+kable(pdata[1:10, ], digits = 2, format = "html", align = "c")
+```
+
+In @sec-chapter17, we will study econometric models that use panel data. These models are commonly used fixed effects and random effects models.
+
+::: {.callout-note icon=false}
+## Key Concept 8.1: Cross-sectional data, time series, and panel data 
+* Cross-sectional data refer to data on multiple entities collected at a single point in time.
+* Time series data consist of observations on a single entity over multiple time periods.
+* Panel data (or longitudinal data) involve data on multiple entities, with each entity observed across two or more time periods.
+:::

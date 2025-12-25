@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>16&nbsp; Linear Regression with Multiple Regressors – Introduction to Econometrics with Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Chapter7-MultipleRegressionInference.html" rel="next">
+<link href="./Chapter5-LinearRegressionOneRegressorInference.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part2-FundamentalRegressionAnalysis.html">Fundamentals of Regression Analysis</a></li><li class="breadcrumb-item"><a href="./Chapter6-MultipleRegression.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Econometrics with Python</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part0-Python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroPython.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroNumpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-ControlStructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Control Structures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-CustomFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Custom Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-StatFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Statistical Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Pandas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-NumericalAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Applications in Numerical Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-SymbolicMath.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Symbolic Computing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and Review</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentals of Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Further Topics in Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Analysis of Economic Time Series Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theoretical Topics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#omitted-variable-bias" id="toc-omitted-variable-bias" class="nav-link active" data-scroll-target="#omitted-variable-bias"><span class="header-section-number">16.1</span> Omitted variable bias</a></li>
+  <li><a href="#the-multiple-regression-model" id="toc-the-multiple-regression-model" class="nav-link" data-scroll-target="#the-multiple-regression-model"><span class="header-section-number">16.2</span> The multiple regression model</a></li>
+  <li><a href="#the-ols-estimators-in-multiple-regression" id="toc-the-ols-estimators-in-multiple-regression" class="nav-link" data-scroll-target="#the-ols-estimators-in-multiple-regression"><span class="header-section-number">16.3</span> The OLS estimators in multiple regression</a></li>
+  <li><a href="#application-to-test-scores-and-the-studentteacher-ratio" id="toc-application-to-test-scores-and-the-studentteacher-ratio" class="nav-link" data-scroll-target="#application-to-test-scores-and-the-studentteacher-ratio"><span class="header-section-number">16.4</span> Application to test scores and the student–teacher ratio</a></li>
+  <li><a href="#measures-of-fit" id="toc-measures-of-fit" class="nav-link" data-scroll-target="#measures-of-fit"><span class="header-section-number">16.5</span> Measures of fit</a></li>
+  <li><a href="#the-least-squares-assumptions-for-causal-inference-in-multiple-regression" id="toc-the-least-squares-assumptions-for-causal-inference-in-multiple-regression" class="nav-link" data-scroll-target="#the-least-squares-assumptions-for-causal-inference-in-multiple-regression"><span class="header-section-number">16.6</span> The least squares assumptions for causal inference in multiple regression</a></li>
+  <li><a href="#multicollinearity" id="toc-multicollinearity" class="nav-link" data-scroll-target="#multicollinearity"><span class="header-section-number">16.7</span> Multicollinearity</a></li>
+  <li><a href="#control-variables-and-conditional-mean-independence" id="toc-control-variables-and-conditional-mean-independence" class="nav-link" data-scroll-target="#control-variables-and-conditional-mean-independence"><span class="header-section-number">16.8</span> Control variables and conditional mean independence</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter6-MultipleRegression.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part2-FundamentalRegressionAnalysis.html">Fundamentals of Regression Analysis</a></li><li class="breadcrumb-item"><a href="./Chapter6-MultipleRegression.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-multiple" class="quarto-section-identifier"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="f02d3543" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.iolib.summary2 <span class="im">import</span> summary_col</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="omitted-variable-bias" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="omitted-variable-bias"><span class="header-section-number">16.1</span> Omitted variable bias</h2>
+<p>In a regression model of <span class="math inline">\(Y\)</span> on <span class="math inline">\(X\)</span>, <strong>omitted variable bias</strong> occurs if the regressor <span class="math inline">\(X\)</span> is correlated with an omitted variable that determines <span class="math inline">\(Y\)</span>. Let <span class="math inline">\(Z\)</span> be a variable omitted from the regression model. Then, <span class="math inline">\(Z\)</span> causes omitted variable bias if <span class="math inline">\(Z\)</span> satisfies the following two conditions:</p>
+<ul>
+<li><span class="math inline">\(Z\)</span> is a determinant of <span class="math inline">\(Y\)</span> (i.e., <span class="math inline">\(Z\)</span> is part of <span class="math inline">\(u\)</span>), and</li>
+<li><span class="math inline">\(Z\)</span> is correlated with the regressor <span class="math inline">\(X\)</span> (i.e., corr<span class="math inline">\((Z,X)\ne0\)</span>).</li>
+</ul>
+<p>Under omitted variable bias, the zero conditional mean assumption <span class="math inline">\(\E(u|X)=0\)</span> fails because <span class="math inline">\(u\)</span> contains a variable that is correlated with <span class="math inline">\(X\)</span>. To see the effect of omitted variable bias on the OLS estimator of <span class="math inline">\(\beta_1\)</span>, recall the following result from <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 14</span></a>: <span class="math display">\[
+\begin{align}
+\hat{\beta}_1-\beta_1=\frac{\sum_{i=1}^n(X_i-\bar{X})u_i}{\sum_{i=1}^n(X_i-\bar{X})^2}.
+\end{align}
+\]</span></p>
+<p>Under the second and the third least squares assumptions given in <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 14</span></a>, the law of large numbers ensure that <span class="math inline">\(\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\xrightarrow{p}\sigma^2_X\)</span> and <span class="math inline">\(\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})u_i\xrightarrow{p}\E\left[(X_i-\mu_X)u_i\right]=\text{cov}(X_i,u_i)=\sigma_{Xu}\)</span>. Thus, we have <span class="math display">\[
+\begin{align}
+\hat{\beta}_1-\beta_1=\frac{\sum_{i=1}^n(X_i-\bar{X})u_i}{\sum_{i=1}^n(X_i-\bar{X})^2}\xrightarrow{p}\frac{\sigma_{Xu}}{\sigma^2_X}=\frac{\sigma_u}{\sigma_X}\times\frac{\sigma_{Xu}}{\sigma_X\sigma_u}=\frac{\sigma_u}{\sigma_X}\times\rho_{Xu},
+\end{align}
+\]</span> where <span class="math inline">\(\rho_{Xu}=\frac{\sigma_{Xu}}{\sigma_X\sigma_u}\)</span> is the correlation coefficient between <span class="math inline">\(X\)</span> and <span class="math inline">\(u\)</span>. This results indicates that the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> is inconsistent: <span id="eq-eq13-1"><span class="math display">\[
+\begin{align}
+\hat{\beta}_1\xrightarrow{p}\beta_1+\frac{\sigma_u}{\sigma_X}\times\rho_{Xu}.
+\end{align}
+\tag{16.1}\]</span></span></p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Concept 13.1: Omitted Variable Bias
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If <span class="math inline">\(X\)</span> is correlated with an omitted variable that affects <span class="math inline">\(Y\)</span>, then the OLS estimator has omitted variable bias.</p>
+<ul>
+<li>Omitted variable causes the OLS estimator to be biased and inconsistent.</li>
+<li>The bias is given by <span class="math inline">\(\frac{\sigma_u}{\sigma_X}\times\rho_{Xu}\)</span> and does not vanish even when the sample size is large.</li>
+<li>The sign and magnitude of bias depend on <span class="math inline">\(\rho_{Xu}\)</span>.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="the-multiple-regression-model" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="the-multiple-regression-model"><span class="header-section-number">16.2</span> The multiple regression model</h2>
+<p>We can avoid omitted variable bias by extending the simple linear regression model to the multiple linear regression model that includes the omitted variable as an additional regressor. The multiple linear regression model with <span class="math inline">\(k\)</span> regressor is given by <span class="math display">\[
+\begin{align}
+Y_i = \beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\dots+\beta_kX_{ki}+u_i,\quad i=1,2,\dots,n,
+\end{align}
+\]</span> where</p>
+<ul>
+<li><span class="math inline">\(Y_i\)</span> is the <span class="math inline">\(i\)</span>th observation on the dependent variable <span class="math inline">\(Y\)</span>,</li>
+<li><span class="math inline">\((X_{1i},\dots,X_{ki})\)</span> are the <span class="math inline">\(i\)</span>th observations of the <span class="math inline">\(k\)</span> regressors <span class="math inline">\((X_{1},\dots,X_{k})\)</span>,</li>
+<li><span class="math inline">\(\beta_0\)</span> is the intercept parameter,</li>
+<li><span class="math inline">\(\beta_1,\dots,\beta_k\)</span> are slope coefficients associated with <span class="math inline">\((X_{1},\dots,X_{k})\)</span>, and</li>
+<li><span class="math inline">\(u_i\)</span> is the <span class="math inline">\(i\)</span>th error term.</li>
+</ul>
+<p>The population regression function is <span class="math display">\[
+\E(Y|X_{1},\dots,X_{k})=\beta_0+\beta_1X_{1}+\beta_2X_{2}+\dots+\beta_kX_{k}.
+\]</span></p>
+<p>The population regression function suggests that <span class="math inline">\(\beta_j\)</span> gives the effect of a unit change in <span class="math inline">\(X_j\)</span> on the expected change in <span class="math inline">\(Y\)</span>, holding other regressors constant. Using calculus, we have <span class="math display">\[
+\frac{\partial \E(Y|X_{1},\dots,X_{k})}{\partial X_j}=\beta_j,
+\]</span></p>
+<p>for <span class="math inline">\(j=1,\dots,k\)</span>. Therefore, <span class="math inline">\(\beta_j\)</span> is also called the <strong>partial effect</strong> of <span class="math inline">\(X_j\)</span> on <span class="math inline">\(Y\)</span>, holding all other regressors constant. In other words, after controlling for the effects of the other regressors, <span class="math inline">\(\beta_j\)</span> gives the effect of a unit change in <span class="math inline">\(X_j\)</span> on the expected value of <span class="math inline">\(Y\)</span>.</p>
+<p>As in the case of the linear regression model with only one regressor, we will only assume a zero-conditional mean assumption for the error term <span class="math inline">\(u_i\)</span>. Also, the error term <span class="math inline">\(u_i\)</span> is <strong>homoskedastic</strong> if its conditional variance <span class="math inline">\(\var(u_i|X_{1i},\dots,X_{ki})\)</span> is constant for <span class="math inline">\(i=1,\dots,n\)</span>. Otherwise, the error term is said to be <strong>heteroskedastic</strong>. As in the case of a linear regression model with one regressor, homoskedasticity and heteroskedasticity only affect the standard errors of the OLS estimator and do not affect the bias, consistency, or asymptotic normality of the OLS estimator.</p>
+</section>
+<section id="the-ols-estimators-in-multiple-regression" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="the-ols-estimators-in-multiple-regression"><span class="header-section-number">16.3</span> The OLS estimators in multiple regression</h2>
+<p>The OLS estimators are obtained by minimizing the sum of the squared residuals (or prediction errors). Formally, the OLS estimators <span class="math inline">\(\hat{\beta}_0,\dots,\hat{\beta}_k\)</span> are the values of <span class="math inline">\(b_0,\dots,b_k\)</span> that minimize the following objective function: <span class="math display">\[
+\begin{align*}
+\sum_{i=1}^n\left(Y_i-\left(b_0+b_1X_{1i}+b_2X_{2i}+\dots+b_kX_{ki}\right)\right)^2.
+\end{align*}
+\]</span></p>
+<p>The OLS estimator can be obtained using the matrix calculus. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 29</span></a>, we use matrix algebra to derive an explicit formula for the OLS estimator.</p>
+<p>The predicted values and residuals are defined similarly to the case of a linear regression model with only one regressor:</p>
+<ul>
+<li>The predicted value of <span class="math inline">\(Y_i\)</span> is <span class="math inline">\(\hat{Y}_i=\hat{\beta}_0+\hat{\beta}_1X_{1i}+\dots+\hat{\beta}_kX_{ki}\)</span> for <span class="math inline">\(i=1,\dots,n\)</span>.</li>
+<li>The <span class="math inline">\(i\)</span>th residual is <span class="math inline">\(\hat{u}_i=Y_i-\hat{Y}_i\)</span> for <span class="math inline">\(i=1,\dots,n\)</span>.</li>
+</ul>
+<p>In the following theorem, we state an alternative way for computing the OLS estimators.</p>
+<div id="thm-thm13.0" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 16.1 (The Frisch–Waugh Theorem)</strong></span> The OLS estimators <span class="math inline">\(\hat{\beta}_0, \dots, \hat{\beta}_k\)</span> can alternatively be computed through the following steps, involving a sequence of shorter regressions:</p>
+<ol type="1">
+<li>Run a regression of <span class="math inline">\(X_j\)</span> on <span class="math inline">\(X_1, \dots, X_{j-1}, X_{j+1}, \dots, X_k\)</span>, including an intercept term. Let <span class="math inline">\(\tilde{X}_j\)</span> be the residuals from this regression.</li>
+<li>Run a regression of <span class="math inline">\(Y\)</span> on <span class="math inline">\(X_1, \dots, X_{j-1}, X_{j+1}, \dots, X_k\)</span>, including an intercept term. Let <span class="math inline">\(\tilde{Y}\)</span> be the residuals from this regression.</li>
+<li>Finally, obtain the OLS estimator <span class="math inline">\(\hat{\beta}_j\)</span> by running a regression of <span class="math inline">\(\tilde{Y}\)</span> on <span class="math inline">\(\tilde{X}_j\)</span>, including an intercept term.</li>
+</ol>
+</div>
+<p>The Frisch–Waugh theorem shows that by removing the variation associated with <span class="math inline">\(X_1, \dots, X_{j-1}, X_{j+1}, \dots, X_k\)</span> from both <span class="math inline">\(X_j\)</span> and <span class="math inline">\(Y\)</span> through the regressions in Steps 1 and 2, the final regression in Step 3 captures the effect of <span class="math inline">\(X_j\)</span> on <span class="math inline">\(Y\)</span> after accounting for the influence of the other regressors.</p>
+</section>
+<section id="application-to-test-scores-and-the-studentteacher-ratio" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="application-to-test-scores-and-the-studentteacher-ratio"><span class="header-section-number">16.4</span> Application to test scores and the student–teacher ratio</h2>
+<p>We use the district-level test score data described in <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 14</span></a> to estimate the following models: <span class="math display">\[
+\begin{align}
+&amp;\text{TestScore}_i = \beta_0 + \beta_1 \text{STR}_i + u_i,\\
+&amp;\text{TestScore}_i=\beta_0+\beta_1\times\text{STR}_i+\beta_2\times\text{PctEL}_i+u_i,
+\end{align}
+\]</span> for <span class="math inline">\(i=1,\dots,420\)</span>, where <span class="math inline">\(\text{PctEL}_i\)</span> is the percentage of English learners in the <span class="math inline">\(i\)</span>th district. We use the following code chunks to import data from the <code>caschool.xlsx</code> file.</p>
+<div id="688d2595" class="cell" data-message="false" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> pd.read_excel(<span class="st">"data/caschool.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="6b527f79" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Column names</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mydata.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>Index(['Observation Number', 'dist_cod', 'county', 'district', 'gr_span',
+       'enrl_tot', 'teachers', 'calw_pct', 'meal_pct', 'computer', 'testscr',
+       'comp_stu', 'expn_stu', 'str', 'avginc', 'el_pct', 'read_scr',
+       'math_scr'],
+      dtype='object')</code></pre>
+</div>
+</div>
+<p>The <code>describe</code> method can be used to get descriptive statistics provided in <a href="#tbl-t13-1" class="quarto-xref">Table&nbsp;<span>16.1</span></a> on <code>str</code>, <code>el_pct</code>, and <code>testscr</code>.</p>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mydata[[<span class="st">"str"</span>, <span class="st">"el_pct"</span>, <span class="st">"testscr"</span>]].<span class="bu">round</span>(<span class="dv">3</span>).describe().T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="4" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t13-1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t13-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;16.1: Summary statistics
+</figcaption>
+<div aria-describedby="tbl-t13-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">count</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">mean</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">std</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">min</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">25%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">50%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">75%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">str</td>
+<td style="text-align: left;">420.0</td>
+<td style="text-align: left;">19.640417</td>
+<td style="text-align: left;">1.891805</td>
+<td style="text-align: left;">14.00</td>
+<td style="text-align: left;">18.5825</td>
+<td style="text-align: left;">19.723</td>
+<td style="text-align: left;">20.87200</td>
+<td style="text-align: left;">25.80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">el_pct</td>
+<td style="text-align: left;">420.0</td>
+<td style="text-align: left;">15.768152</td>
+<td style="text-align: left;">18.285912</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">1.9410</td>
+<td style="text-align: left;">8.778</td>
+<td style="text-align: left;">22.96975</td>
+<td style="text-align: left;">85.54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">testscr</td>
+<td style="text-align: left;">420.0</td>
+<td style="text-align: left;">654.156548</td>
+<td style="text-align: left;">19.053348</td>
+<td style="text-align: left;">605.55</td>
+<td style="text-align: left;">640.0500</td>
+<td style="text-align: left;">654.450</td>
+<td style="text-align: left;">666.66250</td>
+<td style="text-align: left;">706.75</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>In <a href="#tbl-t13-2" class="quarto-xref">Table&nbsp;<span>16.2</span></a>, we provide sample correlation coefficients between variables. We see that <code>PctEL</code> is negatively correlated with <code>testscr</code> and positively correlated with <code>str</code>.</p>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation coefficients</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mydata[[<span class="st">"str"</span>,<span class="st">"el_pct"</span>, <span class="st">"testscr"</span>]].corr()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="5" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t13-2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t13-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;16.2: The sample correlation coefficients
+</figcaption>
+<div aria-describedby="tbl-t13-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">str</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">el_pct</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">testscr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">str</td>
+<td style="text-align: left;">1.000000</td>
+<td style="text-align: left;">0.187642</td>
+<td style="text-align: left;">-0.226363</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">el_pct</td>
+<td style="text-align: left;">0.187642</td>
+<td style="text-align: left;">1.000000</td>
+<td style="text-align: left;">-0.644124</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">testscr</td>
+<td style="text-align: left;">-0.226363</td>
+<td style="text-align: left;">-0.644124</td>
+<td style="text-align: left;">1.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>In the following code chunk, we use the <code>smf.ols()</code> function to estimate both models.</p>
+<div id="be7c8cd8" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'testscr~str'</span>, data<span class="op">=</span>mydata)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>result1 <span class="op">=</span> model1.fit()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'testscr~str+el_pct'</span>, data<span class="op">=</span>mydata)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>result2 <span class="op">=</span> model2.fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Using the <code>summary_col()</code> function from the <code>statsmodels.iolib.summary2</code>, we can present the estimation results contained in <code>result1</code> and <code>result2</code> as shown in <a href="#tbl-t13-3" class="quarto-xref">Table&nbsp;<span>16.3</span></a>.</p>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> [<span class="st">'Model 1'</span>, <span class="st">'Model 2'</span>]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>results_table <span class="op">=</span> summary_col(results<span class="op">=</span>[result1, result2],</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                            float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>, </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                            stars<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                            model_names<span class="op">=</span>models)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>results_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="7" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t13-3" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="7">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t13-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;16.3: Estimation Results
+</figcaption>
+<div aria-describedby="tbl-t13-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="7">
+<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 1</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
+<td style="text-align: left;">698.933***</td>
+<td style="text-align: left;">686.032***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(9.467)</td>
+<td style="text-align: left;">(7.411)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">str</td>
+<td style="text-align: left;">-2.280***</td>
+<td style="text-align: left;">-1.101***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.480)</td>
+<td style="text-align: left;">(0.380)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">el_pct</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.650***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.039)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
+<td style="text-align: left;">0.051</td>
+<td style="text-align: left;">0.426</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
+<td style="text-align: left;">0.049</td>
+<td style="text-align: left;">0.424</td>
+</tr>
+</tbody>
+</table>
+<br>
+Standard errors in parentheses.<br>
+* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Using the estimation results in <a href="#tbl-t13-3" class="quarto-xref">Table&nbsp;<span>16.3</span></a>, we can write the estimated regression equations as <span class="math display">\[
+\begin{align*}
+&amp;\text{Model 1}: \widehat{TestScore}=698.9-2.280\times STR,\\
+&amp;\text{Model 2}: \widehat{TestScore}=686-1.10\times STR-0.65\times PctEL.
+\end{align*}
+\]</span></p>
+<p>The estimate <span class="math inline">\(\hat{\beta}_1=-1.10\)</span> in Model 2 indicates that when <code>STR</code> increases by one student, the test score on average declines by 1.10 points, holding <code>PctEL</code> constant. The estimate <span class="math inline">\(\hat{\beta}_2=-0.65\)</span> in Model 2 shows that one percent increase in <code>PctEL</code> reduces the test score on average by 0.65 points, holding <code>STR</code> constant. Note that the estimate <span class="math inline">\(\hat{\beta}_1=-2.280\)</span> in Model 1 is approximately twice as small as the estimate <span class="math inline">\(\hat{\beta}_1=-1.10\)</span> in Model 2, indicating that Model 1 suffers from omitted variable bias.</p>
+</section>
+<section id="measures-of-fit" class="level2" data-number="16.5">
+<h2 data-number="16.5" class="anchored" data-anchor-id="measures-of-fit"><span class="header-section-number">16.5</span> Measures of fit</h2>
+<p>In this section, we provide four measures of fit for the multiple linear regression model: (i) the standard error of the regression, (ii) the root mean square errors, (ii) the regression <span class="math inline">\(R^2\)</span>, and (iv) the adjusted <span class="math inline">\(R^2\)</span>.</p>
+<p>The <strong>standard error of the regression</strong> (SER) is the estimator of the standard deviation of the error term. It is calculated based on the standard deviation of the residuals: <span class="math display">\[
+\text{SER} = s_{\hat{u}}=\sqrt{\frac{1}{n-k-1}\sum_{i=1}^n\hat{u}^2_i} = \sqrt{\frac{1}{n-k-1}SSR},
+\]</span></p>
+<p>where <span class="math inline">\(SSR\)</span> is the sum of squared residuals <span class="math inline">\(SSR=\sum_{i=1}^n\hat{u}^2_i\)</span> and <span class="math inline">\(k\)</span> is the number of regressors in the model. The <strong>root mean square errors</strong> (RMSE) is defined by <span class="math display">\[
+RMSE = \sqrt{\frac{1}{n}SSR}.
+\]</span> Both SER and RMSE are measures of the spread of the distribution of <span class="math inline">\(Y\)</span> around the regression line. Equivalently, since <span class="math inline">\(\hat{u}_i=Y_i-\hat{Y}_i\)</span>, we can interpret SER and RMSE as measures of the spread of the distribution of the prediction errors. The smaller the SER and RMSE, the better the fit of the regression model.</p>
+<p>The <span class="math inline">\(R^2\)</span> shows the fraction of the sample variance of <span class="math inline">\(Y\)</span> explained by the regressors. It is given by <span class="math display">\[
+\begin{align*}
+R^2 = \frac{ESS}{TSS} = 1-\frac{SSR}{TSS},
+\end{align*}
+\]</span></p>
+<p>where</p>
+<ul>
+<li><span class="math inline">\(ESS=\sum_{i=1}^n\left(\hat{Y}_i-\bar{\hat{Y}}\right)^2\)</span> is the explained sum of squares,</li>
+<li><span class="math inline">\(SSR=\sum_{i=1}^n\hat{u}^2_i\)</span> is the sum of squared residuals, and</li>
+<li><span class="math inline">\(TSS=\sum_{i=1}^n\left(Y_i-\bar{Y}\right)^2\)</span> is the total sum of squares.</li>
+</ul>
+<p>In general, the SSR decreases when a new regressor is added to the model, which leads to an increase in <span class="math inline">\(R^2\)</span>. However, this increase does not necessarily indicate that the added variable improves the fit of the model. The adjusted <span class="math inline">\(R^2\)</span> (also denoted by <span class="math inline">\(\bar{R}^2\)</span>) addresses this issue by penalizing the inclusion of additional regressors. It is defined as <span class="math display">\[
+\begin{align*}
+\bar{R}^2=1-\frac{n-1}{n-k-1}\times\frac{SSR}{TSS}=1-\frac{s^2_{\hat{u}}}{s^2_Y}.
+\end{align*}
+\]</span></p>
+<p>Note that <span class="math inline">\(\bar{R}^2&lt; R^2\)</span>, but if <span class="math inline">\(n\)</span> is large, the two will be very close because <span class="math inline">\((n-1)/(n-k-1)\)</span> approaches one as <span class="math inline">\(n\)</span> increases. Also, adding a new regressor to the model affects <span class="math inline">\(\bar{R}^2\)</span> in two opposing directions. On the one hand, the new regressor decreases the <span class="math inline">\(SSR\)</span>, which tends to increase <span class="math inline">\(\bar{R}^2\)</span>. On the other hand, the factor <span class="math inline">\((n-1)(n-k-1)\)</span> increases, which tends to reduce <span class="math inline">\(\bar{R}^2\)</span>. Therefore, the net effect on <span class="math inline">\(\bar{R}^2\)</span> depends on which of these two effects is relatively larger.</p>
+<p>The results in <a href="#tbl-t13-3" class="quarto-xref">Table&nbsp;<span>16.3</span></a> show that including <code>PctEL</code> in the regression increases the <span class="math inline">\(R^2\)</span> from 0.051 to 0.426. Thus, including <code>PctEL</code> substantially improves the fit of the regression. Because <span class="math inline">\(n\)</span> is large and we have only two regressors, the difference between <span class="math inline">\(R^2\)</span> and <span class="math inline">\(\bar{R}^2\)</span> is very small: <span class="math inline">\(R^2 = 0.426\)</span> vs.&nbsp;<span class="math inline">\(\bar{R}^2 = 0.424\)</span>. Note that <a href="#tbl-t13-3" class="quarto-xref">Table&nbsp;<span>16.3</span></a> does not include the SER measures. In the following code chunk, we compute the SER measures for both models.</p>
+<div id="2a5be454" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Computing SER for both models</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>SER1 <span class="op">=</span> np.sqrt(np.<span class="bu">sum</span>(result1.resid<span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> result1.df_resid)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>SER2 <span class="op">=</span> np.sqrt(np.<span class="bu">sum</span>(result2.resid<span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> result2.df_resid)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the SER values</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The SER for Model 1 is:"</span>, np.<span class="bu">round</span>(SER1, <span class="dv">1</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The SER for Model 2 is:"</span>, np.<span class="bu">round</span>(SER2, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The SER for Model 1 is: 18.6
+The SER for Model 2 is: 14.5</code></pre>
+</div>
+</div>
+<p>The SER value <span class="math inline">\(18.6\)</span> falls to <span class="math inline">\(14.5\)</span> when <code>PctEL</code> is included as a second regressor into the model. Finally, in the following code chunk, we compute these measures of fit manually for the second model. The results are given in <a href="#tbl-t13-t4" class="quarto-xref">Table&nbsp;<span>16.4</span></a>.</p>
+<div id="2f26505d" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Computing SER, RMSE, R^2, and adjusted R^2 for the second model</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> result2.nobs</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> result2.k_constant</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>y_mean <span class="op">=</span> np.mean(mydata[<span class="st">"testscr"</span>]) <span class="co"># mean of avg. test-scores</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>SSR <span class="op">=</span> np.<span class="bu">sum</span>(result2.resid<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>TSS <span class="op">=</span> np.<span class="bu">sum</span>((mydata[<span class="st">"testscr"</span>] <span class="op">-</span> y_mean) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>ESS <span class="op">=</span> np.<span class="bu">sum</span>((result2.fittedvalues <span class="op">-</span> y_mean) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute measures</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>SER <span class="op">=</span> np.sqrt(SSR<span class="op">/</span>(n <span class="op">-</span> k <span class="op">-</span> <span class="dv">1</span>))</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>RMSE <span class="op">=</span> np.sqrt(SSR<span class="op">/</span>n)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>Rsq <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> (SSR <span class="op">/</span> TSS)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>adj_Rsq <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> ((n <span class="op">-</span> <span class="dv">1</span>) <span class="op">/</span> (n <span class="op">-</span> k <span class="op">-</span> <span class="dv">1</span>)) <span class="op">*</span> SSR <span class="op">/</span> TSS</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Print measures</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>fit_measures <span class="op">=</span> pd.DataFrame([SER, RMSE, Rsq, adj_Rsq], </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">"SER"</span>, <span class="st">"RMSE"</span>, <span class="st">"R^2"</span>, <span class="st">"Adj.R^2"</span>], </span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>[<span class="st">""</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the measures of fit</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>fit_measures</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t13-t4" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="10">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t13-t4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;16.4: Measures of fit for the MLRM
+</figcaption>
+<div aria-describedby="tbl-t13-t4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">SER</td>
+<td>14.447173</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">RMSE</td>
+<td>14.412734</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">R^2</td>
+<td>0.426431</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Adj.R^2</td>
+<td>0.425059</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="the-least-squares-assumptions-for-causal-inference-in-multiple-regression" class="level2" data-number="16.6">
+<h2 data-number="16.6" class="anchored" data-anchor-id="the-least-squares-assumptions-for-causal-inference-in-multiple-regression"><span class="header-section-number">16.6</span> The least squares assumptions for causal inference in multiple regression</h2>
+<p>In this section, we provide the least squares assumptions for the multiple linear regression model. As in the case of the linear regression model with one regressor, these assumptions ensure that the OLS estimator has the desired properties. First, these assumptions ensure that the OLS estimator is unbiased, consistent, and has an asymptotic normal distribution. Second, under these assumptions, the OLS estimates of the slope coefficients provide the estimated causal effects of the regressors on the dependent variable. We list these assumptions below.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The least squares assumptions for multiple regression
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>The zero-conditional mean assumption: <span class="math inline">\(\E\left(u_i|X_{1i},X_{i2},\dots,X_{ik}\right)=0\)</span> for <span class="math inline">\(i=1,2,\dots,n\)</span>.</li>
+<li>The random sampling assumption: <span class="math inline">\(\left(X_{1i},X_{i2},\dots,X_{ik},Y_i\right)\)</span>, <span class="math inline">\(i=1,2,\dots,n\)</span>, are i.i.d. draws from their joint distribution.</li>
+<li>The no large outliers assumption: <span class="math inline">\(X_1,\dots, X_k\)</span>, and <span class="math inline">\(Y\)</span> have finite fourth moments.</li>
+<li>The multicollinearity assumption: There is no perfect multicollinearity.</li>
+</ol>
+</div>
+</div>
+<p>The first assumption extends the zero-conditional mean assumption from the linear regression model with one regressor to the model with multiple regressors. We can use the correlation approach described in <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 14</span></a> to check whether this assumption is violated. According to this approach, in an empirical application, if we suspect that the error term includes an omitted variable that is correlated with the included regressors, then <span class="math inline">\(\E\left(u_i | X_{1i}, X_{2i}, \dots, X_{ki}\right) \neq 0\)</span>. In Section 13.8, we relax this assumption through a conditional mean independence assumption for the variable of interest.</p>
+<p>The second assumption requires that our sample data be collected through simple random sampling. The third assumption stipulates that there are no large outliers, which is ensured by requiring that both the dependent variable and the regressors have finite fourth moments.</p>
+<p>The fourth assumption is new and rules out perfect multicollinearity. In a multiple linear regression model, <strong>perfect multicollinearity</strong> arises if there is a perfect linear relationship among the regressors. For example, the linear relationship such as <span class="math inline">\(X_1=0.5X_5+X_6\)</span> suggests perfect multicollinearity among the regressors <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_5\)</span>, and <span class="math inline">\(X_6\)</span>. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 29</span></a>, we show that the OLS estimator is not defined when perfect multicollinearity is present.</p>
+<p><a href="#thm-thm13-1" class="quarto-xref">Theorem&nbsp;<span>16.2</span></a> summarizes the properties of the OLS estimators under these four assumptions. In this theorem, we do not provide explicit formulas for the asymptotic variance of the OLS estimators. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 29</span></a>, we use linear algebra to derive these formulas.</p>
+<div id="thm-thm13-1" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 16.2 (Properties of OLS Estimators)</strong></span> Under the four least squares assumptions, we have <span class="math inline">\(\E(\hat{\beta}_j) = \beta_j\)</span> for <span class="math inline">\(j=1,\dots,k\)</span>, i.e, the OLS estimators are <strong>unbiased</strong>. As <span class="math inline">\(n\to\infty\)</span>, <span class="math inline">\(\hat{\beta}_0,\dots,\hat{\beta}_k\)</span> are consistent and have a joint multivariate normal distribution.</p>
+</div>
+<p>According to <a href="#thm-thm13-1" class="quarto-xref">Theorem&nbsp;<span>16.2</span></a>, the OLS estimators <span class="math inline">\(\hat{\beta}_0, \dots, \hat{\beta}_k\)</span> satisfy three properties: (i) unbiasedness, (ii) consistency, and (iii) asymptotic joint normality. In the following simulation study, we use simulated data to show that these properties hold when <span class="math inline">\(n\)</span> is large enough. We assume that the dependent variable is generated according too <span class="math display">\[
+Y_i = \beta_0+\beta_1X_{1i}+\beta_2X_{2i}+u_i,
+\]</span> where <span class="math inline">\(\beta_0=0.5\)</span>, <span class="math inline">\(\beta_1=1.5\)</span>, <span class="math inline">\(\beta_2=1\)</span> and <span class="math inline">\(u_i\sim t_3\)</span>. For the regressors, we assume that they are generated from the following bivariate normal distribution: <span class="math display">\[
+(X_{1i},X_{2i})^{'}\sim N\left(\begin{pmatrix}2\\1.5\end{pmatrix},
+\begin{pmatrix}
+5&amp;1.5\\
+1.5&amp;5
+\end{pmatrix}
+\right).
+\]</span></p>
+<p>We set the sample size <span class="math inline">\(n\)</span> to 100 and generate 10000 samples. Using each sample, we estimate the model and store the estimated coefficients in the <code>coefs</code> array. We then generate histograms and density plots for each estimated coefficient. We provide the simulation results in <a href="#fig-fig13-1" class="quarto-xref">Figure&nbsp;<span>16.1</span></a>. The histograms and density plots for <span class="math inline">\(\hat{\beta}_0\)</span>, <span class="math inline">\(\hat{\beta}_1\)</span>, and <span class="math inline">\(\hat{\beta}_2\)</span> are bell-shaped and centered around the respective true parameter values. The surface plot in <a href="#fig-fig13-1" class="quarto-xref">Figure&nbsp;<span>16.1</span></a> resembles that of a bivariate normal distribution, suggesting that <span class="math inline">\(\hat{\beta}_1\)</span> and <span class="math inline">\(\hat{\beta}_2\)</span> have a joint bivariate normal distribution.</p>
+<div id="75202367" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set sample size and number of simulations</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>n_simulations <span class="op">=</span> <span class="dv">10000</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize array for coefficients</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>coefs <span class="op">=</span> np.zeros((n_simulations, <span class="dv">3</span>))</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">15</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop for sampling and estimation</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_simulations):</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate multivariate normal samples</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    mean <span class="op">=</span> [<span class="dv">2</span>, <span class="fl">1.5</span>]</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    cov <span class="op">=</span> [[<span class="dv">5</span>, <span class="fl">1.5</span>], [<span class="fl">1.5</span>, <span class="dv">5</span>]]</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> stats.multivariate_normal.rvs(mean<span class="op">=</span>mean, cov<span class="op">=</span>cov, size<span class="op">=</span>n)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate random errors</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> np.random.standard_t(df<span class="op">=</span><span class="dv">3</span>,size<span class="op">=</span>n)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate dependent variable</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    Y <span class="op">=</span> <span class="fl">0.5</span> <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> X[:, <span class="dv">0</span>] <span class="op">+</span> <span class="dv">1</span> <span class="op">*</span> X[:, <span class="dv">1</span>] <span class="op">+</span> u</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Fit linear regression using statsmodels</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    X_with_const <span class="op">=</span> sm.add_constant(X) <span class="co"># Add constant term for intercept</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> sm.OLS(Y, X_with_const).fit()</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    coefs[i, :] <span class="op">=</span> model.params <span class="co"># Store the coefficients</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-fig-fig13-1" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation results</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seaborn style</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>sns.<span class="bu">set</span>(style<span class="op">=</span><span class="st">'darkgrid'</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the figure</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">7</span>))</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogram and density plot for beta_0</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>ax1 <span class="op">=</span> fig.add_subplot(<span class="dv">221</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>sns.histplot(coefs[:, <span class="dv">0</span>], bins<span class="op">=</span><span class="dv">50</span>, kde<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, stat<span class="op">=</span><span class="st">'density'</span>, ax<span class="op">=</span>ax1, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>ax1.axvline(np.mean(coefs[:, <span class="dv">0</span>]), color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'dashed'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, label<span class="op">=</span><span class="st">'Mean'</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="vs">r'$\hat{\beta}_0$'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>ax1.set_ylabel(<span class="st">'Density'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>ax1.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>ax1.set_xlim(<span class="op">-</span><span class="fl">0.5</span>,<span class="fl">1.5</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogram and density plot for beta_1</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>ax2 <span class="op">=</span> fig.add_subplot(<span class="dv">222</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>sns.histplot(coefs[:, <span class="dv">1</span>], bins<span class="op">=</span><span class="dv">50</span>, kde<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, stat<span class="op">=</span><span class="st">'density'</span>, ax<span class="op">=</span>ax2, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>ax2.axvline(np.mean(coefs[:, <span class="dv">1</span>]), color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'dashed'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, label<span class="op">=</span><span class="st">'Mean'</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="vs">r'$\hat{\beta}_1$'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">'Density'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>ax2.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>ax2.set_xlim(<span class="fl">1.2</span>,<span class="fl">1.8</span>)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogram and density plot for beta_2</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>ax3 <span class="op">=</span> fig.add_subplot(<span class="dv">223</span>)</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>sns.histplot(coefs[:, <span class="dv">2</span>], bins<span class="op">=</span><span class="dv">50</span>, kde<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, stat<span class="op">=</span><span class="st">'density'</span>, ax<span class="op">=</span>ax3, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>ax3.axvline(np.mean(coefs[:, <span class="dv">2</span>]), color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'dashed'</span>, linewidth<span class="op">=</span><span class="dv">1</span>, label<span class="op">=</span><span class="st">'Mean'</span>)</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>ax3.set_xlabel(<span class="vs">r'$\hat{\beta}_2$'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>ax3.set_ylabel(<span class="st">'Density'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>ax3.set_xlim(<span class="fl">0.6</span>,<span class="fl">1.4</span>)</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>ax3.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Kernel density estimation for beta_1 and beta_2</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>kde <span class="op">=</span> stats.gaussian_kde(coefs[:, <span class="dv">1</span>:].T)</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Create grid for 3D plot</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>x_grid <span class="op">=</span> np.linspace(<span class="fl">1.2</span>, <span class="fl">1.8</span>, <span class="dv">100</span>)</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>y_grid <span class="op">=</span> np.linspace(<span class="fl">0.6</span>, <span class="fl">1.4</span>, <span class="dv">100</span>)</span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>X_grid, Y_grid <span class="op">=</span> np.meshgrid(x_grid, y_grid)</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>Z_grid <span class="op">=</span> kde(np.vstack([X_grid.ravel(), Y_grid.ravel()])).reshape(X_grid.shape)</span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="co"># 3D density estimate plot for beta_1 and beta_2</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>ax4 <span class="op">=</span> fig.add_subplot(<span class="dv">224</span>, projection<span class="op">=</span><span class="st">'3d'</span>)</span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>surf <span class="op">=</span> ax4.plot_surface(X_grid, Y_grid, Z_grid, cmap<span class="op">=</span><span class="st">'coolwarm'</span>, edgecolor<span class="op">=</span><span class="st">'none'</span>, rstride<span class="op">=</span><span class="dv">1</span>, cstride<span class="op">=</span><span class="dv">1</span>, alpha<span class="op">=</span><span class="fl">0.85</span>)</span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>ax4.contour(X_grid, Y_grid, Z_grid, zdir<span class="op">=</span><span class="st">'z'</span>, offset<span class="op">=</span>np.<span class="bu">min</span>(Z_grid), cmap<span class="op">=</span><span class="st">'coolwarm'</span>, linestyles<span class="op">=</span><span class="st">"solid"</span>)</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>ax4.set_xlabel(<span class="vs">r'$\hat{\beta}_1$'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>ax4.set_ylabel(<span class="vs">r'$\hat{\beta}_2$'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a><span class="co">#ax4.set_zlabel('Estimated Density', fontsize=12)</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Add color bar for surface</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>fig.colorbar(surf, ax<span class="op">=</span>ax4, shrink<span class="op">=</span><span class="fl">0.5</span>, aspect<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove ticks from 3D plot</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>ax4.set_xticks([])</span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>ax4.set_yticks([])</span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>ax4.set_zticks([])</span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Set a different viewing angle for better perspective</span></span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>ax4.view_init(elev<span class="op">=</span><span class="dv">30</span>, azim<span class="op">=</span><span class="dv">220</span>)</span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust layout for better spacing</span></span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-fig13-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig13-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter6-MultipleRegression_files/figure-html/fig-fig13-1-output-1.png" width="752" height="655" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig13-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16.1: Histogram and density plots of the simulation results
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="multicollinearity" class="level2" data-number="16.7">
+<h2 data-number="16.7" class="anchored" data-anchor-id="multicollinearity"><span class="header-section-number">16.7</span> Multicollinearity</h2>
+<p>When there is an exact linear relationship between regressors, we say there is perfect multicollinearity. On the other hand, when two or more regressors are highly correlated but not perfectly, we say that there is imperfect multicollinearity. Although imperfect multicollinearity does not violate the least squares assumptions, it can result in large standard errors for one or more of the OLS estimators.</p>
+<p>The perfect multicollinearity among the dummy variables is called the <strong>dummy variable trap</strong>. To illustrate the dummy variable trap, we use the data set contained in the <code>ch8_cps.xlsx</code> file. This data set includes the following variables.</p>
+<ul>
+<li><code>Female</code>: 1 if female; 0 if male</li>
+<li><code>Age</code>: Age (in Years)</li>
+<li><code>Ahe</code>: Average Hourly Earnings in 2015</li>
+<li><code>Yrseduc</code>: Years of Education</li>
+<li><code>Northeast</code>: 1 if from the Northeast, 0 otherwise</li>
+<li><code>Midwest</code>: 1 if from the Midwest, 0 otherwise</li>
+<li><code>South</code>: 1 if from the South, 0 otherwise</li>
+<li><code>West</code>: 1 if from the West, 0 otherwise</li>
+</ul>
+<p>Note that there are four regional dummy variables, denoted by <code>Northeast</code>, <code>Midwest</code>, <code>South</code>, and <code>West</code>. We consider the following regression model: <span class="math display">\[
+\begin{align*}
+\text{Ahe}&amp;=\beta_0+\beta_1\text{Yrseduc}+\beta_2\text{Female}+\beta_3\text{Northeast}\\
+&amp;+\beta_4\text{Midwest}+\beta_5\text{South}+\beta_6\text{West}+u.
+\end{align*}
+\]</span></p>
+<p>This regression suffers from the dummy variable trap beacuse we have a perfect linear relationship among the regional dummy variables: <span class="math display">\[
+\text{Northeast}+\text{Midwest}+\text{South}+\text{West}=1.
+\]</span></p>
+<p>To resolve this, we will treat the last dummy variable as the <strong>base category</strong> and exclude it from the regression model.</p>
+<p>We use the following code chunks to import the data. <a href="#tbl-t13-5" class="quarto-xref">Table&nbsp;<span>16.5</span></a> provides summary statistics.</p>
+<div id="c6defd51" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> pd.read_excel(<span class="st">"data/ch8_cps.xlsx"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Display column names</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>mydata.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>Index(['ahe', 'yrseduc', 'female', 'age', 'northeast', 'midwest', 'south',
+       'west'],
+      dtype='object')</code></pre>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>mydata.<span class="bu">round</span>(<span class="dv">3</span>).describe().T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="14" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t13-5" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="14">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t13-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;16.5: Summary statistics
+</figcaption>
+<div aria-describedby="tbl-t13-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="14">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">count</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">mean</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">std</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">min</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">25%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">50%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">75%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">ahe</td>
+<td style="text-align: left;">59668.0</td>
+<td style="text-align: left;">25.213725</td>
+<td style="text-align: left;">17.288965</td>
+<td style="text-align: left;">2.0</td>
+<td style="text-align: left;">13.736</td>
+<td style="text-align: left;">20.192</td>
+<td style="text-align: left;">31.25</td>
+<td style="text-align: left;">228.365</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">yrseduc</td>
+<td style="text-align: left;">59668.0</td>
+<td style="text-align: left;">14.094389</td>
+<td style="text-align: left;">2.598457</td>
+<td style="text-align: left;">6.0</td>
+<td style="text-align: left;">12.000</td>
+<td style="text-align: left;">13.000</td>
+<td style="text-align: left;">16.00</td>
+<td style="text-align: left;">20.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">female</td>
+<td style="text-align: left;">59668.0</td>
+<td style="text-align: left;">0.438510</td>
+<td style="text-align: left;">0.496209</td>
+<td style="text-align: left;">0.0</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">1.00</td>
+<td style="text-align: left;">1.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">age</td>
+<td style="text-align: left;">59668.0</td>
+<td style="text-align: left;">42.884846</td>
+<td style="text-align: left;">12.583984</td>
+<td style="text-align: left;">15.0</td>
+<td style="text-align: left;">33.000</td>
+<td style="text-align: left;">42.000</td>
+<td style="text-align: left;">52.00</td>
+<td style="text-align: left;">85.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">northeast</td>
+<td style="text-align: left;">59668.0</td>
+<td style="text-align: left;">0.157371</td>
+<td style="text-align: left;">0.364153</td>
+<td style="text-align: left;">0.0</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">1.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">midwest</td>
+<td style="text-align: left;">59668.0</td>
+<td style="text-align: left;">0.195063</td>
+<td style="text-align: left;">0.396252</td>
+<td style="text-align: left;">0.0</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">1.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">south</td>
+<td style="text-align: left;">59668.0</td>
+<td style="text-align: left;">0.369863</td>
+<td style="text-align: left;">0.482772</td>
+<td style="text-align: left;">0.0</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">1.00</td>
+<td style="text-align: left;">1.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">west</td>
+<td style="text-align: left;">59668.0</td>
+<td style="text-align: left;">0.277703</td>
+<td style="text-align: left;">0.447870</td>
+<td style="text-align: left;">0.0</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">1.00</td>
+<td style="text-align: left;">1.000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>In the following, we use the <code>smf.ols</code> function from the <code>statsmodels.formula.api</code> module to estimate the regression model.</p>
+<div id="2e6fd191" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>model3 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'ahe ~ yrseduc + female + northeast + midwest + south'</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                 data<span class="op">=</span>mydata)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>result3 <span class="op">=</span> model3.fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The estimation results contained in the <code>result3</code> object are shown in <a href="#tbl-t13-6" class="quarto-xref">Table&nbsp;<span>16.6</span></a>. The coefficient on each dummy variable shows the average difference in the dependent variable relative to the base category. For example, the estimated coefficient on <code>northeast</code> is 1.105, meaning that, holding the other variables constant, a person living in the Northeast region earns, on average, 1.105 more dollars hourly than a person living in the West (the base category).</p>
+<p>The estimated coefficient on <code>female</code> is -6.367. This estimate indicates that holding other variables constant, women earn on average 6.367 fewer dollars hourly than men. The estimated coefficient on <code>Yrseduc</code> is 2.981, which means that for each additional year of education, average hourly earnings increase by 2.981 dollars, holding other variables constant.</p>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> [<span class="st">'Model 3'</span>]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>results_table <span class="op">=</span> summary_col(results<span class="op">=</span>[result3],</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                            float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>, </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                            stars<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                            model_names<span class="op">=</span>models)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>results_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="16" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t13-6" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="16">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t13-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;16.6: The dummy variable trap
+</figcaption>
+<div aria-describedby="tbl-t13-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="16">
+<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
+<td style="text-align: left;">-13.501***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.356)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">yrseduc</td>
+<td style="text-align: left;">2.981***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.024)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">female</td>
+<td style="text-align: left;">-6.367***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.126)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">northeast</td>
+<td style="text-align: left;">1.105***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.197)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">midwest</td>
+<td style="text-align: left;">-1.382***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.184)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">south</td>
+<td style="text-align: left;">-1.108***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.156)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
+<td style="text-align: left;">0.226</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
+<td style="text-align: left;">0.226</td>
+</tr>
+</tbody>
+</table>
+<br>
+Standard errors in parentheses.<br>
+* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="control-variables-and-conditional-mean-independence" class="level2" data-number="16.8">
+<h2 data-number="16.8" class="anchored" data-anchor-id="control-variables-and-conditional-mean-independence"><span class="header-section-number">16.8</span> Control variables and conditional mean independence</h2>
+<p>In this section, we divide the regressors into two groups. The first group includes the variables of interest, denoted by <span class="math inline">\(X_1, \dots, X_k\)</span>. We aim to measure the causal effects of these variables on the dependent variable. The second group of regressors includes control variables, denoted by <span class="math inline">\(W_1, \dots, W_r\)</span>. A <strong>control variable</strong> is a regressor that accounts for an omitted factor affecting the dependent variable. Thus, our multiple linear regression model with control variables can be written as <span id="eq-eq13-2"><span class="math display">\[
+Y_i = \beta_0+\beta_1X_{1i}+\dots+\beta_k X_{ki}+\beta_{k+1}W_{1i}+\dots+\beta_{k+r}W_{ri}+u_i,
+\tag{16.2}\]</span></span> for <span class="math inline">\(i=1,\dots,n\)</span>. We consider this regression model under the following assumptions.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The least squares assumptions for causal inference in the multiple regression model with control variables
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>The conditional mean independence assumption: <span class="math inline">\(\E\left(u_i|X_{1i},X_{i2},\dots,X_{ik},W_{1i},\dots,W_{ri}\right)=\E\left(u_i|W_{1i},\dots,W_{ri}\right)\)</span> for <span class="math inline">\(i=1,2,\dots,n\)</span>.</li>
+<li>The random sampling assumption: <span class="math inline">\(\left(X_{1i},X_{i2},\dots,X_{ik},W_{1i},\dots,W_{ri},Y_i\right)\)</span>, <span class="math inline">\(i=1,2,\dots,n\)</span>, are i.i.d. draws from their joint distribution.</li>
+<li>The no large outliers assumption: <span class="math inline">\(X_1,\dots, X_k,W_{1i},\dots,W_{ri}\)</span>, and <span class="math inline">\(Y_i\)</span> have finite fourth moments.</li>
+<li>The multicollinearity assumption: There is no perfect multicollinearity.</li>
+</ol>
+</div>
+</div>
+<p>Except for the first assumption, all other assumptions are simple adjustments of the least squares assumptions given in Section 13.6 to account for the control variables. The conditional mean independence assumption indicates that, once we control for the control variables, the variables of interest become uncorrelated with the error term. This assumption ensures that the coefficients on the variables of interest have a causal interpretation. However, we do not require that <span class="math inline">\(\E\left(u_i | W_{1i}, \dots, W_{ri}\right) = 0\)</span>; that is, the control variables can be correlated with the error term. Thus, the coefficients on the control variables do not have a causal interpretation.</p>
+<div id="thm-thm13.3" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 16.3 (The OLS estimators in multiple regression with control variables)</strong></span> Under the least squares assumptions for causal inference in the multiple regression model with control variables, the OLS estimators <span class="math inline">\(\hat{\beta}_0, \dots, \hat{\beta}_k\)</span> are unbiased, consistent, and have an asymptotic joint normal distribution.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm13.3" class="quarto-xref">Theorem&nbsp;<span>16.3</span></a>). </span>Under the conditional mean independence assumption, we assume that <span class="math display">\[
+\begin{align}
+\E\left(u_i|X_{1i},X_{i2},\dots,X_{ik},W_{1i},\dots,W_{ri}\right)&amp;=\E\left(u_i|W_{1i},\dots,W_{ri}\right)\\
+&amp; = \gamma_0 + \gamma_1W_{1i} +\dots+\gamma_k W_{ki},
+\end{align}
+\]</span> where <span class="math inline">\(\gamma\)</span>’s are unknown coefficients. That is, we assume that <span class="math inline">\(\E\left(u_i|W_{1i},\dots,W_{ri}\right)\)</span> is a linear function of the control variables. Then, taking the conditional expectation of <a href="#eq-eq13-2" class="quarto-xref">Equation&nbsp;<span>16.2</span></a> with respect to <span class="math inline">\(X_{1i},X_{i2},\dots,X_{ik},W_{1i},\dots,W_{ri}\)</span>, we obtain <span class="math display">\[
+\begin{align}
+&amp;\E\left(Y_i|X_{1i},X_{i2},\dots,X_{ik},W_{1i},\dots,W_{ri}\right)\\
+&amp;=\beta_0+\beta_1X_{1i}+\dots+\beta_kX_{ki}+\beta_{k+1}W_{1i}+\dots+\beta_{k+r}W_{ri}\\
+&amp;+\E\left(u_i|X_{1i},X_{i2},\dots,X_{ik},W_{1i},\dots,W_{ri}\right)\\
+&amp;=(\beta_0+\gamma_0)+\beta_1X_{1i}+\dots+\beta_kX_{ki}+(\beta_{k+1}+\gamma_1)W_{1i}+\dots+(\beta_{k+r}+\gamma_r)W_{ri}\\
+&amp;=\delta_0+\beta_1X_{1i}+\dots+\beta_kX_{ki}+\delta_1W_{1i}+\dots+\delta_rW_{ri},
+\end{align}
+\]</span> where <span class="math inline">\(\delta_0=(\beta_{0}+\gamma_0)\)</span> an <span class="math inline">\(\delta_j=(\beta_{k+j}+\gamma_j)\)</span> for <span class="math inline">\(j=1,\dots,r\)</span>. This result suggests that we can express <a href="#eq-eq13-2" class="quarto-xref">Equation&nbsp;<span>16.2</span></a> as <span id="eq-eq13-3"><span class="math display">\[
+Y_i=\delta_0+\beta_1X_{1i}+\dots+\beta_k X_{ki}+\delta_{k+1}W_{1i}+\dots+\delta_{k+r}W_{ri}+v_i,
+\tag{16.3}\]</span></span> where <span class="math inline">\(\E\left(v_i|X_{1i},X_{i2},\dots,X_{ik},W_{1i},\dots,W_{ri}\right)=0\)</span>. Thus, we can apply <a href="#thm-thm13-1" class="quarto-xref">Theorem&nbsp;<span>16.2</span></a> and conclude that the OLS estimators <span class="math inline">\(\hat{\beta}_1,\dots,\hat{\beta}_k,\hat{\delta}_0,\dots,\hat{\delta}_r\)</span> are unbiased, consistent, and have an asymptotic normal distribution.</p>
+</div>
+<p>The proof <a href="#thm-thm13.3" class="quarto-xref">Theorem&nbsp;<span>16.3</span></a> shows that the OLS estimators <span class="math inline">\(\hat{\delta}_0,\dots,\hat{\delta}_r\)</span> are unbiased and consistent estimators of <span class="math inline">\(\delta_0,\dots,\delta_r\)</span>. From <span class="math inline">\(\beta_{k+j}=\delta_j-\gamma_j\)</span>, we can derive the OLS estimators of the coefficients on the control variables as <span class="math inline">\(\hat{\beta}_{k+j}=\hat{\delta}_j-\hat{\gamma}_j\)</span>. However, this approach is not feasible because we do not have consistent estimators of <span class="math inline">\(\gamma_j\)</span> for <span class="math inline">\(j=1,\dots,r\)</span>.</p>
+<p><a href="#thm-thm13.3" class="quarto-xref">Theorem&nbsp;<span>16.3</span></a> justifies the use of control variables in the multiple linear regression model. According to this theorem, control variables should be selected so that, once included in the model, the variable of interest becomes uncorrelated with the error term. In the empirical application presented in the next chapter, we discuss how to choose control variables in practice.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="pagination-link" aria-label="Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Chapter7-MultipleRegressionInference.html" class="pagination-link" aria-label="Hypothesis Tests and Confidence Intervals in Multiple Regression">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter6-MultipleRegression.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

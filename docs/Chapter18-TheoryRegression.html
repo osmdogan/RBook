@@ -1,0 +1,2081 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>27&nbsp; The Theory of Linear Regression with One Regressor – Introduction to Econometrics with R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Chapter19-TheoryMultipleRegression.html" rel="next">
+<link href="./Part5-TheoreticalTopics.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part5-TheoreticalTopics.html">Theoretical Topics</a></li><li class="breadcrumb-item"><a href="./Chapter18-TheoryRegression.html"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Econometrics with R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part0-RBasics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-DataStructures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Structures in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-ControlStructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Control Structures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-CustomFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Custom Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-StatFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Statistical Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Dataframes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-NumericalAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Applications in Numerical Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and Review</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentals of Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Further Topics in Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Analysis of Economic Time Series Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theoretical Topics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">27.1</span> Introduction</a></li>
+  <li><a href="#the-extended-least-squares-assumptions" id="toc-the-extended-least-squares-assumptions" class="nav-link" data-scroll-target="#the-extended-least-squares-assumptions"><span class="header-section-number">27.2</span> The extended least squares assumptions</a></li>
+  <li><a href="#introduction-to-asymptotic-distribution-theory" id="toc-introduction-to-asymptotic-distribution-theory" class="nav-link" data-scroll-target="#introduction-to-asymptotic-distribution-theory"><span class="header-section-number">27.3</span> Introduction to asymptotic distribution theory</a></li>
+  <li><a href="#asymptotic-distribution-of-the-ols-estimator" id="toc-asymptotic-distribution-of-the-ols-estimator" class="nav-link" data-scroll-target="#asymptotic-distribution-of-the-ols-estimator"><span class="header-section-number">27.4</span> Asymptotic distribution of the OLS estimator</a></li>
+  <li><a href="#asymptotic-distribution-of-the-t-statistic" id="toc-asymptotic-distribution-of-the-t-statistic" class="nav-link" data-scroll-target="#asymptotic-distribution-of-the-t-statistic"><span class="header-section-number">27.5</span> Asymptotic distribution of the t-statistic</a></li>
+  <li><a href="#the-gauss-markov-theorem-1" id="toc-the-gauss-markov-theorem-1" class="nav-link" data-scroll-target="#the-gauss-markov-theorem-1"><span class="header-section-number">27.6</span> The Gauss-Markov theorem</a></li>
+  <li><a href="#exact-sampling-distribution-of-the-ols-estimator" id="toc-exact-sampling-distribution-of-the-ols-estimator" class="nav-link" data-scroll-target="#exact-sampling-distribution-of-the-ols-estimator"><span class="header-section-number">27.7</span> Exact sampling distribution of the OLS estimator</a></li>
+  <li><a href="#exact-sampling-distribution-of-the-homoskedasticity-only-t-statistic" id="toc-exact-sampling-distribution-of-the-homoskedasticity-only-t-statistic" class="nav-link" data-scroll-target="#exact-sampling-distribution-of-the-homoskedasticity-only-t-statistic"><span class="header-section-number">27.8</span> Exact sampling distribution of the homoskedasticity-only t-statistic</a></li>
+  <li><a href="#weighted-least-squares" id="toc-weighted-least-squares" class="nav-link" data-scroll-target="#weighted-least-squares"><span class="header-section-number">27.9</span> Weighted least squares</a>
+  <ul class="collapse">
+  <li><a href="#wls-with-known-heteroskedasticity" id="toc-wls-with-known-heteroskedasticity" class="nav-link" data-scroll-target="#wls-with-known-heteroskedasticity"><span class="header-section-number">27.9.1</span> WLS with known heteroskedasticity</a></li>
+  <li><a href="#wls-with-a-known-functional-form-for-heteroskedasticity" id="toc-wls-with-a-known-functional-form-for-heteroskedasticity" class="nav-link" data-scroll-target="#wls-with-a-known-functional-form-for-heteroskedasticity"><span class="header-section-number">27.9.2</span> WLS with a known functional form for heteroskedasticity</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter18-TheoryRegression.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part5-TheoreticalTopics.html">Theoretical Topics</a></li><li class="breadcrumb-item"><a href="./Chapter18-TheoryRegression.html"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-chapter25" class="quarto-section-identifier"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="c406b300" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">'seaborn-v0_8-darkgrid'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduction" class="level2" data-number="27.1">
+<h2 data-number="27.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">27.1</span> Introduction</h2>
+<p>This chapter provides the theoretical foundation for the simple linear regression model with a single regressor. We present extended assumptions for the model and study both the asymptotic and exact sampling distributions of the OLS estimator and the <span class="math inline">\(t\)</span> statistic.</p>
+<p>We first introduce the extended least squares assumptions and discuss some properties of the OLS estimator and the <span class="math inline">\(t\)</span>-statistic under these assumptions. Next, we cover the basics of asymptotic distribution theory, including the law of large numbers and the central limit theorem. We then present both the asymptotic and exact sampling distributions of the OLS estimator and the <span class="math inline">\(t\)</span>-statistic. Finally, we introduce the weighted least squares estimator for the case where the functional form of heteroskedasticity is known.</p>
+<p>This chapter is supplemented by Appendix C, where we provide additional properties of some well-known distributions.</p>
+</section>
+<section id="the-extended-least-squares-assumptions" class="level2" data-number="27.2">
+<h2 data-number="27.2" class="anchored" data-anchor-id="the-extended-least-squares-assumptions"><span class="header-section-number">27.2</span> The extended least squares assumptions</h2>
+<p>The linear regression model with one regressor is <span id="eq-eq25-1"><span class="math display">\[
+Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i = 1, \ldots, n,
+\tag{27.1}\]</span></span> where <span class="math inline">\(Y_i\)</span> is the dependent variable, <span class="math inline">\(X_i\)</span> is the regressor, and <span class="math inline">\(u_i\)</span> is the error term. In <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 14</span></a>, we derive the OLS estimators of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> as <span class="math display">\[
+\begin{align*}
+\hat{\beta}_1 &amp;= \frac{\sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n (X_i - \bar{X})^2},\\
+\hat{\beta}_0 &amp;= \bar{Y} - \hat{\beta}_1 \bar{X},
+\end{align*}
+\]</span> where <span class="math inline">\(\bar{X} = \frac{1}{n}\sum_{i=1}^n X_i\)</span> and <span class="math inline">\(\bar{Y} = \frac{1}{n}\sum_{i=1}^n Y_i\)</span>.</p>
+<p>We consider <a href="#eq-eq25-1" class="quarto-xref">Equation&nbsp;<span>27.1</span></a> under the following extended assumptions.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The extended least squares assumptions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Zero-conditional mean assumption</strong>: <span class="math inline">\(\E(u_i |X_i) = 0\)</span>, i.e., the conditional distribution of <span class="math inline">\(u_i\)</span> given <span class="math inline">\(X_i\)</span> has a mean of <span class="math inline">\(0\)</span>.</li>
+<li><strong>Random sampling assumption</strong>: <span class="math inline">\((X_i, Y_i):\, i =1,2,\ldots,n\)</span> are independently and identically distributed (i.i.d.) across observations.</li>
+<li><strong>No large outliers assumption</strong>: <span class="math inline">\(\E(X_i^4)&lt;\infty\)</span> and <span class="math inline">\(\E(u_i^4)&lt;\infty\)</span>.</li>
+<li><strong>Homoskedasticity assumption</strong>: <span class="math inline">\(\text{Var}(u_i|X_i)=\sigma^2_u\)</span>, where <span class="math inline">\(\sigma^2_u\)</span> is a scalar unknown parameter.</li>
+<li><strong>Normal distribution assumption</strong>: The conditional distribution of <span class="math inline">\(u_i\)</span> given <span class="math inline">\(X_i\)</span> is normal, i.e., <span class="math inline">\(u_i|X_i\sim N(0,\sigma^2_u)\)</span>.</li>
+</ol>
+</div>
+</div>
+<p>The first three assumptions are the usual assumptions that ensure the large sample properties of the OLS estimator and the <span class="math inline">\(t\)</span>-statistic. The last two assumptions are additional assumptions that are required to show further properties of the OLS estimator. In particular, the fourth assumption is required to show that the OLS estimator is the best linear unbiased estimators (BLUE). The fifth assumption is required to show the <strong>exact</strong> sampling distribution of the OLS estimator and the <span class="math inline">\(t\)</span>-statistic. We collect these results in the following theorems.</p>
+<div id="thm-thm25-1" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.1</strong></span> Under the first three assumptions, the OLS estimators of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> are unbiased, consistent and have asymptotic normal distributions in large samples. Specifically, we have <span class="math display">\[
+\begin{align*}
+&amp;\hat{\beta}_1 \stackrel{A}{\sim} N\left(\beta_1, \sigma^2_{\hat{\beta}_1}\right),\,\text{where}\quad\sigma^2_{\hat{\beta}_1} = \frac{1}{n}\frac{\var\left((X_i - \mu_X)u_i\right)}{\left(\sigma^2_X\right)^2},\\
+&amp;\hat{\beta}_0 \stackrel{A}{\sim} N\left(\beta_0, \sigma^2_{\hat{\beta}_0}\right),\, \text{where}\quad\sigma^2_{\hat{\beta}_0} = \frac{1}{n}\frac{\var\left(H_i u_i\right)}{\left(\E(H_i^2)\right)^2}\,\,\text{and}\,\, H_i = 1 - \frac{\mu_X}{\E(X_i^2)}X_i.
+\end{align*}
+\]</span></p>
+</div>
+<div id="thm-thm25-2" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.2 (The Gauss-Markov theorem)</strong></span> Under the first four assumptions, the OLS estimators of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> are the best linear unbiased estimators (BLUE). The variances of the OLS estimators simplify to <span class="math display">\[
+\begin{align*}
+&amp;\sigma^2_{\widehat{\beta}_1} = \frac{\sigma^2_u}{n\sigma^2_X}\,\text{and}\,\sigma^2_{\hat{\beta}_0} = \frac{\E(X^2_i)\sigma^2_u}{n\sigma^2_X}.
+\end{align*}
+\]</span></p>
+</div>
+<div id="thm-thm25-3" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.3 (Exact sampling distributions of OLS estimators)</strong></span> Under all five assumptions, conditional on <span class="math inline">\(\{X_i\}_i^n\)</span>, the OLS estimators have exact normal sampling distributions with variances given in <a href="#thm-thm25-2" class="quarto-xref">Theorem&nbsp;<span>27.2</span></a>. The t-statistic for testing hypotheses about <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> follows the Student t-distribution with <span class="math inline">\(n - 2\)</span> degrees of freedom.</p>
+</div>
+<p><a href="#thm-thm25-1" class="quarto-xref">Theorem&nbsp;<span>27.1</span></a> suggests that we can make inference about the population parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> using t-statistics and confidence intervals when the sample size is large. In contrast, <a href="#thm-thm25-3" class="quarto-xref">Theorem&nbsp;<span>27.3</span></a> provides the exact sampling distributions of the OLS estimators and the t-statistic under all five assumptions. In this case, a large sample size is not required for inference.</p>
+</section>
+<section id="introduction-to-asymptotic-distribution-theory" class="level2" data-number="27.3">
+<h2 data-number="27.3" class="anchored" data-anchor-id="introduction-to-asymptotic-distribution-theory"><span class="header-section-number">27.3</span> Introduction to asymptotic distribution theory</h2>
+<p>We use asymptotic distribution theory to investigate the distribution of statistics, including estimators, test statistics, and confidence intervals, in large samples. For a statistic, our goal is to determine its asymptotic distribution when the sample size is large and then use this distribution as an approximation to the exact sampling distribution. Therefore, we require a sufficiently large sample size when making inference based on the asymptotic distribution.</p>
+<p>There are two important tools in asymptotic distribution theory: the law of large numbers (LLN) and the central limit theorem (CLT). In this section, we review some important probability concepts and inequalities that will help us apply these tools effectively.</p>
+<div id="def-def25-1" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 27.1 (Convergence in probability)</strong></span> The sequence of random variables <span class="math inline">\(\{S_n\}\)</span> converges in probability to a random variable <span class="math inline">\(S\)</span> if for any <span class="math inline">\(\epsilon&gt;0\)</span>, we have <span class="math display">\[
+\lim_{n\to\infty} P(|S_n - S| &gt; \epsilon) = 0.
+\]</span> We denote this convergence as <span class="math inline">\(S_n \stackrel{p}{\to} S\)</span> or <span class="math inline">\(\text{plim}_{n\to\infty} (S_n -S) = 0\)</span>.</p>
+</div>
+<p>For any <span class="math inline">\(\epsilon&gt;0\)</span>, we have the following relations: <span class="math display">\[
+\begin{align*}
+\{|S_n-S|&gt;\epsilon\}\subseteq\{|S_n-S|\geq\epsilon\}\subseteq\{|S_n-S|&gt;\epsilon/2\}.
+\end{align*}    
+\]</span></p>
+<p>Therefore, we have <span class="math display">\[
+P(|S_n - S| &gt; \epsilon) \leq P(|S_n - S| \geq \epsilon) \leq P(|S_n - S| &gt; \epsilon/2).
+\]</span></p>
+<p>Thus, <span class="math inline">\(S_n \stackrel{p}{\to} S\)</span> if and only if <span class="math inline">\(P(|S_n - S| \geq \epsilon) \to 0\)</span> for any <span class="math inline">\(\epsilon&gt;0\)</span>. That is, we can replace the strict inequality in the definition of convergence in probability with a weak inequality.</p>
+<p>Consider the event <span class="math inline">\(A=\{|S_n-S|&gt;\epsilon\}\)</span> given in <a href="#def-def25-1" class="quarto-xref">Definition&nbsp;<span>27.1</span></a>. Its complement is <span class="math inline">\(A^c=\{|S_n-S|\leq\epsilon\}\)</span>. Since <span class="math inline">\(P(A^c)=1-P(A)\)</span>, we can alternatively state the definition of convergence in probability as, for any <span class="math inline">\(\epsilon&gt;0\)</span>, <span class="math display">\[
+S_n \stackrel{p}{\to} S \iff \lim_{n\to\infty}P(|S_n - S| \leq \epsilon) = 1.
+\]</span></p>
+<div id="exm-exm25-1-plim1" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.1 (Convergence in probability)</strong></span> Let <span class="math inline">\(X\)</span> be a random variable that has an <a href="https://en.wikipedia.org/wiki/Exponential_distribution">exponential distribution</a> with parameter <span class="math inline">\(\lambda&gt;0\)</span>. Then, its pdf and cdf are given by <span class="math display">\[
+\begin{align*}
+f(x) =
+\begin{cases}
+\lambda e^{-\lambda x}, &amp; \quad x \geq 0,\\
+0, &amp; \quad x &lt; 0.
+\end{cases}
+\end{align*}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align*}
+F(x) =
+\begin{cases}
+0, &amp; \quad x &lt; 0,\\
+1 - e^{-\lambda x}, &amp; \quad x \geq 0.
+\end{cases}
+\end{align*}
+\]</span></p>
+<p>Let <span class="math inline">\(S_n\sim\text{Exponential}(n)\)</span>. Then, we have <span class="math display">\[
+\begin{align*}
+P(|S_n - 0| &gt; \epsilon) &amp;= P(S_n &gt; \epsilon) = 1 - F(\epsilon) = e^{-n\epsilon} \to 0,
+\end{align*}
+\]</span></p>
+<p>as <span class="math inline">\(n\to\infty\)</span>. Thus, <span class="math inline">\(S_n \stackrel{p}{\to} 0\)</span>, i.e., <span class="math inline">\(\text{plim}_{n\to\infty} S_n = 0\)</span>.</p>
+</div>
+<p>Consider <span class="math inline">\(S_n\)</span> defined in <a href="#exm-exm25-1-plim1" class="quarto-xref">Example&nbsp;<span>27.1</span></a>. In the following, we plot its pdf for different values of <span class="math inline">\(n\)</span>. As <span class="math inline">\(n\)</span> increases, <a href="#fig-fig25-plim1" class="quarto-xref">Figure&nbsp;<span>27.1</span></a> indicates that the pdf of <span class="math inline">\(S_n\)</span> becomes more concentrated around <span class="math inline">\(0\)</span>, which is consistent with the result that <span class="math inline">\(S_n \stackrel{p}{\to} 0\)</span>.</p>
+<div id="cell-fig-fig25-plim1" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the pdf of S_n ~ Exponential(n) for different n</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">100</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n_values <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">20</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">4</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> n_values:</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    pdf <span class="op">=</span> n <span class="op">*</span> np.exp(<span class="op">-</span>n <span class="op">*</span> x)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(x, pdf, label<span class="op">=</span><span class="ss">f'n=</span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'$S_n$'</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Density'</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-fig25-plim1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig25-plim1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter18-TheoryRegression_files/figure-html/fig-fig25-plim1-output-1.png" width="439" height="351" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig25-plim1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27.1: The pdf of <span class="math inline">\(S_n\)</span> for different <span class="math inline">\(n\)</span>
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="def-def25-2" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 27.2 (Consistent estimator)</strong></span> If <span class="math inline">\(S_n\xrightarrow{p}\mu\)</span>, where <span class="math inline">\(\mu\)</span> is a constant, then <span class="math inline">\(S_n\)</span> is said to be a consistent estimator of <span class="math inline">\(\mu\)</span>.</p>
+</div>
+<p>In <a href="#def-def25-2" class="quarto-xref">Definition&nbsp;<span>27.2</span></a>, the limiting variable is a constant. We call a constant variable a degenerate random variable. Thus, a consistent estimator converges in probability to a degenerate random variable.</p>
+<div id="def-def25-2-1" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 27.3 (Degenerate random variable)</strong></span> A degenerate random variable is a random variable that takes a single value with probability 1.</p>
+</div>
+<p>If <span class="math inline">\(X\)</span> is a degenerate random variable, then there exists a constant <span class="math inline">\(c\)</span> such that <span class="math inline">\(P(X=c)=1\)</span>. Therefore, <span class="math inline">\(\E(X)=c\)</span> and <span class="math inline">\(\text{Var}(X)=0\)</span>. The CDF of <span class="math inline">\(X\)</span> is given by <span class="math display">\[
+\begin{align*}
+F(x) =
+\begin{cases}
+0, &amp; \quad x &lt; c,\\
+1, &amp; \quad x \geq c.
+\end{cases}
+\end{align*}
+\]</span></p>
+<p>Below, we state some useful inequalities that are often used in the asymptotic distribution theory.</p>
+<div id="thm-thm25-4" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.4 (Jensen’s inequality)</strong></span> Let <span class="math inline">\(g\)</span> be a convex function, then for any random variable <span class="math inline">\(X\)</span>, we have <span class="math display">\[
+\E(g(X))\geq g(\E(X)).
+\]</span> If <span class="math inline">\(g\)</span> is a concave function, then we have <span class="math display">\[
+\E(g(X))\leq g(\E(X)).
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-4" class="quarto-xref">Theorem&nbsp;<span>27.4</span></a>). </span>See <span class="citation" data-cites="Hansen2022b">Hansen (<a href="references.html#ref-Hansen2022b" role="doc-biblioref">2022b</a>)</span>.</p>
+</div>
+<p>Some inequalities based on Jensen’s inequality are listed below.</p>
+<ul>
+<li>Since <span class="math inline">\(g(x)=e^x\)</span> is a convex function, we have <span class="math inline">\(e^{\E(X)}\leq \E(e^X)\)</span> for any random variable <span class="math inline">\(X\)</span>.</li>
+<li>Consider <span class="math inline">\(g(x)=x^2\)</span>, which is a convex function. Then, it follows that <span class="math inline">\((\E(X))^2\leq \E(X^2)\)</span> for any random variable <span class="math inline">\(X\)</span>. This inequality suggests that <span class="math inline">\(\text{var}(X)=\E(X^2)-(\E(X))^2\geq0\)</span>. i.e., the variance of a random variable is non-negative.</li>
+<li>The function <span class="math inline">\(g(x)=\sqrt{x}\)</span> is concave for <span class="math inline">\(x&gt;0\)</span>. Then, it follows that <span class="math inline">\(\E(\sqrt{X})\leq \sqrt{\E(X)}\)</span> for any non-negative random variable <span class="math inline">\(X\)</span>.</li>
+<li>The function <span class="math inline">\(\log(x)\)</span> is concave for <span class="math inline">\(x&gt;0\)</span>. Thus, it follows that <span class="math inline">\(\E(\log(X))\leq \log(\E(X))\)</span> for any random variable <span class="math inline">\(X&gt;0\)</span>.</li>
+</ul>
+<div id="thm-thm25-5" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.5 (Expectation Inequality)</strong></span> Let <span class="math inline">\(X\)</span> be a random variable, then <span class="math display">\[
+\begin{align}
+|\E(X)|\leq\E(|X|).
+\end{align}
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-5" class="quarto-xref">Theorem&nbsp;<span>27.5</span></a>). </span>The function <span class="math inline">\(g(x)=|x|\)</span> is a convex function. Then, we can apply Jensen’s inequality to <span class="math inline">\(g(X)\)</span> to get the result. Alternatively, let <span class="math inline">\(X=X^{+}-X^{-}\)</span>, where <span class="math inline">\(X^{+}=\max(X,0)\)</span> and <span class="math inline">\(X^{-}=\max(-X,0)\)</span>. Then, <span class="math inline">\(|X|=X^{+}+X^{-}\)</span>. By the triangle inequality, we have <span class="math display">\[
+\begin{align*}
+|\E(X)|&amp;=|\E(X^+)-\E(X^-)|\\
+&amp;\leq\E(X^+)+\E(X^-)\\
+&amp;=\E(X^++X^-)\\
+&amp;=\E(|X|).
+\end{align*}
+\]</span></p>
+</div>
+<p>The expectation inequality also holds for random vectors. For example, if <span class="math inline">\(\bs{X}\in\mathbb{R}^m\)</span> is a random vector, then <span class="math inline">\(\|\E(\bs{X})\|\leq\E(\|\bs{X}\|)\)</span>, where <span class="math inline">\(\|\cdot\|\)</span> can be any valid vector norm. See Appendix D for more details on vector and matrix norms.</p>
+<div id="thm-thm25-6" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.6 (Lyapunov’s Inequality)</strong></span> Let <span class="math inline">\(\bs{X}\)</span> be a random variable. Then, for any <span class="math inline">\(0&lt;r\leq p\)</span>, we have <span class="math display">\[
+\begin{align}
+\left(\E\left(|\bs{X}|^r\right)\right)^{1/r}\leq\left(\E\left(|\bs{X}|^p\right)\right)^{1/p}.
+\end{align}
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-6" class="quarto-xref">Theorem&nbsp;<span>27.6</span></a>). </span>The function defined by <span class="math inline">\(g(x)=x^{p/r}\)</span> is convex for <span class="math inline">\(x&gt;0\)</span> and <span class="math inline">\(0&lt;r\leq p\)</span>. Let <span class="math inline">\(Y=|X|^r\)</span>. Then, by Jensen’s inequality, we have <span class="math display">\[
+\begin{align*}
+g(\E(Y))&amp;=g(\E(|X|^r))=(\E(|X|^r))^{p/r}\\
+&amp;\leq\E(g(Y))=\E(|X|^p).
+\end{align*}
+\]</span> Then, taking <span class="math inline">\(p\)</span>-th root on both sides yields the result.</p>
+</div>
+<p>Lyapunov’s inequality also holds for random vectors and matrices. For example, if <span class="math inline">\(\bs{X}\in\mathbb{R}^{m\times n}\)</span> is a random matrix, then <span class="math inline">\((\E(\|\bs{X})\|^r))^{1/r}\leq(\E(\|\bs{X}\|^p))^{1/p}\)</span>, where <span class="math inline">\(\|\cdot\|\)</span> denotes any matrix norm (<span class="citation" data-cites="Hansen2022">Hansen (<a href="references.html#ref-Hansen2022" role="doc-biblioref">2022a</a>)</span>).</p>
+<div id="thm-thm25-7" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.7 (Markov’s Inequality)</strong></span> Let <span class="math inline">\(V\)</span> be a non-negative random variable and <span class="math inline">\(\delta\)</span> be a positive constant. Then, <span class="math display">\[
+\begin{align}
+P(V\geq\delta)\leq\frac{\E(V)}{\delta}.
+\end{align}
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-7" class="quarto-xref">Theorem&nbsp;<span>27.7</span></a>). </span>Let <span class="math inline">\(f\)</span> be the pdf of <span class="math inline">\(V\)</span>. Then, <span class="math display">\[
+\begin{align*}
+\E(V)&amp;=\int_{0}^{\infty}vf(v)\text{d}v=\int_{0}^{\delta}vf(v)\text{d}v+\int_{\delta}^{\infty}vf(v)\text{d}v\\
+&amp;\geq\int_{\delta}^{\infty}vf(v)\text{d}v\geq\delta\int_{\delta}^{\infty}f(v)\text{d}v\\
+&amp;=\delta P(V\geq\delta),
+\end{align*}
+\]</span> where the second inequality follows from the fact that <span class="math inline">\(v\geq\delta\)</span> over the range of integration. Then, dividing both sides by <span class="math inline">\(\delta\)</span> yields the result.</p>
+</div>
+<p>Markov’s inequality also holds for random vectors and matrices. For example, if <span class="math inline">\(\bs{V}\in\mathbb{R}^{m\times n}\)</span> is a random matrix, then <span class="math inline">\(P(\|\E(\bs{V})\|\geq\delta)\leq\E(\|\bs{V}\|)/\delta\)</span>, where <span class="math inline">\(\|\cdot\|\)</span> denotes a matrix norm.</p>
+<div id="thm-thm25-8" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.8 (Chebychev’s inequality)</strong></span> Let <span class="math inline">\(V\)</span> be a random variable with mean <span class="math inline">\(\mu_V\)</span> and variance <span class="math inline">\(\sigma^2_V\)</span>, and <span class="math inline">\(\delta\)</span> be a positive constant. Then, <span class="math display">\[
+\begin{align}
+P(|V-\mu_V|\geq\delta)\leq\sigma^2_V/\delta^2.
+\end{align}
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-5" class="quarto-xref">Theorem&nbsp;<span>27.5</span></a>). </span>Let <span class="math inline">\(W=V-\mu_V\)</span> and let <span class="math inline">\(f\)</span> be the pdf of <span class="math inline">\(W\)</span>. Then, <span class="math display">\[
+\begin{align*}
+\E(W^2)&amp;=\int_{-\infty}^{\infty}w^2f(w)\text{d}w\\
+&amp;=\int_{-\infty}^{-\delta}w^2f(w)\text{d}w+\int_{-\delta}^{\delta}w^2f(w)\text{d}w+\int_{\delta}^{\infty}w^2f(w)\text{d}w\\
+&amp;\geq\int_{-\infty}^{-\delta}w^2f(w)\text{d}w+\int_{\delta}^{\infty}w^2f(w)\text{d}w\\
+&amp;\geq\delta^2\left(\int_{-\infty}^{-\delta}f(w)\text{d}w+\int_{\delta}^{\infty}f(w)\text{d}w\right)\\
+&amp;=\delta^2P(|W|\geq\delta),
+\end{align*}
+\]</span> where the second inequality follows from the fact that <span class="math inline">\(w^2\geq\delta^2\)</span> over the range of integration. Substituting <span class="math inline">\(W=V-\mu_V\)</span> and noting that <span class="math inline">\(\E(W^2)=\sigma^2_V\)</span> yields the result.</p>
+</div>
+<p>Let <span class="math inline">\(A=\{|V-\mu_V|\geq\delta\}\)</span> and <span class="math inline">\(A^c=\{|V-\mu_V|&lt;\delta\}\)</span>, where <span class="math inline">\(A^c\)</span> is the complement of <span class="math inline">\(A\)</span>. Since <span class="math inline">\(P(A^c)=1-P(A)\)</span>, we can alternatively state Chebychev’s inequality as <span class="math display">\[
+P(|V-\mu_V|&lt;\delta)\geq 1-\frac{\sigma^2_V}{\delta^2}.
+\]</span> Thus, Chebychev’s inequality provides a lower bound on the probability that a random variable <span class="math inline">\(V\)</span> is within <span class="math inline">\(\delta\)</span> of its mean <span class="math inline">\(\mu_V\)</span>, i.e., <span class="math display">\[
+P(\mu_V-\delta&lt;V&lt;\mu_V+\delta)\geq 1-\frac{\sigma^2_V}{\delta^2}.
+\]</span></p>
+<p>In the following code chunk, we assume that <span class="math inline">\(V\sim N(0,1)\)</span> and <code>delta = np. arange(1, 10)</code>. We calculate the Chebychev bound and the actual probability that <span class="math inline">\(V\)</span> is within <span class="math inline">\(\delta\)</span> of its mean. <a href="#fig-fig25-1" class="quarto-xref">Figure&nbsp;<span>27.2</span></a> shows that the Chebychev bound is a conservative estimate of the actual probability.</p>
+<div id="cb2ca5ac" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the Chebychev inequality</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sigma2_V <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>mu_V <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">10</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> sigma2_V <span class="op">/</span> (delta<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Actual probability</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>prob_actual <span class="op">=</span> stats.norm.cdf(delta, mu_V, np.sqrt(sigma2_V)) <span class="op">-</span> stats.norm.cdf(<span class="op">-</span>delta, mu_V, np.sqrt(sigma2_V))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-fig-fig25-1" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chebychev lower bound and actual probability</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.plot(delta, prob, label<span class="op">=</span><span class="st">'Chebychev bound'</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>plt.plot(delta, prob_actual, label<span class="op">=</span><span class="st">'Actual probability'</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r'$\delta$'</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Probability'</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-fig25-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig25-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter18-TheoryRegression_files/figure-html/fig-fig25-1-output-1.png" width="506" height="349" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig25-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27.2: Chebychev’s inequality
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Using Chebychev’s inequality, we can show the law of large numbers given in the following theorem.</p>
+<div id="thm-thm25-9" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.9 (Weak law of large numbers)</strong></span> Let <span class="math inline">\(\{X_i\}\)</span> be a sequence of i.i.d. random variables with mean <span class="math inline">\(\mu&lt;\infty\)</span> and variance <span class="math inline">\(\sigma^2&lt;\infty\)</span>. Then, the sample mean <span class="math inline">\(\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i\)</span> converges in probability to <span class="math inline">\(\mu\)</span>, i.e., <span class="math inline">\(\bar{X}_n\stackrel{p}{\to}\mu\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-9" class="quarto-xref">Theorem&nbsp;<span>27.9</span></a>). </span>Note that <span class="math inline">\(\E(\bar{X}_n)=\mu\)</span> and <span class="math inline">\(\text{Var}(\bar{X}_n)=\sigma^2/n\)</span>. Then, by Chebychev’s inequality, we have <span class="math display">\[
+\begin{align*}
+P(|\bar{X}_n-\mu|&gt;\delta)\leq\frac{\text{Var}(\bar{X}_n)}{\delta^2}=\frac{\sigma^2}{n\delta^2} \to 0,
+\end{align*}
+\]</span> as <span class="math inline">\(n\to\infty\)</span>.</p>
+</div>
+<p>In <a href="#thm-thm25-9" class="quarto-xref">Theorem&nbsp;<span>27.9</span></a>, we assume that the second moment <span class="math inline">\(\E(X_i^2)\)</span> is finite, i.e., <span class="math inline">\(\sigma^2&lt;\infty\)</span>. We note that this is not necessary for the weak law of large numbers. However, our proof based on Chebychev’s inequality requires the existence of the second moment. For the sake of completeness, we also state the version without the finite second moment assumption.</p>
+<div id="thm-thm25-9-2" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.10 (Weak law of large numbers)</strong></span> Let <span class="math inline">\(\{X_i\}\)</span> be a sequence of i.i.d. random variables with mean <span class="math inline">\(\mu&lt;\infty\)</span>. Then, <span class="math inline">\(\bar{X}_n\stackrel{p}{\to}\mu\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-9-2" class="quarto-xref">Theorem&nbsp;<span>27.10</span></a>). </span>See the proof of Theorem 7.4 in <span class="citation" data-cites="Hansen2022b">Hansen (<a href="references.html#ref-Hansen2022b" role="doc-biblioref">2022b</a>)</span>.</p>
+</div>
+<div id="exm-exm25-1" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.2 (Law of large numbers)</strong></span> Suppose <span class="math inline">\(\{Y_i\}_{i=1}^n\)</span> are i.i.d. with <span class="math inline">\(Y_i\sim N(\mu_Y,\sigma^2_Y)\)</span>, where <span class="math inline">\(0&lt;\sigma^2_Y&lt;\infty\)</span>. Consider the following estimators of <span class="math inline">\(\mu_Y\)</span>:</p>
+<ol type="1">
+<li><span class="math inline">\(m_a=Y_1\)</span>,</li>
+<li><span class="math inline">\(m_b=\left(\frac{1-a^n}{1-a}\right)^{-1}\sum_{i=1}^na^{i-1}Y_i\)</span>, where <span class="math inline">\(0&lt;a&lt;1\)</span>, and</li>
+<li><span class="math inline">\(m_c=\bar{Y}+1/n\)</span>.</li>
+</ol>
+<p>We show that <span class="math inline">\(m_a\)</span> and <span class="math inline">\(m_b\)</span> are inconsistent, while <span class="math inline">\(m_c\)</span> is consistent. Note that <span class="math inline">\(\E(m_a)=\E(Y_1)=\mu_Y\)</span>, showing that <span class="math inline">\(m_a\)</span> is unbiased. However, since <span class="math inline">\(\text{var}(Y_1)=\sigma^2_Y&gt;0\)</span>, <span class="math inline">\(m_a\)</span> has positive probability of falling outside any interval around <span class="math inline">\(\mu_Y\)</span>. Therefore <span class="math inline">\(P(|m_a-\mu_Y|\geq\delta)=P(|Y_1-\mu_Y|\geq\delta)&gt;0\)</span> as <span class="math inline">\(n\to\infty\)</span>. Thus, <span class="math inline">\(m_a\)</span> is inconsistent. This result is not surprising because <span class="math inline">\(m_a\)</span> uses the information in only one observation, therefore its distribution cannot concentrate around <span class="math inline">\(\mu_Y\)</span> as the sample size increases.</p>
+<p>For the second estimator, since <span class="math inline">\(\sum_{i=1}^na^{i-1}=(1-a^n)/(1-a)\)</span>, we have <span class="math display">\[
+\E(m_b)=\E\left(\left(\frac{1-a^n}{1-a}\right)^{-1}\sum_{i=1}^na^{i-1}Y_i\right)=\mu_Y,
+\]</span> showing that <span class="math inline">\(m_b\)</span> is unbiased. The variance of <span class="math inline">\(m_b\)</span> is <span class="math display">\[
+\begin{align*}
+\text{Var}(m_b)&amp;=\left(\frac{1-a^n}{1-a}\right)^{-2}\sum_{i=1}^n\left(a^{i-1}\right)^2\sigma^2_Y\\
+&amp;=\sigma^2_Y\frac{(1+a^n)(1-a)}{(1-a^n)(1+a)}.
+\end{align*}
+\]</span></p>
+<p>Similar to <span class="math inline">\(m_a\)</span>, since the variance of <span class="math inline">\(m_b\)</span> does not decrease as <span class="math inline">\(n\)</span> increases, we conclude that <span class="math inline">\(m_b\)</span> is also inconsistent.</p>
+<p>Finally, we consider the third estimator: <span class="math display">\[
+\E(m_c)=\E(\bar{Y}+1/n)=\mu_Y+1/n,
+\]</span> showing that <span class="math inline">\(m_c\)</span> has a bias of <span class="math inline">\(1/n\)</span>. However, as <span class="math inline">\(n\to\infty\)</span>, the bias vanishes. Using Chebychev’s inequality, we can show that <span class="math display">\[
+P(|m_c-\mu_Y|\geq\delta)\leq\E\left((\bar{Y}+1/n-\mu_Y)^2\right)/\delta^2=\frac{\sigma^2_Y}{\delta^2n}+\frac{1}{\delta^2n^2}\to0,
+\]</span> as <span class="math inline">\(n\to\infty\)</span>. Thus, <span class="math inline">\(m_c\)</span> is consistent.</p>
+</div>
+<p>In the following code chunk, we illustrate the law of large numbers using the estimators <span class="math inline">\(m_a\)</span>, <span class="math inline">\(m_b\)</span>, and <span class="math inline">\(m_c\)</span> defined in <a href="#exm-exm25-1" class="quarto-xref">Example&nbsp;<span>27.2</span></a>. We set <span class="math inline">\(\mu_Y = 0\)</span>, <span class="math inline">\(\sigma_Y^2 = 1\)</span>, and <span class="math inline">\(a = 0.5\)</span>. We consider three sample sizes: <span class="math inline">\(n = 10\)</span>, <span class="math inline">\(n = 100\)</span>, and <span class="math inline">\(n = 1000\)</span>. For each sample size, we generate 1000 samples and compute each estimator. We then create histograms of each estimator for each sample size.</p>
+<p><a href="#fig-fig25-2" class="quarto-xref">Figure&nbsp;<span>27.3</span></a> displays the histograms of <span class="math inline">\(m_a\)</span>, <span class="math inline">\(m_b\)</span>, and <span class="math inline">\(m_c\)</span> for different sample sizes. In the case of <span class="math inline">\(m_a\)</span> and <span class="math inline">\(m_b\)</span>, the histograms do not concentrate around the true mean <span class="math inline">\(\mu_Y = 0\)</span> as the sample size increases. However, since the histograms are centered around the true mean, these estimators are unbiased. On the other hand, the histogram of <span class="math inline">\(m_c\)</span> becomes more concentrated around the true mean as the sample size increases, indicating that <span class="math inline">\(m_c\)</span> is a consistent estimator.</p>
+<div id="a114c2d2" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the law of large numbers</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mu_Y <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>sigma2_Y <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>a<span class="op">=</span><span class="fl">0.5</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Three sample sizes</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> [<span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">1000</span>]</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of simulations</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>n_sim <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimators</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>m_a <span class="op">=</span> np.zeros((<span class="bu">len</span>(n), n_sim))</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>m_b <span class="op">=</span> np.zeros((<span class="bu">len</span>(n), n_sim))</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>m_c <span class="op">=</span> np.zeros((<span class="bu">len</span>(n), n_sim))</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(n)):</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n_sim):</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        Y <span class="op">=</span> np.random.normal(mu_Y, sigma2_Y, n[i])</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        m_a[i, j] <span class="op">=</span> Y[<span class="dv">0</span>]</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        m_b[i, j] <span class="op">=</span> ((<span class="dv">1</span><span class="op">-</span>a<span class="op">**</span>n[i])<span class="op">/</span>(<span class="dv">1</span><span class="op">-</span>a))<span class="op">**</span>(<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span>np.<span class="bu">sum</span>(a<span class="op">**</span>(np.arange(n[i]))<span class="op">*</span>Y)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        m_c[i, j] <span class="op">=</span> np.mean(Y) <span class="op">+</span> <span class="dv">1</span><span class="op">/</span>n[i]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-nrow="3" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate histograms for m_a</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">1</span>, ncols<span class="op">=</span><span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">4</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].hist(m_a[<span class="dv">0</span>, :], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axvline(mu_Y, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'True Mean'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlim(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">"n=10"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#axes[0].legend()</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].hist(m_a[<span class="dv">1</span>, :], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].axvline(mu_Y, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'True Mean'</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlim(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">"n=100"</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#axes[1].legend()</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].hist(m_a[<span class="dv">2</span>, :], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].axvline(mu_Y, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'True Mean'</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_xlim(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_title(<span class="st">"n=1000"</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">#axes[2].legend()</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate histograms for m_b</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">1</span>, ncols<span class="op">=</span><span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">4</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].hist(m_b[<span class="dv">0</span>, :], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axvline(mu_Y, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'True Mean'</span>)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlim(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">"n=10"</span>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">#axes[0].legend()</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].hist(m_b[<span class="dv">1</span>, :], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].axvline(mu_Y, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'True Mean'</span>)</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlim(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">"n=100"</span>)</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="co">#axes[1].legend()</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].hist(m_b[<span class="dv">2</span>, :], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].axvline(mu_Y, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'True Mean'</span>)</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_xlim(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_title(<span class="st">"n=1000"</span>)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="co">#axes[2].legend()</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate histograms for m_c</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">1</span>, ncols<span class="op">=</span><span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">4</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].hist(m_c[<span class="dv">0</span>, :], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axvline(mu_Y, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'True Mean'</span>)</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlim(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">"n=10"</span>)</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a><span class="co">#axes[0].legend()</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].hist(m_c[<span class="dv">1</span>, :], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].axvline(mu_Y, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'True Mean'</span>)</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlim(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">"n=100"</span>)</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a><span class="co">#axes[1].legend()</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].hist(m_c[<span class="dv">2</span>, :], bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">'blue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].axvline(mu_Y, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'True Mean'</span>)</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_xlim(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_title(<span class="st">"n=1000"</span>)</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a><span class="co">#axes[2].legend()</span></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-fig25-2" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig25-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-fig25-2" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-fig25-2-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fig25-2-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter18-TheoryRegression_files/figure-html/fig-fig25-2-output-1.png" data-ref-parent="fig-fig25-2" width="662" height="374" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fig25-2-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Histograms of <span class="math inline">\(m_a\)</span> for different sample sizes
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-fig25-2" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-fig25-2-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fig25-2-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter18-TheoryRegression_files/figure-html/fig-fig25-2-output-2.png" data-ref-parent="fig-fig25-2" width="662" height="374" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fig25-2-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Histograms of <span class="math inline">\(m_b\)</span> for different sample sizes
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-fig25-2" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-fig25-2-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fig25-2-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter18-TheoryRegression_files/figure-html/fig-fig25-2-output-3.png" data-ref-parent="fig-fig25-2" width="662" height="374" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fig25-2-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Histograms of <span class="math inline">\(m_c\)</span> for different sample sizes
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig25-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27.3: Illustrating the law of large numbers
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Another useful inequality is the Cauchy-Schwarz inequality, which can be used to bound the expectation of the product of two random variables.</p>
+<div id="thm-thm25-10" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.11 (Cauchy-Schwarz Inequality)</strong></span> Let <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> be random variables. Then, <span class="math display">\[
+\left(\E(XY)\right)^2 \leq \E(X^2)\E(Y^2).
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-10" class="quarto-xref">Theorem&nbsp;<span>27.11</span></a>). </span>Let <span class="math inline">\(W=Y+bX\)</span>, where <span class="math inline">\(b\)</span> is a constant. Then, <span class="math display">\[
+\E(W^2)=\E(Y^2)+2b\E(XY)+b^2\E(X^2).
+\]</span> Setting <span class="math inline">\(b=-\frac{\E(XY)}{\E(X^2)}\)</span> in the above equation yields <span class="math display">\[
+\E(W^2)=\E(Y^2)-\left(\E(XY)\right)^2/\E(X^2).
+\]</span> Since <span class="math inline">\(\E(W^2)\geq0\)</span>, this last result gives <span class="math inline">\(\E(Y^2)\E(X^2)\geq \left(\E(XY)\right)^2\)</span>.</p>
+</div>
+<p>Note that the Cauchy-Schwarz inequality can also be stated as <span class="math inline">\(|\E(XY)|\leq\sqrt{ \E(X^2)\E(Y^2)}\)</span>. Also, applying the Cauchy-Schwarz inequality to <span class="math inline">\(|Y|\)</span> and <span class="math inline">\(|X|\)</span> gives <span class="math display">\[
+\E(|XY|)=\E(|X||Y|)\leq\sqrt{ \E(X^2)\E(Y^2)}.
+\]</span></p>
+<p>This absolute value form is stronger than the original form because <span class="math display">\[
+|\E(XY)|\leq \E(|XY|)\leq\sqrt{ \E(X^2)\E(Y^2)},
+\]</span> where the first inequality follows from the expectation inequality. Both forms also hold for random vectors and matrices, e.g., see (B.32) in <span class="citation" data-cites="Hansen2022">Hansen (<a href="references.html#ref-Hansen2022" role="doc-biblioref">2022a</a>)</span>.</p>
+<div id="exm-exm25-2" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.3 (Cauchy-Schwarz Inequality)</strong></span> Let <span class="math inline">\(X\sim N(0,1)\)</span> and <span class="math inline">\(Y=2X+u\)</span>, where <span class="math inline">\(u\sim N(0,1)\)</span> and is independent of <span class="math inline">\(X\)</span>. Then we have <span class="math display">\[
+\begin{align*}
+\E(XY)&amp;=\E(2X^2+uX)=2\E(X^2)=2,\\
+\E(X^2)&amp;=1,\,\text{and}\\
+\E(Y^2)&amp;=\E(4X^2+4uX+u^2)=4\E(X^2)+4\E(uX)+\E(u^2)=5.
+\end{align*}
+\]</span> Therefore, the Cauchy-Schwarz inequality implies that <span class="math display">\[
+\left(\E(XY)\right)^2=4\leq\E(X^2)\E(Y^2)=5.
+\]</span></p>
+</div>
+<div id="thm-thm25-10-0" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.12 (Hölder’s Inequality)</strong></span> Let <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> be random variables. Then, for <span class="math inline">\(1\leq p,q&lt;\infty\)</span> with <span class="math inline">\(\frac{1}{p}+\frac{1}{q}=1\)</span>, we have <span class="math display">\[
+\E(|XY|)\leq \left(\E(|X|^p)\right)^{1/p}\left(\E(|Y|^q)\right)^{1/q}.
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-10-0" class="quarto-xref">Theorem&nbsp;<span>27.12</span></a>). </span>See <span class="citation" data-cites="Hansen2022b">Hansen (<a href="references.html#ref-Hansen2022b" role="doc-biblioref">2022b</a>)</span>.</p>
+</div>
+<div id="exm-exm25-3" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.4 (Hölder’s Inequality)</strong></span> Consider the following simple linear regression model <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span>. Assume that <span class="math inline">\(X\)</span> and <span class="math inline">\(u\)</span> has finite fourth order moments. Then, <span class="math inline">\(\E(|X_i|^3|u_i|)&lt;\infty\)</span>. This can be seen from <span class="math display">\[
+\begin{align*}
+\E(|X_i|^3|u_i|)&amp;\leq \left(\E\left((|X_i|^3)^{4/3}\right)\right)^{3/4}\left(\E(|u_i|^4)\right)^{1/4}\\
+&amp;=\left(\E\left(|X_i|^4\right)\right)^{3/4}\left(\E(|u_i|^4)\right)^{1/4}&lt;\infty,
+\end{align*}
+\]</span> where the first inequality follows from Hölder’s inequality with <span class="math inline">\(p=4/3\)</span> and <span class="math inline">\(q=4\)</span>.</p>
+</div>
+<div id="thm-thm25-10-1" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.13 (Minkowski’s Inequality)</strong></span> Let <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> be random variables. Then, for <span class="math inline">\(1\leq p&lt;\infty\)</span>, we have <span class="math display">\[
+\left(\E(|X+Y|^p)\right)^{1/p} \leq \left(\E(|X|^p)\right)^{1/p} + \left(\E(|Y|^p)\right)^{1/p}.
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-10-1" class="quarto-xref">Theorem&nbsp;<span>27.13</span></a>). </span>See <span class="citation" data-cites="Hansen2022b">Hansen (<a href="references.html#ref-Hansen2022b" role="doc-biblioref">2022b</a>)</span>.</p>
+</div>
+<div id="exm-exm25-3" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.5 (Minkowski’s Inequality)</strong></span> Let <span class="math inline">\(Y=X\beta+u\)</span>, where <span class="math inline">\(\beta\)</span> is a scalar parameter. Then, we have <span class="math display">\[
+\begin{align*}
+\left(\E(|Y|^p)\right)^{1/p} &amp;= \left(\E(|X\beta+u|^p)\right)^{1/p} \leq |\beta|\left(\E(|X|^p)\right)^{1/p} + \left(\E(|u|^p)\right)^{1/p}.
+\end{align*}
+\]</span> Also, from <span class="math inline">\(u=Y-X\beta\)</span>, we have <span class="math display">\[
+\left(\E(|u|^p)\right)^{1/p} = \left(\E(|Y-X\beta|^p)\right)^{1/p} \leq \left(\E(|Y|^p)\right)^{1/p} + |\beta|\left(\E(|X|^p)\right)^{1/p}.
+\]</span></p>
+</div>
+<div id="rem-rmk25-1" class="proof remark">
+<p><span class="proof-title"><em>Remark 27.1</em> (Random vectors and matrices). </span>The Cauchy-Schwarz inequality, Hölder’s inequality, and Minkowski’s inequality also hold for random vectors and matrices. For these versions, see <span class="citation" data-cites="Hansen2022">Hansen (<a href="references.html#ref-Hansen2022" role="doc-biblioref">2022a</a>)</span>.</p>
+</div>
+<p>Next, we define convergence in distribution and the asymptotic distribution of a sequence of random variables.</p>
+<div id="def-def25-3" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 27.4 (Convergence in distribution)</strong></span> Let <span class="math inline">\(X\)</span> be a random variable with CDF <span class="math inline">\(F\)</span>, and let <span class="math inline">\(\{X_n\}\)</span> be a sequence of random variables with CDFs <span class="math inline">\(\{F_n\}\)</span>. We say that the sequence <span class="math inline">\(\{X_n\}\)</span> converges in distribution to <span class="math inline">\(X\)</span> if and only if the sequence <span class="math inline">\(\{F_n\}\)</span> converges to <span class="math inline">\(F\)</span> at all continuity points of <span class="math inline">\(F\)</span>. We write this as <span class="math display">\[
+X_n\xrightarrow{d}X\iff \lim_{n\to\infty}F_n(t)=F(t),
+\]</span> where <span class="math inline">\(t\)</span> is a continuity point of <span class="math inline">\(F\)</span>.</p>
+</div>
+<div id="def-def25-4" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 27.5 (Asymptotic distribution)</strong></span> The distribution <span class="math inline">\(F\)</span> in <a href="#def-def25-3" class="quarto-xref">Definition&nbsp;<span>27.4</span></a> is called the asymptotic distribution of <span class="math inline">\(X_n\)</span>.</p>
+</div>
+<div>
+<div id="exm-exm25-3" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.6</strong></span> Let <span class="math inline">\(X\)</span> be the poisson random variable with parameter <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(\{X_n\}\)</span> be a sequence of binomial random variables with parameters <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span>, i.e., <span class="math inline">\(X_n\sim\text{Binomial}(n,p)\)</span>. We show that <span class="math inline">\(X_n\)</span> converges in distribution to <span class="math inline">\(X\)</span>, i.e., <span class="math inline">\(X_n\xrightarrow{d}X\)</span>. The cumulative distribution function of <span class="math inline">\(X_n\)</span> is given by <span class="math display">\[
+F_n(t)=\sum_{k=0}^{\lfloor t\rfloor}\binom{n}{k}p^k(1-p)^{n-k},
+\]</span> where <span class="math inline">\(\lfloor t\rfloor\)</span> is the largest integer less than or equal to <span class="math inline">\(t\)</span>. The cumulative distribution function of <span class="math inline">\(S\)</span> is given by <span class="math display">\[
+F(t)=\sum_{k=0}^{\lfloor t\rfloor}\frac{\lambda^k}{k!}e^{-\lambda}.
+\]</span> Then, setting <span class="math inline">\(p=\lambda/n\)</span>, we have <span class="math display">\[
+\begin{align*}
+F_n(t)&amp;=\sum_{k=0}^{\lfloor t\rfloor}\binom{n}{k}\left(\frac{\lambda}{n}\right)^k\left(1-\frac{\lambda}{n}\right)^{n-k}\\
+&amp;=\sum_{k=0}^{\lfloor t\rfloor}\frac{n!}{k!(n-k)!}\left(\frac{\lambda}{n}\right)^k\left(1-\frac{\lambda}{n}\right)^{n-k}\\
+&amp;=\sum_{k=0}^{\lfloor t\rfloor}\frac{n(n-1)\cdots(n-k+1)}{n^k}\frac{\lambda^k}{k!}\left(1-\frac{\lambda}{n}\right)^n\left(\frac{1}{1-\frac{\lambda}{n}}\right)^k.
+\end{align*}
+\]</span> Taking the limit as <span class="math inline">\(n\to\infty\)</span>, we have <span class="math display">\[
+\begin{align}
+\lim_{n\to\infty}F_n(t)&amp;=\lim_{n\to\infty}\sum_{k=0}^{\lfloor t\rfloor}\frac{n(n-1)\cdots(n-k+1)}{n^k}\frac{\lambda^k}{k!}\left(1-\frac{\lambda}{n}\right)^n\left(\frac{1}{1-\frac{\lambda}{n}}\right)^k\\
+&amp;=\sum_{k=0}^{\lfloor t\rfloor}\frac{\lambda^k}{k!}e^{-\lambda},
+\end{align}
+\]</span> where the last equality follows from the fact that <span class="math inline">\(\lim_{n\to\infty}\left(1-\frac{\lambda}{n}\right)^n=e^{-\lambda}\)</span> and <span class="math inline">\(\lim_{n\to\infty}\left(\frac{1}{1-\frac{\lambda}{n}}\right)^k=1\)</span>. Therefore, we have <span class="math inline">\(S_n\xrightarrow{d}S\)</span>.</p>
+</div>
+</div>
+<p>In the following code chunk, we illustrate the convergence in distribution between the binomial and poisson random variables. We set <span class="math inline">\(\lambda = 5\)</span> and consider three sample sizes: <span class="math inline">\(n = 10\)</span>, <span class="math inline">\(n = 20\)</span>, and <span class="math inline">\(n = 50\)</span>. For each sample size, we then compute the cumulative distribution functions of the binomial and poisson random variables over the range <span class="math inline">\(t = 0, 1, \ldots, 15\)</span>. <a href="#fig-fig25-3" class="quarto-xref">Figure&nbsp;<span>27.4</span></a> shows that the cumulative distribution functions of the binomial random variables converge to the cumulative distribution function of the poisson random variable as the sample size increases.</p>
+<div id="101ced4d" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the convergence in distribution</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>lambda_p <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>n_values <span class="op">=</span> [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>p_values <span class="op">=</span> [lambda_p <span class="op">/</span> n <span class="cf">for</span> n <span class="kw">in</span> n_values]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-fig-fig25-3" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the convergence in distribution</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n, p <span class="kw">in</span> <span class="bu">zip</span>(n_values, p_values):</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Cumulative distribution function</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    F_n <span class="op">=</span> np.array([np.<span class="bu">sum</span>(stats.binom.pmf(np.arange(np.floor(t) <span class="op">+</span> <span class="dv">1</span>), n, p)) <span class="cf">for</span> t <span class="kw">in</span> np.arange(<span class="dv">0</span>, <span class="dv">15</span>)])</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    plt.plot(np.arange(<span class="dv">0</span>, <span class="dv">15</span>), F_n, label<span class="op">=</span><span class="ss">f'Binomial (n=</span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">)'</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Poisson cumulative distribution function</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>F <span class="op">=</span> np.array([np.<span class="bu">sum</span>(stats.poisson.pmf(np.arange(np.floor(t) <span class="op">+</span> <span class="dv">1</span>), lambda_p)) <span class="cf">for</span> t <span class="kw">in</span> np.arange(<span class="dv">0</span>, <span class="dv">15</span>)])</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plt.plot(np.arange(<span class="dv">0</span>, <span class="dv">15</span>), F, label<span class="op">=</span><span class="st">'Poisson'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'t'</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Cumulative Distribution Function'</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-fig25-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig25-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter18-TheoryRegression_files/figure-html/fig-fig25-3-output-1.png" width="506" height="349" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig25-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27.4: Illustrating the convergence in distribution
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The following theorem presents the central limit theorem, which provides the asymptotic distribution of the sample mean of i.i.d. random variables.</p>
+<div id="thm-thm25-10-clt" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.14 (The central limit theorem)</strong></span> If <span class="math inline">\(\{Y_i\}_{i=1}^n\)</span> are i.i.d with mean <span class="math inline">\(\E(Y_i)=\mu_Y\)</span> and variance <span class="math inline">\(0&lt;\sigma^2_Y&lt;\infty\)</span>, then the asymptotic distribution of <span class="math inline">\((\bar{Y}-\mu_{\bar{Y}})/\sigma_{\bar{Y}}=\sqrt{n}(\bar{Y}-\mu_Y)/\sigma_Y\)</span> is <span class="math inline">\(N(0,1)\)</span>. We write this as</p>
+<p><span class="math display">\[
+\frac{(\bar{Y}-\mu_{\bar{Y}})}{\sigma_{\bar{Y}}}=\frac{\sqrt{n}(\bar{Y}-\mu_Y)}{\sigma_Y}\xrightarrow{d}N(0,1).
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-10-clt" class="quarto-xref">Theorem&nbsp;<span>27.14</span></a>). </span>See <a href="AppendixC.html" class="quarto-xref"><span>Appendix C</span></a>.</p>
+</div>
+<p>Note that when <span class="math inline">\(n\)</span> is large, <span class="math inline">\(\sqrt{n}(\bar{Y}-\mu_Y)/\sigma_Y\xrightarrow{d}N(0,1)\)</span> implies that <span class="math display">\[
+\bar{Y}\sim N(\mu_Y,\sigma^2_Y/n).
+\]</span></p>
+<div id="exm-exm25-4" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.7 (Central limit theorem)</strong></span> Let <span class="math inline">\(Y_i\sim U(0,1)\)</span> be i.i.d. random variables. Then, <span class="math inline">\(\E(Y_i)=1/2\)</span> and <span class="math inline">\(\text{Var}(Y_i)=1/12\)</span>. The sample mean <span class="math inline">\(\bar{Y}=\sum_{i=1}^nY_i/n\)</span> has mean <span class="math inline">\(\mu_{\bar{Y}}=1/2\)</span> and variance <span class="math inline">\(\sigma^2_{\bar{Y}}=1/(12n)\)</span>. Therefore, the asymptotic distribution of <span class="math inline">\((\bar{Y}-1/2)/\sqrt{1/12n}=\sqrt{12n}(\bar{Y}-1/2)\)</span> is <span class="math inline">\(N(0,1)\)</span>. We can write this as <span class="math display">\[
+\sqrt{12n}(\bar{Y}-1/2)\xrightarrow{d}N(0,1),
+\]</span> which suggests that <span class="math inline">\(\bar{Y}\sim N(1/2,1/12n)\)</span> when <span class="math inline">\(n\)</span> is large.</p>
+</div>
+<p>In the following code chunk, we illustrate the central limit theorem using the uniform random variables defined in <a href="#exm-exm25-4" class="quarto-xref">Example&nbsp;<span>27.7</span></a>. We set <span class="math inline">\(n = 10, 50, 100, 500, 1000, 5000\)</span> and generate 1000 samples for each sample size. We then compute the sample mean <span class="math inline">\(\bar{Y}\)</span> and plot the histograms of <span class="math inline">\(\sqrt{12n}(\bar{Y}-1/2)\)</span> for each sample size. <a href="#fig-fig25-4" class="quarto-xref">Figure&nbsp;<span>27.5</span></a> shows the histograms of <span class="math inline">\(\sqrt{12n}(\bar{Y}-1/2)\)</span> along with the standard normal density plot. As the sample size increases, the deviations between the histograms and the standard normal density plot decrease, indicating that the sample mean converges to the standard normal distribution as the sample size grows.</p>
+<div id="64651fdc" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the central limit theorem</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>n_values <span class="op">=</span> [<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">500</span>, <span class="dv">1000</span>, <span class="dv">5000</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the central limit theorem</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">2</span>, ncols<span class="op">=</span><span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1000</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>normal_density <span class="op">=</span> stats.norm.pdf(x, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(n_values):</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    row, col <span class="op">=</span> <span class="bu">divmod</span>(i, <span class="dv">3</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    Y <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>, (n, <span class="dv">1000</span>))</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    Y_bar <span class="op">=</span> np.mean(Y, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    axes[row, col].hist(np.sqrt(<span class="dv">12</span><span class="op">*</span>n)<span class="op">*</span>(Y_bar<span class="op">-</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>), bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, density<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    axes[row, col].plot(x, normal_density, color<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">'N(0,1) Density'</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    axes[row, col].set_xlim(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    axes[row, col].set_title(<span class="ss">f"n=</span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-fig-fig25-4" class="cell quarto-layout-panel" data-layout-nrow="3" data-execution_count="10">
+<div class="quarto-layout-row">
+<div class="cell-output cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-fig25-4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig25-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter18-TheoryRegression_files/figure-html/fig-fig25-4-output-1.png" width="950" height="566" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig25-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27.5: Illustrating the central limit theorem
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="exm-exm25-4-1" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.8</strong></span> Suppose that, at a large public university, the time required for economics majors to complete their graduation thesis follows the <a href="https://en.wikipedia.org/wiki/Exponential_distribution">exponential distribution</a> with mean 6 months. Given a random sample of 100 students, the university wants to determine the probability that more than 40 students take longer than 6 months to finish their thesis.</p>
+<p>Let <span class="math inline">\(X_i\)</span> denote the time required for the <span class="math inline">\(i\)</span>th student to complete the graduation thesis. Then, <span class="math inline">\(X_i\sim \text{Exponential}(\lambda)\)</span>, where <span class="math inline">\(\lambda=1/6\)</span>. The PDF and CDF of <span class="math inline">\(X_i\)</span> are given by <span class="math display">\[
+\begin{align*}
+f(x)=
+\begin{cases}
+\lambda e^{-\lambda x},\,x\geq0,\\
+0,\,x&lt;0,
+\end{cases}
+\end{align*}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align*}
+F(x)=
+\begin{cases}
+1-e^{-\lambda x},\,x\geq0,\\
+0,\,x&lt;0.
+\end{cases}
+\end{align*}
+\]</span></p>
+<p>Let <span class="math inline">\(Y_i=1\)</span> if the time for the <span class="math inline">\(i\)</span>th student to finish the thesis is more than 6 months and <span class="math inline">\(Y_i=0\)</span> otherwise. Then, we have <span class="math display">\[
+P(Y_i=1)=P(X_i&gt;6)=e^{-\lambda 6}=e^{-1}\approx0.3679,
+\]</span> <span class="math display">\[
+P(Y_i=0)=1-P(Y_i=1)=1-e^{-1}\approx0.6321.
+\]</span></p>
+<p>Thus, we have <span class="math inline">\(Y_i\sim \text{Bernoulli}(p)\)</span>, where <span class="math inline">\(p=e^{-1}\)</span>. Let <span class="math inline">\(S_n=\sum_{i=1}^{100}Y_i\)</span> be the number of students who take longer than 6 months to finish their thesis. Then, since our sample is a random sample, we have <span class="math inline">\(S_n\sim \text{Binomial}(n=100,p=e^{-1})\)</span>.</p>
+<p>We want to find <span class="math inline">\(P(S_n&gt;40)\)</span>. Since the sample size is large, we can use the central limit theorem to approximate this probability. Note that <span class="math inline">\(\E(Y_i)=p\)</span> and <span class="math inline">\(\text{Var}(Y_i)=p(1-p)\)</span>. Thus, <span class="math inline">\(\E(S_n)=np\)</span> and <span class="math inline">\(\text{Var}(S_n)=np(1-p)\)</span>. Then, we have</p>
+<p><span class="math display">\[
+\begin{align*}
+P(S_n&gt;40)&amp;=P\left(\frac{S_n-np}{\sqrt{np(1-p)}}&gt;\frac{40-np}{\sqrt{np(1-p)}}\right)\\
+&amp;\approx P\left(Z&gt;\frac{40-100e^{-1}}{\sqrt{100e^{-1}(1-e^{-1})}}\right)\\
+&amp;=P(Z&gt; 0.6661)\\
+&amp;=1-P(Z\leq 0.6661)\\
+&amp;=0.2527,
+\end{align*}
+\]</span> where <span class="math inline">\(Z\sim N(0,1)\)</span>. The last step can be computed using the following code:</p>
+<div id="82864029" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">round</span>(<span class="dv">1</span> <span class="op">-</span> stats.norm.cdf(<span class="fl">0.6661</span>), <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>0.2527</code></pre>
+</div>
+</div>
+<p>The result indicates that there is approximately a 25.27% chance that more than 40 students will take longer than 6 months to complete their thesis.</p>
+<p>Since <span class="math inline">\(P(S_n&gt;40)=1-P(S_n\leq 40)\)</span>, we can also compute the exact probability as follows:</p>
+<div id="95abdc44" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">round</span>(<span class="dv">1</span> <span class="op">-</span> stats.binom.cdf(<span class="dv">40</span>, <span class="dv">100</span>, np.exp(<span class="op">-</span><span class="dv">1</span>)), <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>0.2197</code></pre>
+</div>
+</div>
+<p>The exact probability is approximately 0.2197, which is close to the approximation of 0.2527 obtained using the central limit theorem.</p>
+</div>
+<p>We now state an important result called Slutsky’s theorem. This theorem provides the limiting distributions of sums, products, and quotients of random variables.</p>
+<div id="thm-thm25-11" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.15 (Slutsky’s theorem)</strong></span> Let <span class="math inline">\(\{X_n\}\)</span> and <span class="math inline">\(\{Y_n\}\)</span> be two sequences of random variables sucht that <span class="math inline">\(X_n\xrightarrow{d}X\)</span> and <span class="math inline">\(Y_n\xrightarrow{p}a\)</span>, where <span class="math inline">\(a\)</span> is a constant and <span class="math inline">\(X\)</span> is a random variable. Then,</p>
+<ol type="1">
+<li><span class="math inline">\(X_n+Y_n\xrightarrow{d}a+X\)</span>,</li>
+<li><span class="math inline">\(X_nY_n\xrightarrow{d}aX\)</span>, and</li>
+<li>if <span class="math inline">\(a\ne0\)</span>, then <span class="math inline">\(X_n/Y_n\xrightarrow{d}X/a\)</span>.</li>
+</ol>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-11" class="quarto-xref">Theorem&nbsp;<span>27.15</span></a>). </span>See <a href="AppendixC.html" class="quarto-xref"><span>Appendix C</span></a>.</p>
+</div>
+<p>The following theorem provides the continuous mapping theorem, which is useful for finding the probability limit and the asymptotic distribution of functions of random variables.</p>
+<div id="thm-thm25-12" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.16 (Continuous mapping theorem)</strong></span> Let <span class="math inline">\(\{X_n\}\)</span> denote a sequence of random variables, and let <span class="math inline">\(g:\mathbb{R}\to\mathbb{R}\)</span> be a continuous function. Then,</p>
+<ol type="1">
+<li><span class="math inline">\(X_n\xrightarrow{p}X\implies g(X_n)\xrightarrow{p}g(X)\)</span>, and</li>
+<li><span class="math inline">\(X_n\xrightarrow{d}X\implies g(X_n)\xrightarrow{d}g(X)\)</span>.</li>
+</ol>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-12" class="quarto-xref">Theorem&nbsp;<span>27.16</span></a>). </span>See Theorem 2.3 in <span class="citation" data-cites="Vaart1998">Vaart (<a href="references.html#ref-Vaart1998" role="doc-biblioref">1998</a>)</span>.</p>
+</div>
+<div id="exm-exm25-5" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.9</strong></span> Let <span class="math inline">\(g(x)=\sqrt{x}\)</span>. If <span class="math inline">\(s^2_Y\xrightarrow{p}\sigma^2_Y\)</span>, where <span class="math inline">\(s^2_Y\)</span> is the sample variance, then <span class="math display">\[
+g(s^2_Y)=s_Y\xrightarrow{p}g(\sigma^2_Y)=\sigma_Y,
+\]</span> by the first part of <a href="#thm-thm25-12" class="quarto-xref">Theorem&nbsp;<span>27.16</span></a>. In other words, the sample standard deviation is a consistent estimator of the population standard deviation.</p>
+</div>
+<div id="exm-exm25-6" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.10</strong></span> Let <span class="math inline">\(g(x)=x^2\)</span>. If <span class="math inline">\(S_n\xrightarrow{d}Z\)</span>, where <span class="math inline">\(Z\sim N(0,1)\)</span>, then we have <span class="math inline">\(g(S_n)\xrightarrow{d}g(Z)\)</span> by the second part of <a href="#thm-thm25-12" class="quarto-xref">Theorem&nbsp;<span>27.16</span></a>. Thus, <span class="math display">\[
+S^2_n\xrightarrow{d}Z^2.
+\]</span> In other words, the distribution of <span class="math inline">\(S^2_n\)</span> converges to the distribution of a squared standard normal random variable, which in turn has a <span class="math inline">\(\chi^2_1\)</span> distribution; that is, <span class="math inline">\(S^2_n\xrightarrow{d}\chi^2_1\)</span>.</p>
+</div>
+<div id="exm-exm25-7" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.11</strong></span> Consider t-statistic for testing <span class="math inline">\(H_0:\E(Y_i)=\mu_0\)</span> based on <span class="math inline">\(\bar{Y}\)</span>. Then, by <a href="#exm-exm25-4" class="quarto-xref">Example&nbsp;<span>27.7</span></a> and <a href="#thm-thm25-11" class="quarto-xref">Theorem&nbsp;<span>27.15</span></a>, we have <span class="math display">\[
+t=\frac{\bar{Y}-\mu_0}{s_Y/\sqrt{n}}=\frac{\sqrt{n}(\bar{Y}-\mu_0)}{\sigma_Y}\div\frac{s_Y}{\sigma_Y}\xrightarrow{d}N(0,1).
+\]</span></p>
+</div>
+<div id="exm-exm25-8" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.12</strong></span> Suppose that <span class="math inline">\(\{X_i,Y_i\}\)</span> is a sequence of i.i.d. random variables with finite fourth moments. We want to show that <span class="math inline">\(s_{XY}\xrightarrow{p}\sigma_{XY}\)</span>, where <span class="math inline">\(s_{XY}\)</span> is the sample covariance and <span class="math inline">\(\sigma_{XY}\)</span> is the population covariance.</p>
+<p>Note that <span class="math display">\[
+\begin{align*}
+&amp;s_{XY}=\frac{1}{n-1}\sum_{i=1}^n(X_i-\bar{X})(Y_i-\bar{Y})\\
+&amp;=\frac{1}{n-1}\sum_{i=1}^n\left((X_i-\mu_X)-(\bar{X}-\mu_X)\right)\left((Y_i-\mu_Y)-(\bar{Y}-\mu_Y)\right)\\
+&amp;=\frac{n}{n-1}\left(\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)(Y_i-\mu_Y)\right)-\frac{n}{n-1}(\bar{X}-\mu_X)(\bar{Y}-\mu_Y)
+\end{align*}
+\]</span> Since <span class="math inline">\(\bar{X}\xrightarrow{p}\mu_X\)</span> and <span class="math inline">\(\bar{Y}\xrightarrow{p}\mu_Y\)</span>, we have <span class="math inline">\((\bar{X}-\mu_X)(\bar{Y}-\mu_Y)\xrightarrow{p}0\)</span> by Slutsky’s theorem. To apply the law of large numbers to the first term, we need to show that</p>
+<ol type="1">
+<li><span class="math inline">\(\{(X_i-\mu_X)(Y_i-\mu_Y)\}\)</span> are i.i.d., and</li>
+<li><span class="math inline">\(\text{var}\left((X_i-\mu_X)(Y_i-\mu_Y)\right)&lt;\infty\)</span>.</li>
+</ol>
+<p>Since <span class="math inline">\((X_i,Y_i)\)</span> are i.i.d., the first condition is satisfied. For the second condition, we have <span class="math display">\[
+\begin{align*}
+&amp;\text{Var}\left((X_i-\mu_X)(Y_i-\mu_Y)\right)&lt;\E\left((X_i-\mu_X)^2(Y_i-\mu_Y)^2\right)\\
+&amp;\leq\sqrt{\E\left((X_i-\mu_X)^4\right)\E\left((Y_i-\mu_Y)^4\right)}&lt;\infty,
+\end{align*}
+\]</span> where the second follows by applying the Cauchy-Schwarz inequality, and the third inequality follows because <span class="math inline">\((X_i, Y_i)\)</span> have finite fourth moments. Then, by the law of large numbers, we have <span class="math display">\[
+\begin{align*}
+\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)(Y_i-\mu_Y)\xrightarrow{p}\E\left((X_i-\mu_X)(Y_i-\mu_Y)\right)=\sigma_{XY}.
+\end{align*}
+\]</span> Also, <span class="math inline">\(\frac{n}{n-1}\to1\)</span>, so the first term for <span class="math inline">\(s_{XY}\)</span> converges in probability to <span class="math inline">\(\sigma_{XY}\)</span>. Combining results on the two terms for <span class="math inline">\(s_{XY}\)</span>, we obtain <span class="math inline">\(s_{XY}\xrightarrow{p}\sigma_{XY}\)</span>.</p>
+</div>
+<p>The following result shows that convergence in probability implies convergence in distribution.</p>
+<div id="thm-thm25-12-1" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.17 (Convergence in probability implies convergence in distribution)</strong></span> If <span class="math inline">\(X_n\xrightarrow{p}X\)</span>, then <span class="math inline">\(X_n\xrightarrow{d}X\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-12-1" class="quarto-xref">Theorem&nbsp;<span>27.17</span></a>). </span>See Theorem 2.7 in <span class="citation" data-cites="Vaart1998">Vaart (<a href="references.html#ref-Vaart1998" role="doc-biblioref">1998</a>)</span>.</p>
+</div>
+<p>The reverse of this result is not true in general. However, if <span class="math inline">\(X\)</span> is a degenerate random variable, then the reverse is true as shown in the following theorem.</p>
+<div id="thm-thm25-12-2" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.18 (Convergence in distribution to a constant)</strong></span> If <span class="math inline">\(X_n\xrightarrow{d}c\)</span>, where <span class="math inline">\(c\)</span> is a constant, then <span class="math inline">\(X_n\xrightarrow{p}c\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-12-2" class="quarto-xref">Theorem&nbsp;<span>27.18</span></a>). </span>Fix <span class="math inline">\(\epsilon&gt;0\)</span>. Then, we can split the event <span class="math inline">\(\{|X_n-c|&gt;\epsilon\}\)</span> into two disjoint events: <span class="math inline">\(\{X_n&gt;c+\epsilon\}\)</span> and <span class="math inline">\(\{X_n&lt;c-\epsilon\}\)</span>. Thus, we have <span class="math display">\[
+\begin{align*}
+P(|X_n-c|&gt;\epsilon)&amp;=P(X_n&lt;c-\epsilon)+P(X_n&gt;c+\epsilon)\\
+&amp;\leq P(X_n\leq c-\epsilon)+1- P(X_n\leq c+\epsilon)\\
+&amp;=F_{X_n}(c-\epsilon)+1-F_{X_n}(c+\epsilon),
+\end{align*}
+\]</span> where <span class="math inline">\(F_{X_n}\)</span> is the CDF of <span class="math inline">\(X_n\)</span>. The degenrate random variable <span class="math inline">\(c\)</span> has the following CDF: <span class="math display">\[
+F(t)=
+\begin{cases}
+0, &amp; t&lt;c,\\
+1, &amp; t\geq c,
+\end{cases}
+\]</span> where <span class="math inline">\(c\)</span> is the only discontinuity point of <span class="math inline">\(F\)</span>. Since <span class="math inline">\(X_n\xrightarrow{d}c\)</span>, we have <span class="math inline">\(\lim_{n\to\infty}F_{X_n}(t)=F(t)\)</span> for all continuity points of <span class="math inline">\(F\)</span>. Thus, we have <span class="math display">\[
+\begin{align*}
+\lim_{n\to\infty}F_{X_n}(t)=F(t)
+=
+\begin{cases}
+0, &amp; t&lt;c,\\
+1, &amp; t&gt; c.
+\end{cases}
+\end{align*}
+\]</span></p>
+<p>Therefore, we have <span class="math inline">\(\lim_{n\to\infty}F_{X_n}(c-\epsilon)=0\)</span> and <span class="math inline">\(\lim_{n\to\infty}F_{X_n}(c+\epsilon)=1\)</span>. This implies that <span class="math display">\[
+\lim_{n\to\infty}P(|X_n-c|&gt;\epsilon)=0,
+\]</span> which shows that <span class="math inline">\(X_n\xrightarrow{p}c\)</span>.</p>
+</div>
+</section>
+<section id="asymptotic-distribution-of-the-ols-estimator" class="level2" data-number="27.4">
+<h2 data-number="27.4" class="anchored" data-anchor-id="asymptotic-distribution-of-the-ols-estimator"><span class="header-section-number">27.4</span> Asymptotic distribution of the OLS estimator</h2>
+<p>In this section, we show how to derive the asymptotic distribution of <span class="math inline">\(\widehat{\beta}_1\)</span> and <span class="math inline">\(\widehat{\beta}_0\)</span> as shown in <a href="#thm-thm25-1" class="quarto-xref">Theorem&nbsp;<span>27.1</span></a>. From <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span> and <span class="math inline">\(\bar{Y}=\beta_0+\beta_1\bar{X}+\bar{u}\)</span>, we obtain <span class="math display">\[
+\begin{align}
+Y_i-\bar{Y}=\beta_1(X_i-\bar{X})+(u_i-\bar{u}).
+\end{align}
+\]</span> Using this result, we obtain <span class="math display">\[
+\begin{align}
+\widehat{\beta}_1 &amp;= \frac{\sum_{i=1}^n(X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n(X_i - \bar{X})^2} =\frac{\sum_{i=1}^n(X_i - \bar{X})\left(\beta_1(X_i-\bar{X})+(u_i-\bar{u})\right)}{\sum_{i=1}^n(X_i - \bar{X})^2}\\
+&amp;=\beta_1+\frac{\sum_{i=1}^n(X_i - \bar{X})(u_i-\bar{u})}{\sum_{i=1}^n(X_i - \bar{X})^2}=\beta_1+\frac{\sum_{i=1}^n(X_i-\bar{X})u_i}{\sum_{i=1}^n(X_i - \bar{X})^2},
+\end{align}
+\]</span> where the last equality follows from the fact that <span class="math inline">\(\sum_{i=1}^n(X_i - \bar{X})(u_i-\bar{u})=\sum_{i=1}^n(X_i-\bar{X})u_i\)</span>. Then, we have <span class="math display">\[
+\begin{align}
+\widehat{\beta}_1-\beta_1&amp;=\frac{\sum_{i=1}^n(X_i - \bar{X})u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}=\frac{\sum_{i=1}^n\left((X_i-\mu_X) - (\bar{X}-\mu_X)\right)u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}\\
+&amp;=\frac{\sum_{i=1}^n\left(X_i-\mu_X\right)u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}-\frac{\sum_{i=1}^n\left(\bar{X}-\mu_X\right)u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}\\
+&amp;=\frac{\sum_{i=1}^nv_i}{\sum_{i=1}^n(X_i - \bar{X})^2}-\frac{\sum_{i=1}^n\left(\bar{X}-\mu_X\right)u_i}{\sum_{i=1}^n(X_i - \bar{X})^2},
+\end{align}
+\]</span> where <span class="math inline">\(v_i=\left(X_i-\mu_X\right)u_i\)</span>. Multiplying both sides with <span class="math inline">\(\sqrt{n}\)</span> yields <span id="eq-eq25-2"><span class="math display">\[
+\begin{align}
+&amp;\sqrt{n}\left(\widehat{\beta}_1-\beta_1\right)=\frac{\frac{1}{\sqrt{n}}\sum_{i=1}^nv_i}{\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2}-\frac{\left(\bar{X}-\mu_X\right)\frac{1}{\sqrt{n}}\sum_{i=1}^nu_i}{\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2}.
+\end{align}
+\tag{27.2}\]</span></span></p>
+<p>We first show that the second term in <a href="#eq-eq25-2" class="quarto-xref">Equation&nbsp;<span>27.2</span></a> converges in probability to zero:</p>
+<ol type="1">
+<li><p><span class="math inline">\(\{u_i\}\)</span> are i.i.d. with mean <span class="math inline">\(\mu_u=0\)</span> and variance <span class="math inline">\(\sigma^2_u\)</span>. Thus, by the central limit theorem, we have <span class="math display">\[
+\begin{align*}
+\frac{(\bar{u}-\mu_{\bar{u}})}{\sigma_{\bar{u}}}=\frac{\sqrt{n}(\bar{u}-\mu_u)}{\sigma_u}=\frac{\frac{1}{\sqrt{n}}\sum_{i=1}^nu_i}{\sigma_u}\xrightarrow{d}N(0,1).
+\end{align*}
+\]</span> This suggests that <span class="math inline">\(\frac{1}{\sqrt{n}}\sum_{i=1}^nu_i\sim N(0,\sigma^2_u)\)</span> when <span class="math inline">\(n\)</span> is large.</p></li>
+<li><p>By the law of large numbers, we have <span class="math inline">\(\bar{X}-\mu_X\xrightarrow{p}0\)</span>.</p></li>
+<li><p>By the consistency of sample variance, <span class="math inline">\(\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2\xrightarrow{p}\sigma^2_X\)</span>.</p></li>
+</ol>
+<p>Using Slutsky’s theorem and these three results, it follows that<br>
+<span class="math display">\[
+\frac{\left(\bar{X}-\mu_X\right)\frac{1}{\sqrt{n}}\sum_{i=1}^nu_i}{\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2}\xrightarrow{p}0.
+\]</span></p>
+<p>Next, we consider the first term in <a href="#eq-eq25-2" class="quarto-xref">Equation&nbsp;<span>27.2</span></a>. We will show that</p>
+<ol type="1">
+<li><span class="math inline">\(\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2\xrightarrow{p}\sigma^2_X\)</span>,</li>
+<li><span class="math inline">\(\frac{1}{\sqrt{n}}\sum_{i=1}^nv_i\)</span> satisfies the central limit theorem conditions: (i) <span class="math inline">\(\{v_i\}\)</span> are i.i.d., and (ii) <span class="math inline">\(\text{var}(v_i)&lt;\infty\)</span>.</li>
+</ol>
+<p>The first result <span class="math inline">\(\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2\xrightarrow{p}\sigma^2_X\)</span> follows from the consistency of sample variance. By Assumption 2, <span class="math inline">\(\{v_i\}\)</span> are i.i.d. To show <span class="math inline">\(\text{var}(v_i)&lt;\infty\)</span>, note that <span class="math display">\[
+\begin{align*}
+&amp;\text{var}(v_i)=\text{var}((X_i-\mu_X)u_i)\leq \E\left((X_i-\mu_X)^2u^2_i\right)\\
+&amp;\leq\sqrt{\E\left((X_i-\mu_X)^4\right)\E(u^4_i)}&lt;\infty,
+\end{align*}
+\]</span> where the second inequality follows by applying the Cauchy-Schwarz inequality, and the last inequality follows because of the finite fourth moments for <span class="math inline">\((X_i, u_i)\)</span>. Thus, <span class="math inline">\(\frac{1}{\sqrt{n}}\sum_{i=1}^nv_i\)</span> satisfies the conditions of the central limit theorem. Then, <span class="math display">\[
+\frac{\bar{v}-\mu_{\bar{v}}}{\sigma_{\bar{v}}}=\frac{\frac{1}{\sqrt{n}}\sum_{i=1}^nv_i}{\sqrt{\text{var}(v_i)}}\xrightarrow{d}N\left(0,1\right),
+\]</span> suggesting that <span class="math inline">\(\frac{1}{\sqrt{n}}\sum_{i=1}^nv_i\sim N\left(0,\text{var}(v_i)\right)\)</span> when <span class="math inline">\(n\)</span> is large. Combining these results and applying Slutsky’s theorem, we obtain <span id="eq-eq25-3"><span class="math display">\[
+\begin{align}
+\sqrt{n}\left(\widehat{\beta}_1-\beta_1\right)\xrightarrow{d}N\left(0,\text{var}(v_i)/(\sigma^2_X)^2\right).
+\end{align}
+\tag{27.3}\]</span></span></p>
+<p>Asymptotic distribution of <span class="math inline">\(\widehat{\beta}_0\)</span> can be obtained by following the similar steps. Below, we will provide the main points and avoid some of the details. Recall that <span class="math inline">\(\widehat{\beta}_0 = \bar{Y} - \widehat{\beta}_1 \bar{X}\)</span> and <span class="math display">\[
+\begin{align*}
+\widehat{\beta}_1 &amp;= \beta_1+\frac{\sum_{i=1}^n(X_i - \bar{X})(u_i-\bar{u})}{\sum_{i=1}^n(X_i - \bar{X})^2}=\beta_1+\frac{\sum_{i=1}^n(X_i-\bar{X})u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}.
+\end{align*}
+\]</span></p>
+<p>Therefore, we can write <span class="math display">\[
+\begin{align*}
+\widehat{\beta}_0 &amp;= \bar{Y} - \widehat{\beta}_1 \bar{X}\\
+&amp;=\beta_0 + \beta_1 \bar{X} + \bar{u} -\left(\beta_1+\frac{\sum_{i=1}^n(X_i-\bar{X})u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}\right)\bar{X}\\
+&amp;=\beta_0 + \bar{u} -\left(\frac{\sum_{i=1}^n(X_i-\bar{X})u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}\right)\bar{X}.
+\end{align*}
+\]</span></p>
+<p>Under Assumptions 1-3, <span class="math inline">\(\bar{X}\)</span> and <span class="math inline">\(s_X^2\)</span> are consistent estimators of <span class="math inline">\(\mu_X\)</span> and <span class="math inline">\(\sigma_X^2\)</span>, respectively. Hence, for large <span class="math inline">\(n\)</span>, we can write <span class="math display">\[
+\begin{align*}
+\widehat{\beta}_0 &amp;= \beta_0 + \frac{1}{n}\sum_{i=1}^nu_i -\left(\frac{\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})u_i}{\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2}\right)\bar{X}\\
+&amp;\approx\beta_0 + \frac{1}{n}\sum_{i=1}^nu_i -\left(\frac{\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)u_i}{\sigma_X^2}\right)\mu_X\\
+&amp;=\beta_0 + \frac{1}{n}\sum_{i=1}^n u_i \left(1 - \frac{(X_i-\mu_X)\mu_X}{\sigma_X^2}\right)\\
+&amp;=\beta_0 + \frac{1}{n}\sum_{i=1}^n u_i \left(1 - \frac{X_i\mu_X}{\sigma_X^2} + \frac{\mu_X^2}{\sigma_X^2}\right)\\
+&amp;=\beta_0 + \frac{1}{n}\sum_{i=1}^n u_i \frac{\sigma_X^2}{\E(X_i^2)}\left(1 - \frac{X_i\mu_X}{\sigma_X^2} + \frac{\mu_X^2}{\sigma_X^2}\right)\div\frac{\sigma_X^2}{\E(X_i^2)}\\
+&amp;=\beta_0 + \frac{1}{n}\sum_{i=1}^n u_i \left(\frac{\sigma_X^2}{\E(X_i^2)} - \frac{X_i\mu_X}{\E(X_i^2)} + \frac{\mu_X^2}{\E(X_i^2)}\right)\div\frac{\sigma_X^2}{\E(X_i^2)}\\
+&amp;=\beta_0 + \frac{1}{n}\sum_{i=1}^n u_i \left(\frac{\sigma_X^2+\mu_X^2}{\E(X_i^2)} - \frac{X_i\mu_X}{\E(X_i^2)}\right)\div\frac{\sigma_X^2}{\E(X_i^2)}\\
+&amp;=\beta_0 + \frac{1}{n}\sum_{i=1}^n u_i \left(1 - \frac{X_i\mu_X}{\E(X_i^2)}\right)\div\frac{\sigma_X^2}{\E(X_i^2)}.
+\end{align*}
+\]</span></p>
+<p>Let <span class="math inline">\(H_i = 1 - \frac{X_i\mu_X}{\E(X_i^2)}\)</span> and note that <span class="math display">\[
+\begin{align*}
+\E(H_i^2) &amp;= \E\left(1-2\frac{X_i\mu_X}{\E(X_i^2)} + \frac{X_i^2\mu_X^2}{(\E(X_i^2))^2}\right)\\
+&amp;=1 -2\frac{\mu_X^2}{\E(X_i^2)} + \frac{\E(X_i^2)\mu_X^2}{(\E(X_i^2))^2}\\
+&amp;=1 -\frac{\mu_X^2}{\E(X_i^2)}\\
+&amp;= \frac{\sigma_X^2}{\E(X_i^2)}.
+\end{align*}
+\]</span></p>
+<p>Hence, we can write <span class="math display">\[
+\begin{align*}
+\widehat{\beta}_0 &amp;\approx \beta_0 + \frac{1}{n}\sum_{i=1}^n u_i \left(1 - \frac{X_i\mu_X}{\E(X_i^2)}\right)\div\frac{\sigma_X^2}{\E(X_i^2)}\\
+&amp;= \beta_0 + \frac{1}{n}\sum_{i=1}^n \frac{H_iu_i}{\E(H_i^2)}.
+\end{align*}
+\]</span></p>
+<p>Therefore, under Assumptions 1-3, for large <span class="math inline">\(n\)</span>, the following approximation holds <span class="math display">\[
+\sqrt{n}\left(\widehat{\beta}_0 - \beta_0\right) \approx \frac{1}{\sqrt{n}}\sum_{i=1}^n \frac{H_iu_i}{\E(H_i^2)}.
+\]</span> The asymptotic distribution of <span class="math inline">\(\sqrt{n}\left(\widehat{\beta}_0 - \beta_0\right)\)</span> follows by applying the central limit theorem to <span class="math inline">\(\frac{1}{\sqrt{n}}\sum_{i=1}^n H_iu_i\)</span> and then using the continuous mapping theorem: <span class="math display">\[
+\begin{align}
+\sqrt{n}\left(\widehat{\beta}_0-\beta_0\right)\xrightarrow{d}N\left(0,\text{var}(H_iu_i)/(\E(H_i^2))^2\right).
+\end{align}
+\]</span></p>
+<p>For statistical inference, we need to estimate the asymptotic variances of <span class="math inline">\(\widehat{\beta}_1\)</span> and <span class="math inline">\(\widehat{\beta}_0\)</span>. We can estimate the variance terms by replacing the unknown terms in <span class="math inline">\(\sigma^2_{\hat{\beta}_1}\)</span> and <span class="math inline">\(\sigma^2_{\hat{\beta}_0}\)</span> by their sample counterparts:</p>
+<p><span class="math display">\[
+\begin{align}
+&amp;\hat{\sigma}^2_{\hat{\beta}_1} = \frac{1}{n}\frac{\frac{1}{n-2}\sum_{i=1}^n(X_i - \bar{X})^2\hat{u}_i^2}{\left(\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2\right)^2},\\
+&amp;\hat{\sigma}^2_{\hat{\beta}_0} = \frac{1}{n}\frac{\frac{1}{n-2}\sum_{i=1}^n\hat{H}^2\hat{u}_i^2}{\left(\frac{1}{n}\sum_{i=1}^n\hat{H}_i^2\right)^2}\quad\text{and}\quad  \hat{H}_i = 1 - \frac{\bar{X}}{\frac{1}{n}\sum_{i=1}^nX_i^2}X_i.
+\end{align}
+\]</span></p>
+<div id="thm-thm25-var" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.19 (Consistent estimators of the asymptotic variances)</strong></span> Under Assumptions 1-3, the estimators <span class="math inline">\(\hat{\sigma}^2_{\hat{\beta}_1}\)</span> and <span class="math inline">\(\hat{\sigma}^2_{\hat{\beta}_0}\)</span> are consistent for the asymptotic variances <span class="math inline">\(\sigma^2_{\hat{\beta}_1}\)</span> and <span class="math inline">\(\sigma^2_{\hat{\beta}_0}\)</span>, respectively. That is, <span class="math display">\[
+\hat{\sigma}^2_{\hat{\beta}_1}\xrightarrow{p}\sigma^2_{\hat{\beta}_1}\quad\text{and}\quad \hat{\sigma}^2_{\hat{\beta}_0}\xrightarrow{p}\sigma^2_{\hat{\beta}_0}.
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-var" class="quarto-xref">Theorem&nbsp;<span>27.19</span></a>). </span>We show that <span class="math inline">\(\frac{\hat{\sigma}^2_{\hat{\beta}_1}}{\sigma^2_{\hat{\beta}_1}}\xrightarrow{p}1\)</span>. We can express <span class="math inline">\(\frac{\hat{\sigma}^2_{\hat{\beta}_1}}{\sigma^2_{\hat{\beta}_1}}\)</span> as</p>
+<p><span id="eq-eq25-4"><span class="math display">\[
+\begin{align}
+\frac{\hat{\sigma}^2_{\hat{\beta}_1}}{\sigma^2_{\hat{\beta}_1}}=\left(\frac{n}{n-2}\right)\left(\frac{\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i}{\text{var}(v_i)}\right)\div\left(\frac{\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2}{\sigma^2_X}\right)^2,
+\end{align}
+\tag{27.4}\]</span></span> where <span class="math inline">\(\text{var}(v_i)=\E\left((X_i-\mu_X)^2u^2_i\right)\)</span>. The second term in <a href="#eq-eq25-4" class="quarto-xref">Equation&nbsp;<span>27.4</span></a> convergences in probability to one by the consistency of the sample variance. Since <span class="math inline">\(n/(n-2)\to1\)</span> as <span class="math inline">\(n\to\infty\)</span>, it will be enough to show that <span class="math inline">\(\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i\xrightarrow{p}\text{var}(v_i)\)</span>. The proof of <span class="math inline">\(\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i\xrightarrow{p}\text{var}(v_i)\)</span> proceeds in two steps:</p>
+<ol type="1">
+<li><span class="math inline">\(\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)^2u^2_i\xrightarrow{p}\text{var}(v_i)\)</span>, and</li>
+<li><span class="math inline">\(\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i-\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)^2u^2_i\xrightarrow{p}0\)</span>.</li>
+</ol>
+<p>For the first result, we need to show that <span class="math inline">\(\{(X_i-\mu_X)^2u^2_i\}\)</span> obeys the law of large numbers. Under Assumption 2, we know that <span class="math inline">\(\{(X_i-\mu_X)^2u^2_i\}\)</span> are i.i.d., thus it remains to show that <span class="math inline">\(\E((X_i-\mu_X)^2u^2_i)&lt;\infty\)</span>. Note that <span class="math display">\[
+\begin{align*}
+\E((X_i-\mu_X)^2u^2_i)\leq \left(\E\left((X_i-\mu_X)^4\right)\E\left(u^4_i\right)\right)^{1/2}&lt;\infty,
+\end{align*}
+\]</span> where the first inequality follows from the Cauchy-Schwarz inequality and the last inequality from Assumption 3. Then, by the law of large numbers, we have <span class="math display">\[
+\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)^2u^2_i\xrightarrow{p}\E\left((X_i-\mu_X)^2u^2_i\right)=\text{var}(v_i).
+\]</span></p>
+<p>Next, we will show the second part: <span class="math inline">\(\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i-\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)^2u^2_i\xrightarrow{p}0\)</span>. Using the identity <span class="math inline">\(\bar{X}=\mu_X+(\bar{X}-\mu_X)\)</span>, we have <span id="eq-eq25-5"><span class="math display">\[
+\begin{align}
+&amp;\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i-\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)^2u^2_i\\
+&amp;=(\bar{X}-\mu_X)^2\frac{1}{n}\sum_{i=1}^n\hat{u}^2_i-2(\bar{X}-\mu_X)\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)\hat{u}^2_i\\
+&amp;+\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)^2(\hat{u}^2_i-u^2_i).
+\end{align}
+\tag{27.5}\]</span></span></p>
+<p>We use <span class="math inline">\(\hat{u}_i=u_i-(\hat{\beta}_0-\beta_0)-(\hat{\beta}_1-\beta_1)X_i\)</span> to express <span class="math inline">\(\hat{u}^2_i\)</span> as <span class="math display">\[
+\begin{align*}
+\hat{u}^2_i&amp;=u^2_i+(\hat{\beta}_0-\beta_0)^2+(\hat{\beta}_1-\beta_1)^2X^2_i-2u_i(\hat{\beta}_0-\beta_0)\\
+&amp;-2u_i(\hat{\beta}_1-\beta_1)X_i+2(\hat{\beta}_0-\beta_0)(\hat{\beta}_1-\beta_1)X_i.
+\end{align*}
+\]</span> Substituting this into <a href="#eq-eq25-5" class="quarto-xref">Equation&nbsp;<span>27.5</span></a> yields a series of terms. We provide convergence arguments for some exemplary terms. For example, we consider two terms from <span class="math inline">\((\bar{X}-\mu_X)^2\frac{1}{n}\sum_{i=1}^n\hat{u}^2_i\)</span>. For the first term, we have <span class="math display">\[
+(\bar{X}-\mu_X)^2\frac{1}{n}\sum_{i=1}^nu^2_i\xrightarrow{p}0,
+\]</span> because <span class="math inline">\((\bar{X}-\mu_X)^2\xrightarrow{p}0\)</span> and <span class="math inline">\(\frac{1}{n}\sum_{i=1}^nu^2_i\xrightarrow{p}\E(u^2_i)\)</span> by the law of large numbers. For the second term, we have <span class="math display">\[
+(\bar{X}-\mu_X)^2(\hat{\beta}_1-\beta_1)\frac{1}{n}\sum_{i=1}^nu_iX_i\xrightarrow{p}0,
+\]</span> because <span class="math inline">\((\bar{X}-\mu_X)^2\xrightarrow{p}0\)</span>, <span class="math inline">\((\hat{\beta}_1-\beta_1)\xrightarrow{p}0\)</span> and <span class="math inline">\(\frac{1}{n}\sum_{i=1}^nu_iX_i\xrightarrow{p}\E(u_iX_i)=0\)</span> by the law of large numbers. Similar arguments can be made for the remaining terms.</p>
+<p>Similarly, we can substitute the expression for <span class="math inline">\(\hat{u}^2_i\)</span> into <span class="math inline">\(\hat{\sigma}^2_{\hat{\beta}_0}\)</span> and show that <span class="math inline">\(\hat{\sigma}^2_{\hat{\beta}_0}\xrightarrow{p}\sigma^2_{\hat{\beta}_0}\)</span>. We omit the details for brevity.</p>
+</div>
+</section>
+<section id="asymptotic-distribution-of-the-t-statistic" class="level2" data-number="27.5">
+<h2 data-number="27.5" class="anchored" data-anchor-id="asymptotic-distribution-of-the-t-statistic"><span class="header-section-number">27.5</span> Asymptotic distribution of the t-statistic</h2>
+<p>Consider the null hypothesis <span class="math inline">\(H_0:\beta_1=c\)</span>, where <span class="math inline">\(c\)</span> is a known quantity. The heteroskedasticity-robust <span class="math inline">\(t\)</span>-statistic is <span class="math display">\[
+t=\frac{\hat{\beta}_1-c}{\hat{\sigma}_{\hat{\beta}_1}}.
+\]</span></p>
+<p>In the next theorem, we provide the asymptotic distribution of the <span class="math inline">\(t\)</span>-statistic.</p>
+<div id="thm-thm25-t" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.20 (Asymptotic distribution of the t-statistic)</strong></span> Assume that Assumptions 1-3 hold. Then, under <span class="math inline">\(H_0\)</span>, we have <span class="math display">\[
+t\xrightarrow{d}N(0,1).
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-t" class="quarto-xref">Theorem&nbsp;<span>27.20</span></a>). </span>Note that we can express <span class="math inline">\(t\)</span>-statistic as <span class="math display">\[
+\begin{align}
+t=\frac{\hat{\beta}_1-c}{\hat{\sigma}_{\hat{\beta}_1}}=\frac{\sqrt{n}(\hat{\beta}_1-c)}{\sqrt{n\sigma^2_{\hat{\beta}_1}}}\div\sqrt{\frac{\hat{\sigma}^2_{\hat{\beta}_1}}{\sigma^2_{\hat{\beta}_1}}}.
+\end{align}
+\]</span></p>
+<p>We show that <span class="math inline">\(\sqrt{\frac{\hat{\sigma}^2_{\hat{\beta}_1}}{\sigma^2_{\hat{\beta}_1}}}\xrightarrow{p}1\)</span> in <a href="#thm-thm25-var" class="quarto-xref">Theorem&nbsp;<span>27.19</span></a>. Also, if <span class="math inline">\(H_0\)</span> holds, then it follows from <a href="#thm-thm25-1" class="quarto-xref">Theorem&nbsp;<span>27.1</span></a> that <span class="math inline">\(\frac{\sqrt{n}(\hat{\beta}_1-c)}{\sqrt{n\sigma^2_{\hat{\beta}_1}}}\xrightarrow{d}N(0,1)\)</span>. Then, it follows from Slutsky’s theorem that <span class="math inline">\(t\xrightarrow{d}N(0,1)\)</span>.</p>
+</div>
+</section>
+<section id="the-gauss-markov-theorem-1" class="level2" data-number="27.6">
+<h2 data-number="27.6" class="anchored" data-anchor-id="the-gauss-markov-theorem-1"><span class="header-section-number">27.6</span> The Gauss-Markov theorem</h2>
+<p>The Gauss-Markov theorem in <a href="#thm-thm25-2" class="quarto-xref">Theorem&nbsp;<span>27.2</span></a> states that the OLS estimators are the best linear unbiased estimators (BLUE) under the first four assumptions. We prove this claim in <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 29</span></a> using matrix algebra. In this section, we show how the variances of the OLS estimators simplify.</p>
+<p>Under the fourth assumption, the numerator of <span class="math inline">\(\sigma^2_{\widehat{\beta}_1}\)</span> can be written as <span class="math display">\[
+\begin{align*}
+\text{var}((X_i-\mu_X)u_i)&amp;= \E((X_i-\mu_X)^2u^2_i)=\E\left(\E\left((X_i-\mu_X)^2u^2_i|X_i\right)\right)\\
+&amp;=\E\left((X_i-\mu_X)^2\E(u^2_i|X_i)\right)=\E\left((X_i-\mu_X)^2\sigma^2_u\right)\\
+&amp;=\sigma^2_u\E\left((X_i-\mu_X)^2\right)=\sigma^2_u\sigma^2_X,
+\end{align*}
+\]</span> where the second equality follows from the law of iterated expectations. Then, substituting this result into <span class="math inline">\(\sigma^2_{\widehat{\beta}_1}\)</span>, we obtain <span class="math inline">\(\sigma^2_{\widehat{\beta}_1} = \frac{\sigma^2_u}{n\sigma^2_X}\)</span>.</p>
+<p>Under the fourth assumption, we can express the numerator of <span class="math inline">\(\sigma^2_{\hat{\beta}_0}\)</span> as <span class="math display">\[
+\begin{align*}
+\text{var}(H_iu_i)&amp;=\E(H^2_iu^2_i)=\E\left(\E(H^2_iu^2_i|X_i)\right)\\
+&amp;=\E\left(H^2_i\E(u^2_i|X_i)\right)=\E(H^2_i)\sigma^2_u.
+\end{align*}
+\]</span></p>
+<p>Also, in Section 25.4, we show that <span class="math inline">\(\E(H^2_i)=\frac{\sigma^2_X}{\E(X_i^2)}\)</span>. Then, using these results, we can express <span class="math inline">\(\sigma^2_{\hat{\beta}_0}\)</span> as <span class="math display">\[
+\begin{align*}
+\sigma^2_{\hat{\beta}_0} &amp;= \frac{\text{var}(H_iu_i)}{n\left(\E(H^2_i)\right)^2} = \frac{\sigma^2_u}{n\E(H^2_i)}= \frac{\E(X^2_i)\sigma^2_u}{n\sigma^2_X}.
+\end{align*}
+\]</span></p>
+</section>
+<section id="exact-sampling-distribution-of-the-ols-estimator" class="level2" data-number="27.7">
+<h2 data-number="27.7" class="anchored" data-anchor-id="exact-sampling-distribution-of-the-ols-estimator"><span class="header-section-number">27.7</span> Exact sampling distribution of the OLS estimator</h2>
+<p>In <a href="#thm-thm25-3" class="quarto-xref">Theorem&nbsp;<span>27.3</span></a>, we claim that the OLS estimator has an exact conditional normal sampling distribution, and the homoskedasticity-only t-statistic has an exact Student t distribution. In this section, we will provide the proof of this results.</p>
+<p>We start with the following expression for <span class="math inline">\((\widehat{\beta}_1-\beta_1)\)</span>: <span class="math display">\[
+\begin{align}\label{eq14}
+\widehat{\beta}_1-\beta_1=\frac{\sum_{i=1}^n(X_i - \bar{X})u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}.
+\end{align}
+\]</span></p>
+<p>Note that <span class="math inline">\((\widehat{\beta}_1-\beta_1)\)</span> is a weighted average of <span class="math inline">\(u_1,\ldots,u_n\)</span>, and we have <span class="math inline">\(u_i|X_i\sim N(0, \sigma^2_u)\)</span> under Assumption 5. Because the weighted averages of normally distributed variables are themselves normally distributed, it follows that <span class="math inline">\((\widehat{\beta}_1-\beta_1)\)</span> is normally distributed, conditional on <span class="math inline">\(X_1,\ldots,X_n\)</span>.</p>
+<p>The conditional variance of <span class="math inline">\(\hat{\beta}_1\)</span> is <span class="math display">\[
+\begin{align}
+&amp;\text{var}(\hat{\beta}_1|X_1,\ldots,X_n)=\text{var}\left(\frac{\sum_{i=1}^n(X_i - \bar{X})u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}|X_1,\ldots,X_n\right)\\
+&amp;=\frac{\sum_{i=1}^n(X_i - \bar{X})^2\text{var}\left(u_i|X_1,\ldots,X_n\right)}{\left(\sum_{i=1}^n(X_i - \bar{X})^2\right)^2}=\frac{\sigma^2_u\sum_{i=1}^n(X_i - \bar{X})^2}{\left(\sum_{i=1}^n(X_i - \bar{X})^2\right)^2}\\
+&amp;=\frac{\sigma^2_u}{\sum_{i=1}^n(X_i - \bar{X})^2},
+\end{align}
+\]</span> where we use Assumption 4 in the third equality. Thus, <span class="math inline">\(\frac{\hat{\beta}_1-\beta_1}{\sqrt{\frac{\sigma^2_{u}}{\sum_{i=1}^n(X_i - \bar{X})^2}}}\sim N(0,1)\)</span>. We can estimate this conditional variance by the following estimator: <span class="math display">\[
+\begin{align}
+&amp;\widehat{\text{var}}(\hat{\beta}_1|X_1,\ldots,X_n)=\frac{s^2_{\hat{u}}}{\sum_{i=1}^n(X_i - \bar{X})^2},
+\end{align}
+\]</span> where <span class="math inline">\(s^2_{\hat{u}}=\frac{1}{n-2}\sum_{i=1}^n\hat{u}^2_i\)</span>.</p>
+<p>The exact sampling distribution of the OLS estimator <span class="math inline">\(\hat{\beta}_0\)</span> can be derived in a similar way. We omit the details.</p>
+</section>
+<section id="exact-sampling-distribution-of-the-homoskedasticity-only-t-statistic" class="level2" data-number="27.8">
+<h2 data-number="27.8" class="anchored" data-anchor-id="exact-sampling-distribution-of-the-homoskedasticity-only-t-statistic"><span class="header-section-number">27.8</span> Exact sampling distribution of the homoskedasticity-only t-statistic</h2>
+<p>Consider the null hypothesis <span class="math inline">\(H_0:\beta_1=c\)</span>, where <span class="math inline">\(c\)</span> is a known quantity. The homoskedasticity-only t-statistic is given by</p>
+<p><span class="math display">\[
+\begin{align}
+t&amp;=\frac{\hat{\beta}_1-c}{\sqrt{\widehat{\text{var}}(\hat{\beta}_1|X_1,\ldots,X_n)}}.
+\end{align}
+\]</span></p>
+<div id="thm-thm25-t2" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 27.21</strong></span> Assume that all five assumptions hold. Then, under <span class="math inline">\(H_0\)</span>, the homoskedasticity-only <span class="math inline">\(t\)</span>-statistic has the Student t distribution with <span class="math inline">\(n-2\)</span> degrees of freedom.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm25-t2" class="quarto-xref">Theorem&nbsp;<span>27.21</span></a>). </span>We can express the <span class="math inline">\(t\)</span>-statistic as <span class="math display">\[
+\begin{align}
+t&amp;=\frac{\hat{\beta}_1-c}{\sqrt{\widehat{\text{var}}(\hat{\beta}_1|X_1,\ldots,X_n)}}=\frac{\hat{\beta}_1-c}{\sqrt{\frac{\sigma^2_{u}}{\sum_{i=1}^n(X_i - \bar{X})^2}}}\div\sqrt{\frac{s^2_{\hat{u}}}{\sigma^2_u}}\\
+&amp;=\frac{\hat{\beta}_1-c}{\sqrt{\frac{\sigma^2_{u}}{\sum_{i=1}^n(X_i - \bar{X})^2}}}\div\sqrt{W/(n-2)},
+\end{align}
+\]</span> where <span class="math inline">\(W=\sum_{i=1}^n\hat{u}^2_i/\sigma^2_u\)</span>. Under <span class="math inline">\(H_0\)</span>, we have <span class="math inline">\(\frac{\hat{\beta}_1-c}{\sqrt{\frac{\sigma^2_{u}}{\sum_{i=1}^n(X_i - \bar{X})^2}}}\sim N(0,1)\)</span>. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 29</span></a>, we show that <span class="math inline">\(W\)</span> has a chi-squared distribution with <span class="math inline">\(n-2\)</span> degrees of freedom and that it is independent of the standardized OLS estimator in the numerator. It then follows from the definition of the Student’s <span class="math inline">\(t\)</span> distribution that the homoskedasticity-only <span class="math inline">\(t\)</span>-statistic has a Student’s <span class="math inline">\(t\)</span> distribution with <span class="math inline">\(n-2\)</span> degrees of freedom.</p>
+</div>
+</section>
+<section id="weighted-least-squares" class="level2" data-number="27.9">
+<h2 data-number="27.9" class="anchored" data-anchor-id="weighted-least-squares"><span class="header-section-number">27.9</span> Weighted least squares</h2>
+<p>The Gauss-Markov theorem stated in <a href="#thm-thm25-2" class="quarto-xref">Theorem&nbsp;<span>27.2</span></a> requires that the errors are homoskedastic. If the errors are heteroskedastic, then the OLS estimator is no longer the most efficient estimator. In this section, we will discuss the weighted least squares (WLS) estimator, which is can be efficient under heteroskedasticity.</p>
+<section id="wls-with-known-heteroskedasticity" class="level3" data-number="27.9.1">
+<h3 data-number="27.9.1" class="anchored" data-anchor-id="wls-with-known-heteroskedasticity"><span class="header-section-number">27.9.1</span> WLS with known heteroskedasticity</h3>
+<p>We assume that the conditional variance of the errors is known up to a factor of proportionality. In other words, we assume that <span class="math inline">\(\text{var}(u_i|X_i)=\lambda h(X_i)\)</span> for <span class="math inline">\(i=1,\ldots,n\)</span>, where <span class="math inline">\(\lambda\)</span> is a constant and <span class="math inline">\(h(X_i)\)</span> is known. Under this assumption, we can express our linear regression model with one explanatory variable as <span id="eq-eq25-8"><span class="math display">\[
+\tilde{Y}_i=\beta_0\tilde{X}_{0i}+\beta_1\tilde{X}_{1i}+\tilde{u}_i,
+\tag{27.6}\]</span></span> where <span class="math inline">\(\tilde{Y}_i=Y_i/\sqrt{h(X_i)}\)</span>, <span class="math inline">\(\tilde{X}_{0i}=1/\sqrt{h(X_i)}\)</span>, <span class="math inline">\(\tilde{X}_{1i}=X_i/\sqrt{h(X_i)}\)</span>, and <span class="math inline">\(\tilde{u}_i=u_i/\sqrt{h(X_i)}\)</span>. Note that the conditional variance of <span class="math inline">\(\tilde{u}_i\)</span> is given by <span class="math display">\[
+\text{var}(\tilde{u}_i|\tilde{X}_{0i},\tilde{X}_{1i})=\frac{\text{var}(u_i|X_i)}{h(X_i)}=\lambda,
+\]</span> suggesting that <span class="math inline">\(\tilde{u}_i\)</span>’s are homoskedastic. The model in <a href="#eq-eq25-8" class="quarto-xref">Equation&nbsp;<span>27.6</span></a> is a linear regression model with homoskedastic errors, and we can apply the OLS estimator to this model. The WLS estimator of <span class="math inline">\(\beta_1\)</span> is is the OLS estimator of <span class="math inline">\(\beta_1\)</span> based on the transformed model. Under the first three assumptions of the linear regression model and <span class="math inline">\(\text{var}(u_i|X_i)=\lambda h(X_i)\)</span>, the Gauss-Markov theorem ensures that the WLS estimator is BLUE.</p>
+</section>
+<section id="wls-with-a-known-functional-form-for-heteroskedasticity" class="level3" data-number="27.9.2">
+<h3 data-number="27.9.2" class="anchored" data-anchor-id="wls-with-a-known-functional-form-for-heteroskedasticity"><span class="header-section-number">27.9.2</span> WLS with a known functional form for heteroskedasticity</h3>
+<p>In practice, we do not know the functional form of <span class="math inline">\(h(X_i)\)</span>, therefore the WLS approach based on <a href="#eq-eq25-8" class="quarto-xref">Equation&nbsp;<span>27.6</span></a> is not feasible. However, if we know the functional form of <span class="math inline">\(h(X_i)\)</span>, we can use the WLS estimator based on the transformed model. For example, if we know that <span id="eq-eq25-9"><span class="math display">\[
+\text{var}(u_i|X_i)=\lambda h(X_i)=\lambda_0+\lambda_1X^2_i,
+\tag{27.7}\]</span></span> where <span class="math inline">\(\lambda_0&gt;0\)</span>, and <span class="math inline">\(\lambda_1\geq0\)</span> are unknown parameters. Then, if we know the values of <span class="math inline">\(\lambda_0\)</span> and <span class="math inline">\(\lambda_1\)</span>, we can use the WLS estimator based on the transformed model as in the previous section.</p>
+<p>If we do not know the values of <span class="math inline">\(\lambda_0\)</span> and <span class="math inline">\(\lambda_1\)</span>, we can estimate them using the OLS estimator. Thus, the WLS estimation becomes feasible. The WLS estimator can be computed by the following steps:</p>
+<ol type="1">
+<li>Estimate the OLS model using the original data to obtain <span class="math inline">\(\hat{\beta}_0\)</span> and <span class="math inline">\(\hat{\beta}_1\)</span>.</li>
+<li>Compute the residuals <span class="math inline">\(\hat{u}_i=Y_i-\hat{\beta}_0-\hat{\beta}_1X_i\)</span>.</li>
+<li>Regress <span class="math inline">\(\hat{u}^2_i\)</span> on <span class="math inline">\(X^2_i\)</span> to obtain the predicted values of the conditional variance <span class="math inline">\(\widehat{\text{var}}(u_i|X_i)=\hat{\lambda}_0+\hat{\lambda}_1X^2_i\)</span>.</li>
+<li>Formulate the model in <a href="#eq-eq25-8" class="quarto-xref">Equation&nbsp;<span>27.6</span></a> with <span class="math inline">\(\tilde{Y}_i=Y_i/\sqrt{\widehat{\text{var}}(u_i|X_i)}\)</span>, <span class="math inline">\(\tilde{X}_{0i}=1/\sqrt{\widehat{\text{var}}(u_i|X_i)}\)</span>, and <span class="math inline">\(\tilde{X}_{1i}=X_i/\sqrt{\widehat{\text{var}}(u_i|X_i)}\)</span>.</li>
+<li>Estimate the transformed model using the OLS estimator to obtain the WLS estimator of <span class="math inline">\(\beta_1\)</span>.</li>
+</ol>
+<p>The WLS estimator computed in this way is usually called the feasible WLS estimator. The advantage of the feasible WLS estimator is that it is asymptotically efficient if the functional form of the conditional variance is correctly specified. The disadvantage is that it produces invalid inference if the functional form is misspecified. Since, in practice, the functional form is mostly unknown, <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> concludes that “it is our opinion that, despite the theoretical appeal of WLS, heteroskedasticity-robust standard errors provide a better way to handle potential heteroskedasticity in most applications.”</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Hansen2022" class="csl-entry" role="listitem">
+Hansen, Bruce. 2022a. <em>Econometrics</em>. Princeton University Press.
+</div>
+<div id="ref-Hansen2022b" class="csl-entry" role="listitem">
+———. 2022b. <em>Probability and Statistics for Economists</em>. Princeton University Press.
+</div>
+<div id="ref-Stock2020" class="csl-entry" role="listitem">
+Stock, James H., and Mark W. Watson. 2020. <em>Introduction to Econometrics</em>. Fourth edition. Pearson.
+</div>
+<div id="ref-Vaart1998" class="csl-entry" role="listitem">
+Vaart, A. W. van der. 1998. <em>Asymptotic Statistics</em>. Cambridge Series in Statistical and Probabilistic Mathematics. Cambridge University Press.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Part5-TheoreticalTopics.html" class="pagination-link" aria-label="Theoretical Topics">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Theoretical Topics</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Chapter19-TheoryMultipleRegression.html" class="pagination-link" aria-label="The Theory of Multiple Regression">
+        <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter18-TheoryRegression.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

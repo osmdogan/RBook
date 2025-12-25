@@ -1,0 +1,2004 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>12&nbsp; Review of Statistics – Introduction to Econometrics with R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Part2-FundamentalRegressionAnalysis.html" rel="next">
+<link href="./Chapter2-ReviewProbability.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part1-IntroductionReview.html">Introduction and Review</a></li><li class="breadcrumb-item"><a href="./Chapter3-ReviewStatistics.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Statistics</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Econometrics with R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part0-RBasics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-DataStructures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Structures in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-ControlStructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Control Structures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-CustomFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Custom Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-StatFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Statistical Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Dataframes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-NumericalAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Applications in Numerical Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and Review</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentals of Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Further Topics in Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Analysis of Economic Time Series Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theoretical Topics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#estimators-and-their-properties" id="toc-estimators-and-their-properties" class="nav-link active" data-scroll-target="#estimators-and-their-properties"><span class="header-section-number">12.1</span> Estimators and their properties</a></li>
+  <li><a href="#estimation-of-the-population-mean" id="toc-estimation-of-the-population-mean" class="nav-link" data-scroll-target="#estimation-of-the-population-mean"><span class="header-section-number">12.2</span> Estimation of the population mean</a></li>
+  <li><a href="#estimation-of-the-population-variance" id="toc-estimation-of-the-population-variance" class="nav-link" data-scroll-target="#estimation-of-the-population-variance"><span class="header-section-number">12.3</span> Estimation of the population variance</a></li>
+  <li><a href="#hypothesis-tests-concerning-the-population-mean" id="toc-hypothesis-tests-concerning-the-population-mean" class="nav-link" data-scroll-target="#hypothesis-tests-concerning-the-population-mean"><span class="header-section-number">12.4</span> Hypothesis tests concerning the population mean</a></li>
+  <li><a href="#confidence-intervals-for-the-population-mean" id="toc-confidence-intervals-for-the-population-mean" class="nav-link" data-scroll-target="#confidence-intervals-for-the-population-mean"><span class="header-section-number">12.5</span> Confidence intervals for the population mean</a></li>
+  <li><a href="#comparing-means-from-different-populations" id="toc-comparing-means-from-different-populations" class="nav-link" data-scroll-target="#comparing-means-from-different-populations"><span class="header-section-number">12.6</span> Comparing means from different populations</a></li>
+  <li><a href="#scatterplots-the-sample-covariance-and-the-sample-correlation" id="toc-scatterplots-the-sample-covariance-and-the-sample-correlation" class="nav-link" data-scroll-target="#scatterplots-the-sample-covariance-and-the-sample-correlation"><span class="header-section-number">12.7</span> Scatterplots, the sample covariance, and the sample correlation</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter3-ReviewStatistics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part1-IntroductionReview.html">Introduction and Review</a></li><li class="breadcrumb-item"><a href="./Chapter3-ReviewStatistics.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Statistics</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-statistics" class="quarto-section-identifier"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pracma)  <span class="co"># for numerical integration</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)  <span class="co"># for arranging multiple ggplots</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS) <span class="co"># mvrnorm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="estimators-and-their-properties" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="estimators-and-their-properties"><span class="header-section-number">12.1</span> Estimators and their properties</h2>
+<p>Let <span class="math inline">\(Y_1, Y_2, \dots, Y_n\)</span> be an i.i.d. random sample from a population distribution with mean <span class="math inline">\(\mu_Y\)</span> and variance <span class="math inline">\(\sigma_Y^2\)</span>. We aim to use this sample to learn about unknown characteristics of the population distribution, such as its mean, variance, and other parameters. To achieve this, we construct <strong>estimators</strong>.</p>
+<div id="def-def10-1" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 12.1 (Estimator and estimate)</strong></span> An <strong>estimator</strong> is a statistic formulated from <span class="math inline">\(\{Y_1,Y_2,\dots,Y_n\}\)</span> to estimate an unknown characteristic of the population distribution. An <strong>estimate</strong> is the numerical value obtained by computing the estimator using data from a specific sample.</p>
+</div>
+<p>Note that an estimator is a random variable because it is formulated from the sample <span class="math inline">\(\{Y_1,Y_2,\dots,Y_n\}\)</span>, which is a random sample. On the other hand, an estimate is a constant because it is computed from the realization of a specific sample <span class="math inline">\(\{Y_1,Y_2,\dots,Y_n\}\)</span>, i.e., it is a realization of the estimator.</p>
+<div id="exm-example10-1" class="theorem example">
+<p><span class="theorem-title"><strong>Example 12.1</strong></span> If the unknown characteristic is the population mean <span class="math inline">\(\mu_Y\)</span>, then the estimator of <span class="math inline">\(\mu_Y\)</span> is a statistic formulated from <span class="math inline">\(\{Y_1,Y_2,\dots,Y_n\}\)</span>, such as <span class="math inline">\(\hat{\mu}_Y=\bar{Y}=\frac{1}{n}\sum_{i=1}^nY_i\)</span>. The estimate of <span class="math inline">\(\mu_Y\)</span> is the numerical value of <span class="math inline">\(\hat{\mu}_Y\)</span> when it is computed using data from a specific sample, e.g., <span class="math inline">\(\hat{\mu}_Y=5.2\)</span>.</p>
+</div>
+<p>Since estimators are random variables, they have associated probability distributions, known as sampling distributions.</p>
+<div id="def-def10-2" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 12.2 (Sampling distribution of an estimator)</strong></span> Let <span class="math inline">\(\hat{\mu}_Y\)</span> be an estimator of the population parameter <span class="math inline">\(\mu_Y\)</span>. The probability distribution of <span class="math inline">\(\hat{\mu}_Y\)</span> is called the <strong>sampling distribution</strong> of <span class="math inline">\(\hat{\mu}_Y\)</span>.</p>
+</div>
+<p>Intuitively, the sampling distribution of an estimator is the probability distribution obtained by computing the estimator across all possible samples of size <span class="math inline">\(n\)</span> drawn from the population. It provides insight into how the estimator behaves across different samples and is essential for understanding its properties, such as bias, consistency, and efficiency.</p>
+<div id="def-def10-3" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 12.3 (Properties of an estimator)</strong></span> Let <span class="math inline">\(\hat{\mu}_Y\)</span> be an estimator of the population parameter <span class="math inline">\(\mu_Y\)</span>.</p>
+<ol type="a">
+<li>We say that <span class="math inline">\(\hat{\mu}_Y\)</span> is <strong>unbiased estimator</strong> if <span class="math inline">\(\E(\hat{\mu}_Y)=\mu_Y\)</span>.</li>
+<li>We say that <span class="math inline">\(\hat{\mu}_Y\)</span> is a <strong>consistent estimator</strong> if <span class="math inline">\(\hat{\mu}_Y\xrightarrow{p}\mu_Y\)</span> as the sample size tends to infinity.</li>
+<li>Let <span class="math inline">\(\tilde{\mu}_Y\)</span> be another estimator of <span class="math inline">\(\mu_Y\)</span>, and suppose that both <span class="math inline">\(\hat{\mu}_Y\)</span> and <span class="math inline">\(\tilde{\mu}_Y\)</span> are unbiased. Then, <span class="math inline">\(\hat{\mu}_Y\)</span> said to be more <strong>efficient</strong> (or <strong>precise</strong>) than <span class="math inline">\(\tilde{\mu}_Y\)</span> if <span class="math inline">\(\text{var}(\hat{\mu}_Y) &lt; \text{var}(\tilde{\mu}_Y)\)</span>.</li>
+</ol>
+</div>
+<p>The unbiasedness property implies that the sampling distribution of the estimator <span class="math inline">\(\hat{\mu}_Y\)</span> is centered around the true value of the population parameter <span class="math inline">\(\mu_Y\)</span>. The bias of <span class="math inline">\(\hat{\mu}_Y\)</span> is defined as <span class="math inline">\(\text{Bias}(\hat{\mu}_Y) = \mathbb{E}(\hat{\mu}_Y) - \mu_Y\)</span>. The consistency property indicates that as the sample size increases, the sampling distribution of <span class="math inline">\(\hat{\mu}_Y\)</span> becomes increasingly concentrated around the true value <span class="math inline">\(\mu_Y\)</span>. Among all unbiased and consistent estimators, we prefer the one with the smallest variance, known as the most efficient estimator.</p>
+<div id="exm-example10-2" class="theorem example">
+<p><span class="theorem-title"><strong>Example 12.2</strong></span> Let <span class="math inline">\(\hat{\mu}_1\)</span> and <span class="math inline">\(\hat{\mu}_2\)</span> be two unbiased estimators of <span class="math inline">\(\mu_Y = 5\)</span>. Assume that the sampling distribution of <span class="math inline">\(\hat{\mu}_1\)</span> is <span class="math inline">\(N(5, 0.5)\)</span> and that of <span class="math inline">\(\hat{\mu}_2\)</span> is <span class="math inline">\(N(5, 1)\)</span>. Then, we have <span class="math inline">\(\mathbb{E}(\hat{\mu}_1) = \mathbb{E}(\hat{\mu}_2) = 5\)</span>, indicating that both estimators are unbiased. However, <span class="math inline">\(\hat{\mu}_1\)</span> is more efficient than <span class="math inline">\(\hat{\mu}_2\)</span> because <span class="math inline">\(\text{Var}(\hat{\mu}_1) = 0.5 &lt; \text{Var}(\hat{\mu}_2) = 1\)</span>. In <a href="#fig-fig10-1" class="quarto-xref">Figure&nbsp;<span>12.1</span></a>, we plot the sampling distributions of <span class="math inline">\(\hat{\mu}_1\)</span> and <span class="math inline">\(\hat{\mu}_2\)</span>. Although both sampling distributions are centered at <span class="math inline">\(\mu_Y\)</span>, the sampling distribution of <span class="math inline">\(\hat{\mu}_1\)</span> is more concentrated around <span class="math inline">\(\mu_Y\)</span> than that of <span class="math inline">\(\hat{\mu}_2\)</span>, indicating that <span class="math inline">\(\hat{\mu}_1\)</span> is more efficient than <span class="math inline">\(\hat{\mu}_2\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">2</span>, <span class="dv">8</span>, <span class="at">length.out =</span> <span class="dv">500</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mu_Y <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">rep</span>(x, <span class="dv">2</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pdf =</span> <span class="fu">c</span>(<span class="fu">dnorm</span>(x, <span class="at">mean =</span> mu_Y, <span class="at">sd =</span> <span class="fl">0.5</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>          <span class="fu">dnorm</span>(x, <span class="at">mean =</span> mu_Y, <span class="at">sd =</span> <span class="dv">1</span>)),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimator =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"hat_mu1"</span>, <span class="st">"hat_mu2"</span>), <span class="at">each =</span> <span class="fu">length</span>(x)))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> pdf, <span class="at">color =</span> estimator)) <span class="sc">+</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> mu_Y, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"solid"</span>, <span class="at">linewidth =</span> <span class="fl">0.6</span>, <span class="at">color =</span> <span class="st">"gray50"</span>) <span class="sc">+</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"hat_mu1"</span> <span class="ot">=</span> <span class="st">"steelblue"</span>, <span class="st">"hat_mu2"</span> <span class="ot">=</span> <span class="st">"black"</span>),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"hat_mu1"</span> <span class="ot">=</span> <span class="fu">expression</span>(<span class="fu">hat</span>(mu)[<span class="dv">1</span>]),</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"hat_mu2"</span> <span class="ot">=</span> <span class="fu">expression</span>(<span class="fu">hat</span>(mu)[<span class="dv">2</span>]))) <span class="sc">+</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Estimates"</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Density"</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-fig10-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig10-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter3-ReviewStatistics_files/figure-html/fig-fig10-1-1.png" class="img-fluid figure-img" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig10-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.1: The sampling distributions of two estimators
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Among the biased estimators, we may choose the one that minimizes the <strong>mean squared error</strong> (MSE), which is defined as <span class="math inline">\(\text{MSE}(\hat{\mu}_Y) = \E((\hat{\mu}_Y - \mu_Y)^2)\)</span>. The MSE provides a measure of the average squared deviation of the estimator <span class="math inline">\(\hat{\mu}_Y\)</span> from the true value <span class="math inline">\(\mu_Y\)</span>. It can be decomposed into the variance and the square of the bias: <span class="math display">\[
+\begin{align*}
+\text{MSE}(\hat{\mu}_Y) &amp;= \E((\hat{\mu}_Y - \mu_Y)^2) = \E((\hat{\mu}_Y - \E(\hat{\mu}_Y) + \E(\hat{\mu}_Y) - \mu_Y)^2)\\
+&amp;= \E((\hat{\mu}_Y - \E(\hat{\mu}_Y))^2) + 2\E((\hat{\mu}_Y - \E(\hat{\mu}_Y))(\E(\hat{\mu}_Y) - \mu_Y)) + (\E(\hat{\mu}_Y) - \mu_Y)^2\\
+&amp;= \text{var}(\hat{\mu}_Y) + \text{Bias}^2(\hat{\mu}_Y).
+\end{align*}
+\]</span></p>
+</section>
+<section id="estimation-of-the-population-mean" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="estimation-of-the-population-mean"><span class="header-section-number">12.2</span> Estimation of the population mean</h2>
+<p>Let <span class="math inline">\(Y_1,Y_2,\dots,Y_n\)</span> be i.i.d. random variables from a population that has mean <span class="math inline">\(\mu_Y\)</span> and variance <span class="math inline">\(\sigma_Y^2\)</span>. In <a href="Chapter2-ReviewProbability.html" class="quarto-xref"><span>Chapter 11</span></a>, we show that <span class="math inline">\(\E(\bar{Y})=\mu_Y\)</span> and <span class="math inline">\(\text{var}(\bar{Y})=\sigma^2_Y/n\)</span>. Thus, <span class="math inline">\(\bar{Y}\)</span> is an unbiased estimator of <span class="math inline">\(\mu_Y\)</span> and a consistent estimator of <span class="math inline">\(\mu_Y\)</span> by the law of large numbers. Thus, we have <span class="math inline">\(\text{MSE}(\bar{Y}) = \text{var}(\bar{Y}) = \sigma^2_Y/n\)</span>, which converges to <span class="math inline">\(0\)</span> as <span class="math inline">\(n\to\infty\)</span>. <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> show that <span class="math inline">\(\bar{Y}\)</span> is the most efficient estimator among the estimators that are formulated as a linear function of <span class="math inline">\(Y_1,Y_2,\dots,Y_n\)</span>.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Concept 10.1: <span class="math inline">\(\bar{Y}\)</span> is the Best Linear Unbiased Estimator (BLUE) of <span class="math inline">\(\mu_Y\)</span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let <span class="math inline">\(\tilde{\mu}_Y=\sum_{i=1}^na_iY_i\)</span> be an unbiased estimator of <span class="math inline">\(\mu_Y\)</span>, where <span class="math inline">\(a_1,\dots,a_n\)</span> are nonrandom constant. Then, <span class="math inline">\(\text{var}(\bar{Y})&lt;\text{var}(\tilde{\mu}_Y)\)</span>. Therefore, <span class="math inline">\(\bar{Y}\)</span> is the Best Linear Unbiased Estimator (BLUE) of <span class="math inline">\(\mu_Y\)</span>, meaning it is the most efficient estimator among all unbiased estimators that are linear functions of <span class="math inline">\(Y_1,Y_2,\dots,Y_n\)</span>.</p>
+</div>
+</div>
+<p>In Key Concept 10.1, we claim that <span class="math inline">\(\bar{Y}\)</span> is the most efficient estimator among all unbiased estimators that are linear functions of <span class="math inline">\(Y_1,Y_2,\dots,Y_n\)</span>. <span class="citation" data-cites="Hansen2022b">Hansen (<a href="references.html#ref-Hansen2022b" role="doc-biblioref">2022</a>)</span> shows that <span class="math inline">\(\bar{Y}\)</span> is the most efficient estimator among all unbiased estimators, including those that are nonlinear functions of <span class="math inline">\(Y_1,Y_2,\dots,Y_n\)</span>.</p>
+<div id="exm-example10-3" class="theorem example">
+<p><span class="theorem-title"><strong>Example 12.3</strong></span> Let <span class="math inline">\(Y_1\)</span>, <span class="math inline">\(Y_2\)</span> and <span class="math inline">\(Y_3\)</span> be a random sample from <span class="math inline">\(\chi^2_m\)</span>. We consider the following four estimators for estimating <span class="math inline">\(m\)</span>: <span class="math inline">\(\hat{m}_1=Y_1\)</span>, <span class="math inline">\(\hat{m}_2=\frac{Y_1+Y_2}{2}\)</span>, <span class="math inline">\(\hat{m}_3=\frac{Y_1+2Y_2}{3}\)</span>, and <span class="math inline">\(\hat{m}_4=\bar{Y}\)</span>. Note that if <span class="math inline">\(Y\sim\chi^2_m\)</span>, then <span class="math inline">\(\E(Y)=m\)</span> and <span class="math inline">\(\text{var}(Y)=2m\)</span>. Using these two moments, we can show the following properties:</p>
+<ul>
+<li><span class="math inline">\(\E(\hat{m}_1)=\E(Y_1)=m\)</span> and <span class="math inline">\(\var(\hat{m}_1)=\var(Y_1)=2m\)</span>.</li>
+<li><span class="math inline">\(\E(\hat{m}_2)=\frac{\E(Y_1)+\E(Y_2)}{2}=m\)</span> and <span class="math inline">\(\var(\hat{m}_2)=\frac{\var(Y_1)+\var(Y_2)}{4}=m\)</span>.</li>
+<li><span class="math inline">\(\E(\hat{m}_3)=\frac{\E(Y_1)+2\E(Y_2)}{3}=m\)</span> and <span class="math inline">\(\var(\hat{m}_3)=\frac{\var(Y_1)+4\var(Y_2)}{9}=10m/9\)</span>.</li>
+<li><span class="math inline">\(\E(\hat{m}_4)=\frac{\E(Y_1+Y_2+Y_3)}{3}=m\)</span> and <span class="math inline">\(\var(\hat{m}_4)=\frac{\var(Y_1)+\var(Y_2)+\var(Y_3)}{9}=6m/9\)</span>.</li>
+</ul>
+<p>All four estimators are unbiased, with <span class="math inline">\(\hat{m}_4\)</span> being the most efficient. In the following code chunk, we resample <span class="math inline">\(Y_1\)</span>, <span class="math inline">\(Y_2\)</span>, and <span class="math inline">\(Y_3\)</span> from the <span class="math inline">\(\chi^2_3\)</span> distribution <span class="math inline">\(1000\)</span> times and compute each estimator for every resample. <a href="#fig-f10.1" class="quarto-xref">Figure&nbsp;<span>12.2</span></a> illustrates the sampling distribution of each estimator. As all estimators are unbiased, their estimated means are close to <span class="math inline">\(m = 3\)</span>. The figure also shows that <span class="math inline">\(\hat{m}_4\)</span> is relatively more efficient, as its sampling distribution is more tightly clustered around its mean.</p>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">54321</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate data</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>Y1 <span class="ot">&lt;-</span> <span class="fu">rchisq</span>(r, <span class="at">df =</span> m)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>Y2 <span class="ot">&lt;-</span> <span class="fu">rchisq</span>(r, <span class="at">df =</span> m)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>Y3 <span class="ot">&lt;-</span> <span class="fu">rchisq</span>(r, <span class="at">df =</span> m)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> Y1</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> (Y1 <span class="sc">+</span> Y2) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> (Y1 <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> Y2) <span class="sc">/</span> <span class="dv">3</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> (Y1 <span class="sc">+</span> Y2 <span class="sc">+</span> Y3) <span class="sc">/</span> <span class="dv">3</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Means</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>mean_m1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(m1)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>mean_m2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(m2)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>mean_m3 <span class="ot">&lt;-</span> <span class="fu">mean</span>(m3)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>mean_m4 <span class="ot">&lt;-</span> <span class="fu">mean</span>(m4)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to generate a histogram with vertical mean line</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>plot_histogram <span class="ot">&lt;-</span> <span class="cf">function</span>(data, label, mean_value) {</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> data), <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> mean_value, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">linewidth =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlim</span>(<span class="dv">0</span>, <span class="dv">18</span>) <span class="sc">+</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> label, <span class="at">y =</span> <span class="st">"Frequency"</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate four plots</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plot_histogram</span>(m1, <span class="fu">expression</span>(<span class="fu">hat</span>(m)[<span class="dv">1</span>]), mean_m1)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plot_histogram</span>(m2, <span class="fu">expression</span>(<span class="fu">hat</span>(m)[<span class="dv">2</span>]), mean_m2)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">plot_histogram</span>(m3, <span class="fu">expression</span>(<span class="fu">hat</span>(m)[<span class="dv">3</span>]), mean_m3)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">plot_histogram</span>(m4, <span class="fu">expression</span>(<span class="fu">hat</span>(m)[<span class="dv">4</span>]), mean_m4)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine using gridExtra</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, p3, p4, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-f10.1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-f10.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter3-ReviewStatistics_files/figure-html/fig-f10.1-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f10.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.2: The sampling distribution of each estimator
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="estimation-of-the-population-variance" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="estimation-of-the-population-variance"><span class="header-section-number">12.3</span> Estimation of the population variance</h2>
+<p>Let <span class="math inline">\(Y_1,Y_2,\dots,Y_n\)</span> be i.i.d. random variables with <span class="math inline">\(\E(Y_i)=\mu_Y\)</span>, <span class="math inline">\(\var(Y_i)=\sigma^2_Y\)</span>, and <span class="math inline">\(\E(Y^4_i)&lt;\infty\)</span>. Consider the sample variance given by <span class="math display">\[
+s^2_Y=\frac{1}{n-1}\sum_{i=1}^n(Y_i-\bar{Y})^2.
+\]</span></p>
+<p>We first show that <span class="math inline">\(\E(s^2_Y)=\sigma^2_Y\)</span> and then use the law of large numbers introduced in <a href="Chapter2-ReviewProbability.html" class="quarto-xref"><span>Chapter 11</span></a> to show that <span class="math inline">\(s^2_Y\xrightarrow{p}\sigma^2_Y\)</span>.</p>
+<p>First, note that <span class="math inline">\(\sum_{i=1}^n(Y_i-\bar{Y})^2=\sum_{i=1}^nY^2_i-n\bar{Y}^2\)</span>. Then, we can express <span class="math inline">\(\E(s^2_Y)\)</span> as <span class="math display">\[
+\begin{align*}
+\E(s^2_Y)&amp;=\E\left(\frac{1}{n-1}\sum_{i=1}^n(Y_i-\bar{Y})^2\right)=\frac{1}{n-1}\E\left(\sum_{i=1}^nY^2_i-n\bar{Y}^2\right)\\
+&amp;=\frac{1}{n-1}\left(\E\left(\sum_{i=1}^nY^2_i\right)-n\E(\bar{Y}^2)\right).
+\end{align*}
+\]</span></p>
+<p>The variance computation formula <span class="math inline">\(\var(Y_i)=\E(Y^2_i)-(\E(Y_i))^2\)</span> gives <span class="math inline">\(\E(Y^2_i)=\sigma^2_Y+\mu^2_Y\)</span>. Then, we have the following two expectations: <span class="math display">\[
+\begin{align*}
+&amp;(1)\, \E\left(\sum_{i=1}^nY^2_i\right)=\sum_{i=1}^n\E\left(Y^2_i\right)=\sum_{i=1}^n\left(\var(Y_i)+\left(\E(Y_i)\right)^2\right)=n(\sigma^2_Y+\mu^2_Y),\\
+&amp;(2)\,\E(\bar{Y}^2)=\var(\bar{Y})+\left(\E(\bar{Y})\right)^2=\frac{\sigma^2_Y}{n}+\mu^2_Y.
+\end{align*}
+\]</span></p>
+<p>Substituting (1) and (2) into <span class="math inline">\(\E(s^2_Y)\)</span>, we obtain <span class="math display">\[
+\begin{align*}
+\E(s^2_Y)=\frac{1}{n-1}\left(n(\sigma^2_Y+\mu^2_Y)-n(\sigma^2_Y/n+\mu^2_Y)\right)=\sigma^2_Y,
+\end{align*}
+\]</span> which shows that <span class="math inline">\(s^2_Y\)</span> is an unbiased estimator of <span class="math inline">\(\sigma^2_Y\)</span>.</p>
+<p>To show that <span class="math inline">\(s^2_Y\xrightarrow{p}\sigma^2_Y\)</span>, we first consider the following expression: <span class="math display">\[
+\begin{align*}
+\frac{1}{n}\sum_{i=1}^n(Y_i-\bar{Y})^2=\frac{1}{n}\sum_{i=1}^nY^2_i-\bar{Y}^2.
+\end{align*}
+\]</span></p>
+<p>By the law of large numbers, <span class="math inline">\(\frac{1}{n}\sum_{i=1}^nY^2_i\xrightarrow{p}\E(Y^2_i)\)</span> because <span class="math inline">\(\{Y^2_i\}\)</span> are i.i.d. and <span class="math inline">\(\E(Y^4_i)&lt;\infty\)</span>. Also note that <span class="math inline">\(\bar{Y}^2\xrightarrow{p}\mu^2_Y\)</span>. Thus, <span class="math display">\[
+\begin{align*}
+\frac{1}{n}\sum_{i=1}^n(Y_i-\bar{Y})^2=\frac{1}{n}\sum_{i=1}^nY^2_i-\bar{Y}^2\xrightarrow{p}(\sigma^2_Y+\mu^2_Y)-\mu^2_Y=\sigma^2_Y.
+\end{align*}
+\]</span></p>
+<p>Finally, <span class="math inline">\(s^2_Y=\left(\frac{n}{n-1}\right)\left(\frac{1}{n}\sum_{i=1}^n(Y_i-\bar{Y})^2\right)\xrightarrow{p}\sigma^2_Y\)</span> follows because <span class="math inline">\(\frac{n}{n-1}\to1\)</span>.</p>
+<p>These results suggest that we can estimate <span class="math inline">\(\var(\bar{Y})=\sigma^2_Y/n\)</span> by <span class="math inline">\(\widehat{\var}(\bar{Y})=s^2_Y/n\)</span>.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Concept 10.2: The Standard Error of <span class="math inline">\(\bar{Y}\)</span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The standard error of <span class="math inline">\(\bar{Y}\)</span> is an estimator of the standard deviation of <span class="math inline">\(\bar{Y}\)</span>. The standard error of <span class="math inline">\(\bar{Y}\)</span> is denoted by <span class="math inline">\(\SE(\bar{Y})\)</span> and is given by <span class="math display">\[
+\SE(\bar{Y})=\hat{\sigma}_{\bar{Y}}=s_Y/n.
+\]</span></p>
+</div>
+</div>
+<div id="exm-example10-4" class="theorem example">
+<p><span class="theorem-title"><strong>Example 12.4</strong></span> For illustrating <span class="math inline">\(\E(s^2_Y) = \sigma^2_Y\)</span> and <span class="math inline">\(s^2_Y \xrightarrow{p} \sigma^2_Y\)</span>, we assume that <span class="math inline">\(Y_1, Y_2, \dots, Y_n\)</span> are i.i.d. random variables from the <span class="math inline">\(\chi^2_4\)</span> distribution. Recall that if <span class="math inline">\(Y \sim \chi^2_4\)</span>, then <span class="math inline">\(\sigma^2_Y = 8\)</span>. In the following simulation exercise, we compute the sample variance <span class="math inline">\(1000\)</span> times for different sample sizes, with <span class="math inline">\(n \in \{30, 100, 200, 500\}\)</span>. We then generate histogram plots of the sample variances. The simulation results are shown in <a href="#fig-f10.2" class="quarto-xref">Figure&nbsp;<span>12.3</span></a>. The figure indicates that, as the sample size increases, the mean of the sample variances gets closer to the true value <span class="math inline">\(8\)</span>. Moreover, the sampling distribution becomes more tightly concentrated around the mean.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>reps <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>sample_sizes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">500</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">4</span>  <span class="co"># degrees of freedom</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">45</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to simulate sample variance and return plot</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>plot_var_dist <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Simulate sample variances</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  vars <span class="ot">&lt;-</span> <span class="fu">replicate</span>(reps, <span class="fu">var</span>(<span class="fu">rchisq</span>(n, <span class="at">df =</span> m)))</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  v_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(vars)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> vars), <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> v_mean, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlim</span>(<span class="dv">0</span>, <span class="dv">18</span>) <span class="sc">+</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">paste0</span>(<span class="st">"n = "</span>, n), <span class="at">y =</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the 4 plots</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>p_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(sample_sizes, plot_var_dist)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange into 2×2 panel</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p_list[[<span class="dv">1</span>]], p_list[[<span class="dv">2</span>]], p_list[[<span class="dv">3</span>]], p_list[[<span class="dv">4</span>]], <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-f10.2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-f10.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter3-ReviewStatistics_files/figure-html/fig-f10.2-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f10.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.3: The sampling distribution of the sample variance
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="hypothesis-tests-concerning-the-population-mean" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="hypothesis-tests-concerning-the-population-mean"><span class="header-section-number">12.4</span> Hypothesis tests concerning the population mean</h2>
+<p>A <strong>hypothesis</strong> is a claim about a characteristic of a random variable, such as its mean, variance, and some other parameters. We refer to the hypothesis being tested as the <strong>null hypothesis</strong>, denoted by <span class="math inline">\(H_0\)</span>. The scenario in which the null hypothesis does not hold is described by the <strong>alternative hypothesis</strong>, denoted by <span class="math inline">\(H_1\)</span>.</p>
+<div id="exm-example10-5" class="theorem example">
+<p><span class="theorem-title"><strong>Example 12.5</strong></span> Let <span class="math inline">\(Y\)</span> denote the hourly earnings of recent college graduates. If we conjecture that, on average, college graduates earn $20 per hour, this translates to <span class="math inline">\(H_0: \mu_Y = 20\)</span>. Against this null hypothesis, we can formulate the following alternative hypotheses:</p>
+<ul>
+<li>Two-sided alternative hypothesis: <span class="math inline">\(H_1: \mu_Y \ne 20\)</span>.</li>
+<li>One-sided alternative hypothesis: <span class="math inline">\(H_1: \mu_Y &gt; 20\)</span> or <span class="math inline">\(H_1: \mu_Y &lt; 20\)</span>.</li>
+</ul>
+<p>The <strong>null value</strong> (or the <strong>hypothesized value</strong>) is the specified value of the population parameter under the null hypothesis <span class="math inline">\(H_0\)</span>. In this example, the null value is $20.</p>
+</div>
+<p>In hypothesis testing, we use sample data to test the null hypothesis <span class="math inline">\(H_0\)</span> against the alternative hypothesis <span class="math inline">\(H_1\)</span>. The goal is to determine whether there is sufficient evidence in the sample to reject the null hypothesis in favor of the alternative. The testing process involves the following steps:</p>
+<ul>
+<li>State the null <span class="math inline">\(H_0\)</span> and the alternative <span class="math inline">\(H_1\)</span>,</li>
+<li>Choose a significance level for the test,</li>
+<li>Calculate a test statistics to test <span class="math inline">\(H_0\)</span>,</li>
+<li>Decide whether to reject <span class="math inline">\(H_0\)</span> or not.</li>
+</ul>
+<p>In this process, we can commit two types of errors: <strong>Type-I error</strong> and <strong>Type-II error</strong>. We commit Type-I error if we reject the true <span class="math inline">\(H_0\)</span>, and Type-II error if we fail to reject the false <span class="math inline">\(H_0\)</span>. Since we cannot simultaneously minimize the likelihood of both errors, we choose a significance level, denoted by <span class="math inline">\(\alpha\)</span>, for committing the Type-I error, and then work to minimize the likelihood of committing the Type-II error. You can think of the significance level of the test as your tolerance for rejecting a true null hypothesis <span class="math inline">\(H_0\)</span>. The conventional significance levels are <span class="math inline">\(1\%\)</span>, <span class="math inline">\(5\%\)</span>, and <span class="math inline">\(10\%\)</span>. For example, if we use <span class="math inline">\(\alpha = 0.05\)</span>, then we accept the possibility of rejecting a true null hypothesis <span class="math inline">\(5\)</span> times out of <span class="math inline">\(100\)</span> resamples.</p>
+<p>We consider the following <strong><span class="math inline">\(t\)</span> statistic</strong> as our test statistic: <span id="eq-eq10.1"><span class="math display">\[
+\begin{align}
+t &amp;= \frac{\bar{Y} - \mu_Y}{s_{\bar{Y}}},
+\end{align}
+\tag{12.1}\]</span></span></p>
+<p>where <span class="math inline">\(s_{\bar{Y}} = \sqrt{s_Y^2/n}= s_Y/\sqrt{n}\)</span> is the standard error of <span class="math inline">\(\bar{Y}\)</span>. By the central limit theorem introduced in <a href="Chapter2-ReviewProbability.html" class="quarto-xref"><span>Chapter 11</span></a>, under <span class="math inline">\(H_0\)</span>, the sampling distribution of <span class="math inline">\(t\)</span> statistic can be approximated by the standard normal distribution when <span class="math inline">\(n\)</span> is large, i.e., <span id="eq-eq10.2"><span class="math display">\[
+\begin{align}
+t &amp;= \frac{\bar{Y} - \mu_Y}{s_{\bar{Y}}}\xrightarrow{d} N(0,1).
+\end{align}
+\tag{12.2}\]</span></span></p>
+<p>We then can use the significance level, the alternative hypothesis, and the distribution of the test statistic to determine the rejection regions.</p>
+<ul>
+<li>For <span class="math inline">\(H_1:\mu_Y&gt;20\)</span>, the rejection region is <span class="math inline">\(\{t&gt;z_{\alpha}\}\)</span>, where <span class="math inline">\(z_{\alpha}\)</span> is the critical value of the standard normal distribution at the significance level <span class="math inline">\(\alpha\)</span>.<br>
+</li>
+<li>For <span class="math inline">\(H_1:\mu_Y&lt;20\)</span>, the rejection region is <span class="math inline">\(\{t&lt;-z_{\alpha}\}\)</span>, where <span class="math inline">\(-z_{\alpha}\)</span> is the critical value of the standard normal distribution at the significance level <span class="math inline">\(\alpha\)</span>.</li>
+<li>For <span class="math inline">\(H_1:\mu_Y\ne20\)</span>, the rejection region is <span class="math inline">\(\{|t|&gt;z_{\alpha/2}\}\)</span>, where <span class="math inline">\(z_{\alpha/2}\)</span> is the critical value of the standard normal distribution at the significance level <span class="math inline">\(\alpha/2\)</span>.</li>
+</ul>
+<p>In <a href="#fig-fig10-4" class="quarto-xref">Figure&nbsp;<span>12.4</span></a>, we show the rejection regions according to the type of <span class="math inline">\(H_1\)</span>. In the figure, the critical values are <span class="math inline">\(z_{\alpha}\)</span>, <span class="math inline">\(-z_{\alpha}\)</span>, <span class="math inline">\(-z_{\alpha/2}\)</span>, and <span class="math inline">\(z_{\alpha/2}\)</span>. The critical value, which is the threshold that separates the rejection region from the non-rejection region, depends on the significance level <span class="math inline">\(\alpha\)</span> and the alternative hypothesis <span class="math inline">\(H_1\)</span>:</p>
+<ul>
+<li>In the case of <span class="math inline">\(H_1:\mu_Y&gt;20\)</span>, the critical value <span class="math inline">\(z_{\alpha}\)</span> is the <span class="math inline">\(1-\alpha\)</span> quantile of the sampling distribution of the test statistic.</li>
+<li>In the case of <span class="math inline">\(H_1:\mu_Y&lt;20\)</span>, the critical value <span class="math inline">\(-z_{\alpha}\)</span> is the <span class="math inline">\(\alpha\)</span> quantile of the sampling distribution of the test statistic.</li>
+<li>If we consider the two-sided alternative hypothesis <span class="math inline">\(H_1:\mu_Y\ne20\)</span>, then the critical values are <span class="math inline">\(-z_{\alpha/2}\)</span> and <span class="math inline">\(z_{\alpha/2}\)</span>, which are the <span class="math inline">\(\alpha/2\)</span> and <span class="math inline">\(1-\alpha/2\)</span> quantiles of the sampling distribution of the test statistic, respectively.</li>
+</ul>
+<p>If the realized value of <span class="math inline">\(t\)</span> is in the rejection region, we reject the null hypothesis <span class="math inline">\(H_0\)</span>; otherwise, we fail to reject <span class="math inline">\(H_0\)</span>. Intuitively, if the realized value of <span class="math inline">\(t\)</span> is in the rejection region, it means that the sample mean <span class="math inline">\(\bar{Y}\)</span> is far away from the null value <span class="math inline">\(\mu_Y=20\)</span>, which suggests that the null hypothesis <span class="math inline">\(H_0\)</span> can not be true.</p>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rejection Regions</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>pdf <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(x)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Critical values</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>z_alpha  <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>z_alpha2 <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">pdf =</span> pdf)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>base_plot <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(x, pdf)) <span class="sc">+</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.1</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.08</span>, <span class="fu">max</span>(pdf) <span class="sc">+</span> <span class="fl">0.01</span>)) </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Upper-tailed region: x &gt; z_alpha</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">base_plot</span>() <span class="sc">+</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">subset</span>(df, x <span class="sc">&gt;=</span> z_alpha),</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> pdf),</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"lightblue"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> z_alpha, <span class="at">y =</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.6</span>, <span class="at">y =</span> <span class="fl">0.075</span>, <span class="at">label =</span> <span class="st">"1 - alpha"</span>, <span class="at">parse =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">2</span>, <span class="at">y =</span> <span class="fl">0.075</span>, <span class="at">label =</span> <span class="st">"alpha"</span>, <span class="at">parse =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> z_alpha, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.03</span>, <span class="at">label =</span> <span class="st">"z[alpha]"</span>, <span class="at">parse =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">expression</span>(H[<span class="dv">0</span>] <span class="sc">:</span> mu[Y] <span class="sc">==</span> <span class="dv">20</span> <span class="sc">~</span> <span class="st">" versus "</span> <span class="sc">~</span> H[<span class="dv">1</span>] <span class="sc">:</span> mu[Y] <span class="sc">&gt;</span> <span class="dv">20</span>))</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Lower-tailed region: x &lt; qnorm(alpha)</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">base_plot</span>() <span class="sc">+</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">subset</span>(df, x <span class="sc">&lt;=</span> <span class="fu">qnorm</span>(alpha)),</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> pdf),</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"lightblue"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">qnorm</span>(alpha), <span class="at">y =</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.6</span>, <span class="at">y =</span> <span class="fl">0.075</span>, <span class="at">label =</span> <span class="st">"1 - alpha"</span>, <span class="at">parse =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">2.5</span>, <span class="at">y =</span> <span class="fl">0.075</span>, <span class="at">label =</span> <span class="st">"alpha"</span>, <span class="at">parse =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span>z_alpha, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.03</span>, <span class="at">label =</span> <span class="st">"-z[alpha]"</span>, <span class="at">parse =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">expression</span>(H[<span class="dv">0</span>] <span class="sc">:</span> mu[Y] <span class="sc">==</span> <span class="dv">20</span> <span class="sc">~</span> <span class="st">" versus "</span> <span class="sc">~</span> H[<span class="dv">1</span>] <span class="sc">:</span> mu[Y] <span class="sc">&lt;</span> <span class="dv">20</span>))</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Two-tailed region: x &lt; -z_alpha2 and x &gt; z_alpha2</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">base_plot</span>() <span class="sc">+</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Left tail</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">subset</span>(df, x <span class="sc">&lt;=</span> <span class="sc">-</span>z_alpha2),</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> pdf),</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"lightblue"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Right tail</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">subset</span>(df, x <span class="sc">&gt;=</span> z_alpha2),</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> pdf),</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"lightblue"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span>z_alpha2, <span class="at">y =</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span>  z_alpha2, <span class="at">y =</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.6</span>, <span class="at">y =</span> <span class="fl">0.075</span>, <span class="at">label =</span> <span class="st">"1 - alpha"</span>, <span class="at">parse =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="dv">3</span>, <span class="at">y =</span> <span class="fl">0.07</span>, <span class="at">label =</span> <span class="st">"alpha/2"</span>, <span class="at">parse =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">2.5</span>, <span class="at">y =</span> <span class="fl">0.07</span>, <span class="at">label =</span> <span class="st">"alpha/2"</span>, <span class="at">parse =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span>  z_alpha2, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.03</span>, <span class="at">label =</span> <span class="st">"z[alpha/2]"</span>, <span class="at">parse =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span>z_alpha2, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.03</span>, <span class="at">label =</span> <span class="st">"-z[alpha/2]"</span>, <span class="at">parse =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">expression</span>(H[<span class="dv">0</span>] <span class="sc">:</span> mu[Y] <span class="sc">==</span> <span class="dv">20</span> <span class="sc">~</span> <span class="st">" versus "</span> <span class="sc">~</span> H[<span class="dv">1</span>] <span class="sc">:</span> mu[Y] <span class="sc">!=</span> <span class="dv">20</span>))</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange side-by-side</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>p1 </span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>p2 </span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>p3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-fig10-4" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig10-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-fig10-4" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-fig10-4-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fig10-4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter3-ReviewStatistics_files/figure-html/fig-fig10-4-1.png" class="img-fluid figure-img" data-ref-parent="fig-fig10-4" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fig10-4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Upper-tailed rejection region
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-fig10-4" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-fig10-4-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fig10-4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter3-ReviewStatistics_files/figure-html/fig-fig10-4-2.png" class="img-fluid figure-img" data-ref-parent="fig-fig10-4" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fig10-4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Lower-tailed rejection region
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-fig10-4" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-fig10-4-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-fig10-4-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter3-ReviewStatistics_files/figure-html/fig-fig10-4-3.png" class="img-fluid figure-img" data-ref-parent="fig-fig10-4" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-fig10-4-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Two-tailed rejection regions
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig10-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.4: Rejection Regions
+</figcaption>
+</figure>
+</div>
+<div id="exm-example10-6" class="theorem example">
+<p><span class="theorem-title"><strong>Example 12.6</strong></span> Assume that <span class="math inline">\(\alpha = 5%\)</span> and the alternative hypothesis is specified as <span class="math inline">\(H_1: \mu_Y \neq 20\)</span>. Then, the critical value on the left tail is the <span class="math inline">\(2.5\)</span>th percentile of <span class="math inline">\(N(0,1)\)</span>, which is <span class="math inline">\(-z_{\alpha/2} = -1.96\)</span>, and the critical value on the right tail is the <span class="math inline">\(97.5\)</span>th percentile of <span class="math inline">\(N(0,1)\)</span>, which is <span class="math inline">\(z_{\alpha/2} = 1.96\)</span>. Using R, we can compute the critical values as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Critical values</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>left_critical <span class="ot">=</span> <span class="fu">qnorm</span>(<span class="fl">0.025</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>right_critical <span class="ot">=</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Print critical values</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Left critical value:"</span>, <span class="fu">round</span>(left_critical, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Left critical value: -1.96</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Right critical value:"</span>, <span class="fu">round</span>(right_critical, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Right critical value: 1.96</code></pre>
+</div>
+</div>
+<p>If we obtain <span class="math inline">\(t=\frac{\bar{Y} - 20}{s_{\bar{Y}}}=2\)</span>, then we will reject <span class="math inline">\(H_0\)</span> because the test statistic value is in the rejection region, i.e., <span class="math inline">\(2&gt;z_{\alpha/2}=1.96\)</span>.</p>
+</div>
+<p>Instead of using the critical values and the rejection regions to test <span class="math inline">\(H_0\)</span>, we can also use the <strong><span class="math inline">\(p\)</span>-value</strong>.</p>
+<div id="def-def10-4" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 12.4 (The <span class="math inline">\(p\)</span>-value)</strong></span> The <strong><span class="math inline">\(p\)</span>-value</strong> is the probability of obtaining a test statistic value that is more extreme than the actual one when the null is correct.</p>
+</div>
+<p>Let <span class="math inline">\(t_{\text{calc}}\)</span> be the value of the test statistic obtained from <a href="#eq-eq10.1" class="quarto-xref">Equation&nbsp;<span>12.1</span></a>. Then, the <span class="math inline">\(p\)</span>-value is defined by <span class="math display">\[
+\begin{align*}
+\text{$p$-value}=
+\begin{cases}
+P_{H_0}\left(t &gt; |t_{\text{calc}}|\right), \quad&amp;\text{for }H_1:\mu_Y&gt;20,\\
+P_{H_0}\left(t &lt;-|t_{\text{calc}}|\right), \quad&amp;\text{for }H_1:\mu_Y&lt;20,\\
+P_{H_0}\left(|t| &gt; |t_{\text{calc}}|\right), \quad&amp;\text{for }H_1:\mu_Y\ne20,
+\end{cases}
+\end{align*}
+\]</span> where <span class="math inline">\(P_{H_0}\)</span> means the probability is calculated from the distribution of the test statistic under the null hypothesis. Since the asymptotic distribution of <span class="math inline">\(t\)</span> statistic is <span class="math inline">\(N(0,1)\)</span> as shown in <a href="#eq-eq10.2" class="quarto-xref">Equation&nbsp;<span>12.2</span></a>, we have <span class="math display">\[
+\begin{align*}
+\text{$p$-value}=
+\begin{cases}
+P_{H_0}\left(t &gt; |t_{\text{calc}}|\right)=1-\Phi(|t_{\text{calc}}|), \quad&amp;\text{for }H_1:\mu_Y&gt;20,\\
+P_{H_0}\left(t &lt;-|t_{\text{calc}}|\right)=\Phi(-|t_{\text{calc}}|), \quad&amp;\text{for }H_1:\mu_Y&lt;20,\\
+P_{H_0}\left(|t| &gt; |t_{\text{calc}}|\right)=2\times\Phi(-|t_{\text{calc}}|), \quad&amp;\text{for }H_1:\mu_Y\ne20.
+\end{cases}
+\end{align*}
+\]</span></p>
+<p>We reject the null hypothesis <span class="math inline">\(H_0\)</span> at the significance level <span class="math inline">\(\alpha\)</span> if the <span class="math inline">\(p\)</span>-value is less than <span class="math inline">\(\alpha\)</span>. In other words, we reject <span class="math inline">\(H_0\)</span> if the probability of obtaining a test statistic value that is more extreme than the actual one is small enough, which suggests the realized is already in the rejection region.</p>
+<div id="exm-example10-7" class="theorem example">
+<p><span class="theorem-title"><strong>Example 12.7</strong></span> Assume that <span class="math inline">\(\alpha=5\%\)</span> and <span class="math inline">\(H_1:\mu_Y\ne20\)</span>. Suppose we obtained <span class="math inline">\(t=\frac{\bar{Y} - 20}{s_{\bar{Y}}}=2\)</span>. Then, <span class="math display">\[
+\begin{align*}
+\text{$p$-value}=P_{H_0}\left(|t| &gt; 2\right)=P_{H_0}\left(t &gt; 2\right)+P_{H_0}\left(t &lt;- 2\right)=2\times\Phi(-2).
+\end{align*}
+\]</span> We can compute the <span class="math inline">\(p\)</span>-value using R as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">=</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">pnorm</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="at">mean=</span><span class="dv">0</span>,<span class="at">sd=</span><span class="dv">1</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"p-value:"</span>, <span class="fu">round</span>(p_value, <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>p-value: 0.0455</code></pre>
+</div>
+</div>
+<p>Since <span class="math inline">\(p-\)</span>value <span class="math inline">\(=0.045&lt;\alpha=0.05\)</span>, we reject <span class="math inline">\(H_0\)</span> at the <span class="math inline">\(5\%\)</span> significance level.</p>
+</div>
+<p>Note that we determine the critical values and <span class="math inline">\(p\)</span>-values by assuming that the distribution result in <a href="#eq-eq10.2" class="quarto-xref">Equation&nbsp;<span>12.2</span></a> holds, which requires a large sample size. That is, the standard normal distribution may not provide a good approximation to the sampling distribution of the t-statistic when the sample size is small. If we assume that <span class="math inline">\(Y_1,\dots,Y_n\)</span> are i.i.d. random variables from <span class="math inline">\(N(\mu_Y,\sigma^2_Y)\)</span>, then it can be shown that</p>
+<p><span id="eq-eq10.3"><span class="math display">\[
+\begin{align}
+t &amp;= \frac{\bar{Y} - \mu_Y}{s_{\bar{Y}}}\sim t_{n-1},
+\end{align}
+\tag{12.3}\]</span></span></p>
+<p>where <span class="math inline">\(t_{n-1}\)</span> is the Student t distribution with <span class="math inline">\(n-1\)</span> degrees of freedom. The distribution result in <a href="#eq-eq10.3" class="quarto-xref">Equation&nbsp;<span>12.3</span></a> is <em>exact</em> in the sense that it holds regardless of the sample size.</p>
+<p>Recall that when <span class="math inline">\(n &gt; 30\)</span>, the <span class="math inline">\(t\)</span>-distribution and <span class="math inline">\(N(0,1)\)</span> are very close (as <span class="math inline">\(n\)</span> grows large, the <span class="math inline">\(t_{n-1}\)</span> distribution converges to <span class="math inline">\(N(0,1)\)</span>). Thus, as long as the sample size is larger than <span class="math inline">\(30\)</span>, we can rely on the standard normal distribution for the critical values and p-values. Therefore, <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> conclude that “inferences-hypothesis tests and confidence intervals-about the mean of a distribution should be based on the large-sample normal approximation.”</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Concept 10.3: Testing <span class="math inline">\(H_0:\mu_Y=\mu_0\)</span> versus <span class="math inline">\(H_1:\mu_Y\ne\mu_0\)</span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Compute the standard error of <span class="math inline">\(\bar{Y}\)</span>, <span class="math inline">\(\SE(\bar{Y})=\hat{\sigma}_{\bar{Y}}=s^2_Y/n\)</span>.</li>
+<li>Compute the t-statistic given in <a href="#eq-eq10.1" class="quarto-xref">Equation&nbsp;<span>12.1</span></a> under <span class="math inline">\(H_0\)</span>. Reject <span class="math inline">\(H_0\)</span> at the <span class="math inline">\(5\%\)</span> significance level if <span class="math inline">\(|t|&gt;1.96\)</span>.</li>
+<li>Compute <span class="math inline">\(p\)</span>-value from <span class="math inline">\(2\times\Phi(-|t_{\text{calc}}|)\)</span>, where <span class="math inline">\(t_{\text{calc}}\)</span> is the actual test statistic computed in the second step. Reject <span class="math inline">\(H_0\)</span> at the <span class="math inline">\(5\%\)</span> significance level if the p-value is less than <span class="math inline">\(0.05\)</span>.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="confidence-intervals-for-the-population-mean" class="level2" data-number="12.5">
+<h2 data-number="12.5" class="anchored" data-anchor-id="confidence-intervals-for-the-population-mean"><span class="header-section-number">12.5</span> Confidence intervals for the population mean</h2>
+<p>We want to construct an interval for the population mean <span class="math inline">\(\mu_Y\)</span> such that the true value of <span class="math inline">\(\mu_Y\)</span> is contained in the interval with a pre-specified probability.</p>
+<div id="def-def10-5" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 12.5 (Confidence interval)</strong></span> Let <span class="math inline">\(\alpha\)</span> be the significance level. Then, a <strong><span class="math inline">\(100(1-\alpha)\%\)</span> confidence interval</strong> for the population mean <span class="math inline">\(\mu_Y\)</span> is an interval that contains <span class="math inline">\(\mu_Y\)</span> with probability <span class="math inline">\(1-\alpha\)</span>.</p>
+</div>
+<p>Let <span class="math inline">\(\alpha=0.05\)</span>. Then, one way to construct the <span class="math inline">\(95\%\)</span> two-sided confidence interval for <span class="math inline">\(\mu_Y\)</span> is to collect all values <span class="math inline">\(\mu_{Y,0}\)</span> that cannot be rejected by the <span class="math inline">\(t\)</span> statistic for testing <span class="math inline">\(H_0:\mu_Y=\mu_{Y,0}\)</span> versus <span class="math inline">\(H_1:\mu_Y\ne\mu_{Y,0}\)</span> at the <span class="math inline">\(5\%\)</span> significance level. In other words, we collect all values <span class="math inline">\(\mu_{Y,0}\)</span> for which the test statistic <span class="math inline">\(t\)</span> in <a href="#eq-eq10.1" class="quarto-xref">Equation&nbsp;<span>12.1</span></a> is not in the rejection region, i.e., <span class="math inline">\(|t|\le 1.96\)</span>. This construction implies that the 95% two-sided confidence interval for <span class="math inline">\(\mu_Y\)</span> corresponds to the set of values satisfying <span class="math display">\[
+\begin{align*}
+P\left(\left\{\mu_Y: \left|\frac{\bar{Y} - \mu_Y}{s_Y/\sqrt{n}}\right| \le 1.96\right\}\right) = 0.95.
+\end{align*}
+\]</span></p>
+<p>We can express the set <span class="math inline">\(\left\{\mu_Y: \left|\frac{\bar{Y} - \mu_Y}{s_Y/\sqrt{n}}\right| \le 1.96\right\}\)</span> as follows: <span class="math display">\[
+\begin{align*}
+\left\{\mu_Y:\left|\frac{\bar{Y} - \mu_Y}{s_Y/\sqrt{n}}\right|\le 1.96\right\}&amp;=\left\{\mu_Y:-1.96\le \frac{\bar{Y}-\mu_Y}{s_Y/\sqrt{n}}\le 1.96\right\}\\
+&amp;=\left\{\mu_Y:-\bar{Y} - 1.96\times s_Y/\sqrt{n}\le -\mu_Y \le -\bar{Y} + 1.96\times s_Y/\sqrt{n}\right\}\\
+&amp;=\left\{\mu_Y: \bar{Y} - 1.96\times s_Y/\sqrt{n} \le \mu_Y \le \bar{Y} + 1.96\times s_Y/\sqrt{n}\right\}\\
+&amp;=\left\{\mu_Y: \bar{Y} \pm 1.96 \times \text{SE}(\bar{Y})\right\}.
+\end{align*}
+\]</span></p>
+<p>Thus, the lower bound of the confidence interval is <span class="math inline">\(\bar{Y} - 1.96 \times \text{SE}(\bar{Y})\)</span> and the upper bound is <span class="math inline">\(\bar{Y} + 1.96 \times \text{SE}(\bar{Y})\)</span>, where <span class="math inline">\(\text{SE}(\bar{Y})=s_Y/\sqrt{n}\)</span> is the standard error of <span class="math inline">\(\bar{Y}\)</span>. If we choose another pre-specified probability, say <span class="math inline">\(90\%\)</span> or <span class="math inline">\(99\%\)</span>, then we only need to change the critical value in the formula, i.e., <span class="math display">\[
+\begin{align*}
+&amp;\{\mu_Y: \bar{Y} \pm 1.64 \times \text{SE}(\bar{Y})\}\quad\text{or}\quad \{\mu_Y: \bar{Y} \pm 2.58 \times \text{SE}(\bar{Y})\}.
+\end{align*}
+\]</span></p>
+<p>The confidence interval can be used to test the null hypothesis <span class="math inline">\(H_0:\mu_Y = \mu_0\)</span> against the alternative hypothesis <span class="math inline">\(H_1:\mu_Y \ne \mu_0\)</span>. Based on the 95% confidence interval, we reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level if the hypothesized value <span class="math inline">\(\mu_0\)</span> is not contained within the interval; otherwise, we fail to reject the null hypothesis.</p>
+<p>Note that we construct the the <span class="math inline">\(95\%\)</span> confidence interval <span class="math inline">\(\{\mu_Y: \bar{Y} \pm 1.96 \times \text{SE}(\bar{Y})\}\)</span> by using the critical values from the standard normal distribution. That is, our confidence interval is based on the central limit theorem result in <a href="#eq-eq10.2" class="quarto-xref">Equation&nbsp;<span>12.2</span></a>, which requires a large sample size. In the following simulation exercise, we compute <code>nsim=5000</code> confidence intervals for different sample sizes and then determine the percentage of intervals that includes <span class="math inline">\(\mu_Y\)</span>. As the sample size increases, we expect this percentage to approach <span class="math inline">\(95\%\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>confidence_int <span class="ot">&lt;-</span> <span class="cf">function</span>(rvgen, n, <span class="at">nsim =</span> <span class="dv">5000</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">mu =</span> <span class="cn">NULL</span>, <span class="at">seed =</span> <span class="cn">NULL</span>, ...) {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># rvgen: function that generates random samples, e.g., rnorm</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># n: sample size (vector)</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># nsim: number of simulations</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># alpha: significance level</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># mu: population mean</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># seed: for reproducibility</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ...: additional arguments passed to rvgen</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(seed)) {</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set.seed</span>(seed)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Verify inputs</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(rvgen) <span class="sc">||</span> <span class="sc">!</span><span class="fu">is.function</span>(rvgen) <span class="sc">||</span> <span class="fu">is.null</span>(n) <span class="sc">||</span> <span class="fu">is.null</span>(mu)) {</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"Invalid input arguments"</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Storage for results</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(n))</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Loop over sample sizes</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(n)) {</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    CP <span class="ot">&lt;-</span> <span class="fu">numeric</span>(nsim)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nsim) {</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Generate random sample</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>      x <span class="ot">&lt;-</span> <span class="fu">rvgen</span>(n[i], ...)</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>      <span class="co"># CI calculation</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>      xbar <span class="ot">&lt;-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>      s <span class="ot">&lt;-</span> <span class="fu">sd</span>(x)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>      lower <span class="ot">&lt;-</span> xbar <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> (s <span class="sc">/</span> <span class="fu">sqrt</span>(n[i]))</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>      upper <span class="ot">&lt;-</span> xbar <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> (s <span class="sc">/</span> <span class="fu">sqrt</span>(n[i]))</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>      CP[j] <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(lower <span class="sc">&lt;</span> mu <span class="sc">&amp;</span> mu <span class="sc">&lt;</span> upper, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>    results[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(CP)</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(results)</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We assume that the random samples <span class="math inline">\(Y_1, \dots, Y_n\)</span> are generated from three different distributions: (i) <span class="math inline">\(N(0,1)\)</span>, (ii) <span class="math inline">\(\chi^2_3\)</span>, and (iii) the uniform distribution over the interval <span class="math inline">\((0,1)\)</span>. The simulation results are given in <a href="#tbl-t10.1" class="quarto-xref">Table&nbsp;<span>12.1</span></a>. The results indicate that the percentages get closer to <span class="math inline">\(95\%\)</span> as the sample size increases from <span class="math inline">\(n =30\)</span> to <span class="math inline">\(n=500\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">confidence_int</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">rvgen =</span> rnorm,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">100</span>, <span class="dv">500</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="dv">0</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean =</span> <span class="dv">0</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd =</span> <span class="dv">1</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">42</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">confidence_int</span>(</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">rvgen =</span> rchisq,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">100</span>, <span class="dv">500</span>),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="dv">3</span>,</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">df =</span> <span class="dv">3</span>,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">42</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">confidence_int</span>(</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">rvgen =</span> runif,</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">100</span>, <span class="dv">500</span>),</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">mu =</span> <span class="fl">0.5</span>,</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">min =</span> <span class="dv">0</span>,</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">max =</span> <span class="dv">1</span>,</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">42</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation results for the confidence intervals</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(p1, p2, p3)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Normal"</span>, <span class="st">"Chi-squared"</span>, <span class="st">"Uniform"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"n=30"</span>, <span class="st">"n=100"</span>, <span class="st">"n=500"</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the probability distribution in a table</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(df, <span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t10.1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t10.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;12.1: Simulation Results
+</figcaption>
+<div aria-describedby="tbl-t10.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">n=30</th>
+<th style="text-align: right;">n=100</th>
+<th style="text-align: right;">n=500</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Normal</td>
+<td style="text-align: right;">0.94</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.95</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chi-squared</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">0.94</td>
+<td style="text-align: right;">0.95</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uniform</td>
+<td style="text-align: right;">0.94</td>
+<td style="text-align: right;">0.94</td>
+<td style="text-align: right;">0.96</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Concept 10.4: Confidence Intervals for <span class="math inline">\(\mu_Y\)</span>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <span class="math inline">\(95\%\)</span> two-sided confidence interval for <span class="math inline">\(\mu_Y\)</span> is an interval that includes <span class="math inline">\(\mu_Y\)</span> in <span class="math inline">\(95\%\)</span> of all possible random samples. When the sample size is large, we have:</p>
+<ul>
+<li><span class="math inline">\(90\%\)</span> two-sided confidence interval for <span class="math inline">\(\mu_Y\)</span>: <span class="math inline">\(\{\mu_Y: \bar{Y} \pm 1.64 \times \text{SE}(\bar{Y})\}\)</span>.</li>
+<li><span class="math inline">\(95\%\)</span> two-sided confidence interval for <span class="math inline">\(\mu_Y\)</span>: <span class="math inline">\(\{\mu_Y: \bar{Y} \pm 1.96 \times \text{SE}(\bar{Y})\}\)</span>.</li>
+<li><span class="math inline">\(99\%\)</span> two-sided confidence interval for <span class="math inline">\(\mu_Y\)</span>: <span class="math inline">\(\{\mu_Y: \bar{Y} \pm 2.58\times \text{SE}(\bar{Y})\}\)</span>.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="comparing-means-from-different-populations" class="level2" data-number="12.6">
+<h2 data-number="12.6" class="anchored" data-anchor-id="comparing-means-from-different-populations"><span class="header-section-number">12.6</span> Comparing means from different populations</h2>
+<p>Let <span class="math inline">\(\mu_w\)</span> be the mean hourly earnings in the population of women recently graduated from college and <span class="math inline">\(\mu_m\)</span> be the mean hourly earnings in the population of men recently graduated from college. We want to formulate hypotheses for the difference between the mean earnings of female and male college graduates. The null hypothesis and the two-sided alternative hypothesis are <span class="math display">\[
+\begin{align*}
+H_0: \mu_m - \mu_w = d_0 \quad \text{vs.}\quad H_1: \mu_m - \mu_w \ne d_0,
+\end{align*}
+\]</span> where <span class="math inline">\(d_0\)</span> is the hypothesized known value.</p>
+<p>Let <span class="math inline">\(\bar{Y}_m\)</span> be the sample average annual earnings for men and <span class="math inline">\(\bar{Y}_w\)</span> be the sample average annual earnings for women. Then, an estimator of <span class="math inline">\(\mu_m - \mu_w\)</span> is <span class="math inline">\(\bar{Y}_m - \bar{Y}_w\)</span>. Due to simple random sampling, we can invoke the central limit theorem to claim that <span class="math inline">\(\bar{Y}_m \sim N(\mu_m,\,\frac{\sigma^2_m}{n_m})\)</span> and <span class="math inline">\(\bar{Y}_w \sim N(\mu_w,\,\frac{\sigma^2_w}{n_w})\)</span>, where <span class="math inline">\(\sigma^2_m\)</span> and <span class="math inline">\(\sigma^2_w\)</span> are population variances of earnings, and <span class="math inline">\(n_m\)</span> and <span class="math inline">\(n_w\)</span> are sample sizes for men and women, respectively. Since a weighted average of two normal random variables is itself normally distributed, we have <span class="math display">\[
+\begin{align*}
+(\bar{Y}_m - \bar{Y}_w)\sim N\left(\mu_m - \mu_w,\, \frac{\sigma^2_m}{n_m} + \frac{\sigma^2_w}{n_w}\right).
+\end{align*}
+\]</span> Analogous to the test statistic in <a href="#eq-eq10.1" class="quarto-xref">Equation&nbsp;<span>12.1</span></a>, the t-statistic is <span class="math display">\[
+\begin{align*}
+t &amp;= \frac{(\bar{Y}_m - \bar{Y}_w) - d_0}{\sqrt{\frac{s_{Y_m}^2}{n_m} + \frac{s_{Y_w}^2}{n_w}}},
+\end{align*}
+\]</span> where <span class="math inline">\(s^2_{Y_m}\)</span> and <span class="math inline">\(s^2_{Y_w}\)</span> are sample variances for men and women, respectively. If both <span class="math inline">\(n_m\)</span> and <span class="math inline">\(n_w\)</span> are large, then this t-statistic has a standard normal distribution under the null hypothesis: <span class="math display">\[
+\begin{align*}
+t &amp;= \frac{(\bar{Y}_m - \bar{Y}_w) - d_0}{\sqrt{\frac{s_{Y_m}^2}{n_m} + \frac{s_{Y_w}^2}{n_w}}}\sim N(0,1).
+\end{align*}
+\]</span></p>
+<p>These result suggests that we can follow the same steps given in <strong>Key Concept 10.3</strong> to test the null hypothesis.</p>
+<p>Finally, the <span class="math inline">\(95\%\)</span> confidence interval for <span class="math inline">\(\mu_m - \mu_w\)</span> is <span class="math display">\[
+\begin{align*}
+&amp;\{(\mu_m - \mu_w): (\bar{Y}_m - \bar{Y}_w) \pm 1.96 \times \SE(\bar{Y}_m - \bar{Y}_w)\},
+\end{align*}
+\]</span> where <span class="math inline">\(\SE(\bar{Y}_m - \bar{Y}_w)=\sqrt{\frac{s_{Y_m}^2}{n_m} + \frac{s_{Y_w}^2}{n_w}}\)</span> is the standard error of <span class="math inline">\((\bar{Y}_m - \bar{Y}_w)\)</span>.</p>
+<p>For illustration, we use a dataset on the hourly earnings of college-educated, full-time workers aged 25–34 in the United States for the years 1996 and 2015. The <code>CPS96_15.xlsx</code> file contains the data on the following variables:</p>
+<ul>
+<li><code>female</code>: 1 if female; 0 if male</li>
+<li><code>year</code>: Year of observation (1996 or 2015)</li>
+<li><code>ahe</code>: Average hourly earnings in dollars</li>
+<li><code>bachelor</code>: 1 if worker has a bachelor’s degree; 0 if worker has a high school degree</li>
+<li><code>age</code>: Age</li>
+</ul>
+<p>We use the following code chunk to import the data and display the first five rows for college graduates.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cps <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/CPS96_15.xlsx"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for bachelor's degree holders (bachelor == 1)</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>cps <span class="ot">&lt;-</span> <span class="fu">subset</span>(cps, bachelor <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># First five rows</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cps, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 5
+   year   ahe bachelor female   age
+  &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+1  1996  9.62        1      1    27
+2  1996 11.2         1      0    26
+3  1996  9.62        1      1    28
+4  1996 14.4         1      0    32
+5  1996 25           1      0    31</code></pre>
+</div>
+</div>
+<p>In the following code chunk, we compute the average wage gap <span class="math inline">\(\bar{Y}_m - \bar{Y}_w\)</span> and then the <span class="math inline">\(95\%\)</span> two-sided confidence interval <span class="math inline">\((\bar{Y}_m - \bar{Y}_w) \pm 1.96 \times \SE(\bar{Y}_m - \bar{Y}_w)\)</span> for each year. The results are shown in <a href="#tbl-t10.1" class="quarto-xref">Table&nbsp;<span>12.1</span></a>. The average hourly earnings for male college graduates were $16.5 and $28 in 1996 and 2015, respectively. In comparison, female graduates earned an average of $13.9 in 1996 and $23 in 2015. Therefore, the average earnings gap was $2.05 in 1996 and widened to $4.19 in 2015. The estimated confidence intervals for the average earnings gaps are (2.05, 3.085) and (4.192, 5.841) in 1996 and 2015, respectively.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group data by gender and year and compute mean, sd, and n</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>avgs <span class="ot">&lt;-</span> cps <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(female, year) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Y_bar =</span> <span class="fu">mean</span>(ahe, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">s     =</span> <span class="fu">sd</span>(ahe, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n     =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(ahe)),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Split into male and female datasets</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>male <span class="ot">&lt;-</span> avgs <span class="sc">%&gt;%</span> <span class="fu">filter</span>(female <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>female_df <span class="ot">&lt;-</span> avgs <span class="sc">%&gt;%</span> <span class="fu">filter</span>(female <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename columns (same pattern as Python)</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>male <span class="ot">&lt;-</span> male <span class="sc">%&gt;%</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sex =</span> female,</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Year =</span> year,</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">Y_bar_m =</span> Y_bar,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">s_m =</span> s,</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_m =</span> n</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>female_df <span class="ot">&lt;-</span> female_df <span class="sc">%&gt;%</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sex =</span> female,</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">Year =</span> year,</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">Y_bar_f =</span> Y_bar,</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">s_f =</span> s,</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_f =</span> n</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge on Year</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>merged <span class="ot">&lt;-</span> male <span class="sc">%&gt;%</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(female_df, <span class="at">by =</span> <span class="st">"Year"</span>)</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate gender gaps</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>gap <span class="ot">&lt;-</span> merged<span class="sc">$</span>Y_bar_m <span class="sc">-</span> merged<span class="sc">$</span>Y_bar_f</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard errors for the gaps</span></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>gap_se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(merged<span class="sc">$</span>s_m<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> merged<span class="sc">$</span>n_m <span class="sc">+</span> merged<span class="sc">$</span>s_f<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> merged<span class="sc">$</span>n_f)</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Confidence intervals</span></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>gap_ci_l <span class="ot">&lt;-</span> gap <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> gap_se</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>gap_ci_u <span class="ot">&lt;-</span> gap <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> gap_se</span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine results in a dataframe</span></span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">Year      =</span> merged<span class="sc">$</span>Year,</span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y_bar_m   =</span> merged<span class="sc">$</span>Y_bar_m,</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">s_m       =</span> merged<span class="sc">$</span>s_m,</span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_m       =</span> merged<span class="sc">$</span>n_m,</span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y_bar_f   =</span> merged<span class="sc">$</span>Y_bar_f,</span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">s_f       =</span> merged<span class="sc">$</span>s_f,</span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_f       =</span> merged<span class="sc">$</span>n_f,</span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a>  <span class="at">Gap       =</span> gap,</span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">SE_GAP    =</span> gap_se,</span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>  <span class="at">CI_Lower  =</span> gap_ci_l,</span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>  <span class="at">CI_Upper  =</span> gap_ci_u</span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(result, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t10.2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t10.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;12.2: The hourly earnings of working college graduates
+</figcaption>
+<div aria-describedby="tbl-t10.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 9%">
+<col style="width: 6%">
+<col style="width: 10%">
+<col style="width: 9%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Year</th>
+<th style="text-align: right;">Y_bar_m</th>
+<th style="text-align: right;">s_m</th>
+<th style="text-align: right;">n_m</th>
+<th style="text-align: right;">Y_bar_f</th>
+<th style="text-align: right;">s_f</th>
+<th style="text-align: right;">n_f</th>
+<th style="text-align: right;">Gap</th>
+<th style="text-align: right;">SE_GAP</th>
+<th style="text-align: right;">CI_Lower</th>
+<th style="text-align: right;">CI_Upper</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1996</td>
+<td style="text-align: right;">16.459</td>
+<td style="text-align: right;">7.575</td>
+<td style="text-align: right;">1387</td>
+<td style="text-align: right;">13.892</td>
+<td style="text-align: right;">5.912</td>
+<td style="text-align: right;">1232</td>
+<td style="text-align: right;">2.567</td>
+<td style="text-align: right;">0.264</td>
+<td style="text-align: right;">2.050</td>
+<td style="text-align: right;">3.085</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2015</td>
+<td style="text-align: right;">28.055</td>
+<td style="text-align: right;">14.366</td>
+<td style="text-align: right;">1917</td>
+<td style="text-align: right;">23.039</td>
+<td style="text-align: right;">11.218</td>
+<td style="text-align: right;">1816</td>
+<td style="text-align: right;">5.016</td>
+<td style="text-align: right;">0.421</td>
+<td style="text-align: right;">4.192</td>
+<td style="text-align: right;">5.841</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="scatterplots-the-sample-covariance-and-the-sample-correlation" class="level2" data-number="12.7">
+<h2 data-number="12.7" class="anchored" data-anchor-id="scatterplots-the-sample-covariance-and-the-sample-correlation"><span class="header-section-number">12.7</span> Scatterplots, the sample covariance, and the sample correlation</h2>
+<p>A <strong>scatterplot</strong> is a plot of observations on two variables. We use the scatter plot to explore the relationship between two variables. For example, <a href="#fig-fig10-5" class="quarto-xref">Figure&nbsp;<span>12.5</span></a> displays the scatterplot of the average test scores against the average student-teacher ratios for 420 California school districts. Each point in the figure represents an <span class="math inline">\((X, Y)\)</span> pair for a school district, where <span class="math inline">\(X\)</span> is the average student-teacher ratio, and <span class="math inline">\(Y\)</span> is the average test score. The scatterplot in <a href="#fig-fig10-5" class="quarto-xref">Figure&nbsp;<span>12.5</span></a> indicates a negative relationship between the average student-teacher ratio and the average test score. That is, as the student-teacher ratio increases, the average test score tends to decrease.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the data</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>CAschool <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/caschool.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 420 Columns: 18
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (3): county, district, gr_span
+dbl (15): Observation Number, dist_cod, enrl_tot, teachers, calw_pct, meal_p...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the scatterplot</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(CAschool, <span class="fu">aes</span>(<span class="at">x =</span> str, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Student–teacher ratio"</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test score"</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-fig10-5" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig10-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter3-ReviewStatistics_files/figure-html/fig-fig10-5-1.png" class="img-fluid figure-img" width="528">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig10-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.5: The scatterplot of test score and student–teacher ratio
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Recall that <strong>covariance</strong> and <strong>correlation</strong> are measures linear relationship between two variables <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. These measures can be estimated by their sample counterparts. Let <span class="math inline">\((X_i,Y_i)\)</span> for <span class="math inline">\(i=1,2,\dots,n\)</span> be a sample of data on <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. Then, the <strong>sample covariance</strong>, denoted by <span class="math inline">\(s_{XY}\)</span>, is <span class="math display">\[
+\begin{align*}
+s_{XY} &amp;= \frac{1}{n-1}\sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y}).
+\end{align*}
+\]</span> The <strong>sample correlation coefficient</strong>, or <strong>sample correlation</strong>, denoted by <span class="math inline">\(r_{XY}\)</span>, is <span class="math display">\[
+\begin{align*}
+r_{XY} &amp;= \frac{s_{XY}}{s_Xs_Y},
+\end{align*}
+\]</span> where <span class="math inline">\(s_X\)</span> and <span class="math inline">\(s_Y\)</span> are the sample standard deviations of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, respectively.</p>
+<div id="exm-example10-8" class="theorem example">
+<p><span class="theorem-title"><strong>Example 12.8</strong></span> Let <span class="math inline">\(X=1.5+0.5Z\)</span>, where <span class="math inline">\(Z\sim N(0,1)\)</span>. Then, we have</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp;\E(X) = 1.5 + 0.5\E(Z) = 1.5,\\
+&amp;\var(X) = (0.5)^2\var(Z) = 0.25,\\
+&amp;\text{cov}(X,Z) = \E\left[(X - \E(X))(Z - \E(Z))\right] = \E\left[0.5Z^2\right] = 0.5,\\
+&amp;\text{corr}(X,Z) = \frac{\text{cov}(X,Z)}{\sqrt{\var(X)}\sqrt{\var(Z)}} = \frac{0.5}{\sqrt{0.25}\sqrt{1}} = 1.
+\end{align*}
+\]</span></p>
+<p>In the following, we generate a random sample of size <span class="math inline">\(n=500\)</span> from the distribution of <span class="math inline">\(Z\)</span> and then compute the sample covariance and the sample correlation coefficient between <span class="math inline">\(X\)</span> and <span class="math inline">\(Z\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fl">1.5</span> <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> Z</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute sample covariance</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>cov_XZ <span class="ot">&lt;-</span> <span class="fu">cov</span>(X, Z)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute sample correlation coefficient</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>cor_XZ <span class="ot">&lt;-</span> <span class="fu">cor</span>(X, Z)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Sample covariance between X and Z:"</span>, cov_XZ, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sample covariance between X and Z: 0.4731401 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Sample correlation coefficient between X and Z:"</span>, cor_XZ, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sample correlation coefficient between X and Z: 1 </code></pre>
+</div>
+</div>
+</div>
+<p>Using the law of large numbers, we can show that the sample covariance and the sample correlation coefficient are consistent estimators; that is, <span class="math inline">\(s_{XY}\xrightarrow{p}\sigma_{XY}\)</span> and <span class="math inline">\(r_{XY}\xrightarrow{p}\text{corr}(X,Y)\)</span>. The sample correlation coefficient measures the strength of the linear relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. As in the case of the population correlation coefficient, <span class="math inline">\(r_{XY}\)</span> is unit-free and satisfies <span class="math inline">\(|r_{XY}|&lt;1\)</span>. In a scatter plot, if the points are tightly clustered around a straight line, we would expect <span class="math inline">\(r_{XY}\)</span> to be close to <span class="math inline">\(\pm1\)</span>, depending on the slope of the line.</p>
+<p>In <a href="#fig-fig10-6" class="quarto-xref">Figure&nbsp;<span>12.6</span></a>, we show four correlation coefficients for four hypothetical data sets. The last plot illustrates a non-linear relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, even though the correlation coefficient between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> is zero.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">45</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Positive correlation</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>mean_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>cov_positive <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                         <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>data1 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">mvrnorm</span>(<span class="dv">100</span>, <span class="at">mu =</span> mean_vec, <span class="at">Sigma =</span> cov_positive))</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Negative correlation</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>cov_negative <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="sc">-</span><span class="dv">2</span>,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>                         <span class="sc">-</span><span class="dv">2</span>, <span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">mvrnorm</span>(<span class="dv">100</span>, <span class="at">mu =</span> mean_vec, <span class="at">Sigma =</span> cov_negative))</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. No correlation</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>cov_no_corr <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="dv">2</span>)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>data3 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">mvrnorm</span>(<span class="dv">100</span>, <span class="at">mu =</span> mean_vec, <span class="at">Sigma =</span> cov_no_corr))</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Quadratic relationship, zero correlation</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="fl">0.01</span>)</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="sc">-</span>X<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(X))</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">X =</span> X, <span class="at">Y =</span> Y)</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize column names for plotting</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>)</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>)</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data3) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"X"</span>, <span class="st">"Y"</span>)</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Common plotting function</span></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>make_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(df, title) {</span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> X, <span class="at">y =</span> Y)) <span class="sc">+</span></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"X"</span>, <span class="at">y =</span> <span class="st">"Y"</span>, <span class="at">title =</span> title)</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Create plots</span></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">make_plot</span>(data1, <span class="st">"Correlation = 0.8"</span>)</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">make_plot</span>(data2, <span class="st">"Correlation = -0.8"</span>)</span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">make_plot</span>(data3, <span class="st">"Correlation = 0"</span>)</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">make_plot</span>(data4, <span class="st">"Correlation = 0"</span>)</span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange in a 2×2 grid</span></span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, p3, p4, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-fig10-6" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig10-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter3-ReviewStatistics_files/figure-html/fig-fig10-6-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig10-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.6: The scatterplots for four hypothetical data sets
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Hansen2022b" class="csl-entry" role="listitem">
+Hansen, Bruce. 2022. <em>Probability and Statistics for Economists</em>. Princeton University Press.
+</div>
+<div id="ref-Stock2020" class="csl-entry" role="listitem">
+Stock, James H., and Mark W. Watson. 2020. <em>Introduction to Econometrics</em>. Fourth edition. Pearson.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Chapter2-ReviewProbability.html" class="pagination-link" aria-label="Review of Probability">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Review of Probability</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Part2-FundamentalRegressionAnalysis.html" class="pagination-link" aria-label="Fundamentals of Regression Analysis">
+        <span class="nav-page-text">Fundamentals of Regression Analysis</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter3-ReviewStatistics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

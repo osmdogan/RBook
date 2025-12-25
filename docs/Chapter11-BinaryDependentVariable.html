@@ -1,0 +1,2910 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>21&nbsp; Regression with a Binary Dependent Variable – Introduction to Econometrics with R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Chapter12-IVRegression.html" rel="next">
+<link href="./Chapter10-RegressionPanelData.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part3-FurtherTopics.html">Further Topics in Regression Analysis</a></li><li class="breadcrumb-item"><a href="./Chapter11-BinaryDependentVariable.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Econometrics with R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part0-RBasics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-DataStructures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Structures in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-ControlStructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Control Structures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-CustomFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Custom Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-StatFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Statistical Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Dataframes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-NumericalAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Applications in Numerical Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-SymbolicMath.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Symbolic Computing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and Review</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentals of Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Further Topics in Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Analysis of Economic Time Series Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theoretical Topics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#binary-dependent-variables" id="toc-binary-dependent-variables" class="nav-link active" data-scroll-target="#binary-dependent-variables"><span class="header-section-number">21.1</span> Binary dependent variables</a></li>
+  <li><a href="#linear-probability-model" id="toc-linear-probability-model" class="nav-link" data-scroll-target="#linear-probability-model"><span class="header-section-number">21.2</span> Linear probability model</a></li>
+  <li><a href="#probit-and-logit-models" id="toc-probit-and-logit-models" class="nav-link" data-scroll-target="#probit-and-logit-models"><span class="header-section-number">21.3</span> Probit and logit models</a>
+  <ul class="collapse">
+  <li><a href="#probit-model" id="toc-probit-model" class="nav-link" data-scroll-target="#probit-model"><span class="header-section-number">21.3.1</span> Probit model</a></li>
+  <li><a href="#logit-model" id="toc-logit-model" class="nav-link" data-scroll-target="#logit-model"><span class="header-section-number">21.3.2</span> Logit model</a></li>
+  </ul></li>
+  <li><a href="#estimation-and-inference-in-the-probit-and-logit-models" id="toc-estimation-and-inference-in-the-probit-and-logit-models" class="nav-link" data-scroll-target="#estimation-and-inference-in-the-probit-and-logit-models"><span class="header-section-number">21.4</span> Estimation and inference in the probit and logit models</a></li>
+  <li><a href="#measures-of-fit" id="toc-measures-of-fit" class="nav-link" data-scroll-target="#measures-of-fit"><span class="header-section-number">21.5</span> Measures of fit</a></li>
+  <li><a href="#application-to-the-boston-hmda-data" id="toc-application-to-the-boston-hmda-data" class="nav-link" data-scroll-target="#application-to-the-boston-hmda-data"><span class="header-section-number">21.6</span> Application to the Boston HMDA data</a>
+  <ul class="collapse">
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">21.6.1</span> Data</a></li>
+  <li><a href="#empirical-models" id="toc-empirical-models" class="nav-link" data-scroll-target="#empirical-models"><span class="header-section-number">21.6.2</span> Empirical models</a></li>
+  <li><a href="#estimation-results" id="toc-estimation-results" class="nav-link" data-scroll-target="#estimation-results"><span class="header-section-number">21.6.3</span> Estimation results</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter11-BinaryDependentVariable.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part3-FurtherTopics.html">Further Topics in Regression Analysis</a></li><li class="breadcrumb-item"><a href="./Chapter11-BinaryDependentVariable.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-chapter18" class="quarto-section-identifier"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="e4dc2d40" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.iolib.summary2 <span class="im">import</span> summary_col</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="binary-dependent-variables" class="level2" data-number="21.1">
+<h2 data-number="21.1" class="anchored" data-anchor-id="binary-dependent-variables"><span class="header-section-number">21.1</span> Binary dependent variables</h2>
+<p>In many empirical studies, the dependent variable is binary, taking on two values, say 0 and 1. For example, in the context of mortgage applications, the dependent variable could be a binary indicator variable denoting whether the mortgage application was denied (1) or approved (0). For practical reasons, the binary dependent variable is typically coded as 1 for the event of interest occurring and 0 for the event that does not occur.</p>
+<p>In this chapter, we use a dataset on mortgage applications from the Boston metropolitan area in 1990. The dependent variable is <code>deny</code>, a binary variable equal to 1 if a mortgage application was denied and 0 otherwise. The explanatory variables of interest are the payment-to-income ratio (<code>pirat</code>), which is the ratio of total monthly debt payments to total monthly income, and an applicant race dummy variable. The dataset is contained in the <code>hmda.csv</code> file. The three variables from the dataset that we will use are:</p>
+<ul>
+<li><code>deny</code>: 1 if the mortgage application was denied, 0 otherwise</li>
+<li><code>pirat</code>: Ratio of total monthly debt payments to total monthly income</li>
+<li><code>black</code>: 1 if the applicant is Black, 0 if White</li>
+</ul>
+<p>The descriptive statistics of these variables are presented in <a href="#tbl-t18-1" class="quarto-xref">Table&nbsp;<span>21.1</span></a>. There are 2380 observations in the dataset. The average mortgage denial rate is 0.12, the average payment-to-income ratio is 0.33, and the proportion of Black applicants is 0.14.</p>
+<div id="ac2e973c" class="cell" data-message="false" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> pd.read_csv(<span class="st">"data/hmda.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Column names</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>mydata.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>Index(['deny', 'pirat', 'hirat', 'lvrat', 'chist', 'mhist', 'phist', 'unemp',
+       'selfemp', 'insurance', 'condomin', 'black', 'single', 'hschool'],
+      dtype='object')</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Descriptive statistics</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>mydata[[<span class="st">"deny"</span>, <span class="st">"pirat"</span>, <span class="st">"black"</span>]].describe().<span class="bu">round</span>(<span class="dv">2</span>).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t18-1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t18-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;21.1: Descriptive statistics
+</figcaption>
+<div aria-describedby="tbl-t18-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">count</th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">std</th>
+<th data-quarto-table-cell-role="th">min</th>
+<th data-quarto-table-cell-role="th">25%</th>
+<th data-quarto-table-cell-role="th">50%</th>
+<th data-quarto-table-cell-role="th">75%</th>
+<th data-quarto-table-cell-role="th">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">deny</td>
+<td>2380.0</td>
+<td>0.12</td>
+<td>0.32</td>
+<td>0.0</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">pirat</td>
+<td>2380.0</td>
+<td>0.33</td>
+<td>0.11</td>
+<td>0.0</td>
+<td>0.28</td>
+<td>0.33</td>
+<td>0.37</td>
+<td>3.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">black</td>
+<td>2380.0</td>
+<td>0.14</td>
+<td>0.35</td>
+<td>0.0</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>In <a href="#fig-f18-1" class="quarto-xref">Figure&nbsp;<span>21.1</span></a>, we present a scatter plot of the mortgage application denial (<code>deny</code>) against the payment-to-income ratio (<code>pirat</code>). Although <code>deny</code> is binary, we can still plot it against a continuous variable. The estimated regression line indicates a positive relationship between the payment-to-income ratio and <code>deny</code>.</p>
+<div id="cell-fig-f18-1" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a linear regression model</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>r1 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"deny ~ pirat"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>         data <span class="op">=</span> mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the style </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>sns.<span class="bu">set</span>(style<span class="op">=</span><span class="st">"darkgrid"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plt.scatter(mydata[<span class="st">'pirat'</span>], mydata[<span class="st">'deny'</span>], </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">'black'</span>, s<span class="op">=</span><span class="dv">15</span>, label<span class="op">=</span><span class="st">'Data points'</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Add labels</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'P/I ratio'</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Deny'</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="op">-</span><span class="fl">0.4</span>, <span class="fl">1.4</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Add horizontal dashed lines</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'darkred'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'darkred'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Add text annotations</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">2.5</span>, <span class="fl">0.9</span>, <span class="st">"Mortgage denied"</span>, fontsize<span class="op">=</span><span class="dv">8</span>, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">2.5</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="st">"Mortgage approved"</span>, fontsize<span class="op">=</span><span class="dv">8</span>, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the estimated regression line</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>plt.plot(mydata[<span class="st">'pirat'</span>], r1.predict(), color<span class="op">=</span><span class="st">'steelblue'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-f18-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-f18-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter11-BinaryDependentVariable_files/figure-html/fig-f18-1-output-1.png" width="532" height="367" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f18-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21.1: Scatterplot of mortgage application denial and the payment-to-income ratio
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="linear-probability-model" class="level2" data-number="21.2">
+<h2 data-number="21.2" class="anchored" data-anchor-id="linear-probability-model"><span class="header-section-number">21.2</span> Linear probability model</h2>
+<p>A multiple linear regression model with a binary dependent variable is called a <strong>linear probability model</strong>. Thus, the linear probability model is a special case of the linear regression model where the dependent variable is binary. The linear probability model is given by <span class="math display">\[
+\begin{align}
+Y_i=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\cdots+\beta_kX_{ki}+u_i,
+\end{align}
+\]</span></p>
+<p>where <span class="math inline">\(Y_i\in\{0,1\}\)</span>, <span class="math inline">\(X_{1i},X_{2i},\ldots,X_{ki}\)</span> are the explanatory variables, <span class="math inline">\(\beta_0,\beta_1,\ldots,\beta_k\)</span> are the coefficients, and <span class="math inline">\(u_i\)</span> is the error term. Because <span class="math inline">\(Y_i\)</span> is a binary variable, we have <span class="math display">\[
+\begin{align*}
+&amp;\E\left(Y_i|X_{1i},X_{2i},\ldots,X_{ki}\right)=0\times P(Y_i=0|X_{1i},X_{2i},\ldots,X_{ki})\\
+&amp;+1\times P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}).
+\end{align*}
+\]</span></p>
+<p>Then, under the zero-conditional mean assumption <span class="math inline">\(\E\left(u_i|X_{1i},X_{i2},\ldots,X_{ik}\right)=0\)</span>, we have <span class="math inline">\(\E\left(Y_i|X_{1i},X_{2i},\ldots,X_{ki}\right)=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}\)</span>. Thus, the population regression function is given by <span id="eq-eq18-1"><span class="math display">\[
+\begin{align}
+P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}.
+\end{align}
+\tag{21.1}\]</span></span></p>
+<p>The population regression line in <a href="#eq-eq18-1" class="quarto-xref">Equation&nbsp;<span>21.2</span></a> indicates that the coefficient <span class="math inline">\(\beta_j\)</span> gives the effect of one unit change in <span class="math inline">\(X_j\)</span> on the probability that <span class="math inline">\(Y=1\)</span>, holding other variables constant.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Concept 18.1: Linear probability model
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The linear probability model suggests that <span class="math display">\[
+\begin{align*}
+&amp;\E\left(Y_i|X_{1i},X_{2i},\ldots,X_{ki}\right)=P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}).
+\end{align*}
+\]</span> Thus, the population regression function is given by <span class="math display">\[
+\begin{align*}
+P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}.
+\end{align*}
+\]</span> The coefficients <span class="math inline">\(\beta_j\)</span> in the linear probability model gives the effect of one unit change in <span class="math inline">\(X_j\)</span> on the probability of <span class="math inline">\(Y_i=1\)</span>, holding other variables constant.</p>
+</div>
+</div>
+<p>Almost all tools developed for the multiple linear regression model can be applied to the linear probability model. In particular, we can use the OLS estimator to estimate the coefficients in the linear probability model. Inference using t-statistics, confidence intervals, and F-statistics is conducted in the same way as in the multiple linear regression model.</p>
+<p>By construction, the errors in the linear probability model are inherently heteroskedastic, which can be seen from</p>
+<p><span class="math display">\[
+\begin{align}
+u_i=
+\begin{cases}
+1-P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}),\,&amp;\text{with probability}\,P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}),\\
+-P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}),\,&amp;\text{with probability}\, 1-P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}).
+\end{cases}
+\end{align}
+\]</span></p>
+<p>Thus, the conditional variance of <span class="math inline">\(u_i\)</span> is given by <span class="math display">\[
+\begin{align}
+&amp;\var(u_i|X_{1i},X_{2i},\ldots,X_{ki})=\var(Y_i|X_{1i},X_{2i},\ldots,X_{ki})\\
+&amp;=P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})\left(1-P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})\right).
+\end{align}
+\]</span></p>
+<p>Therefore, we should use heteroskedasticity-robust standard errors to obtain valid inference in the linear probability model.</p>
+<p>Using the mortgage dataset, we consider the following linear probability models: <span class="math display">\[
+\begin{align*}
+&amp;\text{Model 1}:\quad{\tt deny}=\beta_0+\beta_1{\tt pirat}+u,\\
+&amp;\text{Model 2}:\quad {\tt deny}=\beta_0+\beta_1{\tt pirat}+\beta_2{\tt black}+u.
+\end{align*}
+\]</span></p>
+<p>We use the following code chunk to estimate these models and then present the estimation results in <a href="#tbl-t18-2" class="quarto-xref">Table&nbsp;<span>21.2</span></a>.</p>
+<div id="73dcdd67" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>r1 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"deny ~ pirat"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>         data <span class="op">=</span> mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"deny ~ pirat + black"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>         data <span class="op">=</span> mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation results</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>models<span class="op">=</span>[<span class="st">"Model 1"</span>, <span class="st">"Model 2"</span>]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>summary_col(results<span class="op">=</span>[r1,r2],</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>            model_names<span class="op">=</span>models,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>            stars<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>            float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="6" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t18-2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t18-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;21.2: Estimation results
+</figcaption>
+<div aria-describedby="tbl-t18-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="6">
+<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 1</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
+<td style="text-align: left;">-0.080**</td>
+<td style="text-align: left;">-0.091***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.032)</td>
+<td style="text-align: left;">(0.029)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">pirat</td>
+<td style="text-align: left;">0.604***</td>
+<td style="text-align: left;">0.559***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.098)</td>
+<td style="text-align: left;">(0.089)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">black</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.177***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.025)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
+<td style="text-align: left;">0.040</td>
+<td style="text-align: left;">0.076</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
+<td style="text-align: left;">0.039</td>
+<td style="text-align: left;">0.075</td>
+</tr>
+</tbody>
+</table>
+<br>
+Standard errors in parentheses.<br>
+* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>According to the estimation results in <a href="#tbl-t18-2" class="quarto-xref">Table&nbsp;<span>21.2</span></a>, the estimated linear probability models are <span class="math display">\[
+\begin{align*}
+&amp;\text{Model 1}:\quad\hat{P}({\tt deny}=1|{\tt pirat})=-0.080+0.604{\tt pirat},\\
+&amp;\text{Model 2}:\quad\hat{P}({\tt deny}=1|{\tt pirat},{\tt black})=-0.091+0.559{\tt pirat}+0.177{\tt black}.
+\end{align*}
+\]</span></p>
+<p>According to Model 1, if <code>pirat</code> increases by one percentage point (i.e., if <code>pirat</code> increases by 0.01), the probability of denial increases by <span class="math inline">\(0.604 \times 0.01 = 0.00604 \approx 0.6\%\)</span>. According to Model 2, if <code>pirat</code> increases by one percentage point (i.e., by 0.01), the probability of denial increases by <span class="math inline">\(0.559 \times 0.01 = 0.00559 \approx 0.6\%\)</span>, holding black constant. Additionally, holding <code>pirat</code> constant, being Black increases the probability of a mortgage application denial by about <span class="math inline">\(17.7\%\)</span>. That is, a black applicant is <span class="math inline">\(17.7\)</span> percentage points more likely to have their mortgage application denied compared to a white applicant, holding constant their payment-to-income ratio.</p>
+<p>Although the linear probability model is easy to estimate and interpret, it has two main drawbacks. The first drawback is that the predicted probabilities from the linear probability model can be less than 0 or greater than 1. We assume that the population regression function is specified as <span class="math inline">\(P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}\)</span>. In estimating this function, we do not constrain the predicted probabilities to lie within the valid interval [0,1]. In <a href="#fig-f18-2" class="quarto-xref">Figure&nbsp;<span>21.2</span></a> and <a href="#fig-f18-3" class="quarto-xref">Figure&nbsp;<span>21.3</span></a>, we present the predicted probabilities for Models 1 and 2. These figures show that some of the predicted probabilities fall outside the valid interval [0,1].</p>
+<div id="cell-fig-f18-2" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1: Plot of predicted probabilities</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.plot(r1.predict(), <span class="st">'o'</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, markersize<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">0.8</span>)  <span class="co"># Add horizontal line at y=0</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">0.8</span>)  <span class="co"># Add horizontal line at y=1</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Index'</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Predicted probabilities'</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-f18-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-f18-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter11-BinaryDependentVariable_files/figure-html/fig-f18-2-output-1.png" width="527" height="361" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f18-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21.2: Predicted probabilities based on Model 1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-fig-f18-3" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2: Plot of predicted probabilities</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.plot(r2.predict(), <span class="st">'o'</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, markersize<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">0.8</span>)  <span class="co"># Add horizontal line at y=0</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="fl">0.8</span>)  <span class="co"># Add horizontal line at y=1</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Index'</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Predicted probabilities'</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-f18-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-f18-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter11-BinaryDependentVariable_files/figure-html/fig-f18-3-output-1.png" width="527" height="361" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f18-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21.3: Predicted probabilities based on Model 2
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The second drawback of the linear probability model is that we assume a linear relationship between the explanatory variables and <span class="math inline">\(P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})\)</span>. For instance, in our mortgage denial example, the effect of the payment-to-income ratio on the probability of mortgage denial is constant and given by <span class="math inline">\(\beta_1\)</span>. However, the effect on the probability of mortgage denial can be different at different levels of the payment-to-income ratio.</p>
+</section>
+<section id="probit-and-logit-models" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="probit-and-logit-models"><span class="header-section-number">21.3</span> Probit and logit models</h2>
+<p>When the dependent variable is binary, we show that <span class="math inline">\(\E\left(Y_i|X_{1i},X_{2i},\ldots,X_{ki}\right) = P(Y_i = 1|X_{1i},X_{2i},\ldots,X_{ki})\)</span>. Since probabilities lie in [0, 1], it is natural to use a nonlinear model to enforce these bounds when modeling <span class="math inline">\(P(Y_i = 1|X_{1i},X_{2i},\ldots,X_{ki})\)</span>. Two popular nonlinear models for binary dependent variables are the probit and logit models. These models are based on the cumulative standard normal distribution function <span class="math inline">\(\Phi(\cdot)\)</span>, and the logistic distribution function <span class="math inline">\(F(\cdot)\)</span>, respectively.</p>
+<section id="probit-model" class="level3" data-number="21.3.1">
+<h3 data-number="21.3.1" class="anchored" data-anchor-id="probit-model"><span class="header-section-number">21.3.1</span> Probit model</h3>
+<p>In the Probit model, we use the cumulative standard normal distribution function to specify <span class="math inline">\(P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})\)</span>: <span class="math display">\[
+\begin{align}
+P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}),
+\end{align}
+\]</span></p>
+<p>where <span class="math inline">\(\Phi(\cdot)\)</span> is the the cumulative standard normal distribution function (cdf).</p>
+<div id="exm-exm18-1" class="theorem example">
+<p><span class="theorem-title"><strong>Example 21.1</strong></span> Assume that there is a single regress such that <span class="math inline">\(P(Y=1|X=x)=\Phi(\beta_0+\beta_1 x)\)</span>. In this specification, <span class="math inline">\(z=\beta_0+\beta_1x\)</span> plays the role of a quantile: <span class="math display">\[
+\begin{align}
+\Phi(\beta_0+\beta_1 x)=\Phi(z)=P(Z\leq z),
+\end{align}
+\]</span> where <span class="math inline">\(Z\sim N(0,1)\)</span>. Suppose that <span class="math inline">\(\beta_0=-2\)</span>, <span class="math inline">\(\beta_1=3\)</span> and <span class="math inline">\(X=0.4\)</span>. Then, we have <span class="math display">\[
+\begin{align*}
+P(Y=1|X=0.4)=\Phi(-2+4\times0.4)=\Phi(-0.8)\approx0.212.
+\end{align*}
+\]</span></p>
+<div id="4d50dc13" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Probit model</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>X, beta0, beta1 <span class="op">=</span> <span class="fl">0.4</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">3</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> beta0 <span class="op">+</span> beta1 <span class="op">*</span> X</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>probability <span class="op">=</span> stats.norm.cdf(z)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Predicted probability:"</span>, probability.<span class="bu">round</span>(<span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Predicted probability: 0.212</code></pre>
+</div>
+</div>
+<p>Thus, when <span class="math inline">\(X=0.4\)</span>, the predicted probability that <span class="math inline">\(Y=1\)</span> is <span class="math inline">\(0.212\)</span>. Since <span class="math inline">\(z=\beta_0+\beta_1x\)</span>, the sign of <span class="math inline">\(\beta_1\)</span> gives the direction of the relationship between <span class="math inline">\(X\)</span> and the probability of <span class="math inline">\(Y = 1\)</span>. Thus, if <span class="math inline">\(\beta_1&gt;0\)</span>, then the probability of <span class="math inline">\(Y = 1\)</span> increases as <span class="math inline">\(X\)</span> increases.</p>
+</div>
+<p>The sign of <span class="math inline">\(\beta_j\)</span> in the probit model gives the direction of the relationship between <span class="math inline">\(X_j\)</span> and <span class="math inline">\(P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})\)</span> for <span class="math inline">\(j=1,2,\ldots,k\)</span>. However, unlike in the linear probability model, the magnitude of the effect is not directly given by <span class="math inline">\(\beta_j\)</span>; instead, it depends on the values of the regressors and the estimated coefficients. We can determine this effect by computing the change in the predicted probability of <span class="math inline">\(Y = 1\)</span> when <span class="math inline">\(X_j\)</span> changes by one unit.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Concept 18.2: Probit model, predicted probabilities and marginal effects
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>The sign of the coefficient gives the direction of the relationship between the explanatory variable and <span class="math inline">\(P(Y=1|X_1,\ldots,X_k)\)</span>.</li>
+<li>Assume that <span class="math inline">\(X_1\)</span> changes by <span class="math inline">\(\Delta X_1\)</span>. Then, the effect on the conditional probability of <span class="math inline">\(Y=1\)</span> is given by <span class="math display">\[
+\begin{align}
+\Delta P(Y=1|X_1,\ldots,X_k)&amp;=\Phi(\beta_0+\beta_1(X_1+\Delta X_1)+\beta_2X_2+\ldots+\beta_kX_k)\\
+&amp;\quad-\Phi(\beta_0+\beta_1X_1+\beta_2X_2+\ldots+\beta_kX_k).
+\end{align}
+\]</span></li>
+<li>The partial effect (marginal effect) of a change in <span class="math inline">\(X_1\)</span> on <span class="math inline">\(P(Y=1|X_1,\ldots,X_k)\)</span>, holding other variables constant, is given by <span class="math display">\[
+\begin{align}
+\frac{\partial P(Y=1|X_1,\ldots,X_k)}{\partial X_1}=\beta_1\phi(\beta_0+\beta_1X_1+\beta_2X_2+\ldots+\beta_kX_k),
+\end{align}
+\]</span> where <span class="math inline">\(\phi(\cdot)\)</span> is the standard normal probability density function (pdf). The partial effect is not constant and depends on the values of the regressors. We can use the sample mean of the regressors to compute the <strong>partial effect at the average</strong> (PEA): <span class="math display">\[
+\begin{align}
+PEA=\beta_1\phi(\beta_0+\beta_1\bar{X}_1+\beta_2\bar{X}_2+\ldots+\beta_k\bar{X}_k).
+\end{align}
+\]</span> Alternatively, instead of using the sample means, we can use the <strong>average partial effect</strong> (APE), which is given by: <span class="math display">\[
+\begin{align}
+APE=\frac{1}{n}\sum_{i=1}^n\beta_1\phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}).
+\end{align}
+\]</span></li>
+</ul>
+</div>
+</div>
+<p>For our mortgage applications data, we consider the following probit models: <span class="math display">\[
+\begin{align}
+&amp;\text{Model 1}:\quad P({\tt deny}=1|{\tt pirat})=\Phi\left(\beta_0+\beta_1{\tt pirat}\right),\\
+&amp;\text{Model 2}:\quad P\left({\tt deny}=1|{\tt pirat},{\tt black}\right)=\Phi\left(\beta_0+\beta_1{\tt pirat}+\beta_2{\tt black}\right).
+\end{align}
+\]</span></p>
+<p>The probit models can be estimated using the <code>smf.probit()</code> function from the <code>statsmodels</code> package. The following code chunk can be used to estimate these models and present the estimation results in <a href="#tbl-t18-4" class="quarto-xref">Table&nbsp;<span>21.3</span></a>.</p>
+<div id="1fc300d7" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1: Probit regression</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>r1 <span class="op">=</span> smf.probit(<span class="st">'deny ~ pirat'</span>, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                  data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>, disp<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2: Probit regression with additional predictor</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> smf.probit(<span class="st">'deny ~ pirat + black'</span>,  </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                  data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>, disp<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation results</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>models<span class="op">=</span>[<span class="st">"Model 1"</span>, <span class="st">"Model 2"</span>]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>info<span class="op">=</span>{</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'N'</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>nobs<span class="sc">:.0f}</span><span class="ss">"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"AIC"</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>aic<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"BIC"</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>bic<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Log-Likelihood"</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>llf<span class="sc">:.2f}</span><span class="ss">"</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>summary_col(results<span class="op">=</span>[r1,r2],</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>            model_names<span class="op">=</span>models,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>            stars<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>            info_dict<span class="op">=</span>info,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>            float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="11" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t18-4" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="11">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t18-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;21.3: Estimation results for Probit models
+</figcaption>
+<div aria-describedby="tbl-t18-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="11">
+<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 1</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
+<td style="text-align: left;">-2.194***</td>
+<td style="text-align: left;">-2.259***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.165)</td>
+<td style="text-align: left;">(0.159)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">pirat</td>
+<td style="text-align: left;">2.968***</td>
+<td style="text-align: left;">2.742***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.465)</td>
+<td style="text-align: left;">(0.444)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">black</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.708***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.083)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">AIC</td>
+<td style="text-align: left;">1667.58</td>
+<td style="text-align: left;">1600.27</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">BIC</td>
+<td style="text-align: left;">1679.13</td>
+<td style="text-align: left;">1617.60</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Log-Likelihood</td>
+<td style="text-align: left;">-831.79</td>
+<td style="text-align: left;">-797.14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">N</td>
+<td style="text-align: left;">2380</td>
+<td style="text-align: left;">2380</td>
+</tr>
+</tbody>
+</table>
+<br>
+Standard errors in parentheses.<br>
+* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>According to the estimation results in <a href="#tbl-t18-4" class="quarto-xref">Table&nbsp;<span>21.3</span></a>, the estimated models are <span class="math display">\[
+\begin{align*}
+&amp;\text{Model 1}:\quad \hat{P}({\tt deny}=1|{\tt pirat})=\Phi\left(-2.194+2.968{\tt pirat}\right),\\
+&amp;\text{Model 2}:\quad \hat{P}({\tt deny}=1|{\tt pirat},{\tt black})=\Phi\left(-2.259+2.742{\tt pirat}+0.708{\tt black}\right),
+\end{align*}
+\]</span></p>
+<p>where <span class="math inline">\(\hat{P}({\tt deny}=1|{\tt pirat})\)</span> and <span class="math inline">\(\hat{P}({\tt deny}=1|{\tt pirat},{\tt black})\)</span> are the predicted probabilities.</p>
+<p>In <a href="#fig-f18-4" class="quarto-xref">Figure&nbsp;<span>21.4</span></a>, we present the scatter plot between <code>deny</code> and <code>pirat</code> along with the predicted probabilities based on the first model. Note that the normal cumulative distribution function (cdf) ensures that all predicted probabilities are in the interval [0, 1].</p>
+<div id="cell-fig-f18-4" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot and predicted probabilities based on Model 1</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot of observed data</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>plt.scatter(mydata[<span class="st">'pirat'</span>], mydata[<span class="st">'deny'</span>], s<span class="op">=</span><span class="dv">15</span>, c<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'P/I ratio'</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Deny'</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="op">-</span><span class="fl">0.4</span>, <span class="fl">1.4</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Add horizontal dashed lines and text</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">1</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'darkred'</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'darkred'</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="dv">2</span>, <span class="fl">0.9</span>, <span class="st">'Mortgage denied'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="dv">2</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="st">'Mortgage approved'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate and plot predicted probabilities</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">300</span>)  <span class="co"># Generates 300 points between 0 and 3</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> r1.predict(pd.DataFrame({<span class="st">'pirat'</span>: x}))</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, lw<span class="op">=</span><span class="fl">1.5</span>, color<span class="op">=</span><span class="st">'steelblue'</span>, label<span class="op">=</span><span class="st">'Predicted probabilities'</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a legend</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>plt.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-f18-4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-f18-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter11-BinaryDependentVariable_files/figure-html/fig-f18-4-output-1.png" width="527" height="367" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f18-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21.4: Predicted probabilities based on Model 1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In Model 1, the predicted change in the denial probability when <code>pirat</code> increases from <span class="math inline">\(0.3\)</span> to <span class="math inline">\(0.4\)</span> can be computed as <span class="math display">\[
+\begin{align*}
+&amp;\Delta \hat{P}({\tt deny}=1|{\tt pirat})\\
+&amp;=\Phi\left(-2.194+2.968\times 0.4\right)- \Phi\left(-2.194+2.968\times 0.3\right)\approx0.060.
+\end{align*}
+\]</span></p>
+<div id="27add8ec" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted probabilities for pirat = 0.3 and pirat = 0.4</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> pd.DataFrame({<span class="st">'pirat'</span>: [<span class="fl">0.3</span>, <span class="fl">0.4</span>]})</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> r1.predict(new_data)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute difference in probabilities</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>probability_difference <span class="op">=</span> predictions.diff().iloc[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Difference in predicted probabilities:"</span>, probability_difference.<span class="bu">round</span>(<span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Difference in predicted probabilities: 0.061</code></pre>
+</div>
+</div>
+<p>Using Model 2, for a white and a black applicant with <code>pirat = 0.3</code>, we compute the predicted denial probabilities as follows: <span class="math display">\[
+\begin{align*}
+&amp;\hat{P}({\tt deny}=1|{\tt pirat}=0.3,{\tt black}=0)=\Phi\left(-2.259+2.742\times0.3+0.708\times0\right)\approx0.075,\\
+&amp;\hat{P}({\tt deny}=1|{\tt pirat}=0.3,{\tt black}=1)=\Phi\left(-2.259+2.742\times0.3+0.708\times1\right)\approx0.233.
+\end{align*}
+\]</span></p>
+<div id="572a5593" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted probabilities for the white and black applicants with pirat = 0.3</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> pd.DataFrame({<span class="st">'pirat'</span>: [<span class="fl">0.3</span>, <span class="fl">0.3</span>], <span class="st">'black'</span>: [<span class="dv">0</span>, <span class="dv">1</span>]})</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> r2.predict(new_data)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Predicted denial probability for the white applicant:"</span>, predictions[<span class="dv">0</span>].<span class="bu">round</span>(<span class="dv">3</span>))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Predicted denial probability for the black applicant:"</span>, predictions[<span class="dv">1</span>].<span class="bu">round</span>(<span class="dv">3</span>))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute difference in predicted probabilities</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>probability_difference <span class="op">=</span> predictions.diff().iloc[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Difference in predicted denial probabilities:"</span>, probability_difference.<span class="bu">round</span>(<span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Predicted denial probability for the white applicant: 0.075
+Predicted denial probability for the black applicant: 0.233
+Difference in predicted denial probabilities: 0.158</code></pre>
+</div>
+</div>
+<p>These computations indicates that the difference in denial probabilities between these two hypothetical applicants is <span class="math inline">\(15.8\)</span> percentage points.</p>
+<p>The partial effects can be computed using the <code>get_margeff()</code> function in <code>statsmodels</code>. The following code chunk can be used to compute the partial effects at the mean and overall values of the regressors for Models 1 and 2. These results indicate that the partial effects at the mean and overall values of the regressors are the same for the probit model.</p>
+<div id="eaa0ca04" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Partial effect at the average (PEA) for Model 1</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r1.get_margeff(at<span class="op">=</span><span class="st">"mean"</span>).summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Probit Marginal Effects       
+=====================================
+Dep. Variable:                   deny
+Method:                          dydx
+At:                              mean
+==============================================================================
+                dy/dx    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+pirat          0.5678      0.087      6.521      0.000       0.397       0.738
+==============================================================================</code></pre>
+</div>
+</div>
+<div id="662a1a81" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Average partial effect (APE) for Model 1</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r1.get_margeff(at<span class="op">=</span><span class="st">"overall"</span>).summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Probit Marginal Effects       
+=====================================
+Dep. Variable:                   deny
+Method:                          dydx
+At:                           overall
+==============================================================================
+                dy/dx    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+pirat          0.5665      0.087      6.538      0.000       0.397       0.736
+==============================================================================</code></pre>
+</div>
+</div>
+<div id="66d676e1" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Partial effect at the average (PEA) for Model 2</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r2.get_margeff(at<span class="op">=</span><span class="st">"mean"</span>).summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Probit Marginal Effects       
+=====================================
+Dep. Variable:                   deny
+Method:                          dydx
+At:                              mean
+==============================================================================
+                dy/dx    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+pirat          0.5002      0.079      6.300      0.000       0.345       0.656
+black          0.1292      0.015      8.472      0.000       0.099       0.159
+==============================================================================</code></pre>
+</div>
+</div>
+<div id="ce086751" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Average partial effect (APE) for Model 2</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r2.get_margeff(at<span class="op">=</span><span class="st">"overall"</span>).summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Probit Marginal Effects       
+=====================================
+Dep. Variable:                   deny
+Method:                          dydx
+At:                           overall
+==============================================================================
+                dy/dx    std err          z      P&gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+pirat          0.5014      0.079      6.335      0.000       0.346       0.657
+black          0.1295      0.015      8.615      0.000       0.100       0.159
+==============================================================================</code></pre>
+</div>
+</div>
+</section>
+<section id="logit-model" class="level3" data-number="21.3.2">
+<h3 data-number="21.3.2" class="anchored" data-anchor-id="logit-model"><span class="header-section-number">21.3.2</span> Logit model</h3>
+<p>In the logit model, we use the logistic distribution function to specify <span class="math inline">\(P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})\)</span>: <span class="math display">\[
+\begin{align}
+P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=F(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}),
+\end{align}
+\]</span></p>
+<p>where <span class="math inline">\(F(\cdot)\)</span> is the logistic distribution function. The logistic distribution function is defined as <span class="math inline">\(F(z)=\frac{1}{1+\exp(-z)}\)</span>. Thus, in the logit model, the conditional probability of <span class="math inline">\(Y_i=1\)</span> is specified as <span class="math display">\[
+\begin{align}
+P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\frac{1}{1+\exp\left(-\left(\beta_0+\beta_1
+X_{1i}+\beta_2 X_{2i}+\ldots+\beta_k X_{ki}\right)\right)}.
+\end{align}
+\]</span></p>
+<p>As in the case of the probit model, the sign of the coefficient in the logit model indicates the direction of the relationship between the explanatory variable and the probability of the event occurring. For the marginal effects (the partial effects), we can use the approach described in Key Concept 18.2.</p>
+<p>For our mortgage data applications, we consider the following logit models: <span class="math display">\[
+\begin{align}
+&amp;\text{Model 1}:\quad P({\tt deny}=1|{\tt pirat})=F\left(\beta_0+\beta_1{\tt pirat}\right),\\
+&amp;\text{Model 2}:\quad P\left({\tt deny}=1|{\tt pirat},{\tt black}\right)=F\left(\beta_0+\beta_1{\tt pirat}+\beta_2{\tt black}\right).
+\end{align}
+\]</span></p>
+<p>The logit model is estimated using the <code>smf.logit()</code> function from the <code>statsmodels</code> package.</p>
+<div id="2ba830ed" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1: Logistic regression with 'pirat' as predictor</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>r1 <span class="op">=</span> smf.logit(<span class="st">'deny ~ pirat'</span>, data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>, disp<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2: Logistic regression with 'pirat' and 'black' as predictors</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> smf.logit(<span class="st">'deny ~ pirat + black'</span>, data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>, disp<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation results for the logit models</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>info<span class="op">=</span>{</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'N'</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>nobs<span class="sc">:.0f}</span><span class="ss">"</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"AIC"</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>aic<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"BIC"</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>bic<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Log-Likelihood"</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>llf<span class="sc">:.2f}</span><span class="ss">"</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>models<span class="op">=</span>[<span class="st">"Model 1"</span>, <span class="st">"Model 2"</span>]</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>summary_col(results<span class="op">=</span>[r1,r2], stars<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>            model_names<span class="op">=</span>models, </span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>            info_dict<span class="op">=</span>info,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>            float_format <span class="op">=</span> <span class="st">'</span><span class="sc">%.3f</span><span class="st">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="20" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t18-5" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="20">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t18-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;21.4: Estimation results (Logit Models)
+</figcaption>
+<div aria-describedby="tbl-t18-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="20">
+<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 1</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
+<td style="text-align: left;">-4.028***</td>
+<td style="text-align: left;">-4.126***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.359)</td>
+<td style="text-align: left;">(0.346)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">pirat</td>
+<td style="text-align: left;">5.884***</td>
+<td style="text-align: left;">5.370***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(1.000)</td>
+<td style="text-align: left;">(0.963)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">black</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">1.273***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.146)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">AIC</td>
+<td style="text-align: left;">1664.19</td>
+<td style="text-align: left;">1597.39</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">BIC</td>
+<td style="text-align: left;">1675.74</td>
+<td style="text-align: left;">1614.71</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Log-Likelihood</td>
+<td style="text-align: left;">-830.09</td>
+<td style="text-align: left;">-795.70</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">N</td>
+<td style="text-align: left;">2380</td>
+<td style="text-align: left;">2380</td>
+</tr>
+</tbody>
+</table>
+<br>
+Standard errors in parentheses.<br>
+* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>The estimation results are presented in <a href="#tbl-t18-5" class="quarto-xref">Table&nbsp;<span>21.4</span></a>. According to the estimation results, the estimated logit models are <span class="math display">\[
+\begin{align*}
+&amp;\text{Model 1}:\quad\hat{P}({\tt deny}=1|{\tt pirat})=F\left(-4.028+5.884{\tt pirat}\right),\\
+&amp;\text{Model 2}:\quad\hat{P}({\tt deny}=1|{\tt pirat},{\tt black})=F\left(-4.126+5.370{\tt pirat}+1.273{\tt black}\right),
+\end{align*}
+\]</span></p>
+<p>Using estimated Model 2, we compute the predicted denial probabilities for a white and a black applicant with <code>pirat = 0.3</code> as follows: <span class="math display">\[
+\begin{align*}
+&amp;\hat{P}({\tt deny}=1|{\tt pirat}=0.3,{\tt black}=0)=F\left(-4.126+5.370{\tt pirat}+1.273{\tt black}\right)\approx0.075,\\
+&amp;\hat{P}({\tt deny}=1|{\tt pirat}=0.3,{\tt black}=1)=F\left(-4.126+5.370{\tt pirat}+1.273{\tt black}\right)\approx0.230.
+\end{align*}
+\]</span></p>
+<div id="918ddf60" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted probabilities for black = 0 and black = 1 with pirat = 0.3</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> pd.DataFrame({<span class="st">'pirat'</span>: [<span class="fl">0.3</span>, <span class="fl">0.3</span>], <span class="st">'black'</span>: [<span class="dv">0</span>, <span class="dv">1</span>]})</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> r2.predict(new_data)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Predicted denial probability for the white applicant:"</span>, predictions[<span class="dv">0</span>].<span class="bu">round</span>(<span class="dv">3</span>))</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Predicted denial probability for the black applicant:"</span>, predictions[<span class="dv">1</span>].<span class="bu">round</span>(<span class="dv">3</span>))</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute difference in probabilities</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>probability_difference <span class="op">=</span> predictions.diff().iloc[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Difference in predicted probabilities:"</span>, probability_difference.<span class="bu">round</span>(<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Predicted denial probability for the white applicant: 0.075
+Predicted denial probability for the black applicant: 0.224
+Difference in predicted probabilities: 0.15</code></pre>
+</div>
+</div>
+<p>These computations indicate that for a white applicant with <code>pirat = 0.3</code>, the predicted denial probability is <span class="math inline">\(7.5\%\)</span>, while for a black applicant with <code>pirat = 0.3</code>, it is <span class="math inline">\(23\%\)</span>. The difference in denial probabilities between these two hypothetical applicants is approximately <span class="math inline">\(15\)</span> percentage points.</p>
+<p>The logit and probit regressions provide similar predicted probabilities. In <a href="#fig-f18-5" class="quarto-xref">Figure&nbsp;<span>21.5</span></a>, we plot the predicted probabilities based on Model 1 for both probit and logit regressions. The differences between predicted probabilities are small. Historically, the logit model has been more popular than the probit model because of its computational advantages. However, given the availability of modern computational tools, the choice between the probit and logit models is often based on the researcher’s preference.</p>
+<div id="cell-fig-f18-5" class="cell" data-message="false" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit Probit and Logit models</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>probit <span class="op">=</span> smf.probit(<span class="st">'deny ~ pirat'</span>, data<span class="op">=</span>mydata).fit(disp<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>logit <span class="op">=</span> smf.logit(<span class="st">'deny ~ pirat'</span>, data<span class="op">=</span>mydata).fit(disp<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot of observed data</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>plt.scatter(mydata[<span class="st">'pirat'</span>], mydata[<span class="st">'deny'</span>], s<span class="op">=</span><span class="dv">15</span>, c<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'P/I ratio'</span>)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Deny'</span>)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="op">-</span><span class="fl">0.4</span>, <span class="fl">1.4</span>)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Add horizontal dashed lines and text</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">1</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>plt.axhline(y<span class="op">=</span><span class="dv">0</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">2.2</span>, <span class="fl">0.9</span>, <span class="st">'Mortgage denied'</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">2.2</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="st">'Mortgage approved'</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted probabilities for Probit and Logit models</span></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">300</span>)  <span class="co"># Generating 300 points between 0 and 3</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>y_probit <span class="op">=</span> probit.predict(pd.DataFrame({<span class="st">'pirat'</span>: x}))</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>y_logit <span class="op">=</span> logit.predict(pd.DataFrame({<span class="st">'pirat'</span>: x}))</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot estimated regression lines</span></span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y_probit, lw<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">'Probit model'</span>)</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y_logit, lw<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Logit model'</span>)</span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a legend</span></span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-f18-5" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-f18-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter11-BinaryDependentVariable_files/figure-html/fig-f18-5-output-1.png" width="527" height="367" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f18-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21.5: Predicted probabilities based on probit and logit models
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="estimation-and-inference-in-the-probit-and-logit-models" class="level2" data-number="21.4">
+<h2 data-number="21.4" class="anchored" data-anchor-id="estimation-and-inference-in-the-probit-and-logit-models"><span class="header-section-number">21.4</span> Estimation and inference in the probit and logit models</h2>
+<p>We use the maximum likelihood estimator (MLE) to estimate the probit and logit models. To define this estimator, we first need to define the likelihood function.</p>
+<div id="def-def18-1" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 21.1 (Likelihood function)</strong></span> The likelihood function is the joint probability distribution of the data, given the unknown coefficients.</p>
+</div>
+<p>Let <span class="math inline">\(f(\bs{\beta}|\bs{Y},\bs{X})\)</span> be the likelihood function of the probit model, where <span class="math inline">\(\bs{\beta}=(\beta_0,\beta_1,\ldots,\beta_k)^{'}\)</span> and <span class="math inline">\(\bs{X}=(X^{'}_1,X^{'}_2,\ldots,X^{'}_k)^{'}\)</span>, and <span class="math inline">\(\bs{Y}=(Y_1,Y_2,\ldots,Y_n)^{'}\)</span>. For the probit model, we have</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp;P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}),\\
+&amp;P(Y_i=0|X_{1i},X_{2i},\ldots,X_{ki})=1-\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}),
+\end{align*}
+\]</span> for <span class="math inline">\(i=1,2,\ldots,n\)</span>. These results suggest that we can express <span class="math inline">\(P(Y_i=y_i|X_{1i},X_{2i},\ldots,X_{ki})\)</span> as <span class="math display">\[
+\begin{align*}
+P(Y_i=y_i|X_{1i},X_{2i},\ldots,X_{ki})&amp;=\left[\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right]^{y_i}\\
+&amp;\times\left[1-\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right]^{1-y_i},
+\end{align*}
+\]</span> where <span class="math inline">\(y_i\in\{0,1\}\)</span>. Then, <a href="#def-def18-1" class="quarto-xref">Definition&nbsp;<span>21.1</span></a> suggests the following likelihood function: <span class="math display">\[
+\begin{align*}
+f(\bs{\beta}|\bs{Y},\bs{X})&amp;=P(Y_1=y_1,Y_2=y_2,\ldots,Y_n=y_n|X_{1},X_{2},\ldots,X_{k})\\
+&amp;=\prod_{i=1}^n\bigg(\left[\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right]^{y_i}\\
+&amp;\times\left[1-\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right]^{1-y_i}\bigg).
+\end{align*}
+\]</span> Then, the log-likelihood function is <span id="eq-eq18-1"><span class="math display">\[
+\begin{align}
+\ln\left(f(\bs{\beta}|\bs{Y},\bs{X})\right)&amp;=\sum_{i=1}^nY_i\ln\left(\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right)\\
+&amp;+\sum_{i=1}^n(1-Y_i)\ln\left(\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right).\nonumber
+\end{align}
+\tag{21.2}\]</span></span></p>
+<p>We use the log-likelihood function to define the MLE in the following way: <span class="math display">\[
+\hat{\bs{\beta}}=\text{argmax}_{\bs{\beta}}\ln\left(f(\bs{\beta}|\bs{Y},\bs{X})\right).
+\]</span></p>
+<p>Since the log-likelihood function is a non-linear function of parameters, there is no analytical solution for the MLE. We can resort to numerical algorithms to compute the MLE. Under some standard conditions, it can be shown that the MLE is a consistent estimator and has an asymptotic normal distribution in large samples (see <span class="citation" data-cites="Hansen2022">Hansen (<a href="references.html#ref-Hansen2022" role="doc-biblioref">2022</a>)</span> for more details).</p>
+<p>To get the log likelihood function of the logit model, we need to replace <span class="math inline">\(\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\)</span> in <a href="#eq-eq18-1" class="quarto-xref">Equation&nbsp;<span>21.2</span></a> by <span class="math display">\[
+F(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})
+=\frac{1}{1+\exp(-(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}))}.
+\]</span></p>
+<p>The MLE of the logit model is also consistent and has an asymptotic normal distribution. For inference, we can use the estimated standard errors to conduct hypothesis tests and compute confidence intervals. As in the case of multiple linear regression models, we can resort to the F-statistic to test joint null hypotheses.</p>
+</section>
+<section id="measures-of-fit" class="level2" data-number="21.5">
+<h2 data-number="21.5" class="anchored" data-anchor-id="measures-of-fit"><span class="header-section-number">21.5</span> Measures of fit</h2>
+<p>The maximized likelihood increases as additional regressors are added to the model. In <a href="#tbl-t18-4" class="quarto-xref">Table&nbsp;<span>21.3</span></a> and <a href="#tbl-t18-5" class="quarto-xref">Table&nbsp;<span>21.4</span></a>, the maximized likelihood values are reported for each model (see Log Likelihood). These values are computed using <span class="math inline">\(\ln(f(\hat{\bs{\beta}}|\bs{Y},\bs{X}))\)</span>. The usual <span class="math inline">\(R^2\)</span>, or its adjusted version, is a poor measure of fit for models with binary dependent variables. In general, <span class="math inline">\(R^2\)</span> and <span class="math inline">\(\bar{R}^2\)</span> are invalid for nonlinear regression models because both measures assume a linear relationship between the dependent variable and the explanatory variable(s).</p>
+<p>For the probit and logit models, we consider the following measures of fit:</p>
+<ul>
+<li>Pseudo <span class="math inline">\(R^2\)</span>,</li>
+<li>Akaike Information Criterion (AIC),</li>
+<li>Bayesian Information Criterion (BIC).</li>
+</ul>
+<p>Pseudo <span class="math inline">\(R^2\)</span> compares the value of the maximized log-likelihood of the model with all regressors (the full model) to the likelihood of a model with no regressors (null model, a model with only the constant term). Thus, the pseudo <span class="math inline">\(R^2\)</span> is given by <span class="math display">\[
+\begin{align}
+\text{Pseudo}\, R^2=1-\frac{\ln(f_{\text{full}}(\hat{\bs{\beta}}|\bs{Y},\bs{X}))}{\ln(f_{\text{null}}(\hat{\bs{\beta}}|\bs{Y},\bs{X}))}.
+\end{align}
+\]</span></p>
+<p>The information criteria AIC and BIC shows the predictive performance of the model. They are defined as follows: <span class="math display">\[
+\begin{align}
+&amp;\text{AIC}=-2\ln(f(\hat{\bs{\beta}}|\bs{Y},\bs{X}))+2k,\\
+&amp;\text{BIC}=-2\ln(f(\hat{\bs{\beta}}|\bs{Y},\bs{X}))+k\ln(n).
+\end{align}
+\]</span></p>
+<p>where <span class="math inline">\(k\)</span> is the number of parameters in the model. The preferred model is the one with the smallest AIC and BIC values.</p>
+<p>For the models given in <a href="#tbl-t18-2" class="quarto-xref">Table&nbsp;<span>21.2</span></a>, we provide the pseudo <span class="math inline">\(R^2\)</span>, AIC, and BIC values in <a href="#tbl-t18-6" class="quarto-xref">Table&nbsp;<span>21.5</span></a>. These values indicate that Model 2 has a better fit than Model 1 according to all three measures of fit.</p>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Measures of fit</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="op">=</span> [r1.prsquared,r1.aic,r1.bic]</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>m2 <span class="op">=</span> [r2.prsquared,r2.aic,r2.bic]</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"Pseudo R^2"</span>: [m1[<span class="dv">0</span>],m2[<span class="dv">0</span>]],</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"AIC"</span>:[m1[<span class="dv">1</span>],m2[<span class="dv">1</span>]],</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"BIC"</span>:[m1[<span class="dv">2</span>],m2[<span class="dv">2</span>]]},</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>                  index<span class="op">=</span>[<span class="st">"Model 1"</span>,<span class="st">"Model 2"</span>])</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t18-6" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="23">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t18-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;21.5: Measures of fit
+</figcaption>
+<div aria-describedby="tbl-t18-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Pseudo R^2</th>
+<th data-quarto-table-cell-role="th">AIC</th>
+<th data-quarto-table-cell-role="th">BIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Model 1</td>
+<td>0.048</td>
+<td>1664.188</td>
+<td>1675.738</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Model 2</td>
+<td>0.088</td>
+<td>1597.390</td>
+<td>1614.715</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="application-to-the-boston-hmda-data" class="level2" data-number="21.6">
+<h2 data-number="21.6" class="anchored" data-anchor-id="application-to-the-boston-hmda-data"><span class="header-section-number">21.6</span> Application to the Boston HMDA data</h2>
+<section id="data" class="level3" data-number="21.6.1">
+<h3 data-number="21.6.1" class="anchored" data-anchor-id="data"><span class="header-section-number">21.6.1</span> Data</h3>
+<p>We consider the mortgage dataset contained in the file <code>hmda.csv</code>. The data pertain to mortgage applications made in 1990 in the greater Boston metropolitan area. Below, we provide a description of variables that we will use in our analysis:</p>
+<ul>
+<li><code>pirat</code>: Ratio of total monthly debt payments to total monthly income</li>
+<li><code>hirat</code>: Ratio of monthly housing expenses to total monthly income</li>
+<li><code>lvrat</code>: Ratio of size of loan to assessed value of property</li>
+<li><code>chist</code>: Credit scores ranging from 1 to 6, 6 being the worst</li>
+<li><code>mhist</code>: Mortgage scores ranging from 1 to 4, 4 being the worst</li>
+<li><code>phist</code>: Public bad credit record, 1 if any public record of credit problems, 0 otherwise</li>
+<li><code>insurance</code>: 1 if the applicant was ever denied mortgage insurance, 0 otherwise. If the loan-to-value ratio exceeds 80%, the applicant typically was required to buy mortgage insurance.</li>
+<li><code>selfemp</code>: 1 if self-employed, 0 otherwise</li>
+<li><code>single</code>: 1 if applicant reported being single, 0 otherwise</li>
+<li><code>hschool</code>: 1 if applicant graduated from high school, 0 otherwise</li>
+<li><code>unemp</code>: 1989 Massachusetts unemployment rate in the applicant’s industry</li>
+<li><code>condomin</code>: 1 if unit is a condominium, 0 otherwise</li>
+<li><code>black</code>: 1 if applicant is black, 0 if white</li>
+<li><code>deny</code>: 1 if mortgage application denied, 0 otherwise</li>
+</ul>
+<p>The first two variables <code>pirat</code> and <code>hirat</code> are directly related to the applicant’s ability to pay the mortgage. The variable <code>lvrat</code> is related to the loan-to-value ratio, which is an important factor in the mortgage approval process. The variables <code>chist</code>, <code>mhist</code>, and <code>phist</code> are related to the applicant’s credit history. The variable <code>insurance</code> is related to the mortgage insurance requirement. The next four variables <code>selfemp</code>, <code>single</code>, <code>hschool</code>, and <code>unemp</code> are related to the applicant’s ability to repay the loan. The variable <code>condomin</code> is related to the type of property.</p>
+<p>The previous results indicated that denial rates were higher for black applicants than for white applicants, holding constant their payment-to-income ratio. Note that many factors other than the payment-to-income ratio affect loan officers’ decisions. If any of those other factors differ systematically by race, the estimators considered so far may suffer from omitted variable bias.</p>
+<p>We will attempt to control for applicant characteristics that a loan officer might legally consider when deciding on a mortgage application. In the 1990s, loan officers commonly used thresholds, or cutoff values, for the loan-to-value ratio. Therefore, we will group the loan-to-value ratios into three categories:</p>
+<ul>
+<li><code>low</code>: loan-to-value ratio less than 0.8</li>
+<li><code>medium</code>: loan-to-value ratio between 0.8 and 0.95</li>
+<li><code>high</code>: loan-to-value ratio greater than 0.95</li>
+</ul>
+<p>The following code chunk can be used to create these categories:</p>
+<div id="bd6801e8" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> mydata.copy()</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'lvrat_s'</span>] <span class="op">=</span> pd.cut(df[<span class="st">'lvrat'</span>],[<span class="dv">0</span>,<span class="fl">.799</span>,<span class="fl">.95</span>,<span class="fl">1.95</span>], labels <span class="op">=</span> [<span class="st">'low'</span>,<span class="st">'medium'</span>,<span class="st">'high'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'lvrat_s'</span>].value_counts().to_frame().T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t18-7-0" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="25">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t18-7-0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;21.6: Summary statistics for <code>lvrat_s</code>
+</figcaption>
+<div aria-describedby="tbl-t18-7-0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="25">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">lvrat_s</th>
+<th data-quarto-table-cell-role="th">low</th>
+<th data-quarto-table-cell-role="th">medium</th>
+<th data-quarto-table-cell-role="th">high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>1408</td>
+<td>895</td>
+<td>77</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>The summary statistics for the variable <code>lvrat_s</code> are presented in <a href="#tbl-t18-7-0" class="quarto-xref">Table&nbsp;<span>21.6</span></a>. The summary statistics for the other variables in the dataset are presented in <a href="#tbl-t18-7" class="quarto-xref">Table&nbsp;<span>21.7</span></a>.</p>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>df.describe().<span class="bu">round</span>(<span class="dv">3</span>).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="26" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t18-7" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="26">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t18-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;21.7: Summary statistics
+</figcaption>
+<div aria-describedby="tbl-t18-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="26">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">count</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">mean</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">std</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">min</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">25%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">50%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">75%</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">deny</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">0.120</td>
+<td style="text-align: left;">0.325</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">pirat</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">0.331</td>
+<td style="text-align: left;">0.107</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.280</td>
+<td style="text-align: left;">0.33</td>
+<td style="text-align: left;">0.370</td>
+<td style="text-align: left;">3.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">hirat</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">0.255</td>
+<td style="text-align: left;">0.097</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.214</td>
+<td style="text-align: left;">0.26</td>
+<td style="text-align: left;">0.299</td>
+<td style="text-align: left;">3.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">lvrat</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">0.738</td>
+<td style="text-align: left;">0.179</td>
+<td style="text-align: left;">0.02</td>
+<td style="text-align: left;">0.653</td>
+<td style="text-align: left;">0.78</td>
+<td style="text-align: left;">0.868</td>
+<td style="text-align: left;">1.95</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">chist</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">2.116</td>
+<td style="text-align: left;">1.667</td>
+<td style="text-align: left;">1.00</td>
+<td style="text-align: left;">1.000</td>
+<td style="text-align: left;">1.00</td>
+<td style="text-align: left;">2.000</td>
+<td style="text-align: left;">6.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">mhist</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">1.721</td>
+<td style="text-align: left;">0.537</td>
+<td style="text-align: left;">1.00</td>
+<td style="text-align: left;">1.000</td>
+<td style="text-align: left;">2.00</td>
+<td style="text-align: left;">2.000</td>
+<td style="text-align: left;">4.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">phist</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">0.074</td>
+<td style="text-align: left;">0.261</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">unemp</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">3.774</td>
+<td style="text-align: left;">2.027</td>
+<td style="text-align: left;">1.80</td>
+<td style="text-align: left;">3.100</td>
+<td style="text-align: left;">3.20</td>
+<td style="text-align: left;">3.900</td>
+<td style="text-align: left;">10.60</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">selfemp</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">0.116</td>
+<td style="text-align: left;">0.321</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">insurance</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">0.020</td>
+<td style="text-align: left;">0.141</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">1.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">condomin</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">0.288</td>
+<td style="text-align: left;">0.453</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">1.000</td>
+<td style="text-align: left;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">black</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">0.142</td>
+<td style="text-align: left;">0.350</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">1.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">single</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">0.393</td>
+<td style="text-align: left;">0.489</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">0.000</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">1.000</td>
+<td style="text-align: left;">1.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">hschool</td>
+<td style="text-align: left;">2380.0</td>
+<td style="text-align: left;">0.984</td>
+<td style="text-align: left;">0.127</td>
+<td style="text-align: left;">0.00</td>
+<td style="text-align: left;">1.000</td>
+<td style="text-align: left;">1.00</td>
+<td style="text-align: left;">1.000</td>
+<td style="text-align: left;">1.00</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="empirical-models" class="level3" data-number="21.6.2">
+<h3 data-number="21.6.2" class="anchored" data-anchor-id="empirical-models"><span class="header-section-number">21.6.2</span> Empirical models</h3>
+<p>We consider the following models:</p>
+<ol type="1">
+<li>Linear probability model (LPM) with <code>deny</code> as the dependent variable and <code>black</code>, <code>pirat</code>, <code>hirat</code>, <code>lvrat_s</code>, <code>chist</code>, <code>mhist</code>, <code>phist</code>, <code>insurance</code>, and <code>selfemp</code> as regressors.</li>
+<li>Logit model with the same regressors as in (1).</li>
+<li>Probit model with the same regressors as in (1).</li>
+<li>Probit model with the same regressors as in (1) plus <code>single</code>, <code>hschool</code>, and <code>unemp</code>.</li>
+<li>Probit model with the same regressors as in (4) plus <code>condomin</code> and additional dummies for <code>mhist</code> and <code>chist</code>.</li>
+<li>Probit model with the same regressors as in (4) plus interactions between <code>black</code> and <code>pirat</code> and between <code>black</code> and <code>hirat</code>.</li>
+</ol>
+<p>The first three models refer to the base specification. The fourth, fifth, and sixth models are used to investigate the sensitivity of the results in the base specifications to changes in the regression specification. The fourth model includes additional regressors that are likely to affect the mortgage approval process. The fifth model includes additional dummies for <code>mhist</code> and <code>chist</code> to control for the effect of the mortgage and credit score on the denial probability as well as <code>condomin</code> to control for the effect of the property type. The sixth model includes the interaction terms <code>black*pirat</code> and between <code>black*hirat</code> to test whether the effects of <code>pirat</code> and <code>hirat</code> differ between black and white applicants.</p>
+</section>
+<section id="estimation-results" class="level3" data-number="21.6.3">
+<h3 data-number="21.6.3" class="anchored" data-anchor-id="estimation-results"><span class="header-section-number">21.6.3</span> Estimation results</h3>
+<p>The following code chunk can be used to estimate these models. The estimation results are presented in <a href="#tbl-t18-7" class="quarto-xref">Table&nbsp;<span>21.7</span></a>.</p>
+<div id="c76adf91" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="op">=</span> smf.ols(formula <span class="op">=</span> <span class="st">'deny ~ black + pirat + hirat + C(lvrat_s) + chist + mhist + phist + insurance + selfemp'</span>, </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                   data <span class="op">=</span> df).fit(cov_type<span class="op">=</span><span class="st">'HC1'</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> smf.logit(formula <span class="op">=</span> <span class="st">'deny ~ black + pirat + hirat + C(lvrat_s) + chist + mhist + phist + insurance + selfemp'</span>, </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>                   data <span class="op">=</span> df).fit(disp <span class="op">=</span> <span class="dv">0</span>, cov_type<span class="op">=</span><span class="st">'HC1'</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>model3 <span class="op">=</span> smf.probit(formula <span class="op">=</span> <span class="st">'deny ~ black + pirat + hirat + C(lvrat_s)+chist+ mhist + phist + insurance + selfemp'</span>, </span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>                    data <span class="op">=</span> df).fit(disp <span class="op">=</span> <span class="dv">0</span>, cov_type<span class="op">=</span><span class="st">'HC1'</span>)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>model4 <span class="op">=</span> smf.probit(formula <span class="op">=</span> <span class="st">'deny ~ black + pirat + hirat +C(lvrat_s)+chist + mhist + phist + insurance + selfemp + single + hschool + unemp'</span>, </span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>                    data <span class="op">=</span> df).fit(disp <span class="op">=</span> <span class="dv">0</span>, cov_type<span class="op">=</span><span class="st">'HC1'</span>)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>model5 <span class="op">=</span> smf.probit(formula <span class="op">=</span> <span class="st">'deny ~ black + pirat + hirat + C(lvrat_s) + chist + mhist + phist + insurance + selfemp + single + hschool + unemp + condomin +</span><span class="ch">\</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="st">                               I(mhist==3) + I(mhist==4) + I(chist==3) + I(chist==4) + I(chist==5) + I(chist==6)'</span>, </span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>                    data <span class="op">=</span> df).fit(disp <span class="op">=</span> <span class="dv">0</span>, cov_type<span class="op">=</span><span class="st">'HC1'</span>)</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>model6 <span class="op">=</span> smf.probit(formula <span class="op">=</span> <span class="st">'deny ~ black*(pirat + hirat) + C(lvrat_s) + chist + mhist + phist + insurance + selfemp + single + hschool + unemp'</span>, </span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>                    data <span class="op">=</span> df).fit(disp <span class="op">=</span> <span class="dv">0</span>, cov_type<span class="op">=</span><span class="st">'HC1'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation results for the logit models</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>info<span class="op">=</span>{</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'N'</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>nobs<span class="sc">:.0f}</span><span class="ss">"</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"AIC"</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>aic<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"BIC"</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>bic<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Log-Likelihood"</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">.</span>llf<span class="sc">:.2f}</span><span class="ss">"</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>models<span class="op">=</span>[<span class="st">"Model 1"</span>, <span class="st">"Model 2"</span>, <span class="st">"Model 3"</span>, <span class="st">"Model 4"</span>, <span class="st">"Model 5"</span>, <span class="st">"Model 6"</span>]</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> [model1, model2, model3, model4, model5, model6]</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>summary_col(results<span class="op">=</span>results, stars<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>           model_names<span class="op">=</span>models, </span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>           info_dict<span class="op">=</span>info,</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>           float_format <span class="op">=</span> <span class="st">'</span><span class="sc">%.3f</span><span class="st">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" data-execution_count="28" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-t18-8" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="28">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t18-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;21.8: Estimation results
+</figcaption>
+<div aria-describedby="tbl-t18-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="28">
+<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 1</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 2</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 3</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 4</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 5</td>
+<td style="text-align: left;" data-quarto-table-cell-role="th">Model 6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
+<td style="text-align: left;">-0.183***</td>
+<td style="text-align: left;">-5.717***</td>
+<td style="text-align: left;">-3.045***</td>
+<td style="text-align: left;">-2.579***</td>
+<td style="text-align: left;">-2.901***</td>
+<td style="text-align: left;">-2.548***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.028)</td>
+<td style="text-align: left;">(0.484)</td>
+<td style="text-align: left;">(0.230)</td>
+<td style="text-align: left;">(0.335)</td>
+<td style="text-align: left;">(0.388)</td>
+<td style="text-align: left;">(0.349)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">C(lvrat_s)[T.medium]</td>
+<td style="text-align: left;">0.032**</td>
+<td style="text-align: left;">0.480***</td>
+<td style="text-align: left;">0.222***</td>
+<td style="text-align: left;">0.224***</td>
+<td style="text-align: left;">0.224***</td>
+<td style="text-align: left;">0.224***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.013)</td>
+<td style="text-align: left;">(0.160)</td>
+<td style="text-align: left;">(0.081)</td>
+<td style="text-align: left;">(0.082)</td>
+<td style="text-align: left;">(0.083)</td>
+<td style="text-align: left;">(0.082)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">C(lvrat_s)[T.high]</td>
+<td style="text-align: left;">0.190***</td>
+<td style="text-align: left;">1.504***</td>
+<td style="text-align: left;">0.796***</td>
+<td style="text-align: left;">0.799***</td>
+<td style="text-align: left;">0.841***</td>
+<td style="text-align: left;">0.793***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.050)</td>
+<td style="text-align: left;">(0.324)</td>
+<td style="text-align: left;">(0.180)</td>
+<td style="text-align: left;">(0.181)</td>
+<td style="text-align: left;">(0.182)</td>
+<td style="text-align: left;">(0.181)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">black</td>
+<td style="text-align: left;">0.083***</td>
+<td style="text-align: left;">0.685***</td>
+<td style="text-align: left;">0.387***</td>
+<td style="text-align: left;">0.369***</td>
+<td style="text-align: left;">0.360***</td>
+<td style="text-align: left;">0.248</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.023)</td>
+<td style="text-align: left;">(0.181)</td>
+<td style="text-align: left;">(0.098)</td>
+<td style="text-align: left;">(0.099)</td>
+<td style="text-align: left;">(0.099)</td>
+<td style="text-align: left;">(0.448)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">pirat</td>
+<td style="text-align: left;">0.448***</td>
+<td style="text-align: left;">4.764***</td>
+<td style="text-align: left;">2.442***</td>
+<td style="text-align: left;">2.465***</td>
+<td style="text-align: left;">2.623***</td>
+<td style="text-align: left;">2.571***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.114)</td>
+<td style="text-align: left;">(1.330)</td>
+<td style="text-align: left;">(0.609)</td>
+<td style="text-align: left;">(0.599)</td>
+<td style="text-align: left;">(0.611)</td>
+<td style="text-align: left;">(0.663)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">hirat</td>
+<td style="text-align: left;">-0.048</td>
+<td style="text-align: left;">-0.110</td>
+<td style="text-align: left;">-0.189</td>
+<td style="text-align: left;">-0.307</td>
+<td style="text-align: left;">-0.508</td>
+<td style="text-align: left;">-0.539</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.110)</td>
+<td style="text-align: left;">(1.296)</td>
+<td style="text-align: left;">(0.675)</td>
+<td style="text-align: left;">(0.675)</td>
+<td style="text-align: left;">(0.697)</td>
+<td style="text-align: left;">(0.743)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">chist</td>
+<td style="text-align: left;">0.031***</td>
+<td style="text-align: left;">0.291***</td>
+<td style="text-align: left;">0.155***</td>
+<td style="text-align: left;">0.158***</td>
+<td style="text-align: left;">0.345***</td>
+<td style="text-align: left;">0.158***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.005)</td>
+<td style="text-align: left;">(0.039)</td>
+<td style="text-align: left;">(0.021)</td>
+<td style="text-align: left;">(0.021)</td>
+<td style="text-align: left;">(0.106)</td>
+<td style="text-align: left;">(0.021)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">mhist</td>
+<td style="text-align: left;">0.021*</td>
+<td style="text-align: left;">0.280**</td>
+<td style="text-align: left;">0.148**</td>
+<td style="text-align: left;">0.111</td>
+<td style="text-align: left;">0.163</td>
+<td style="text-align: left;">0.112</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.011)</td>
+<td style="text-align: left;">(0.138)</td>
+<td style="text-align: left;">(0.073)</td>
+<td style="text-align: left;">(0.076)</td>
+<td style="text-align: left;">(0.102)</td>
+<td style="text-align: left;">(0.076)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">phist</td>
+<td style="text-align: left;">0.197***</td>
+<td style="text-align: left;">1.223***</td>
+<td style="text-align: left;">0.696***</td>
+<td style="text-align: left;">0.701***</td>
+<td style="text-align: left;">0.716***</td>
+<td style="text-align: left;">0.703***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.035)</td>
+<td style="text-align: left;">(0.203)</td>
+<td style="text-align: left;">(0.115)</td>
+<td style="text-align: left;">(0.116)</td>
+<td style="text-align: left;">(0.117)</td>
+<td style="text-align: left;">(0.116)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">insurance</td>
+<td style="text-align: left;">0.702***</td>
+<td style="text-align: left;">4.547***</td>
+<td style="text-align: left;">2.556***</td>
+<td style="text-align: left;">2.584***</td>
+<td style="text-align: left;">2.588***</td>
+<td style="text-align: left;">2.589***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.045)</td>
+<td style="text-align: left;">(0.575)</td>
+<td style="text-align: left;">(0.298)</td>
+<td style="text-align: left;">(0.294)</td>
+<td style="text-align: left;">(0.298)</td>
+<td style="text-align: left;">(0.294)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">selfemp</td>
+<td style="text-align: left;">0.060***</td>
+<td style="text-align: left;">0.668***</td>
+<td style="text-align: left;">0.360***</td>
+<td style="text-align: left;">0.347***</td>
+<td style="text-align: left;">0.343***</td>
+<td style="text-align: left;">0.348***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;">(0.021)</td>
+<td style="text-align: left;">(0.213)</td>
+<td style="text-align: left;">(0.113)</td>
+<td style="text-align: left;">(0.115)</td>
+<td style="text-align: left;">(0.115)</td>
+<td style="text-align: left;">(0.115)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">single</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.229***</td>
+<td style="text-align: left;">0.230***</td>
+<td style="text-align: left;">0.225***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.080)</td>
+<td style="text-align: left;">(0.085)</td>
+<td style="text-align: left;">(0.080)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">hschool</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.613***</td>
+<td style="text-align: left;">-0.604**</td>
+<td style="text-align: left;">-0.620***</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.231)</td>
+<td style="text-align: left;">(0.236)</td>
+<td style="text-align: left;">(0.231)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">unemp</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0.030*</td>
+<td style="text-align: left;">0.028</td>
+<td style="text-align: left;">0.030</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.018)</td>
+<td style="text-align: left;">(0.018)</td>
+<td style="text-align: left;">(0.018)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">I(mhist == 3)[T.True]</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.106</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.292)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">I(mhist == 4)[T.True]</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.382</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.427)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">I(chist == 3)[T.True]</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.226</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.242)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">I(chist == 4)[T.True]</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.251</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.335)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">I(chist == 5)[T.True]</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.791*</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.407)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">I(chist == 6)[T.True]</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.907*</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.508)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">condomin</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.054</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(0.093)</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">black:pirat</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">-0.575</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(1.472)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">black:hirat</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">1.211</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">(1.692)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
+<td style="text-align: left;">0.266</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
+<td style="text-align: left;">0.263</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">AIC</td>
+<td style="text-align: left;">684.04</td>
+<td style="text-align: left;">1292.65</td>
+<td style="text-align: left;">1295.14</td>
+<td style="text-align: left;">1284.68</td>
+<td style="text-align: left;">1291.55</td>
+<td style="text-align: left;">1288.14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">BIC</td>
+<td style="text-align: left;">747.56</td>
+<td style="text-align: left;">1356.18</td>
+<td style="text-align: left;">1358.66</td>
+<td style="text-align: left;">1365.53</td>
+<td style="text-align: left;">1412.83</td>
+<td style="text-align: left;">1380.54</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" data-quarto-table-cell-role="th">Log-Likelihood</td>
+<td style="text-align: left;">-331.02</td>
+<td style="text-align: left;">-635.33</td>
+<td style="text-align: left;">-636.57</td>
+<td style="text-align: left;">-628.34</td>
+<td style="text-align: left;">-624.78</td>
+<td style="text-align: left;">-628.07</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" data-quarto-table-cell-role="th">N</td>
+<td style="text-align: left;">2380</td>
+<td style="text-align: left;">2380</td>
+<td style="text-align: left;">2380</td>
+<td style="text-align: left;">2380</td>
+<td style="text-align: left;">2380</td>
+<td style="text-align: left;">2380</td>
+</tr>
+</tbody>
+</table>
+<br>
+Standard errors in parentheses.<br>
+* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Below, we summarize the main results from the estimation results in <a href="#tbl-t18-8" class="quarto-xref">Table&nbsp;<span>21.8</span></a>:</p>
+<ul>
+<li><p>We start with the linear probability model. An increase in the consumer credit score by 1 unit is estimated to increase the probability of a loan denial by approximately 0.031 percentage points. Having a high loan-to-value ratio increases the probability of denial: the coefficient for <code>lvrat_high</code> is 0.19. Thus, clients in this group are estimated to have a nearly 19% higher probability of denial than those in <code>lvrat_low</code>, ceteris paribus. Apart from the housing-expense-to-income ratio (<code>hirat</code>) and the mortgage credit score (<code>mhist</code>), all estimated coefficients are statistically significant. The estimated coefficient on the race dummy is 0.083, indicating that the denial probability for African American applicants is 8.3% higher than that for white applicants with the same characteristics.</p></li>
+<li><p>The logit results in (2) and the probit results in (3) provide similar evidence of racial parity in the mortgage market, as the estimated coefficients on <code>black</code> are statistically significant at the 5% level in both models. All other coefficients, except for the coefficient for the housing expense-to-income ratio (which is not significantly different from zero), are statistically significant at the 5% level.</p></li>
+<li><p>We cannot directly compare the coefficient estimates from (2)–(6) with those in (1). In order to make a statement about the effect of being non-white, we need to compute the estimated denial probability for two individuals that differ only in race. For the comparison, we consider two individuals that share mean values for all numeric regressors. For the qualitative variables, we assign the property that is most representative for the data at hand. For example, consider self-employment: 88% of all individuals in the sample are not self-employed (<code>selfemp=0</code>). We can use the following code chunk to compute the difference in the predicted denial probability for a white and a black applicant.</p></li>
+</ul>
+<div id="686acaed" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimated difference in denial probabilities</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>X_new <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    {<span class="st">'black'</span>:[<span class="dv">0</span>, <span class="dv">1</span>],</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>     <span class="st">'pirat'</span>: [df[<span class="st">'pirat'</span>].mean(), df[<span class="st">'pirat'</span>].mean()],</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>     <span class="st">'hirat'</span>: [df[<span class="st">'hirat'</span>].mean(), df[<span class="st">'hirat'</span>].mean()], </span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>     <span class="st">'lvrat_s'</span>: [<span class="st">'medium'</span>, <span class="st">'medium'</span>],</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>     <span class="st">'chist'</span>: [df[<span class="st">'chist'</span>].mean(), df[<span class="st">'chist'</span>].mean()], </span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>     <span class="st">'mhist'</span>: [df[<span class="st">'mhist'</span>].mean(), df[<span class="st">'mhist'</span>].mean()], </span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>     <span class="st">'phist'</span>: [<span class="dv">0</span>, <span class="dv">0</span>], <span class="st">'insurance'</span>: [<span class="dv">0</span>, <span class="dv">0</span>],</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>     <span class="st">'selfemp'</span>: [<span class="dv">0</span>, <span class="dv">0</span>], <span class="st">'single'</span>: [<span class="dv">0</span>, <span class="dv">0</span>],</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>     <span class="st">'hschool'</span>: [<span class="dv">1</span>, <span class="dv">1</span>], </span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>     <span class="st">'unemp'</span>: [df[<span class="st">'unemp'</span>].mean(), df[<span class="st">'unemp'</span>].mean()],</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>     <span class="st">'condomin'</span>:[<span class="dv">0</span>, <span class="dv">0</span>]}</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>pp <span class="op">=</span> [np.diff(model1.predict(X_new))[<span class="dv">0</span>], np.diff(model2.predict(X_new))[<span class="dv">0</span>], </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>np.diff(model3.predict(X_new))[<span class="dv">0</span>], np.diff(model4.predict(X_new))[<span class="dv">0</span>], </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>np.diff(model5.predict(X_new))[<span class="dv">0</span>], np.diff(model6.predict(X_new))[<span class="dv">0</span>]]</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(pp, columns<span class="op">=</span>[<span class="st">'Difference in denial probability'</span>], index<span class="op">=</span>[<span class="st">'Model 1'</span>, <span class="st">'Model 2'</span>, <span class="st">'Model 3'</span>, <span class="st">'Model 4'</span>, <span class="st">'Model 5'</span>, <span class="st">'Model 6'</span>]).<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t18-9" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="30">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t18-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;21.9: Estimated difference in denial probabilities
+</figcaption>
+<div aria-describedby="tbl-t18-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="30">
+<div>
+
+
+<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Difference in denial probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Model 1</td>
+<td>0.083</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Model 2</td>
+<td>0.060</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Model 3</td>
+<td>0.068</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Model 4</td>
+<td>0.055</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Model 5</td>
+<td>0.066</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Model 6</td>
+<td>0.055</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li><p>The estimated differences in denial probabilities are reported in <a href="#tbl-t18-9" class="quarto-xref">Table&nbsp;<span>21.9</span></a>. The results indicate that the denial probability difference between white and black applicants is approximately <span class="math inline">\(8.3\%\)</span> in Model 1, <span class="math inline">\(6\%\)</span> in Model 2, <span class="math inline">\(6.8\%\)</span> in Model 3, <span class="math inline">\(5.5\%\)</span> in Model 4, <span class="math inline">\(6.6\%\)</span> in Model 5, and <span class="math inline">\(5.5%\)</span> in Model 6. Overall, the estimated difference ranges from <span class="math inline">\(6\%\)</span> to <span class="math inline">\(8.3\%\)</span> in the U.S. mortgage market.</p></li>
+<li><p>In Model 5, the estimated coefficients for the dummies for <code>mhist</code> and <code>chist</code>, as well as the estimated coefficient for the <code>condomin</code> dummy, are not statistically significant at the 5% level.</p></li>
+<li><p>An interesting question related to racial parity can be investigated using Model 6. If the coefficient on <code>black:pirat</code> was different from zero, the effect of the payment-to-income ratio on the denial probability would be different for black and white applicants. Similarly, a non-zero coefficient on <code>black:hirat</code> would indicate that loan officers weight the risk of bankruptcy associated with a high loan-to-value ratio differently for black and white mortgage applicants. We will test for the joint significance of these two variables. Note that under the joint null hypothesis (the restricted model), we have Model 4. We can use the F-statistic to test the null hypothesis that the coefficients on <code>black:pirat</code> and <code>black:hirat</code> are jointly equal to zero. The following code chunk can be used to perform the test.</p></li>
+</ul>
+<div id="b36890d7" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># F-test for joint significance of black:pirat and black:hirat</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>hypotheses <span class="op">=</span> [<span class="st">'black:pirat=0'</span>, <span class="st">'black:hirat=0'</span>]</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>f_test <span class="op">=</span> model6.f_test(hypotheses)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;F test: F=0.25835294661113933, p=0.7723443985897998, df_denom=2.36e+03, df_num=2&gt;</code></pre>
+</div>
+</div>
+<p>According to the test result, we fail to reject the joint null hypothesis that the coefficients on <code>black:pirat</code> and <code>black:hirat</code> are jointly equal to zero at the 5% significance level.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Hansen2022" class="csl-entry" role="listitem">
+Hansen, Bruce. 2022. <em>Econometrics</em>. Princeton University Press.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Chapter10-RegressionPanelData.html" class="pagination-link" aria-label="Regression with Panel Data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Chapter12-IVRegression.html" class="pagination-link" aria-label="Instrumental Variables Regression">
+        <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter11-BinaryDependentVariable.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

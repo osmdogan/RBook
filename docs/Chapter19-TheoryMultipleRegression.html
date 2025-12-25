@@ -1,0 +1,2004 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>29&nbsp; The Theory of Multiple Regression – Introduction to Econometrics with Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./AppendixA.html" rel="next">
+<link href="./Chapter18-TheoryRegression.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part5-TheoreticalTopics.html">Theoretical Topics</a></li><li class="breadcrumb-item"><a href="./Chapter19-TheoryMultipleRegression.html"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Econometrics with Python</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part0-Python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroPython.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroNumpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-ControlStructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Control Structures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-CustomFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Custom Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-StatFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Statistical Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Pandas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-NumericalAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Applications in Numerical Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-SymbolicMath.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Symbolic Computing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and Review</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentals of Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Further Topics in Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Analysis of Economic Time Series Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theoretical Topics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">29.1</span> Introduction</a></li>
+  <li><a href="#the-ols-estimator-in-matrix-form" id="toc-the-ols-estimator-in-matrix-form" class="nav-link" data-scroll-target="#the-ols-estimator-in-matrix-form"><span class="header-section-number">29.2</span> The OLS estimator in matrix form</a></li>
+  <li><a href="#algebraic-properties-of-the-ols-estimator" id="toc-algebraic-properties-of-the-ols-estimator" class="nav-link" data-scroll-target="#algebraic-properties-of-the-ols-estimator"><span class="header-section-number">29.3</span> Algebraic properties of the OLS estimator</a></li>
+  <li><a href="#goodness-of-fit" id="toc-goodness-of-fit" class="nav-link" data-scroll-target="#goodness-of-fit"><span class="header-section-number">29.4</span> Goodness of fit</a></li>
+  <li><a href="#asymptotic-distribution-of-the-ols-estimator" id="toc-asymptotic-distribution-of-the-ols-estimator" class="nav-link" data-scroll-target="#asymptotic-distribution-of-the-ols-estimator"><span class="header-section-number">29.5</span> Asymptotic distribution of the OLS estimator</a></li>
+  <li><a href="#exact-sampling-distribution-of-the-ols-estimator" id="toc-exact-sampling-distribution-of-the-ols-estimator" class="nav-link" data-scroll-target="#exact-sampling-distribution-of-the-ols-estimator"><span class="header-section-number">29.6</span> Exact sampling distribution of the OLS estimator</a></li>
+  <li><a href="#efficiency-of-the-ols-estimator-with-homoskedastic-errors" id="toc-efficiency-of-the-ols-estimator-with-homoskedastic-errors" class="nav-link" data-scroll-target="#efficiency-of-the-ols-estimator-with-homoskedastic-errors"><span class="header-section-number">29.7</span> Efficiency of the OLS estimator with homoskedastic errors</a></li>
+  <li><a href="#control-variables-and-the-conditional-mean-independence-assumption" id="toc-control-variables-and-the-conditional-mean-independence-assumption" class="nav-link" data-scroll-target="#control-variables-and-the-conditional-mean-independence-assumption"><span class="header-section-number">29.8</span> Control variables and the conditional mean independence assumption</a></li>
+  <li><a href="#generalized-least-squares-estimation" id="toc-generalized-least-squares-estimation" class="nav-link" data-scroll-target="#generalized-least-squares-estimation"><span class="header-section-number">29.9</span> Generalized least squares estimation</a></li>
+  <li><a href="#instrumental-variables-and-generalized-method-of-moments-estimation" id="toc-instrumental-variables-and-generalized-method-of-moments-estimation" class="nav-link" data-scroll-target="#instrumental-variables-and-generalized-method-of-moments-estimation"><span class="header-section-number">29.10</span> Instrumental variables and generalized method of moments estimation</a>
+  <ul class="collapse">
+  <li><a href="#the-tsls-estimator" id="toc-the-tsls-estimator" class="nav-link" data-scroll-target="#the-tsls-estimator"><span class="header-section-number">29.10.1</span> The TSLS estimator</a></li>
+  <li><a href="#the-class-of-iv-estimators" id="toc-the-class-of-iv-estimators" class="nav-link" data-scroll-target="#the-class-of-iv-estimators"><span class="header-section-number">29.10.2</span> The class of IV estimators</a></li>
+  <li><a href="#generalized-method-of-moments" id="toc-generalized-method-of-moments" class="nav-link" data-scroll-target="#generalized-method-of-moments"><span class="header-section-number">29.10.3</span> Generalized method of moments</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter19-TheoryMultipleRegression.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part5-TheoreticalTopics.html">Theoretical Topics</a></li><li class="breadcrumb-item"><a href="./Chapter19-TheoryMultipleRegression.html"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-chapter26" class="quarto-section-identifier"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="7d23d8c0" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">'seaborn-v0_8-darkgrid'</span>)  </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> multivariate_normal</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduction" class="level2" data-number="29.1">
+<h2 data-number="29.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">29.1</span> Introduction</h2>
+<p>In this chapter, we use matrix algebra to introduce multiple linear regression models and the OLS estimator. We then examine its algebraic properties in matrix form and derive both its asymptotic and exact sampling distributions. We also discuss the asymptotic and exact sampling distributions of the <span class="math inline">\(t\)</span> and <span class="math inline">\(F\)</span> statistics. Next, we extend our analysis to the generalized least squares (GLS) and feasible generalized least squares (FGLS) estimators. Finally, we present the instrumental variables (IV) and generalized method of moments (GMM) estimators, along with their asymptotic distributions.</p>
+<p>We use matrix notation extensively throughout this chapter. In Appendix D, we provide a brief introduction to matrix algebra, including matrix operations, determinants, inverse matrix, rank, eigenvalues/eigenvectors, matrix square roots, and matrix norms. We also provide a brief introduction to the properties of quadratic forms, vector calculus, and random vectors. We assume that the reader is familiar with the material in this appendix.</p>
+</section>
+<section id="the-ols-estimator-in-matrix-form" class="level2" data-number="29.2">
+<h2 data-number="29.2" class="anchored" data-anchor-id="the-ols-estimator-in-matrix-form"><span class="header-section-number">29.2</span> The OLS estimator in matrix form</h2>
+<p>The multiple linear regression model with <span class="math inline">\(k\)</span> regressors is given by <span id="eq-eq26-1"><span class="math display">\[
+\begin{align}
+Y_i=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}+u_i,\,i=1,2,\ldots,n,
+\end{align}
+\tag{29.1}\]</span></span> where <span class="math inline">\(Y_i\)</span> is the dependent variable, <span class="math inline">\(X_{ji}\)</span> is the <span class="math inline">\(j\)</span>th regressor, <span class="math inline">\(\beta_j\)</span> is the <span class="math inline">\(j\)</span>th regression coefficient, and <span class="math inline">\(u_i\)</span> is the error term. To express the model in matrix form, we define the following vectors and matrices: <span class="math display">\[
+\begin{align*}
+\bs{Y}=
+\begin{pmatrix}
+Y_1\\
+Y_2\\
+\vdots\\
+Y_n
+\end{pmatrix}
+,\,\bs{U}=
+\begin{pmatrix}
+u_1\\
+u_2\\
+\vdots\\
+u_n
+\end{pmatrix},
+\,
+\bs{\beta}=
+\begin{pmatrix}
+\beta_0\\
+\beta_1\\
+\vdots\\
+\beta_k
+\end{pmatrix},
+\,\text{and}\,
+\bs{X}=
+\begin{pmatrix}
+1&amp;X_{11}&amp;\cdots&amp;X_{k1}\\
+1&amp;X_{12}&amp;\cdots&amp;X_{k2}\\
+\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+1&amp;X_{1n}&amp;\cdots&amp;X_{kn}
+\end{pmatrix}.
+\end{align*}
+\]</span> Note that</p>
+<ul>
+<li><span class="math inline">\(\bs{Y}\)</span> is the <span class="math inline">\(n\times1\)</span> vector of observations on the dependent variable,</li>
+<li><span class="math inline">\(\bs{X}\)</span> is the <span class="math inline">\(n \times (k + 1)\)</span> matrix of observations on the <span class="math inline">\(k + 1\)</span> regressors (including intercept term)</li>
+<li><span class="math inline">\(\bs{U}\)</span> is the <span class="math inline">\(n\times 1\)</span> vector of the error terms, and</li>
+<li><span class="math inline">\(\bs{\beta}\)</span> is the <span class="math inline">\((k + 1) \times 1\)</span> vector of the <span class="math inline">\(k + 1\)</span> unknown regression coefficients.</li>
+</ul>
+<p>The first column of <span class="math inline">\(\bs{X}\)</span> is a column of ones, which corresponds to the intercept term <span class="math inline">\(\beta_0\)</span>. The remaining columns of <span class="math inline">\(\bs{X}\)</span> correspond to the <span class="math inline">\(k\)</span> regressors. We can alternatively express <span class="math inline">\(\bs{X}\)</span> in two different ways. First, we can express <span class="math inline">\(\bs{X}\)</span> as <span class="math display">\[
+\begin{align*}
+\bs{X}=
+\begin{pmatrix}
+1&amp;X_{11}&amp;\cdots&amp;X_{k1}\\
+1&amp;X_{12}&amp;\cdots&amp;X_{k2}\\
+\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+1&amp;X_{1n}&amp;\cdots&amp;X_{kn}
+\end{pmatrix}
+=\begin{pmatrix}
+\bs{X}^{'}_{1}\\
+\bs{X}^{'}_{2}\\
+\vdots\\
+\bs{X}^{'}_{n}
+\end{pmatrix},
+\end{align*}
+\]</span> where <span class="math inline">\(\bs{X}_i\)</span> is the <span class="math inline">\((k+1)\times1\)</span> column vector formulated from the <span class="math inline">\(i\)</span>th row, i.e., <span class="math inline">\(\bs{X}_i = (1, X_{1i},\cdots,X_{ki})^{'}\)</span> for <span class="math inline">\(i=1,\ldots,n\)</span>. Second, we can express <span class="math inline">\(\bs{X}\)</span> as <span class="math display">\[
+\begin{align*}
+\bs{X}=
+\begin{pmatrix}
+1&amp;X_{11}&amp;\cdots&amp;X_{k1}\\
+1&amp;X_{12}&amp;\cdots&amp;X_{k2}\\
+\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+1&amp;X_{1n}&amp;\cdots&amp;X_{kn}
+\end{pmatrix}
+=\begin{pmatrix}
+\bs{l}_n&amp;\bs{X}_{1}&amp;\bs{X}_{2}&amp;\cdots&amp; \bs{X}_{k}
+\end{pmatrix},
+\end{align*}
+\]</span> where <span class="math inline">\(\bs{l}_n\)</span> is the <span class="math inline">\(n\times 1\)</span> column vector of ones, and <span class="math inline">\(\bs{X}_j\)</span> is the <span class="math inline">\(n\times 1\)</span> column vector formulated from the <span class="math inline">\(j\)</span>th column, i.e., <span class="math inline">\(\bs{X}_j=(X_{j1},\ldots,X_{jn})^{'}\)</span> for <span class="math inline">\(j=1,\ldots,k\)</span>.</p>
+<p>Using <span class="math inline">\(\bs{X}_i\)</span> and <span class="math inline">\(\bs{\beta}\)</span>, we can express the model for the <span class="math inline">\(i\)</span>th observation as <span id="eq-eq26-2"><span class="math display">\[
+\begin{align}
+Y_i=\bs{X}^{'}_i\bs{\beta}+u_i,\,i=1,\ldots,n.
+\end{align}
+\tag{29.2}\]</span></span> Stacking <a href="#eq-eq26-2" class="quarto-xref">Equation&nbsp;<span>29.2</span></a> across <span class="math inline">\(i\)</span>, we can write the multiple regression model in matrix form as <span id="eq-eq26-3"><span class="math display">\[
+\begin{align}
+\bs{Y}=\bs{X}\bs{\beta}+\bs{U}.
+\end{align}
+\tag{29.3}\]</span></span></p>
+<p>We consider the model under Assumptions 1-6 given in the following callout block.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The extended least squares assumptions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Zero-conditional mean assumption</strong>: <span class="math inline">\(\E(u_i |\bs{X}_i) = 0\)</span>, i.e., the conditional distribution of <span class="math inline">\(u_i\)</span> given <span class="math inline">\(\bs{X}_i\)</span> has zero mean.</li>
+<li><strong>Random sampling assumption</strong>: <span class="math inline">\((\bs{X}_i, Y_i)\)</span>, <span class="math inline">\(i =1,2,\ldots,n\)</span>, are independently and identically distributed (i.i.d.) across observations.</li>
+<li><strong>No large outliers assumption</strong>: <span class="math inline">\(\bs{X}_i\)</span> and <span class="math inline">\(u_i\)</span> have nonzero finite fourth moments.</li>
+<li><strong>No perfect multicollinearity</strong>: <span class="math inline">\(\bs{X}\)</span> has full column rank, i.e., <span class="math inline">\(\text{rank}(\bs{X})=k+1\)</span>.</li>
+<li><strong>Homoskedasticity assumption</strong>: <span class="math inline">\(\text{Var}(u_i|\bs{X}_i)=\sigma^2_u\)</span>, where <span class="math inline">\(\sigma^2_u\)</span> is a scalar unknown parameter.</li>
+<li><strong>Normal distribution assumption</strong>: <span class="math inline">\(u_i|\bs{X}_i\sim N(0,\sigma^2_u)\)</span>.</li>
+</ol>
+</div>
+</div>
+<p>The first three assumptions are the same as those used in the simple and multiple linear regression models covered in <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 14</span></a> and <a href="Chapter6-MultipleRegression.html" class="quarto-xref"><span>Chapter 16</span></a>. Note that Assumption 3 also suggests that <span class="math inline">\(\E[Y^4_i]=\E[(\bs{X}^{'}_i\bs{\beta}+u_i)^4]&lt;\infty\)</span>. Assumption 4 corresponds to the no-perfect-multicollinearity assumption in the multiple linear regression model. This assumption requires that the columns of <span class="math inline">\(\bs{X}\)</span> are linearly independent; that is, we can not express any column of <span class="math inline">\(\bs{X}\)</span> as a linear combination of the other columns. Thus, the full column rank condition rules out perfect multicollinearity. The homoskedasticity assumption requires that the variance of the error term is constant across observations and is necessary for studying the efficiency of the OLS estimator. The normality assumption is required to derive the exact sampling distribution of the OLS estimator and test statistics. As we discuss in <a href="Chapter18-TheoryRegression.html" class="quarto-xref"><span>Chapter 28</span></a>, we do not need neither the homoskedasticity nor the normality assumption to show that the OLS estimator is consistent and have asymptotic normal distribution.</p>
+<p>What are the conditional mean and variance of <span class="math inline">\(\bs{U}\)</span>? Under Assumptions 1 and 2, we can express <span class="math inline">\(\E(\bs{U}|\bs{X})\)</span> as <span class="math display">\[
+\begin{align*}
+\E(\bs{U}|\bs{X})=\E\left(\begin{pmatrix}
+u_1\\
+u_2\\
+\vdots\\
+u_n
+\end{pmatrix}|\bs{X}\right)
+=\begin{pmatrix}
+\E(u_1|\bs{X})\\
+\E(u_2|\bs{X})\\
+\vdots\\
+\E(u_n|\bs{X})
+\end{pmatrix}
+=\begin{pmatrix}
+\E(u_1|\bs{X}_1)\\
+\E(u_2|\bs{X}_2)\\
+\vdots\\
+\E(u_n|\bs{X}_n)
+\end{pmatrix}
+=\bs{0},
+\end{align*}
+\]</span> where the third equality follows from Assumption 2. Under Assumptions 1, 2, and 5, we have <span class="math display">\[
+\begin{align*}
+\text{var}(\bs{U}|\bs{X})=\E\left((\bs{U}-\bs{\mu}_{\bs{U}})(\bs{U}-\bs{\mu}_{\bs{U}})^{'}|\bs{X}\right)=\E\left(\bs{U}\bs{U}^{'}|\bs{X}\right) = \sigma^2_u\bs{I}_n,
+\end{align*}
+\]</span> where <span class="math inline">\(\bs{I}_n\)</span> is the <span class="math inline">\(n \times n\)</span> identity matrix. Thus, under Assumption 6, we have <span class="math display">\[
+\begin{align}\label{e4}
+\bs{U}|\bs{X}\sim N(\bs{0},\sigma^2_u\bs{I}_n).
+\end{align}
+\]</span></p>
+<p>The OLS estimator minimizes the sum of squared prediction errors <span class="math inline">\(\sum_{i=1}^n(Y_i-\bs{X}^{'}_i\bs{b})^{2}\)</span>, where <span class="math inline">\(\bs{b}\)</span> is a <span class="math inline">\((k+1)\times1\)</span> vector of coefficients. Thus, the OLS estimator is defined by <span id="eq-eq26-4"><span class="math display">\[
+\begin{align}
+\hat{\bs{\beta}}=\argmin_{\bs{b}}\;\sum_{i=1}^n(Y_i-\bs{X}^{'}_i\bs{b})^{2}=\argmin_{\bs{b}}\;(\bs{Y}-\bs{X}\bs{b})^{'}(\bs{Y}-\bs{X}\bs{b}).
+\end{align}
+\tag{29.4}\]</span></span></p>
+<p>Let <span class="math inline">\(\mathcal{S}(\bs{b})=(\bs{Y}-\bs{X}\bs{b})^{'}(\bs{Y}-\bs{X}\bs{b})\)</span>. The first-order condition for a minimum is <span id="eq-eq26-5"><span class="math display">\[
+\begin{align}
+\frac{\partial\mathcal{S}(\bs{b})}{\partial\bs{b}}=-2\bs{X}^{'}\bs{Y}+2\bs{X}^{'}\bs{X}\bs{b}=\bs{0}.
+\end{align}
+\tag{29.5}\]</span></span> We can solve <a href="#eq-eq26-5" class="quarto-xref">Equation&nbsp;<span>29.5</span></a> for <span class="math inline">\(\bs{b}\)</span> if <span class="math inline">\(\bs{X}^{'}\bs{X}\)</span> is invertible. Since <span class="math inline">\(\bs{X}\)</span> has full column rank by Assumption 4, <span class="math inline">\(\bs{X}^{'}\bs{X}\)</span> is invertible and we can derive the OLS estimator as <span id="eq-eq26-6"><span class="math display">\[
+\begin{align}
+\hat{\bs{\beta}}=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}.
+\end{align}
+\tag{29.6}\]</span></span></p>
+<p>To see that this solution is the global minimum, we need to show that <span class="math inline">\(\mathcal{S}(\bs{b})\)</span> is strictly convex. To that end, it suffices to show that the matrix of second-order derivatives (the Hessian matrix) is positive definite. The Hessian matrix is given by <span id="eq-eq26-7"><span class="math display">\[
+\begin{align}
+\frac{\partial^2\mathcal{S}(\bs{b})}{\partial\bs{b}\partial\bs{b}^{'}} = 2\bs{X}^{'}\bs{X},
+\end{align}
+\tag{29.7}\]</span></span> which must be positive definite. Let <span class="math inline">\(\bs{c}\)</span> be an arbitrary <span class="math inline">\((k+1)\times 1\)</span> nonzero vector, and define <span class="math inline">\(\bs{v}=\bs{X}\bs{c}\)</span>. Then, <span class="math display">\[
+\begin{align}
+\bs{c}^{'}\bs{X}^{'}\bs{X}\bs{c}=\bs{v}^{'}\bs{v}=\sum_{i=1}^n v_i^2,
+\end{align}
+\]</span> which equals zero only if <span class="math inline">\(v_i=0\)</span> for <span class="math inline">\(i=1,\ldots,n\)</span>. This can happen only if the columns of <span class="math inline">\(\bs{X}\)</span> are linearly dependent. However, this contradicts the assumption that <span class="math inline">\(\bs{X}\)</span> has full column rank. Hence, <span class="math inline">\(\sum_{i=1}^n v_i^2 &gt; 0\)</span>, showing that <span class="math inline">\(\bs{X}^{'}\bs{X}\)</span> is positive definite.</p>
+</section>
+<section id="algebraic-properties-of-the-ols-estimator" class="level2" data-number="29.3">
+<h2 data-number="29.3" class="anchored" data-anchor-id="algebraic-properties-of-the-ols-estimator"><span class="header-section-number">29.3</span> Algebraic properties of the OLS estimator</h2>
+<p>In this section, we show some algebraic properties of the OLS estimator. The first property states that <span class="math inline">\(\bs{X}\)</span> is orthogonal to the residuals by construction. That is, the inner product of each column of <span class="math inline">\(\bs{X}\)</span> with <span class="math inline">\(\hat{\bs{U}}\)</span> is zero, meaning they form a right angle. This can be shown as follows. <span id="eq-eq26-8"><span class="math display">\[
+\begin{align}
+\bs{X}^{'}\hat{\bs{U}}&amp;=\bs{X}^{'}(\bs{Y}-\bs{X}\hat{\bs{\beta}})=\bs{X}^{'}\bs{Y}-\bs{X}^{'}\bs{X}\hat{\bs{\beta}}\\
+&amp;=\bs{X}^{'}\bs{Y}-\bs{X}^{'}\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}=\bs{X}^{'}\bs{Y}-\bs{X}^{'}\bs{Y}=\bs{0}.
+\end{align}
+\tag{29.8}\]</span></span></p>
+<p>The second algebraic property is that the least-squares residuals sum to zero. Let <span class="math inline">\(\bs{l}_n\)</span> be the column vector of ones. Then, we can express <span class="math inline">\(\bs{X}^{'}\hat{\bs{U}}\)</span> as <span class="math display">\[
+\begin{align*}
+\bs{X}^{'}\hat{\bs{U}}=\big(\bs{l}_n,\bs{X}_1,\ldots,\bs{X}_k\big)^{'}\hat{\bs{U}}=
+\left(\begin{array}{c}
+\bs{l}^{'}_n\hat{\bs{U}}\\
+\bs{X}_1^{'}\hat{\bs{U}}\\
+\vdots\\
+\bs{X}_k^{'}\hat{\bs{U}}\\
+\end{array}\right)=\bs{0}.
+\end{align*}
+\]</span> where the last equality follows from the fact that <span class="math inline">\(\bs{X}^{'}\hat{\bs{U}}=\bs{0}\)</span>. The first row of the above equation gives us <span class="math inline">\(\bs{l}^{'}_n\hat{\bs{U}}=\sum_{i=1}^n\hat{u}_i\)</span>, which is the sum of least squares residuals and equals zero.</p>
+<p>The third property states that the regression hyperplane passes through the data means: <span class="math inline">\(\bar{\bs{Y}}=\bar{\bs{X}}\hat{\bs{\beta}}\)</span>. From <a href="#eq-eq26-5" class="quarto-xref">Equation&nbsp;<span>29.5</span></a>, we have <span class="math inline">\(\bs{X}^{'}\bs{Y}=\bs{X}^{'}\bs{X}\hat{\bs{\beta}}\)</span>, which can be expressed as <span class="math display">\[
+\begin{align*}
+\left(\begin{array}{c}
+\bs{l}^{'}_n\\
+\bs{X}_1^{'}\\
+\vdots\\
+\bs{X}_k^{'}\\
+\end{array}\right)\bs{Y}=
+\left(\begin{array}{c}
+\bs{l}^{'}_n\\
+\bs{X}_1^{'}\\
+\vdots\\
+\bs{X}_k^{'}\\
+\end{array}\right)\big(\bs{l}_n,\bs{X}_1,\ldots,\bs{X}_k\big)\hat{\bs{\beta}}.
+\end{align*}
+\]</span></p>
+<p>From the first row, we obtain <span class="math inline">\(\bs{l}^{'}_n\bs{Y}=\big(\bs{l}^{'}_n\bs{l}_n,\bs{l}^{'}_n\bs{X}_1,\ldots,\bs{l}^{'}_n\bs{X}_k\big)\hat{\bs{\beta}}\)</span>. Thus, <span class="math display">\[
+\begin{align*}
+\bar{Y}=\frac{1}{n}\bs{l}^{'}_n\bs{Y}=\big(\frac{1}{n}\bs{l}^{'}_n\bs{l}_n,\frac{1}{n}\bs{l}^{'}_n\bs{X}_1,\ldots,\frac{1}{n}\bs{l}^{'}_n\bs{X}_k\big)\hat{\bs{\beta}}=\bar{\bs{X}}\hat{\bs{\beta}}.
+\end{align*}
+\]</span></p>
+<p>The final property states that the mean of the fitted values (the mean of predicted values) equals the mean of the actual values: <span class="math inline">\(\bar{\hat{\bs{Y}}}=\bar{\bs{Y}}\)</span>. This property can be easily verified from <span class="math inline">\(\hat{\bs{Y}}=\bs{X}\hat{\bs{\beta}}\)</span>: <span class="math display">\[
+\begin{align*}
+\bar{\hat{\bs{Y}}}&amp;=\frac{1}{n}\bs{l}^{'}_n\bs{X}\hat{\bs{\beta}}=\frac{1}{n}\bs{l}^{'}_n\bs{X}\hat{\bs{\beta}}+\frac{1}{n}\bs{l}^{'}_n\hat{\bs{U}}\\
+&amp;=\frac{1}{n}\bs{l}^{'}_n\big(\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}}\big)=\frac{1}{n}\bs{l}^{'}_n\bs{Y}=\bar{\bs{Y}},
+\end{align*}
+\]</span> where the second equality follows from the fact that <span class="math inline">\(\bs{l}^{'}_n\hat{\bs{U}}=0\)</span>.</p>
+<p>We close this section by defining two useful projection matrices. From the definition of the least squares residuals, we have the following equation: <span class="math display">\[
+\begin{align*}
+\hat{\bs{U}}&amp;=\bs{Y}-\bs{X}\hat{\bs{\beta}}=\bs{Y}-\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}\\
+&amp;=\left(\bs{I}_n-\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\right)\bs{Y}=\bs{M}_{\bs{X}}\bs{Y},
+\end{align*}
+\]</span> where <span class="math inline">\(\bs{M}_{\bs{X}}=\left(\bs{I}_n-\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\right)\)</span>. This matrix is also called the residual maker matrix or annihilator matrix. It is symmetric and idempotent, i.e., <span class="math inline">\(\bs{M}_{\bs{X}}^{'}=\bs{M}_{\bs{X}}\)</span> and <span class="math inline">\(\bs{M}^{2}_{\bs{X}}=\bs{M}_{\bs{X}}\)</span>.</p>
+<p>There is another projection matrix that produces the fitted values <span class="math inline">\(\hat{\bs{Y}}\)</span> from the actual values. To see this, note that <span class="math display">\[
+\begin{align*}
+\hat{\bs{Y}}&amp;=\bs{Y}-\hat{\bs{U}}=\bs{Y}-\bs{M}_{\bs{X}}\bs{Y}=\big(\bs{I}_n-\bs{I}_n+\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\big)\bs{Y}\\
+&amp;=\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}=\bs{P}_{\bs{X}}\bs{Y},
+\end{align*}
+\]</span> where <span class="math inline">\(\bs{P}_{\bs{X}}=\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\)</span>. This matrix is also symmetric and idempotent.</p>
+<p>Note that <span class="math inline">\(\bs{P}_{\bs{X}}\bs{X}=\bs{X}\)</span>, <span class="math inline">\(\bs{M}_{\bs{X}}\bs{X}=\bs{0}\)</span>, and <span class="math inline">\(\bs{P}_{\bs{X}}\bs{M}_{\bs{X}}=\bs{0}\)</span>. Using <span class="math inline">\(\bs{M}_{\bs{X}}\)</span> and <span class="math inline">\(\bs{P}_{\bs{X}}\)</span>, we can derive the following useful results.</p>
+<ul>
+<li><p>We can decompose <span class="math inline">\(\bs{Y}\)</span> as <span class="math inline">\(\bs{Y}=\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}}=\bs{P}_{\bs{X}}\bs{Y}+\bs{M}_{\bs{X}}\bs{Y}\)</span>. In this decomposition, <span class="math inline">\(\bs{P}_{\bs{X}}\bs{Y}\)</span> is the projection of <span class="math inline">\(\bs{Y}\)</span> onto the space spanned by the columns of <span class="math inline">\(\bs{X}\)</span>, and <span class="math inline">\(\bs{M}_{\bs{X}}\bs{Y}\)</span> is the projection of <span class="math inline">\(\bs{Y}\)</span> onto the orthogonal complement of the column space of <span class="math inline">\(\bs{X}\)</span>. The two projections are orthogonal to each other because <span class="math inline">\(\bs{P}_{\bs{X}}\bs{M}_{\bs{X}}=\bs{0}\)</span>. Thus, the predicted values <span class="math inline">\(\hat{\bs{Y}}\)</span> and the residuals <span class="math inline">\(\hat{\bs{U}}\)</span> are orthogonal to each other, i.e., <span class="math inline">\(\hat{\bs{Y}}^{'}\hat{\bs{U}}=\bs{0}\)</span>.</p></li>
+<li><p>The sum of squared residuals can be expressed as <span class="math inline">\(\hat{\bs{U}}^{'}\hat{\bs{U}}=\bs{Y}^{'}\bs{M}_{\bs{X}}^{'}\bs{M}_{\bs{X}}\bs{Y} =\bs{Y}^{'}\bs{M}_{\bs{X}}^{'}\bs{Y}=\hat{\bs{U}}^{'}\bs{Y}\)</span>.</p></li>
+<li><p>Alternatively, we can express <span class="math inline">\(\hat{\bs{U}}^{'}\hat{\bs{U}}\)</span> as <span class="math display">\[
+\begin{align*}
+\hat{\bs{U}}^{'}\hat{\bs{U}}&amp;=(\bs{Y}-\bs{P}_{\bs{X}}\bs{Y})^{'}(\bs{Y}-\bs{P}_{\bs{X}}\bs{Y})\\
+&amp;=\bs{Y}^{'}\bs{Y}-\bs{Y}^{'}\bs{P}_{\bs{X}}^{'}\bs{Y}-\bs{Y}^{'}\bs{P}_{\bs{X}}\bs{Y}+\bs{Y}^{'}\bs{P}_{\bs{X}}^{'}\bs{P}_{\bs{X}}\bs{Y}\\
+&amp;=\bs{Y}^{'}\bs{Y}-\bs{Y}^{'}\bs{P}_{\bs{X}}^{'}\bs{P}_{\bs{X}}\bs{Y}\\
+&amp;=\bs{Y}^{'}\bs{Y}-\hat{\bs{\beta}}^{'}\bs{X}^{'}\bs{X}\hat{\bs{\beta}}.
+\end{align*}
+\]</span></p></li>
+</ul>
+</section>
+<section id="goodness-of-fit" class="level2" data-number="29.4">
+<h2 data-number="29.4" class="anchored" data-anchor-id="goodness-of-fit"><span class="header-section-number">29.4</span> Goodness of fit</h2>
+<p>The following symmetric idempotent matrix is useful for deriving the goodness of fit measures: <span class="math display">\[
+\begin{align*}
+\mb{M}_0&amp;=\bs{I}_n-\bs{l}_n(\bs{l}_n^{'}\bs{l}_n)^{-1}\bs{l}_n^{'}=\bs{I}_n-\frac{1}{n}\bs{l}_n\bs{l}_n^{'}\\
+&amp;=\begin{pmatrix}
+1-\frac{1}{n}&amp;-\frac{1}{n}&amp;\cdots&amp;-\frac{1}{n}\\
+-\frac{1}{n}&amp;1-\frac{1}{n}&amp;\cdots&amp;-\frac{1}{n}\\
+\vdots&amp;\vdots&amp;\ddots&amp;\vdots\\
+-\frac{1}{n}&amp;-\frac{1}{n}&amp;\cdots&amp;1-\frac{1}{n}\\
+\end{pmatrix}.
+\end{align*}
+\]</span></p>
+<p>This matrix is often called the deviation-from-the-mean matrix or the centering matrix. For example, <span class="math inline">\(\mb{M}_0\bs{Y}\)</span> is the column vector of deviations of its elements from its mean: <span class="math display">\[
+\begin{align*}
+\mb{M}_0\bs{Y}&amp;=\left(\bs{I}_n-\frac{1}{n}\bs{l}_n\bs{l}_n^{'}\right)\bs{Y}=\bs{Y}-\frac{1}{n}\bs{l}_n\bs{l}_n^{'}\bs{Y}\\
+&amp;=\bs{Y}-\frac{1}{n}\sum_{i=1}^n Y_i\bs{l}_n=\begin{pmatrix}
+Y_1-\bar{Y}\\
+Y_2-\bar{Y}\\
+\vdots\\
+Y_n-\bar{Y}
+\end{pmatrix}.
+\end{align*}
+\]</span></p>
+<p>Using <span class="math inline">\(\mb{M}_0\)</span>, we can express <span class="math inline">\(\bs{Y}=\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}}\)</span> as <span class="math display">\[
+\begin{align*}
+\mb{M}_0\bs{Y}=\mb{M}_0\bs{X}\hat{\bs{\beta}}+\mb{M}_0\hat{\bs{U}}
+=\mb{M}_0\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}},
+\end{align*}
+\]</span> where the second equality follows because <span class="math inline">\(\mb{M}_0\hat{\bs{U}}=\hat{\bs{U}}-\frac{1}{n}\bs{l}_n\bs{l}_n^{'}\hat{\bs{U}}=\hat{\bs{U}}\)</span> as <span class="math inline">\(\bs{l}_n^{'}\hat{\bs{U}}=\bs{0}\)</span>. Thus, we can write the sum of the squared deviations of the elements of <span class="math inline">\(\bs{Y}\)</span> from its mean as <span class="math display">\[
+\begin{align*}
+(\mb{M}_0\bs{Y})^{'}\mb{M}_0\bs{Y}&amp;=\bs{Y}^{'}\mb{M}_0\bs{Y}=(\mb{M}_0\bs{X}
+\hat{\bs{\beta}}+\hat{\bs{U}})^{'}
+(\mb{M}_0\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}})\\
+&amp;=\hat{\bs{\beta}}^{'}\bs{X}^{'}\mb{M}_0\bs{X}\hat{\bs{\beta}}+
+\hat{\bs{\beta}}^{'}\bs{X}^{'}\hat{\bs{U}}+
+\hat{\bs{U}}^{'}\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}}^{'}\hat{\bs{U}}\\
+&amp;=\hat{\bs{\beta}}^{'}\bs{X}^{'}\mb{M}_0\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}}^{'}\hat{\bs{U}}\\
+&amp;=\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{Y}}+\hat{\bs{U}}^{'}\hat{\bs{U}}.
+\end{align*}
+\]</span> Let <span class="math inline">\(TSS=\bs{Y}^{'}\mb{M}_0\bs{Y}\)</span> be the total sum of squares, <span class="math inline">\(ESS=\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{Y}}\)</span> be the explained sum of squares, and <span class="math inline">\(RSS=\hat{\bs{U}}^{'}\hat{\bs{U}}\)</span> be the residual sum of squares. Clearly, <span class="math inline">\(TSS=ESS+RSS\)</span> holds. Then, a natural measure of goodness-of-fit is <span class="math display">\[
+\begin{align*}
+R^2=\frac{ESS}{TSS}=\frac{\hat{\bs{\beta}}^{'}\bs{X}^{'}\mb{M}_0\bs{X}\hat{\bs{\beta}}}{\bs{Y}^{'}\mb{M}_0\bs{Y}}=1-\frac{\hat{\bs{U}}^{'}\hat{\bs{U}}}{\bs{Y}^{'}\mb{M}_0\bs{Y}}=1-
+\frac{RSS}{TSS}.
+\end{align*}
+\]</span></p>
+<p>We can also express <span class="math inline">\(R^2\)</span> as the square of the sample correlation coefficient between <span class="math inline">\(\bs{Y}\)</span> and <span class="math inline">\(\hat{\bs{Y}}\)</span>. That is, <span class="math display">\[
+\begin{align*}
+R^2=r^2_{\bs{Y}\hat{\bs{Y}}}=\frac{s^2_{\bs{Y}\hat{\bs{Y}}}}{s^2_{\bs{Y}}s^2_{\hat{\bs{Y}}}},
+\end{align*}
+\]</span> where <span class="math inline">\(s_{\bs{Y}\hat{\bs{Y}}}\)</span> is the sample covariance between <span class="math inline">\(\bs{Y}\)</span> and <span class="math inline">\(\hat{\bs{Y}}\)</span>, and <span class="math inline">\(s^2_{\bs{Y}}\)</span> and <span class="math inline">\(s^2_{\hat{\bs{Y}}}\)</span> are the sample variances of <span class="math inline">\(\bs{Y}\)</span> and <span class="math inline">\(\hat{\bs{Y}}\)</span>, respectively. To see this, first note that we can express <span class="math inline">\(r^2_{\bs{Y}\hat{\bs{Y}}}\)</span> as <span class="math display">\[
+\begin{align*}
+r^2_{\bs{Y}\hat{\bs{Y}}}&amp;=\frac{\left(\sum_{i=1}^n(\hat{Y}_i-\bar{\hat{Y}})(Y_i-\bar{Y})\right)^2}{\sum_{i=1}^n(Y_i-\bar{Y})^2\sum_{i=1}^n(\hat{Y}_i-\bar{\hat{Y}})^2}\\
+&amp;=\frac{(\hat{\bs{Y}}^{'}\mb{M}_0\bs{Y})^2}{(\bs{Y}^{'}\mb{M}_0\bs{Y})(\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{Y}})}.
+\end{align*}
+\]</span></p>
+<p>Note that <span class="math inline">\(ESS=\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{Y}}=\hat{\bs{Y}}^{'}\mb{M}_0(\bs{Y}-\hat{\bs{U}})=\hat{\bs{Y}}^{'}\mb{M}_0\bs{Y}-\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{U}}=\hat{\bs{Y}}^{'}\mb{M}_0\bs{Y}\)</span> because <span class="math inline">\(\mb{M}_0\hat{\bs{U}}=\hat{\bs{U}}\)</span> and <span class="math inline">\(\hat{\bs{Y}}^{'}\hat{\bs{U}}=0\)</span>. Thus, we have <span class="math display">\[
+\begin{align*}
+r^2_{\bs{Y}\hat{\bs{Y}}}=\frac{(\hat{\bs{Y}}^{'}\mb{M}_0\bs{Y})^2}{(\bs{Y}^{'}\mb{M}_0\bs{Y})(\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{Y}})}=\frac{(ESS)^2}{TSS\cdot ESS}=\frac{ESS}{TSS}=R^2.
+\end{align*}
+\]</span></p>
+<p>Recall that <span class="math inline">\(R^2\)</span> always lies between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>. One serious drawback of <span class="math inline">\(R^2\)</span> is that it never decreases as we include more explanatory variables in <span class="math inline">\(\bs{X}\)</span>, even when they do not contribute to explain <span class="math inline">\(\bs{Y}\)</span>. Hence, we modify <span class="math inline">\(R^2\)</span> so that it penalizes for adding superfluous regressors into the model. The modified measure, known as the adjusted <span class="math inline">\(R^2\)</span>, is given by <span class="math display">\[
+\begin{align*}
+\bar{R}^2=1-\frac{\hat{\bs{U}}^{'}\hat{\bs{U}}/(n-k-1)}{\bs{Y}^{'}\mb{M}_0\bs{Y}/(n-1)}.
+\end{align*}
+\]</span></p>
+</section>
+<section id="asymptotic-distribution-of-the-ols-estimator" class="level2" data-number="29.5">
+<h2 data-number="29.5" class="anchored" data-anchor-id="asymptotic-distribution-of-the-ols-estimator"><span class="header-section-number">29.5</span> Asymptotic distribution of the OLS estimator</h2>
+<p>We first show that the OLS estimator is unbiased under Assumptions 1-4. To see this, first note that we can express the OLS estimator as <span class="math display">\[
+\begin{align}
+\hat{\bs{\beta}}&amp;=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}(\bs{X}\bs{\beta}+\bs{U})\\
+&amp;=\bs{\beta}+(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{U}.
+\end{align}
+\]</span></p>
+<p>Since <span class="math inline">\(\E(\bs{U}|\bs{X})=\bs{0}\)</span> holds under Assumptions 1 and 2, we have <span class="math display">\[
+\begin{align*}
+\E(\hat{\bs{\beta}}|\bs{X})=\bs{\beta}+(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\E(\bs{U}|\bs{X})=\bs{\beta},
+\end{align*}
+\]</span> which shows that the OLS estimator is conditionally unbiased. Finally, by the law of iterated expectations, we have <span class="math display">\[
+\E(\hat{\bs{\beta}})=\E(\E(\hat{\bs{\beta}}|\bs{X}))=\E(\bs{\beta})=\bs{\beta}.
+\]</span></p>
+<p>Next, we show that the OLS estimator is consistent in the following theorem.</p>
+<div id="thm-thm26-1-0" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.1 (Consistency of the OLS estimator)</strong></span> Assume that Assumptions 1-4 hold and that <span class="math inline">\(\bs{Q}_{\bs{X}}=\E(\bs{X}_i\bs{X}^{'}_i)\)</span> is positive definite. Then, the OLS estimator <span class="math inline">\(\hat{\bs{\beta}}\)</span> is consistent, i.e., <span class="math inline">\(\hat{\bs{\beta}}\xrightarrow{p}\bs{\beta}\)</span> as <span class="math inline">\(n\to\infty\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm26-1-0" class="quarto-xref">Theorem&nbsp;<span>29.1</span></a>). </span>Note that we can express the OLS estimator as <span class="math display">\[
+\begin{align*}
+\hat{\bs{\beta}}=\bs{\beta}+\left(\frac{1}{n}\bs{X}^{'}\bs{X}\right)^{-1}\left(\frac{1}{n}\bs{X}^{'}\bs{U}\right).
+\end{align*}
+\]</span></p>
+<p>We use the law of large numbers to show the following results:</p>
+<ol type="1">
+<li><span class="math inline">\(\frac{1}{n}\bs{X}^{'}\bs{X}\xrightarrow{p}\bs{Q}_{\bs{X}}\)</span>, and</li>
+<li><span class="math inline">\(\frac{1}{n}\bs{X}^{'}\bs{U}\xrightarrow{p}\bs{0}_{k+1}\)</span>.</li>
+</ol>
+<p>Note that <span class="math inline">\(\frac{1}{n}\bs{X}^{'}\bs{X}=\frac{1}{n}\sum_{i=1}^n\bs{X}_i\bs{X}^{'}_i\)</span>. The <span class="math inline">\((h,l)\)</span>th element of this matrix is given by <span class="math inline">\(\frac{1}{n}\sum_{i=1}^nX_{hi}X_{li}\)</span>. By Assumption 2, <span class="math inline">\(\{X_{hi}X_{li}\}\)</span> are i.i.d. across <span class="math inline">\(i\)</span>. By Assumption 3, the elements of <span class="math inline">\(\bs{X}_i\)</span> have finite fourth moments, then it follows form the Cauchy–Schwarz inequality that <span class="math display">\[
+\begin{align*}
+\E\left(X_{hi}^2X_{li}^2\right)\leq \sqrt{\E(X_{hi}^4)\E(X_{li}^4)}&lt;\infty.
+\end{align*}
+\]</span> Thus, <span class="math inline">\(X_{hi}X_{li}\)</span> has a finite variance. Then, by the law of large numbers, we have <span class="math inline">\(\frac{1}{n}\sum_{i=1}^nX_{hi}X_{li}\xrightarrow{p}\E(X_{hi}X_{li})\)</span>. Since this is true for all elements of <span class="math inline">\(\frac{1}{n}\bs{X}^{'}\bs{X}\)</span>, we obtain <span class="math inline">\(\frac{1}{n}\bs{X}^{'}\bs{X}\xrightarrow{p}\E(\bs{X}_i\bs{X}^{'}_i)=\bs{Q}_{\bs{X}}\)</span>.</p>
+<p>Similarly, we can express <span class="math inline">\(\frac{1}{n}\bs{X}^{'}\bs{U}\)</span> as <span class="math inline">\(\frac{1}{n}\bs{X}^{'}\bs{U}=\frac{1}{n}\sum_{i=1}^n\bs{X}_iu_i\)</span>. Thus, the <span class="math inline">\(j\)</span>th element of <span class="math inline">\(\frac{1}{n}\bs{X}^{'}\bs{U}\)</span> is <span class="math inline">\(\frac{1}{n}\sum_{i=1}^nX_{ji}u_i\)</span> for <span class="math inline">\(j=1,\ldots,k+1\)</span>. By Assumption 2, <span class="math inline">\(\{X_{ji}u_i\}\)</span> are i.i.d. across <span class="math inline">\(i\)</span>. Also, by the Cauchy–Schwarz inequality, we have <span class="math display">\[
+\E\left(X_{ji}^2u_i^2\right)\leq \sqrt{\E(X_{ji}^4)\E(u_i^4)}&lt;\infty,
+\]</span> where the last inequality follows from Assumption 3. Then, by the law of large numbers, we have <span class="math inline">\(\frac{1}{n}\sum_{i=1}^nX_{ji}u_i\xrightarrow{p}\E(X_{ji}u_i)=0\)</span>. Thus, we obtain <span class="math inline">\(\frac{1}{n}\bs{X}^{'}\bs{U}\xrightarrow{p}\bs{0}_{k+1}\)</span>.</p>
+<p>Finally, using the continuous mapping theorem, we obtain <span class="math display">\[
+\hat{\bs{\beta}}=\bs{\beta}+\left(\frac{1}{n}\bs{X}^{'}\bs{X}\right)^{-1}\left(\frac{1}{n}\bs{X}^{'}\bs{U}\right)\xrightarrow{p}\bs{\beta}+\bs{Q}^{-1}_{\bs{X}}\bs{0}_{k+1}=\bs{\beta}.
+\]</span></p>
+</div>
+<p>To derive the asymptotic distribution of <span class="math inline">\(\hat{\bs{\beta}}\)</span>, we need a multivariate central limit theorem that applies to vector-valued random variables.</p>
+<div id="thm-thm26-0" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.2 (Multivariate central limit theorem)</strong></span> Let <span class="math inline">\(\{\bs{W}_i\}_{i=1}^n\)</span> be a sequence of i.i.d. <span class="math inline">\(m\)</span>-dimensional random variables with mean <span class="math inline">\(\bs{\mu}_{\bs{W}}\)</span> and covariance matrix <span class="math inline">\(\bs{\Sigma}_{\bs{W}}\)</span>, where <span class="math inline">\(\bs{\Sigma}_{\bs{W}}\)</span> is positive definite and finite. Define <span class="math inline">\(\overline{\bs{W}}=\frac{1}{n}\sum_{i=1}^n\bs{W}_i\)</span>. Then, <span class="math display">\[
+\sqrt{n}(\overline{\bs{W}}-\bs{\mu}_{\bs{W}})\xrightarrow{d}N(\bs{0}_m,\bs{\Sigma}_{\bs{W}}).
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-0" class="quarto-xref">Theorem&nbsp;<span>29.2</span></a>). </span>See <a href="AppendixD.html" class="quarto-xref"><span>Appendix D</span></a>.</p>
+</div>
+<p>Using the multivariate central limit theorem, we can derive the asymptotic distribution of the OLS estimator. The following theorem states that the OLS estimator is asymptotically normally distributed.</p>
+<div id="thm-thm26-1" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.3 (Asymptotic distribution of the OLS estimator)</strong></span> Assume that Assumptions 1-4 hold. Let <span class="math inline">\(\bs{Q}_{\bs{X}}=\E(\bs{X}_i\bs{X}^{'}_i)\)</span> and <span class="math inline">\(\bs{\Sigma}_{\bs{V}}=\E(\bs{V}_i\bs{V}^{'}_i)\)</span>, where <span class="math inline">\(\bs{V}_i=\bs{X}_iu_i\)</span>. Assume that <span class="math inline">\(\bs{Q}_{\bs{X}}\)</span> is positive definite. Then, we have <span class="math display">\[
+\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})\xrightarrow{d}N\left(\bs{0}_{k+1},\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\right),
+\]</span> where <span class="math inline">\(\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}=\bs{Q}^{-1}_{\bs{X}}\bs{\Sigma}_{\bs{V}}\bs{Q}^{-1}_{\bs{X}}\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-1" class="quarto-xref">Theorem&nbsp;<span>29.3</span></a>). </span>Note that we can express <span class="math inline">\(\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})\)</span> as <span id="eq-eq26-10"><span class="math display">\[
+\begin{align}
+\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})=\left(\frac{\bs{X}^{'}\bs{X}}{n}\right)^{-1}\left(\frac{\bs{X}^{'}\bs{U}}{\sqrt{n}}\right).
+\end{align}
+\tag{29.9}\]</span></span></p>
+<p>Thus, we need to show that</p>
+<ol type="1">
+<li><span class="math inline">\(\frac{1}{n}\bs{X}^{'}\bs{X}\xrightarrow{p}\bs{Q}_{\bs{X}}\)</span>, and</li>
+<li><span class="math inline">\(\frac{1}{\sqrt{n}}\bs{X}^{'}\bs{U}\)</span> obeys the multivariate central limit theorem in <a href="#thm-thm26-0" class="quarto-xref">Theorem&nbsp;<span>29.2</span></a>, i.e., <span class="math inline">\(\frac{1}{\sqrt{n}}\bs{X}^{'}\bs{U}\xrightarrow{d}N\left(\bs{0}_{k+1},\,\bs{\Sigma}_{\bs{V}}\right)\)</span>.</li>
+</ol>
+<p>The first result follows from the law of large numbers as shown in the proof of <a href="#thm-thm26-1-0" class="quarto-xref">Theorem&nbsp;<span>29.1</span></a>. Thus, we need to only show the second result. Note that <span class="math inline">\(\frac{1}{\sqrt{n}}\bs{X}^{'}\bs{U}=\frac{1}{\sqrt{n}}\sum_{i=1}^n\bs{V}_i\)</span>, where <span class="math inline">\(\bs{V}_i=\bs{X}_iu_i\)</span>. By Assumption 1, we have <span class="math display">\[
+\E(\bs{V}_i)=\E\left(\bs{X}_iu_i\right)=\E\left(\E\left(\bs{X}_iu_i|\bs{X}_i\right)\right)=\E\left(\bs{X}_i\E\left(u_i|\bs{X}_i\right)\right)=\bs{0}.
+\]</span></p>
+<p>To apply the multivariate central limit theorem in <a href="#thm-thm26-0" class="quarto-xref">Theorem&nbsp;<span>29.2</span></a>, we need to show that <span class="math inline">\(\{\bs{V}_i\}\)</span> are i.i.d across <span class="math inline">\(i\)</span> and <span class="math inline">\(\bs{\Sigma}_{\bs{V}}\)</span> is finite. Assumption 2 ensures that <span class="math inline">\(\{\bs{V}_i\}\)</span> are i.i.d across <span class="math inline">\(i\)</span>. To show that <span class="math inline">\(\bs{\Sigma}_{\bs{V}}\)</span> is finite, we consider the <span class="math inline">\((h,l)\)</span>th element of <span class="math inline">\(\bs{\Sigma}_{\bs{V}}=\E\left(\bs{V}_i\bs{V}^{'}_i\right)=\E\left(\bs{X}_i\bs{X}^{'}_iu^2_i\right)\)</span>, which is given by <span class="math display">\[
+\bs{\Sigma}_{\bs{V},hl}=\E\left(X_{hi}u_iX_{li}u_i\right)=\E\left(X_{hi}X_{li}u^2_i\right),
+\]</span> where <span class="math inline">\(h,l\in\{1,\ldots,k+1\}\)</span>. Then, applying the expectation inequality and the Cauchy-Cauchy–Schwarz inequality, we obtain <span class="math display">\[
+\begin{align*}
+|\bs{\Sigma}_{\bs{V},hl}|&amp;=\left|\E\left(X_{hi}X_{li}u^2_i\right)\right|\leq\E\left(\left|X_{hi}X_{li}u^2_i\right|\right)\\
+&amp;\leq \sqrt{\E\left(X^2_{hi}X^2_{li}\right)\E(u^4_i)}\\
+&amp;\leq \left(\E(X^4_{hi})\right)^{1/4}\left(\E(X^4_{li})\right)^{1/4}\sqrt{\E(u^4_i)}&lt;\infty,
+\end{align*}
+\]</span> where the first inequality follows from the expectation inequality, the second and the third from the Cauchy-Schwarz inequality, and the last from Assumption 3. Thus, we conclude that <span class="math inline">\(\bs{\Sigma}_{\bs{V}}\)</span> is finite.</p>
+<p>Then, by the multivariate central limit theorem in <a href="#thm-thm26-0" class="quarto-xref">Theorem&nbsp;<span>29.2</span></a>, we have <span class="math display">\[
+\frac{1}{\sqrt{n}}\bs{X}^{'}\bs{U}=\frac{1}{\sqrt{n}}\sum_{i=1}^n\bs{V}_i\xrightarrow{d}N\left(\bs{0}_{k+1},\,\bs{\Sigma}_{\bs{V}}\right).
+\]</span> Finally, the desired result follows from Slutsky’s theorem.</p>
+</div>
+<p>For inference, we need an estimator of <span class="math inline">\(\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\)</span>. The heteroskedasticity-robust estimator of <span class="math inline">\(\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\)</span> is given by <span class="math display">\[
+\begin{align}
+\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}=\left(\frac{\bs{X}^{'}\bs{X}}{n}\right)^{-1}\hat{\bs{\Sigma}}_{\bs{V}}\left(\frac{\bs{X}^{'}\bs{X}}{n}\right)^{-1},
+\end{align}
+\]</span> where <span class="math inline">\(\hat{\bs{\Sigma}}_{\bs{V}}=\frac{1}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_i\hat{u}^2_i\)</span>. <span class="citation" data-cites="White1980">White (<a href="references.html#ref-White1980" role="doc-biblioref">1980</a>)</span> showed that <span class="math inline">\(\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\)</span> is a consistent estimator of <span class="math inline">\(\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\)</span>. The estimator <span class="math inline">\(\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\)</span> is called the <strong>heteroskedasticity-robust covariance matrix estimator</strong>. In particular, it is called the HC0 covariance matrix estimator, indicating that it is a baseline estimator. By scaling this estimator with <span class="math inline">\(n/(n-k-1)\)</span>, we obtain another version, called the HC1 estimator. The HC1 estimator is the most commonly used one in practice.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div id="thm-thm29-3-1" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.4 (Consistency of the heteroskedasticity-robust covariance matrix estimator)</strong></span> Under the assumptions of <a href="#thm-thm26-1" class="quarto-xref">Theorem&nbsp;<span>29.3</span></a>, <span class="math inline">\(\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\xrightarrow{p}\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\)</span> as <span class="math inline">\(n\to\infty\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm29-3-1" class="quarto-xref">Theorem&nbsp;<span>29.4</span></a>). </span>See <a href="AppendixD.html" class="quarto-xref"><span>Appendix D</span></a>.</p>
+</div>
+<p>Note that the asymptotic variance of <span class="math inline">\(\hat{\bs{\beta}}\)</span> is <span class="math inline">\(\hat{\bs{\Sigma}}_{\hat{\bs{\beta}}}=n^{-1}\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\)</span>. The heteroskedasticity-robust standard error for the <span class="math inline">\(j\)</span>th regression coefficient is the square root of the <span class="math inline">\(j\)</span>th diagonal element of <span class="math inline">\(\hat{\bs{\Sigma}}_{\hat{\bs{\beta}}}\)</span>: <span class="math display">\[
+\begin{align}
+SE(\hat{\beta}_j)=\sqrt{\hat{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}},
+\end{align}
+\]</span> where <span class="math inline">\(\hat{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}\)</span> is the <span class="math inline">\((j,j)\)</span>th element of <span class="math inline">\(\hat{\bs{\Sigma}}_{\hat{\bs{\beta}}}\)</span>. Then, the heteroskedasticity-robust t-statistic for testing the null hypothesis <span class="math inline">\(H_0:\beta_j=c\)</span> is given by <span class="math display">\[
+\begin{align}
+t=\frac{\hat{\beta}_j-c}{SE(\hat{\beta}_j)}.
+\end{align}
+\]</span></p>
+<div id="thm-thm26-t" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.5 (Asymptotic distribution of the heteroskedasticity-robust t-statistic)</strong></span> Assume that Assumptions 1-4 hold. Under the null hypothesis, <span class="math inline">\(t\)</span> has the asymptotic standard normal distribution, i.e., <span class="math inline">\(t\xrightarrow{d}N(0,1)\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-t" class="quarto-xref">Theorem&nbsp;<span>29.5</span></a>). </span>The heteroskedasticity-robust t-statistic can be written as <span class="math display">\[
+\begin{align}
+t=\frac{\hat{\beta}_j-c}{SE(\hat{\beta}_j)}=\frac{\hat{\beta}_j-c}{\sqrt{\hat{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}}}=\frac{\hat{\beta}_j-c}{\sqrt{\bs{\Sigma}_{\hat{\bs{\beta}},jj}}}\div \sqrt{\frac{\hat{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}}{\bs{\Sigma}_{\hat{\bs{\beta}},jj}}}.
+\end{align}
+\]</span> Under the null hypothesis, <span class="math inline">\(\frac{\hat{\beta}_j-c}{\sqrt{\bs{\Sigma}_{\hat{\bs{\beta}},jj}}}\xrightarrow{d}N(0,1)\)</span> and <span class="math inline">\(\sqrt{\frac{\hat{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}}{\bs{\Sigma}_{\hat{\bs{\beta}},jj}}}\xrightarrow{p}1\)</span>. Then, it follows from Slutsky’s theorem that <span class="math display">\[
+\begin{align}
+t\xrightarrow{d}N(0,1).
+\end{align}
+\]</span></p>
+</div>
+<p>In <a href="Chapter7-MultipleRegressionInference.html" class="quarto-xref"><span>Chapter 17</span></a>, we show that a joint null hypothesis that imposes <span class="math inline">\(q\)</span> linear restrictions on the regression coefficients can be expressed as <span id="eq-eq26-14"><span class="math display">\[
+\begin{align}
+H_0:\bs{R}\bs{\beta}=\bs{r},
+\end{align}
+\tag{29.10}\]</span></span> where <span class="math inline">\(\bs{R}\)</span> is a <span class="math inline">\(q\times(k + 1)\)</span> nonrandom matrix with full row rank and <span class="math inline">\(\bs{r}\)</span> is a nonrandom <span class="math inline">\(q\times1\)</span> vector.</p>
+<div id="exm-exm26-1" class="theorem example">
+<p><span class="theorem-title"><strong>Example 29.1</strong></span> Consider <span class="math inline">\(H_0:\beta_1=0,\beta_2=0, \beta_3=3\)</span>. This null hypothesis imposes <span class="math inline">\(q=3\)</span> restrictions. Then, for this null hypothesis, we have <span class="math display">\[
+\begin{align}
+\bs{R}=
+\begin{pmatrix}
+0&amp;1&amp;0&amp;0&amp;0&amp;\cdots&amp;0\\
+0&amp;0&amp;1&amp;0&amp;0&amp;\cdots&amp;0\\
+0&amp;0&amp;0&amp;1&amp;0&amp;\cdots&amp;0\\
+\end{pmatrix}_{3\times(k+1)}
+\quad\text{and}\quad \bs{r}=
+\begin{pmatrix}
+0\\
+0\\
+3
+\end{pmatrix}.
+\end{align}
+\]</span> If we consider <span class="math inline">\(H_0:\beta_1=0\)</span> and <span class="math inline">\(\beta_2+\beta_3=1\)</span>, then <span class="math display">\[
+\begin{align}
+\bs{R}=
+\begin{pmatrix}
+0&amp;1&amp;0&amp;0&amp;0&amp;\cdots&amp;0\\
+0&amp;0&amp;1&amp;1&amp;0&amp;\cdots&amp;0
+\end{pmatrix}_{2\times(k+1)}
+\quad\text{and}\quad \bs{r}=
+\begin{pmatrix}
+0\\
+1
+\end{pmatrix}.
+\end{align}
+\]</span></p>
+</div>
+<p>We can use the heteroskedasticity-robust F-statistic for testing the joint hypothesis in <a href="#eq-eq26-14" class="quarto-xref">Equation&nbsp;<span>29.10</span></a>. The heteroskedasticity-robust F-statistic is given by <span class="math display">\[
+\begin{align}
+F=\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(\bs{R}\hat{\bs{\Sigma}}_{\hat{\bs{\beta}}}\bs{R}^{'}\right)^{-1}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)/q.
+\end{align}
+\]</span></p>
+<div id="thm-thm26-2" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.6 (Asymptotic distribution of the heteroskedasticity-robust F-statistic)</strong></span> Assume that Assumptions 1-4 hold. Then, under the null hypothesis, we have <span class="math display">\[
+\begin{align}
+F\xrightarrow{d}F_{q,\infty}.
+\end{align}
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-2" class="quarto-xref">Theorem&nbsp;<span>29.6</span></a>). </span>The proof requires some properties of random variables that have multivariate normal distribution. See Appendix D for these properties. Under <span class="math inline">\(H_0\)</span>, we have <span class="math inline">\(\sqrt{n}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)=\sqrt{n}\bs{R}\left(\hat{\bs{\beta}}-\bs{\beta}\right)\xrightarrow{d}N\left(\bs{0},\bs{R}\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\bs{R}^{'}\right)\)</span>. Then, it follows that <span class="math display">\[
+\begin{align*}
+&amp;\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(\bs{R}\bs{\Sigma}_{\hat{\bs{\beta}}}\bs{R}^{'}\right)^{-1}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)=\sqrt{n}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(n\bs{R}\bs{\Sigma}_{\hat{\bs{\beta}}}\bs{R}^{'}\right)^{-1}\sqrt{n}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)\\
+&amp;=
+\left(\sqrt{n}\bs{R}\left(\hat{\bs{\beta}}-\bs{\beta}\right)\right)^{'}\left(\bs{R}\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\bs{R}^{'}\right)^{-1}\left(\sqrt{n}\bs{R}\left(\hat{\bs{\beta}}-\bs{\beta}\right)\right)\xrightarrow{d}\chi^2_q.
+\end{align*}
+\]</span> Since <span class="math inline">\(\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\xrightarrow{p}\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\)</span>, it follows from Slutsky’s theorem that <span class="math display">\[
+\begin{align*}
+\left(\sqrt{n}\left(\bs{R}\hat{\bs{\beta}}-\bs{\beta}\right)\right)^{'}\left(\bs{R}\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\bs{R}^{'}\right)^{-1}\left(\sqrt{n}\left(\bs{R}\hat{\bs{\beta}}-\bs{\beta}\right)\right)\xrightarrow{d}\chi^2_q.
+\end{align*}
+\]</span> Thus, <span class="math inline">\(F\xrightarrow{d}\chi^2_q/q\equiv F_{q,\infty}\)</span>.</p>
+</div>
+</section>
+<section id="exact-sampling-distribution-of-the-ols-estimator" class="level2" data-number="29.6">
+<h2 data-number="29.6" class="anchored" data-anchor-id="exact-sampling-distribution-of-the-ols-estimator"><span class="header-section-number">29.6</span> Exact sampling distribution of the OLS estimator</h2>
+<p>In this section, we also assume that Assumptions 5 and 6 hold. In the proof <a href="#thm-thm26-1" class="quarto-xref">Theorem&nbsp;<span>29.3</span></a>, we show that <span class="math inline">\(\hat{\bs{\beta}}=\bs{\beta}+(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{U}\)</span>. The conditional variance of <span class="math inline">\(\hat{\bs{\beta}}\)</span> given <span class="math inline">\(\bs{X}\)</span> is <span class="math display">\[
+\begin{align*}
+\bs{\Sigma}_{\hat{\bs{\beta}}|\bs{X}}&amp;=\E\left((\hat{\bs{\beta}}-\bs{\beta})(\hat{\bs{\beta}}-\bs{\beta})^{'}|\bs{X}\right)=\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{U}\bs{U}^{'}\bs{X}(\bs{X}^{'}\bs{X})^{-1}|\bs{X}\right)\\
+&amp;=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}(\sigma^2_u\bs{I}_n)\bs{X}(\bs{X}^{'}\bs{X})^{-1}=\sigma^2_u(\bs{X}^{'}\bs{X})^{-1},
+\end{align*}
+\]</span> where the third equality follows from Assumption 5.</p>
+<p>Note that we have <span class="math inline">\(\bs{U}|\bs{X}\sim N(\bs{0},\sigma^2_u\bs{I}_n)\)</span> under Assumptions 1-6. Also, <span class="math inline">\(\hat{\bs{\beta}}=\bs{\beta}+(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{U}\)</span> indicates that <span class="math inline">\(\hat{\bs{\beta}}\)</span> is a linear function of <span class="math inline">\(\bs{U}\)</span>. Then, using the properties of the multivariate normal distribution given in Appendix D, we can determine the conditional distribution of <span class="math inline">\(\hat{\bs{\beta}}\)</span> given <span class="math inline">\(\bs{X}\)</span> as <span class="math display">\[
+\begin{align}
+\hat{\bs{\beta}}|\bs{X}\sim N\left(\bs{\beta},\,\bs{\Sigma}_{\hat{\bs{\beta}}|\bs{X}}\right).
+\end{align}
+\]</span></p>
+<p>It is important to note that this result is exact in the sense that it holds for any sample size. In particular, we do not need a large sample size for this result to hold.</p>
+<p>We can also determine the exact conditional distribution of the OLS residuals. First, note that we can express the OLS residuals as <span class="math display">\[
+\begin{align*}
+\hat{\bs{U}}=\bs{M}_{\bs{X}}\bs{Y}=\bs{M}_{\bs{X}}(\bs{X}\hat{\bs{\beta}}+\bs{U})=\bs{M}_{\bs{X}}\bs{U},
+\end{align*}
+\]</span> where the last equality follows from the fact that <span class="math inline">\(\bs{M}_{\bs{X}}\bs{X}=\bs{0}\)</span>. Then, using <span class="math inline">\(\hat{\bs{U}}=\bs{M}_{\bs{X}}\bs{U}\)</span>, we can determine the conditional mean and variance of <span class="math inline">\(\hat{\bs{U}}\)</span> as <span class="math display">\[
+\begin{align*}
+&amp;\E(\hat{\bs{U}}|\bs{X})=\E\left(\bs{M}_{\bs{X}}\bs{U}|\bs{X}\right)=\bs{M}_{\bs{X}}\E\left(\bs{U}|\bs{X}\right)=\bs{0},\\
+&amp;\text{var}(\hat{\bs{U}}|\bs{X})=\text{var}\left(\bs{M}_{\bs{X}}\bs{U}|\bs{X}\right)=\bs{M}_{\bs{X}}\text{var}\left(\bs{U}|\bs{X}\right)\bs{M}_{\bs{X}}^{'}=\sigma^2_u\bs{M}_{\bs{X}},
+\end{align*}
+\]</span> where we use the fact that <span class="math inline">\(\text{var}(\bs{U}|\bs{X})=\sigma^2_u\bs{I}_n\)</span> and <span class="math inline">\(\bs{M}_{\bs{X}}\bs{M}_{\bs{X}}=\bs{M}_{\bs{X}}\)</span>.</p>
+<p>Finally, since <span class="math inline">\(\hat{\bs{U}}\)</span> is a linear function of <span class="math inline">\(\bs{U}\)</span> and <span class="math inline">\(\bs{U}|\bs{X}\sim N(\bs{0},\sigma^2_u\bs{I}_n)\)</span>, we can determine the conditional distribution of <span class="math inline">\(\hat{\bs{U}}\)</span> given <span class="math inline">\(\bs{X}\)</span> as <span class="math display">\[
+\begin{align*}
+\hat{\bs{U}}|\bs{X}\sim N\left(\bs{0},\,\bs{\Sigma}_{\hat{\bs{U}}|\bs{X}}\right),
+\end{align*}
+\]</span> where <span class="math inline">\(\bs{\Sigma}_{\hat{\bs{U}}|\bs{X}}=\sigma^2_u\bs{M}_{\bs{X}}\)</span>.</p>
+<p>Also, note that the conditional covariance between <span class="math inline">\(\hat{\bs{\beta}}\)</span> and <span class="math inline">\(\hat{\bs{U}}\)</span> is zero: <span class="math display">\[
+\begin{align*}
+\text{cov}(\hat{\bs{\beta}},\hat{\bs{U}}|\bs{X})&amp;=\E\left((\hat{\bs{\beta}}-\bs{\beta})(\hat{\bs{U}})^{'}|\bs{X}\right)\\
+&amp;=\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{U}(\bs{M}_{\bs{X}}\bs{U})^{'}|\bs{X}\right)\\
+&amp;=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\E\left(\bs{U}\bs{U}^{'}|\bs{X}\right)\bs{M}_{\bs{X}}\\
+&amp;=\sigma^2_u(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{M}_{\bs{X}}\\
+&amp;=\bs{0}_{(k+1)\times n},
+\end{align*}
+\]</span> where the last equality follows from the fact that <span class="math inline">\(\bs{X}^{'}\bs{M}_{\bs{X}}=\bs{0}_{(k+1)\times n}\)</span>. Using this fact and the properties of the multivariate normal distribution, we can determine the joint conditional distribution of <span class="math inline">\((\hat{\bs{\beta}},\hat{\bs{U}})\)</span> given <span class="math inline">\(\bs{X}\)</span> as <span id="eq-eq26-11-2"><span class="math display">\[
+\begin{align*}
+\begin{pmatrix}
+\hat{\bs{\beta}}\\
+\hat{\bs{U}}
+\end{pmatrix}
+\bigg|\bs{X}
+\sim N\left(\begin{pmatrix}
+\bs{\beta}\\
+\bs{0}
+\end{pmatrix},\,\begin{pmatrix}
+\bs{\Sigma}_{\hat{\bs{\beta}}|\bs{X}} &amp; \bs{0}_{(k+1)\times n}\\
+\bs{0}_{n\times (k+1)} &amp; \bs{\Sigma}_{\hat{\bs{U}}|\bs{X}}
+\end{pmatrix}\right).
+\end{align*}
+\tag{29.11}\]</span></span></p>
+<p>The joint normality and <span class="math inline">\(\text{cov}(\hat{\bs{\beta}},\hat{\bs{U}}|\bs{X})=\bs{0}_{(k+1)\times n}\)</span> imply that <span class="math inline">\(\hat{\bs{\beta}}\)</span> is statistically independent of <span class="math inline">\(\hat{\bs{U}}\)</span>. In particular, any function of <span class="math inline">\(\hat{\bs{\beta}}\)</span> is statistically independent of any function of <span class="math inline">\(\hat{\bs{U}}\)</span>. We use this fact to determine the exact sampling distributions of the <span class="math inline">\(t\)</span> and <span class="math inline">\(F\)</span> statistics below.</p>
+<p>The standard error of regression (SER) is <span class="math display">\[
+\begin{align}
+s^2_{\hat{u}}=\frac{1}{n-k-1}\sum_{i=1}^n\hat{u}^2_i=\frac{1}{n-k-1}\hat{\bs{U}}^{'}\hat{\bs{U}}=\frac{1}{n-k-1}\bs{U}^{'}\bs{M}_{\bs{X}}\bs{U},
+\end{align}
+\]</span> where the final equality follows because <span class="math inline">\(\hat{\bs{U}}^{'}\hat{\bs{U}}=(\bs{M}_{\bs{X}}\bs{U})^{'}(\bs{M}_{\bs{X}}\bs{U})=\bs{U}^{'}\bs{M}_{\bs{X}}\bs{M}_{\bs{X}}\bs{U}=\bs{U}^{'}\bs{M}_{\bs{X}}\bs{U}\)</span>. The degrees-of-freedom adjustment ensures that <span class="math inline">\(s^2_{\hat{u}}\)</span> is unbiased. This can be seen from <span class="math display">\[
+\begin{align*}
+\E(s^2_{\hat{u}}|\bs{X})&amp;=\frac{1}{n-k-1}\E\left(\bs{U}^{'}\bs{M}_{\bs{X}}\bs{U}|\bs{X}\right)=\frac{1}{n-k-1}\E\left(\tr\left(\bs{U}^{'}\bs{M}_{\bs{X}}\bs{U}\right)|\bs{X}\right)\\
+&amp;=\frac{1}{n-k-1}\E\left(\tr\left(\bs{M}_{\bs{X}}\bs{U}\bs{U}^{'}\right)|\bs{X}\right)=\frac{1}{n-k-1}\tr\left(\E\left(\bs{M}_{\bs{X}}\bs{U}\bs{U}^{'}|\bs{X}\right)\right)\\
+&amp;=\frac{1}{n-k-1}\tr\left(\bs{M}_{\bs{X}}\E\left(\bs{U}\bs{U}^{'}|\bs{X}\right)\right)=\frac{\sigma^2_u}{n-k-1}\tr\left(\bs{M}_{\bs{X}}\right)=\sigma^2_u.
+\end{align*}
+\]</span> Then, <span class="math inline">\(\E(s^2_{\hat{u}})=\E\left(\E(s^2_{\hat{u}}|\bs{X})\right)=\E(\sigma^2_u)=\sigma^2_u\)</span>.</p>
+<p>Under Assumptions 1-6, we can also determine the exact sampling distribution of <span class="math inline">\(s^2_{\hat{u}}\)</span>. Since <span class="math inline">\(s^2_{\hat{u}}=\frac{1}{n-k-1}\bs{U}^{'}\bs{M}_{\bs{X}}\bs{U}\)</span>, by Theorem D.6 in Appendix D, we have <span id="eq-eq26-18"><span class="math display">\[
+\begin{align*}
+\frac{(n-k-1)s^2_{\hat{u}}}{\sigma^2_u}=(\bs{U}/\sigma_u)^{'}\bs{M}_{\bs{X}}(\bs{U}/\sigma_u)\sim \chi^2_{n-k-1},
+\end{align*}
+\tag{29.12}\]</span></span> where the degrees of freedom of the chi-squared distribution is <span class="math inline">\(n-k-1\)</span> because the rank of <span class="math inline">\(\bs{M}_{\bs{X}}\)</span> is <span class="math inline">\(n-k-1\)</span>. Thus, we have <span class="math display">\[
+\begin{align}
+s^2_{\hat{u}}\sim \frac{\sigma^2_u}{n-k-1}\chi^2_{n-k-1}.
+\end{align}
+\]</span></p>
+<p>The homoskedasticity-only estimator of <span class="math inline">\(\bs{\Sigma}_{\hat{\bs{\beta}}|\bs{X}}\)</span> is given by <span class="math display">\[
+\begin{align}
+\tilde{\bs{\Sigma}}_{\hat{\bs{\beta}}}=s^2_{\hat{u}}(\bs{X}^{'}\bs{X})^{-1}.
+\end{align}
+\]</span> Let the <span class="math inline">\(\hat{\beta}_j\)</span> be the <span class="math inline">\(j\)</span>th element of <span class="math inline">\(\hat{\bs{\beta}}\)</span>. Then, the homokedasticity-only standard error of <span class="math inline">\(\hat{\beta}_j\)</span> is <span class="math display">\[
+\begin{align}
+SE(\hat{\beta}_j)=\sqrt{\tilde{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}},
+\end{align}
+\]</span> where <span class="math inline">\(\tilde{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}\)</span> is the <span class="math inline">\((j,j)\)</span>th element of <span class="math inline">\(\tilde{\bs{\Sigma}}_{\hat{\bs{\beta}}}\)</span>.</p>
+<p>Consider <span class="math inline">\(H_0:\beta_j=\beta_{j,0}\)</span>, where <span class="math inline">\(\beta_{j,0}\)</span> is a known constant. Then, the <span class="math inline">\(t\)</span>-statistic for testing this hypothesis is <span class="math display">\[
+\tilde{t}=\frac{\hat{\beta}_j-\beta_{j,0}}{\sqrt{\tilde{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}}}.
+\]</span></p>
+<div id="thm-thm26-3" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.7 (Exact sampling distribution of the homoskedasticity-only t-statistic)</strong></span> Under all six of the extended least squares assumptions, the exact sampling distribution of <span class="math inline">\(\tilde{t}\)</span> is the Student t distribution with <span class="math inline">\(n- k - 1\)</span> degrees of freedom.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-3" class="quarto-xref">Theorem&nbsp;<span>29.7</span></a>). </span>Note that we can write <span class="math inline">\(\tilde{t}\)</span> as <span class="math display">\[
+\tilde{t}=\frac{(\hat{\beta}_j-\beta_{j,0})/\sqrt{\bs{\Sigma}_{\hat{\bs{\beta}},jj}}}{\sqrt{W/(n-k-1)}},
+\]</span> where <span class="math inline">\(W=\frac{(n-k-1)s^2_{\hat{u}}}{\sigma^2_u}\)</span>. Under the null, the numerator is distributed as <span class="math inline">\(N(0,1)\)</span>. The variable <span class="math inline">\(W\)</span> in the denominator is distributed as <span class="math inline">\(W\sim \chi_{n-k-1}\)</span> by <a href="#eq-eq26-18" class="quarto-xref">Equation&nbsp;<span>29.12</span></a>. If we can also show that <span class="math inline">\(W\)</span> is independent of the numerator, then we can conclude that <span class="math inline">\(\tilde{t}\)</span> has the Student t distribution with <span class="math inline">\(n-k-1\)</span> degrees of freedom. The independence result follows from <a href="#eq-eq26-11-2" class="quarto-xref">Equation&nbsp;<span>29.11</span></a>.</p>
+</div>
+<p>Finally, we determine the distribution of the homoskedasticity-only <span class="math inline">\(F\)</span>-statistic under Assumptions 1-6. The homoskedasticity-only <span class="math inline">\(F\)</span>-statistic for testing <span class="math inline">\(H_0:\bs{R}\bs{\beta}=\bs{r}\)</span> is <span class="math display">\[
+\begin{align}
+\tilde{F}=\frac{\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(\bs{R}(\bs{X}^{'}\bs{X})^{-1}\bs{R}^{'}\right)^{-1}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)/q}{s^2_{\hat{u}}}.
+\end{align}
+\]</span></p>
+<div id="thm-thm26-4" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.8 (Exact sampling distribution of the homoskedasticity-only F-statistic)</strong></span> Assume that all six assumptions hold. Then, under the null hypothesis, we have <span class="math display">\[
+\begin{align}
+\tilde{F}\sim F_{q,n-k-1}.
+\end{align}
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-4" class="quarto-xref">Theorem&nbsp;<span>29.8</span></a>). </span>Note that we can express <span class="math inline">\(\tilde{F}\)</span> as <span class="math inline">\(\tilde{F}=(W_1/q)/(W_2/(n-k-1))\)</span>, where</p>
+<ul>
+<li><span class="math inline">\(W_1=\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(\sigma^2_u\bs{R}(\bs{X}^{'}\bs{X})^{-1}\bs{R}^{'}\right)^{-1}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)\)</span>, and</li>
+<li><span class="math inline">\(W_2=\frac{(n-k-1)s^2_{\hat{u}}}{\sigma^2_u}\)</span>.</li>
+</ul>
+<p>The numerator is distributed as <span class="math inline">\(\chi^2_q\)</span> and the denominator is distributed as <span class="math inline">\(\chi^2_{n-k-1}\)</span>. The independence of <span class="math inline">\(W_1\)</span> and <span class="math inline">\(W_2\)</span> follows from <a href="#eq-eq26-11-2" class="quarto-xref">Equation&nbsp;<span>29.11</span></a>. Thus, we have <span class="math inline">\(\tilde{F}\sim F_{q,n-k-1}\)</span>.</p>
+</div>
+</section>
+<section id="efficiency-of-the-ols-estimator-with-homoskedastic-errors" class="level2" data-number="29.7">
+<h2 data-number="29.7" class="anchored" data-anchor-id="efficiency-of-the-ols-estimator-with-homoskedastic-errors"><span class="header-section-number">29.7</span> Efficiency of the OLS estimator with homoskedastic errors</h2>
+<p>The first five assumptions imply the following Gauss-Markov conditions:</p>
+<ol type="1">
+<li><span class="math inline">\(\E(\bs{U}|\bs{X})=\bs{0}_{n\times1}\)</span>,</li>
+<li><span class="math inline">\(\E(\bs{U}\bs{U}^{'}|\bs{X})=\sigma^2_u\bs{I}_n\)</span>, and</li>
+<li><span class="math inline">\(\bs{X}\)</span> has full column rank.</li>
+</ol>
+<p>An estimator <span class="math inline">\(\tilde{\bs{\beta}}\)</span> is a linear function of <span class="math inline">\(\bs{Y}\)</span> if it can be expressed as <span class="math inline">\(\tilde{\bs{\beta}}=\bs{A}^{'}\bs{Y}\)</span>, where <span class="math inline">\(\bs{A}\)</span> may depend on <span class="math inline">\(\bs{X}\)</span> and nonrandom constants but not on <span class="math inline">\(\bs{Y}\)</span>. For example, the OLS estimator <span class="math inline">\(\hat{\bs{\beta}}=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}\)</span> is linear because it can be written as <span class="math inline">\(\hat{\bs{\beta}}=\bs{A}^{'}\bs{Y}\)</span>, where <span class="math inline">\(\bs{A}=\bs{X}(\bs{X}^{'}\bs{X})^{-1}\)</span>.</p>
+<div id="thm-thm26-6-1" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.9 (Gauss-Markov Theorem)</strong></span> Suppose the three Gauss-Markov conditions hold. Then, the OLS estimator is efficient among all linear and conditionally unbiased estimators; that is, the OLS estimator is the best linear unbiased estimator (BLUE).</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-6-1" class="quarto-xref">Theorem&nbsp;<span>29.9</span></a>). </span>Note that under the Gauss-Markov conditions, the conditional variance of the OLS estimator is given by <span class="math inline">\(\sigma^2_u(\bs{X}^{'}\bs{X})^{-1}\)</span>. Let <span class="math inline">\(\tilde{\beta}=\bs{A}^{'}\bs{Y}\)</span> be a conditionally unbiased linear estimator of <span class="math inline">\(\bs{\beta}\)</span>. Then, under the first assumption, we have <span class="math display">\[
+\E(\tilde{\bs{\beta}}|\bs{X})=\bs{A}^{'}\E(\bs{Y}|\bs{X})=\bs{A}^{'}\bs{X}\bs{\beta},
+\]</span> indicating that <span class="math inline">\(\bs{A}^{'}\bs{X}=\bs{I}_k\)</span>. The conditional variance of <span class="math inline">\(\tilde{\bs{\beta}}\)</span> is given by <span class="math display">\[
+\text{var}(\tilde{\bs{\beta}}|\bs{X})=\text{var}(\bs{A}^{'}\bs{Y}|\bs{X})=\bs{A}^{'}\text{var}(\bs{Y}|\bs{X})\bs{A}=\sigma^2_u\bs{A}^{'}\bs{A},
+\]</span> where in the last equality we use the fact that <span class="math inline">\(\text{var}(\bs{Y}|\bs{X})=\text{var}(\bs{U}|\bs{X})=\sigma^2_u\bs{I}_n\)</span>. Thus, we need to show that <span class="math display">\[
+\sigma^2_u\bs{A}^{'}\bs{A}-\sigma^2_u(\bs{X}^{'}\bs{X})^{-1}\geq0.
+\]</span></p>
+<p>Let <span class="math inline">\(\bs{C}=\bs{A}-\bs{X}(\bs{X}^{'}\bs{X})^{-1}\)</span>. Then, we have <span class="math display">\[
+\begin{align}
+\bs{A}^{'}\bs{A}-(\bs{X}^{'}\bs{X})^{-1}&amp;=\left(\bs{C}+\bs{X}(\bs{X}^{'}\bs{X})^{-1}\right)^{'}\left(\bs{C}+\bs{X}(\bs{X}^{'}\bs{X})^{-1}\right)-(\bs{X}^{'}\bs{X})^{-1}\\
+&amp;=\bs{C}^{'}\bs{C}+\bs{C}^{'}\bs{X}(\bs{X}^{'}\bs{X})^{-1}+(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{C}\\
+&amp;=\bs{C}^{'}\bs{C}\geq0,
+\end{align}
+\]</span> where the third equality follows from <span class="math inline">\(\bs{C}^{'}\bs{X}=\bs{A}^{'}\bs{X}-(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{X}=\bs{A}^{'}\bs{X}-\bs{I}_k=\bs{0}_{k\times k}\)</span>.</p>
+</div>
+</section>
+<section id="control-variables-and-the-conditional-mean-independence-assumption" class="level2" data-number="29.8">
+<h2 data-number="29.8" class="anchored" data-anchor-id="control-variables-and-the-conditional-mean-independence-assumption"><span class="header-section-number">29.8</span> Control variables and the conditional mean independence assumption</h2>
+<p>In this section, we consider the following model with control variables: <span class="math display">\[
+\begin{align}
+Y_i=\beta_0+\beta_1X_{1i}+\cdots+\beta_kX_{ki}+\beta_{k+1}W_{1i}+\cdots+\beta_{k+r}W_{ri}+u_i,
+\end{align}
+\]</span> where <span class="math inline">\(W_{1},\ldots,W_{r}\)</span> are control variables. Let <span class="math inline">\(\bs{\beta}=(\beta_0,\beta_1,\ldots,\beta_k)^{'}\)</span>, <span class="math inline">\(\bs{\gamma}=(\beta_{k+1},\ldots,\beta_{k+r})^{'}\)</span>, <span class="math inline">\(\bs{X}_i=(1,X_{1i},\ldots,X_{ki})^{'}\)</span>, and <span class="math inline">\(\bs{W}_i=(W_{1i},\ldots,W_{ri})^{'}\)</span>. Then, we can express the model in matrix form as <span class="math display">\[
+\begin{align}
+Y_i=\bs{X}^{'}_i\bs{\beta}+\bs{W}^{'}_i\bs{\gamma}+u_i.
+\end{align}
+\]</span> Stacking over <span class="math inline">\(i\)</span>, we obtain <span class="math display">\[
+\begin{align}
+\bs{Y}=\bs{X}\bs{\beta}+\bs{W}\bs{\gamma}+\bs{U},
+\end{align}
+\]</span> where <span class="math inline">\(\bs{Y}=(Y_1,\ldots,Y_n)^{'}\)</span>, <span class="math inline">\(\bs{X}=(\bs{X}_1,\ldots,\bs{X}_n)^{'}\)</span>, <span class="math inline">\(\bs{W}=(\bs{W}_1,\ldots,\bs{W}_n)^{'}\)</span>, and <span class="math inline">\(\bs{U}=(u_1,\ldots,u_n)^{'}\)</span>. Let <span class="math inline">\(\mb{X}=(\bs{X},\bs{W})\)</span> and <span class="math inline">\(\bs{\theta}=(\bs{\beta}^{'},\bs{\gamma}^{'})^{'}\)</span>. Then, we can express the model as <span class="math display">\[
+\begin{align}
+\bs{Y}=\mb{X}\bs{\theta}+\bs{U}.
+\end{align}
+\]</span> The OLS estimator of <span class="math inline">\(\bs{\theta}\)</span> is given by <span class="math display">\[
+\begin{align}
+\hat{\bs{\theta}}=
+\begin{pmatrix}
+\hat{\bs{\beta}}\\
+\hat{\bs{\gamma}}
+\end{pmatrix}
+=(\mb{X}^{'}\mb{X})^{-1}\mb{X}^{'}\bs{Y}=
+\begin{pmatrix}
+\bs{X}^{'}\bs{X}&amp;\bs{X}^{'}\bs{W}\\
+\bs{W}^{'}\bs{X}&amp;\bs{W}^{'}\bs{W}   
+\end{pmatrix}^{-1}
+\begin{pmatrix}
+\bs{X}^{'}\bs{Y}\\
+\bs{W}^{'}\bs{Y}
+\end{pmatrix}.
+\end{align}
+\]</span> Let <span class="math inline">\(\bs{M}_{\bs{W}}=\bs{I}_n-\bs{W}(\bs{W}^{'}\bs{W})^{-1}\bs{W}^{'}\)</span>. Then, using the matrix inverse formula, we can show that <span class="math display">\[
+\begin{align}
+\begin{pmatrix}
+\bs{X}^{'}\bs{X}&amp;\bs{X}^{'}\bs{W}\\
+\bs{W}^{'}\bs{X}&amp;\bs{W}^{'}\bs{W}   
+\end{pmatrix}^{-1}
+=
+\begin{pmatrix}
+\bs{K}_{11}&amp;\bs{K}_{12}\\
+\bs{K}_{21}&amp;\bs{K}_{22}
+\end{pmatrix},
+\end{align}
+\]</span> where</p>
+<ul>
+<li><span class="math inline">\(\bs{K}_{11}=(\bs{X}^{'}\bs{M}_{\bs{W}}\bs{X})^{-1}\)</span>,</li>
+<li><span class="math inline">\(\bs{K}_{12}=-(\bs{X}^{'}\bs{M}_{\bs{W}}\bs{X})^{-1}\bs{X}^{'}\bs{W}(\bs{W}^{'}\bs{W})^{-1}\)</span>,</li>
+<li><span class="math inline">\(\bs{K}_{21}=-(\bs{W}^{'}\bs{W})^{-1}\bs{W}^{'}\bs{X}(\bs{X}^{'}\bs{M}_{\bs{W}}\bs{X})^{-1}\)</span>, and</li>
+<li><span class="math inline">\(\bs{K}_{22}=(\bs{W}^{'}\bs{W})^{-1}+\bs{K}_{21}\bs{X}^{'}\bs{W}(\bs{W}^{'}\bs{W})^{-1}\)</span>.</li>
+</ul>
+<p>Using this matrix inverse result, we can express the OLS estimator of <span class="math inline">\(\bs{\beta}\)</span> as <span class="math display">\[
+\begin{align}
+\hat{\bs{\beta}}=\bs{K}_{11}\bs{X}^{'}\bs{Y}+\bs{K}_{12}\bs{W}^{'}\bs{Y}=(\bs{X}^{'}\bs{M}_{\bs{W}}\bs{X})^{-1}\bs{X}^{'}\bs{M}_{\bs{W}}\bs{Y}.
+\end{align}
+\]</span> This result indicates that the OLS estimator of <span class="math inline">\(\bs{\beta}\)</span> can be obtained by regressing <span class="math inline">\(\tilde{\bs{Y}}=\bs{M}_{\bs{W}}\bs{Y}\)</span> on <span class="math inline">\(\tilde{\bs{X}}=\bs{M}_{\bs{W}}\bs{X}\)</span>. Note that <span class="math inline">\(\tilde{\bs{Y}}\)</span> is the residual vector from the regression of <span class="math inline">\(\bs{Y}\)</span> on <span class="math inline">\(\bs{W}\)</span>, and <span class="math inline">\(\tilde{\bs{X}}\)</span> is the residual matrix obtained from the regression of <span class="math inline">\(\bs{X}\)</span> on <span class="math inline">\(\bs{W}\)</span>. Thus, this result gives the proof of the Frisch-Waugh theorem given in Section 13.3.</p>
+<p>To show the large sample properties of the OLS estimator <span class="math inline">\(\hat{\bs{\beta}}\)</span>, we assume the following assumptions.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The least squares assumptions for the model with control variables
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Conditional mean independence assumption</strong>: <span class="math inline">\(\E(u_i |\bs{X}_i,\bs{W}_i) = \E(u_i |\bs{W}_i)\)</span>.</li>
+<li><strong>Random sampling assumption</strong>: <span class="math inline">\((\bs{X}_i,\bs{W}_i, Y_i)\)</span>, <span class="math inline">\(i =1,2,\ldots,n\)</span>, are independently and identically distributed (i.i.d.) across observations.</li>
+<li><strong>No large outliers assumption</strong>: <span class="math inline">\(\bs{X}_i\)</span>, <span class="math inline">\(\bs{W}_i\)</span>, and <span class="math inline">\(u_i\)</span> have nonzero finite fourth moments.</li>
+<li><strong>No perfect multicollinearity</strong>: <span class="math inline">\(\mb{X}\)</span> has full column rank, i.e., <span class="math inline">\(\text{rank}(\mb{X})=k+r+1\)</span>.</li>
+</ol>
+</div>
+</div>
+<p>These assumptions are identical to those stated in Section 13.8, except that we use matrix algebra notation to express them.</p>
+<div id="thm-thm26-control" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.10 (The OLS estimator for the model with control variables)</strong></span> Assume that the least squares assumptions for the model with control variables hold. Then, the OLS estimator <span class="math inline">\(\hat{\bs{\beta}}\)</span> is consistent and has an asymptotic normal distribution.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-control" class="quarto-xref">Theorem&nbsp;<span>29.10</span></a>). </span>The proof closely follows that of <a href="#thm-thm26-1" class="quarto-xref">Theorem&nbsp;<span>29.3</span></a> and is thus omitted.</p>
+</div>
+</section>
+<section id="generalized-least-squares-estimation" class="level2" data-number="29.9">
+<h2 data-number="29.9" class="anchored" data-anchor-id="generalized-least-squares-estimation"><span class="header-section-number">29.9</span> Generalized least squares estimation</h2>
+<p>In this section, we consider <span class="math inline">\(\bs{Y}=\bs{X}\bs{\beta}+\bs{U}\)</span> under the generalized least squares (GLS) assumptions given in the following callout block.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The generalized least squares assumptions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><span class="math inline">\(\E(u_i |\bs{X}) = \bs{0}\)</span>.</li>
+<li><span class="math inline">\(\E(\bs{U}\bs{U}^{'}|\bs{X})=\bs{\Omega}(\bs{X})\)</span>, where <span class="math inline">\(\bs{\Omega}(\bs{X})\)</span> is an <span class="math inline">\(n\times n\)</span> positive definite matrix that depends on <span class="math inline">\(\bs{X}\)</span>.</li>
+<li><span class="math inline">\(\bs{X}_i\)</span> and <span class="math inline">\(u_i\)</span> have nonzero suitable finite moments.</li>
+<li><span class="math inline">\(\bs{X}\)</span> has full column rank, i.e., <span class="math inline">\(\text{rank}(\bs{X})=k+1\)</span>.</li>
+</ol>
+</div>
+</div>
+<p>The first assumption is implied by the first two extended assumptions of the OLS estimator. However, we do not require i.i.d. sampling across <span class="math inline">\(i\)</span> for the GLS estimation. The second assumption allows for heteroskedasticity and/or correlation of the errors across <span class="math inline">\(i\)</span>. The moment existence assumption depends on the specific form of <span class="math inline">\(\bs{\Omega}(\bs{X})\)</span>. For example, if <span class="math inline">\(\bs{\Omega}(\bs{X})=\sigma^2_u\bs{I}_n\)</span>, then we will require the existence of non-zero finite fourth moments as in the case of the OLS estimator. The fourth assumption is needed for ruling out perfect multicollinearity.</p>
+<p>We consider the GLS estimation under two cases. In the first case, we assume that <span class="math inline">\(\bs{\Omega}(\bs{X})\)</span> is known. In the second case, we assume that the functional form of <span class="math inline">\(\bs{\Omega}(\bs{X})\)</span> is known upto some unknown parameters. To ease the notation, we will drop the dependence of <span class="math inline">\(\bs{\Omega}(\bs{X})\)</span> on <span class="math inline">\(\bs{X}\)</span> and write <span class="math inline">\(\bs{\Omega}\)</span> instead.</p>
+<p>In the first case, we can transform model by <span class="math inline">\(\bs{\Omega}\)</span> such that the transformed model has homoskedastic errors. Let <span class="math inline">\(\bs{F}\)</span> be a matrix that satifies <span class="math inline">\(\bs{F}\bs{F}^{'}=\bs{\Omega}^{-1}\)</span>. Then, we can transform the model by premultiplying both sides of the model by <span class="math inline">\(\bs{F}^{'}\)</span> to get <span class="math display">\[
+\begin{align}
+\tilde{\bs{Y}} =\tilde{\bs{X}}\bs{\beta}+\tilde{\bs{U}},
+\end{align}
+\]</span> where <span class="math inline">\(\tilde{\bs{Y}}=\bs{F}^{'}\bs{Y}\)</span>, <span class="math inline">\(\tilde{\bs{X}}=\bs{F}^{'}\bs{X}\)</span>, and <span class="math inline">\(\tilde{\bs{U}}=\bs{F}^{'}\bs{U}\)</span>. Note that <span class="math inline">\(\E(\tilde{\bs{U}}|\tilde{\bs{X}})=\E(\bs{F}^{'}\bs{U}|\tilde{\bs{X}})=\bs{F}^{'}\E(\bs{U}|\tilde{\bs{X}})=\bs{0}_{n\times1}\)</span>. Also note that <span class="math inline">\(\E(\tilde{\bs{U}}\tilde{\bs{U}}^{'}|\tilde{\bs{X}})=\E(\bs{F}^{'}\bs{U}\bs{U}^{'}\bs{F}|\tilde{\bs{X}})=\bs{F}^{'}\E(\bs{U}\bs{U}^{'}|\tilde{\bs{X}})\bs{F}=\bs{F}^{'}\bs{\Omega}\bs{F}=\bs{I}_n\)</span>. Thus, the transformed model has homoskedastic errors.</p>
+<p>The GLS estimator is the OLS estimator of the transformed model and is given by <span id="eq-eq26-22"><span class="math display">\[
+\begin{align}
+\tilde{\bs{\beta}}^{GLS}&amp;=\left(\tilde{\bs{X}}^{'}\tilde{\bs{X}}\right)^{-1}\tilde{\bs{X}}^{'}\tilde{\bs{Y}}=\left(\bs{X}^{'}\bs{F}\bs{F}^{'}\bs{X}\right)^{-1}\left(\bs{X}^{'}\bs{F}\bs{F}^{'}\bs{Y}\right)\\
+&amp;=\left(\bs{X}^{'}\bs{\Omega}^{-1}\bs{X}\right)^{-1}\left(\bs{X}^{'}\bs{\Omega}^{-1}\bs{Y}\right).
+\end{align}
+\tag{29.13}\]</span></span></p>
+<p>Given the fact that the transformed model is homoskedastic, it follows that <span class="math display">\[
+\begin{align}
+&amp;\E(\tilde{\bs{\beta}}^{GLS}|\bs{X})=\bs{\beta},\\
+&amp;\text{var}(\tilde{\bs{\beta}}^{GLS}|\bs{X})=\left(\bs{X}^{'}\bs{\Omega}^{-1}\bs{X}\right)^{-1}.
+\end{align}
+\]</span></p>
+<p>Also, since the transformed model satisfies the Gauss-Markov conditions, we can use the Gauss-Markov theorem to show that the GLS estimator is efficient among all linear and conditionally unbiased estimators. That is, the GLS estimator is the best linear unbiased estimator (BLUE).</p>
+<p>In the second case, we assume that the functional form of <span class="math inline">\(\bs{\Omega}\)</span> is known up to some unknown parameters. In this case, we can use an estimator of <span class="math inline">\(\bs{\Omega}\)</span> to formulate the following estimator: <span id="eq-eq26-23"><span class="math display">\[
+\begin{align}
+\hat{\bs{\beta}}^{GLS}=\left(\bs{X}^{'}\hat{\bs{\Omega}}^{-1}\bs{X}\right)^{-1}\left(\bs{X}^{'}\hat{\bs{\Omega}}^{-1}\bs{Y}\right),
+\end{align}
+\tag{29.14}\]</span></span> where <span class="math inline">\(\hat{\bs{\Omega}}\)</span> is an estimator of <span class="math inline">\(\bs{\Omega}\)</span>. This GLS estimator is called the feasible generalized least squares (FGLS) estimator.</p>
+</section>
+<section id="instrumental-variables-and-generalized-method-of-moments-estimation" class="level2" data-number="29.10">
+<h2 data-number="29.10" class="anchored" data-anchor-id="instrumental-variables-and-generalized-method-of-moments-estimation"><span class="header-section-number">29.10</span> Instrumental variables and generalized method of moments estimation</h2>
+<section id="the-tsls-estimator" class="level3" data-number="29.10.1">
+<h3 data-number="29.10.1" class="anchored" data-anchor-id="the-tsls-estimator"><span class="header-section-number">29.10.1</span> The TSLS estimator</h3>
+<p>Let <span class="math inline">\(\bs{X}\)</span> be the <span class="math inline">\(n\times(k + r + 1)\)</span> matrix of the regressors that contains both the endogenous regressors and exogenous regressors. We assume that the <span class="math inline">\(i\)</span>th row vector of <span class="math inline">\(\bs{X}\)</span> is <span class="math inline">\(\bs{X}_i = (1, X_{1i}, X_{2i},\ldots, X_{ki}, W_{1i}, W_{2i},\ldots,W_{ri})^{'}\)</span>. Let <span class="math inline">\(\bs{Z}\)</span> be the <span class="math inline">\(n\times(m + r + 1)\)</span> matrix of all the exogenous regressors, both those included in the model (the <span class="math inline">\(W\)</span>’s) and those excluded from the model. The <span class="math inline">\(i\)</span>th row of <span class="math inline">\(\bs{Z}\)</span> is <span class="math inline">\(\bs{Z}_i = (1, Z_{1i}, Z_{2i},\ldots, Z_{mi},W_{1i}, W_{2i},\ldots,W_{ri})^{'}\)</span>. We assume that <span class="math inline">\(\bs{Z}\)</span> satifies the instrument exogeneity condition: <span id="eq-eq26-24"><span class="math display">\[
+\begin{align}
+\E(\bs{Z}_iu_i)=\bs{0}.
+\end{align}
+\tag{29.15}\]</span></span></p>
+<p>Let <span class="math inline">\(\hat{\bs{X}}\)</span> be the matrix of predicted values with the <span class="math inline">\(i\)</span>th row given by <span class="math inline">\((1, \hat{X}_{1i}, \hat{X}_{2i},\ldots, \hat{X}_{ki}, W_{1i}, W_{2i},\ldots,W_{ri})\)</span>, where <span class="math inline">\(\hat{X}_{1i}\)</span> is the predicted value from the regression of <span class="math inline">\(X_{1i}\)</span> on <span class="math inline">\(\bs{Z}\)</span> and so forth. Because the <span class="math inline">\(W's\)</span> are contained in <span class="math inline">\(\bs{Z}\)</span>, the predicted value from a regression of <span class="math inline">\(W_{1i}\)</span> on <span class="math inline">\(\bs{Z}\)</span> is just <span class="math inline">\(W_{1i}\)</span> and so forth. Using the projection matrix <span class="math inline">\(\bs{P}_{\bs{Z}} = \bs{Z}(\bs{Z}^{'}\bs{Z})^{-1}\bs{Z}^{'}\)</span>, the predicted values are <span class="math inline">\(\hat{\bs{X}}=\bs{P}_{\bs{Z}}\bs{X}\)</span>.</p>
+<p>The TSLS estimator is the OLS estimator of the regression of <span class="math inline">\(\bs{Y}\)</span> on <span class="math inline">\(\hat{\bs{X}}\)</span> and is given by <span id="eq-eq26-25"><span class="math display">\[
+\begin{align}
+\hat{\bs{\beta}}^{TSLS}=(\hat{\bs{X}}^{'}\hat{\bs{X}})^{-1}\hat{\bs{X}}^{'}\bs{Y}=(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{Y}.
+\end{align}
+\tag{29.16}\]</span></span></p>
+<p>Using <span class="math inline">\(\bs{Y}=\bs{X}\bs{\beta}+\bs{U}\)</span>, we can express the TSLS estimator as <span class="math display">\[
+\begin{align}
+\sqrt{n}(\hat{\bs{\beta}}^{TSLS}-\bs{\beta})&amp;=\left(\frac{\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X}}{n}\right)^{-1}\frac{\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{Y}}{\sqrt{n}}\\
+&amp;=\left[\frac{\bs{X}^{'}\bs{Z}}{n}\left(\frac{\bs{Z}^{'}\bs{Z}}{n}\right)^{-1}\frac{\bs{Z}^{'}\bs{X}}{n}\right]^{-1}\left[\frac{\bs{X}^{'}\bs{Z}}{n}\left(\frac{\bs{Z}^{'}\bs{Z}}{n}\right)^{-1}\frac{\bs{Z}^{'}\bs{U}}{\sqrt{n}}\right].
+\end{align}
+\]</span></p>
+<p>We assume the following conditions for the asymptotic distribution of the TSLS estimator:</p>
+<ol type="1">
+<li><span class="math inline">\(\frac{\bs{X}^{'}\bs{Z}}{n}\xrightarrow{p}\bs{Q}_{\bs{X}\bs{Z}}\)</span>, where <span class="math inline">\(\bs{Q}_{\bs{X}\bs{Z}}=\E(\bs{X}_i\bs{Z}^{'}_i)\)</span>,</li>
+<li><span class="math inline">\(\frac{\bs{Z}^{'}\bs{Z}}{n}\xrightarrow{p}\bs{Q}_{\bs{Z}\bs{Z}}\)</span>, where <span class="math inline">\(\bs{Q}_{\bs{Z}\bs{Z}}=\E(\bs{Z}_i\bs{Z}^{'}_i)\)</span>, and</li>
+<li><span class="math inline">\(\frac{\bs{Z}^{'}\bs{U}}{\sqrt{n}}\xrightarrow{d}\bs{\Psi}_{\bs{Z}\bs{U}}\)</span>, where <span class="math inline">\(\bs{\Psi}_{\bs{Z}\bs{U}}\sim N(\bs{0},\bs{H})\)</span> and <span class="math inline">\(\bs{H}=\E(\bs{Z}_i\bs{Z}^{'}_iu^2_i)\)</span>.</li>
+</ol>
+<p>Under these assumptions, it follows from Slutsky’s theorem that <span class="math display">\[
+\begin{align*}
+\sqrt{n}(\hat{\bs{\beta}}^{TSLS}-\bs{\beta})\xrightarrow{d}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{\Psi}_{\bs{Z}\bs{U}}\sim N(\bs{0},\bs{\Sigma}^{TSLS}),
+\end{align*}
+\]</span> where <span class="math display">\[
+\begin{align*}
+\bs{\Sigma}^{TSLS}=\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{H}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+\]</span> We can estimate <span class="math inline">\(\bs{\Sigma}^{TSLS}\)</span> by substituting sample moments for the population moments: <span class="math display">\[
+\begin{align*}
+\hat{\bs{\Sigma}}^{TSLS}=\left(\hat{\bs{Q}}_{\bs{X}\bs{Z}}\hat{\bs{Q}}^{-1}_{\bs{Z}\bs{Z}}\hat{\bs{Q}}_{\bs{Z}\bs{X}}\right)^{-1}\hat{\bs{Q}}_{\bs{X}\bs{Z}}\hat{\bs{Q}}^{-1}_{\bs{Z}\bs{Z}}\hat{\bs{H}}\hat{\bs{Q}}^{-1}_{\bs{Z}\bs{Z}}\hat{\bs{Q}}_{\bs{Z}\bs{X}}\left(\hat{\bs{Q}}_{\bs{X}\bs{Z}}\hat{\bs{Q}}^{-1}_{\bs{Z}\bs{Z}}\hat{\bs{Q}}_{\bs{Z}\bs{X}}\right)^{-1},
+\end{align*}
+\]</span> where</p>
+<ul>
+<li><span class="math inline">\(\hat{\bs{Q}}_{\bs{X}\bs{Z}}=\bs{X}^{'}\bs{Z}/n\)</span>, <span class="math inline">\(\hat{\bs{Q}}_{\bs{Z}\bs{Z}}=\bs{Z}^{'}\bs{Z}/n\)</span>, <span class="math inline">\(\hat{\bs{Q}}_{\bs{Z}\bs{X}}=\bs{Z}^{'}\bs{X}/n\)</span>,and</li>
+<li><span class="math inline">\(\hat{\bs{H}}=\frac{1}{n}\sum_{i=1}^n\bs{Z}_i\bs{Z}^{'}_i\hat{u}^2_i\)</span>, and <span class="math inline">\(\hat{u}_i\)</span> is the <span class="math inline">\(i\)</span>th element of <span class="math inline">\(\hat{\bs{U}}=\bs{Y}-\bs{X}\hat{\bs{\beta}}^{TSLS}\)</span>.</li>
+</ul>
+<p>When the error terms are homoskedastic, the covariance matrix of the TSLS estimator simplifies. Assume that <span class="math inline">\(\E(u^2_i|\bs{Z}_i)=\sigma^2_u\)</span>. Then, by the law of iterated expectations, we have <span class="math display">\[
+\begin{align*}
+\bs{H}=\E(\bs{Z}_i\bs{Z}^{'}_iu^2_i)=\E\left(\E(\bs{Z}_i\bs{Z}^{'}_iu^2_i|\bs{Z}_i)\right)=\E(\bs{Z}_i\bs{Z}^{'}_i\E(u^2_i|\bs{Z}_i)=\sigma^2_u\bs{Q}_{\bs{Z}\bs{Z}}.
+\end{align*}
+\]</span> Thus, <span class="math inline">\(\bs{\Sigma}^{TSLS}\)</span> simplifies to <span class="math display">\[
+\begin{align*}
+\bs{\Sigma}^{TSLS}=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+\]</span> This homoskedasticity-only covariance matrix estimator can be estimated by substituting sample moments for the population moments: <span class="math display">\[
+\begin{align*}
+\tilde{\bs{\Sigma}}^{TSLS}=\hat{\sigma}^2_u\left(\hat{\bs{Q}}_{\bs{X}\bs{Z}}\hat{\bs{Q}}^{-1}_{\bs{Z}\bs{Z}}\hat{\bs{Q}}_{\bs{Z}\bs{X}}\right)^{-1},
+\end{align*}
+\]</span> where <span class="math inline">\(\hat{\sigma}^2_u=\frac{1}{n-k-1}\hat{\bs{U}}^{'}\hat{\bs{U}}\)</span> and <span class="math inline">\(\hat{\bs{U}}=\bs{Y}-\bs{X}\hat{\bs{\beta}}^{TSLS}\)</span>.</p>
+</section>
+<section id="the-class-of-iv-estimators" class="level3" data-number="29.10.2">
+<h3 data-number="29.10.2" class="anchored" data-anchor-id="the-class-of-iv-estimators"><span class="header-section-number">29.10.2</span> The class of IV estimators</h3>
+<p>The TSLS estimator is a special case of the IV estimator. The IV estimator can be formulated in two equivalent ways. The first way is based on the instrument exogeneity condition: <span id="eq-eq26-27"><span class="math display">\[
+\begin{align}
+\E\left((\bs{Y}-\bs{X}\bs{\beta})^{'}\bs{Z}\right)=0.
+\end{align}
+\tag{29.17}\]</span></span> This moment condition constitutes <span class="math inline">\(m+r+1\)</span> equations involving <span class="math inline">\(k+r+1\)</span> unknowns. When <span class="math inline">\(m=k\)</span>, we can consider the sample analog of <a href="#eq-eq26-27" class="quarto-xref">Equation&nbsp;<span>29.17</span></a>: <span class="math inline">\((\bs{Y}-\bs{X}\bs{b})^{'}\bs{Z}=0\)</span>. Then, the IV estimator is the value of <span class="math inline">\(\bs{b}\)</span> that satisfies the sample analog of <a href="#eq-eq26-27" class="quarto-xref">Equation&nbsp;<span>29.17</span></a>. However, when <span class="math inline">\(m&gt;k\)</span>, there are infinitely many values of <span class="math inline">\(\bs{b}\)</span> that satisfy the sample analog of <a href="#eq-eq26-27" class="quarto-xref">Equation&nbsp;<span>29.17</span></a>.</p>
+<p>When parameters are overidentified, we can resort to the second way of defining the IV estimator. The second way is based on minimizing the quadratic form involving all the moment conditions. Let <span class="math inline">\(\bs{A}\)</span> be a <span class="math inline">\((m+r+1)\times(m+r+1)\)</span> matrix of weights. Then, the IV estimator is the value of <span class="math inline">\(\bs{b}\)</span> that minimizes <span id="eq-eq26-28"><span class="math display">\[
+\begin{align}
+\bs{Q}(\bs{b})=\left(\bs{Y}-\bs{X}\bs{b}\right)^{'}\bs{Z}\bs{A}\bs{Z}^{'}\left(\bs{Y}-\bs{X}\bs{b}\right).
+\end{align}
+\tag{29.18}\]</span></span> The minimization problem is solved by differentiating <span class="math inline">\(\bs{Q}(\bs{b})\)</span> with respect to <span class="math inline">\(\bs{b}\)</span> and setting the resulting derivative equal to zero. The solution is given by <span id="eq-eq26-29"><span class="math display">\[
+\begin{align}
+\hat{\bs{\beta}}^{IV}_{\bs{A}}=\left(\bs{X}^{'}\bs{Z}\bs{A}\bs{Z}^{'}\bs{X}\right)^{-1}\bs{X}^{'}\bs{Z}\bs{A}\bs{Z}^{'}\bs{Y}.
+\end{align}
+\tag{29.19}\]</span></span> The TSLS estimator is a special case of the IV estimator when <span class="math inline">\(\bs{A}=(\bs{Z}^{'}\bs{Z})^{-1}\)</span>. Thus, the TSLS estimator is the IV estimator that minimizes the quadratic form involving the sample moment conditions with the weights given by <span class="math inline">\(\bs{A}=(\bs{Z}^{'}\bs{Z})^{-1}\)</span>.</p>
+<p>Using the same argument as in the case of the TSLS estimator, we can show that the IV estimator is asymptotically normally distributed. The asymptotic distribution of the IV estimator is given by <span class="math display">\[
+\begin{align*}
+\sqrt{n}(\hat{\bs{\beta}}^{IV}_{\bs{A}}-\bs{\beta})\xrightarrow{d}N(\bs{0},\bs{\Sigma}^{IV}_{\bs{A}}),
+\end{align*}
+\]</span> where <span class="math display">\[
+\begin{align*}
+\bs{\Sigma}^{IV}_{\bs{A}}=\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{H}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+\]</span></p>
+<p>Since <span class="math inline">\(\bs{H}=\sigma^2_u\bs{Q}_{\bs{Z}\bs{Z}}\)</span> under homoskedasticity, the covariance matrix of the IV estimator becomes <span class="math display">\[
+\begin{align*}
+\bs{\Sigma}^{IV}_{\bs{A}}=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+\]</span></p>
+<div id="thm-thm26-5" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.11 (The efficiency of the TSLS estimator under homoskedasticity)</strong></span> If the errors are homoskedastic, then the TSLS estimator is efficient among all IV estimators that are based on the linear moment conditions.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-5" class="quarto-xref">Theorem&nbsp;<span>29.11</span></a>). </span>Recall that the covariance matrix of the TSLS estimator is given by <span class="math inline">\(\bs{\Sigma}^{TSLS}=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\)</span>. Then, we can express <span class="math inline">\(\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS}\)</span> as <span class="math display">\[
+\begin{align*}
+\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS}&amp;=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\\
+&amp;-\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\\
+&amp;=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\left[\bs{Q}_{\bs{Z}\bs{Z}}-\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\right]\\
+&amp;\times\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+\]</span> Let <span class="math inline">\(\bs{F}\)</span> be the square root matrix of <span class="math inline">\(\bs{Q}_{\bs{Z}\bs{Z}}\)</span> such that <span class="math inline">\(\bs{F}^{'}\bs{F}=\bs{Q}_{\bs{Z}\bs{Z}}\)</span> and <span class="math inline">\(\bs{F}^{-1}\bs{F}^{-1'}=\bs{Q}_{\bs{Z}\bs{Z}}^{-1}\)</span>. Then, we can express <span class="math inline">\(\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS}\)</span> as <span class="math display">\[
+\begin{align*}
+\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS}&amp;=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{F}^{'}\\
+&amp;\times\left(\bs{I}-\bs{F}^{-1'}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{F}^{-1}\bs{F}^{-1'}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{F}^{-1}\right)\\
+&amp;\times\bs{F}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+\]</span> Let <span class="math inline">\(\bs{D}=\bs{F}^{-1'}\bs{Q}_{\bs{Z}\bs{X}}\)</span> and <span class="math inline">\(\bs{d}=\bs{F}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{c}\)</span>, where <span class="math inline">\(\bs{c}\in\mathbb{R}^{k+r+1}\)</span>. Then, we can express <span class="math inline">\(\bs{c}^{'}(\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS})\bs{c}\)</span> as <span class="math display">\[
+\begin{align*}
+\bs{c}^{'}(\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS})\bs{c}&amp;= \sigma^2_u\bs{d}^{'}\left(\bs{I}-\bs{D}(\bs{D}^{'}\bs{D})^{-1}\bs{D}^{'}\right)\bs{d}.
+\end{align*}
+\]</span> Since <span class="math inline">\(\bs{I}-\bs{D}(\bs{D}^{'}\bs{D})^{-1}\bs{D}^{'}\)</span> is a positive semidefinite matrix, we have <span class="math inline">\(\bs{c}^{'}(\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS})\bs{c}\geq0\)</span>. Thus, the TSLS estimator is efficient among all IV estimators that are based on the linear moment conditions.</p>
+</div>
+<p>Using the homoskedasticity-only F-statistic formula, we can determine the expression of the <span class="math inline">\(J\)</span> statistic. Under homoskedasticity, the <span class="math inline">\(J\)</span> statistic is the homoskedasticity-only F-statistic for testing the null hypothesis that all coefficients on <span class="math inline">\(\bs{Z}\)</span> from the regression of <span class="math inline">\(\hat{\bs{U}}\)</span> on <span class="math inline">\(\bs{Z}\)</span> are equal to zero. The unrestericted model is the regression of <span class="math inline">\(\hat{\bs{U}}\)</span> on <span class="math inline">\(\bs{Z}\)</span> and the restricted model is the regression without any regressors. Thus, <span class="math inline">\(SSR_u=\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}\)</span> and <span class="math inline">\(SSR_r=\hat{\bs{U}}^{'}\hat{\bs{U}}\)</span>. The <span class="math inline">\(J\)</span> statistic is then given by <span id="eq-eq26-30"><span class="math display">\[
+\begin{align}
+J&amp;=(m+r)\times F\\
+&amp;=\frac{\left(\hat{\bs{U}}^{'}\hat{\bs{U}}-\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}} \right)}{\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}/(n-m-r-1)}\\
+&amp;=\frac{\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}}}{\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}/(n-m-r-1)}.
+\end{align}
+\tag{29.20}\]</span></span></p>
+<div id="thm-thm26-6" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.12 (The <span class="math inline">\(J\)</span> statistic under homoskedasticity)</strong></span> If the errors are homoskedastic, then under the null hypothesis that <span class="math inline">\(\E(\bs{Z}_iu_i)=0\)</span>, we have <span class="math display">\[
+\begin{align}
+J\xrightarrow{d}\chi^2_{m-k}.
+\end{align}
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-6" class="quarto-xref">Theorem&nbsp;<span>29.12</span></a>). </span>Note that <span class="math display">\[
+\begin{align*}
+\hat{\bs{U}} &amp;= \bs{Y} - \bs{X}\hat{\bs{\beta}}^{TSLS} = \bs{Y} - \bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{Y}\\
+&amp;=\bs{X}\bs{\beta}+\bs{U} - \bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}(\bs{X}\bs{\beta}+\bs{U})\\
+&amp;=\left(\bs{I}-\bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}\right)\bs{U}.
+\end{align*}
+\]</span> Thus, we can express <span class="math inline">\(\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}}\)</span> as <span class="math display">\[
+\begin{align*}
+\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}} &amp;= \bs{U}^{'}\left(\bs{I}-\bs{P}_{\bs{Z}}\bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\right)\bs{P}_{\bs{Z}}\left(\bs{I}-\bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}\right)\bs{U}\\
+&amp;=\bs{U}^{'}\left(\bs{P}_{\bs{Z}}-\bs{P}_{\bs{Z}}\bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}\right)\bs{U}.
+\end{align*}
+\]</span> Let <span class="math inline">\(\bs{B}=\bs{Z}(\bs{Z}^{'}\bs{Z})^{-1/2}\)</span>, which is defined because <span class="math inline">\(\bs{Z}\)</span> has full column rank. Then, we can express <span class="math inline">\(\bs{P}_{\bs{Z}}\)</span> as <span class="math inline">\(\bs{P}_{\bs{Z}}=\bs{B}\bs{B}^{'}\)</span>. Using this expression, we can write <span class="math inline">\(\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}}\)</span> as <span class="math display">\[
+\begin{align*}
+\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}} &amp;= \bs{U}^{'}\left(\bs{B}\bs{B}^{'}-\bs{B}\bs{B}^{'}\bs{X}(\bs{X}^{'}\bs{B}\bs{B}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{B}\bs{B}^{'}\right)\bs{U}\\
+&amp;=\bs{U}^{'}\bs{B}\left(\bs{I}-\bs{B}^{'}\bs{X}(\bs{X}^{'}\bs{B}\bs{B}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{B}\right)\bs{B}^{'}\bs{U}\\
+&amp;=\bs{U}^{'}\bs{B}\bs{M}_{\bs{B}^{'}\bs{X}}\bs{B}^{'}\bs{U},
+\end{align*}
+\]</span> where <span class="math inline">\(\bs{M}_{\bs{B}^{'}\bs{X}}=\bs{I}-\bs{B}^{'}\bs{X}(\bs{X}^{'}\bs{B}\bs{B}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{B}\)</span> is symmetric and idempotent.</p>
+<p>Under the null hypothesis that <span class="math inline">\(\E(\bs{Z}_iu_i)=0\)</span>, we have <span class="math inline">\(\frac{1}{\sqrt{n}}\bs{Z}^{'}\bs{U}=\frac{1}{\sqrt{n}}\sum_{i=1}^n\bs{Z}_iu_i\xrightarrow{d}N(0,\sigma^2_u\bs{Q}_{\bs{Z}\bs{Z}})\)</span>. Also, <span class="math inline">\(\frac{1}{\sqrt{n}}\bs{B}^{'}\bs{X}=(\bs{Z}^{'}\bs{Z}/n)^{-1/2}(\bs{Z}^{'}\bs{X}/n)\xrightarrow{p}\bs{Q}^{-1/2}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\)</span>. Using these results, we can show that</p>
+<ul>
+<li><span class="math inline">\(\bs{B}^{'}\bs{U}=(\bs{Z}^{'}\bs{Z})^{-1/2'}\bs{Z}^{'}\bs{U}=(\bs{Z}^{'}\bs{Z}/n)^{-1/2'}(\bs{Z}^{'}\bs{U}/\sqrt{n})\xrightarrow{d}\sigma_u\bs{z}\)</span>, where <span class="math inline">\(\bs{z}\sim N(\bs{0},\bs{I}_{m+r+1})\)</span>.</li>
+<li><span class="math inline">\(\bs{M}_{\bs{B}^{'}\bs{X}}\xrightarrow{p}\bs{I}-\bs{Q}^{-1/2}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1/2'}_{\bs{Z}\bs{Z}}\bs{Q}^{-1/2}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}})^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1/2'}_{\bs{Z}\bs{Z}}=\bs{M}_{\bs{Q}^{-1/2}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}}\)</span>.</li>
+<li>Under the null hypothesis, it also follows that <span class="math inline">\(\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}/(n-m-r-1)\xrightarrow{p}\sigma^2_u\)</span>.</li>
+</ul>
+<p>Then, combining these results, we have <span class="math display">\[
+\begin{align*}
+J=\frac{\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}}}{\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}/(n-m-r-1)}=\frac{\bs{U}^{'}\bs{B}\bs{M}_{\bs{B}^{'}\bs{X}}\bs{B}^{'}\bs{U}}{\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}/(n-m-r-1)}
+\xrightarrow{d}\bs{z}^{'}\bs{M}_{\bs{Q}^{-1/2}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}}\bs{z},
+\end{align*}
+\]</span> where <span class="math inline">\(\bs{z}\sim N(\bs{0},\bs{I}_{m+r+1})\)</span>. Thus, <span class="math inline">\(J\sim \chi^2_{m-k}\)</span> by Theorem D.6 in Appendix D.</p>
+</div>
+</section>
+<section id="generalized-method-of-moments" class="level3" data-number="29.10.3">
+<h3 data-number="29.10.3" class="anchored" data-anchor-id="generalized-method-of-moments"><span class="header-section-number">29.10.3</span> Generalized method of moments</h3>
+<p>When the error terms are heteroskedastic, the TSLS estimator is not the most efficient estimator within the class of IV estimators. Also, the distributional result given in <a href="#thm-thm26-6" class="quarto-xref">Theorem&nbsp;<span>29.12</span></a> for the J-statistic does not hold. In this case, we can use the generalized method of moments (GMM) estimator. We use the GMM estimator to formulate a J-statistic that is valid under heteroskedasticity.</p>
+<p>When the moment conditions are linear, the cass of the GMM estimator consists of all the estimators that can be obtained by minimizing the quadratic form in <a href="#eq-eq26-28" class="quarto-xref">Equation&nbsp;<span>29.18</span></a>. Our goal is to find the GMM estimator that is efficient among all the estimators in the class of GMM estimators. To do this, we need to find the optimal weighting matrix <span class="math inline">\(\bs{A}\)</span>. In the heteroskedastic case, the optimal wieghting matrix is given by <span class="math inline">\(\bs{A}=\bs{H}^{-1}\)</span>, where <span class="math inline">\(\bs{H}=\E(\bs{Z}_i\bs{Z}^{'}_iu^2_i)\)</span>. The GMM estimator is obtained by minimizing the quadratic form <span id="eq-eq26-31"><span class="math display">\[
+\begin{align}
+\bs{Q}(\bs{b})=\left(\bs{Y}-\bs{X}\bs{b}\right)^{'}\bs{Z}\bs{H}^{-1}\bs{Z}^{'}\left(\bs{Y}-\bs{X}\bs{b}\right).
+\end{align}
+\tag{29.21}\]</span></span> Then, the efficient GMM estimator is given by <span id="eq-eq26-32"><span class="math display">\[
+\begin{align}
+\tilde{\bs{\beta}}^{GMM}=(\bs{X}^{'}\bs{Z}\bs{H}^{-1}\bs{Z}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Z}\bs{H}^{-1}\bs{Z}^{'}\bs{Y}.
+\end{align}
+\tag{29.22}\]</span></span> The asymptotic distribution can be determined by using the same arguments as in the case of the IV estimator. In particular, the covariance matrix of the GMM estimator is obtained by substituting <span class="math inline">\(\bs{A}=\bs{H}^{-1}\)</span> into the covariance matrix of the IV estimator. The asymptotic distribution of the GMM estimator is given by <span class="math display">\[
+\begin{align*}
+\sqrt{n}(\tilde{\bs{\beta}}^{GMM}-\bs{\beta})\xrightarrow{d}N(\bs{0},\bs{\Sigma}^{GMM}),
+\end{align*}
+\]</span> where <span class="math inline">\(\bs{\Sigma}^{GMM}=(\bs{Q}_{\bs{X}\bs{Z}}\bs{H}^{-1}\bs{Q}_{\bs{Z}\bs{X}})^{-1}\)</span>.</p>
+<div id="thm-thm26-7" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.13 (The GMM estimator)</strong></span> The GMM estimator in <a href="#eq-eq26-32" class="quarto-xref">Equation&nbsp;<span>29.22</span></a> is the most efficient estimator among all the estimators in the class of GMM estimators.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-7" class="quarto-xref">Theorem&nbsp;<span>29.13</span></a>). </span>The proof requires showing that <span class="math inline">\(\bs{c}(\bs{\Sigma}^{GMM}-\bs{\Sigma}^{IV}_{\bs{A}})\bs{c}\leq0\)</span> for all <span class="math inline">\(\bs{c}\in\mathbb{R}^{k+r+1}\)</span>. We can follow the same steps as in the proof of <a href="#thm-thm26-5" class="quarto-xref">Theorem&nbsp;<span>29.11</span></a>. The only difference is that we need to replace <span class="math inline">\(\sigma^2_u\bs{Q}_{\bs{Z}\bs{Z}}\)</span> with <span class="math inline">\(\bs{H}^{-1}\)</span>. We omit the details here.</p>
+</div>
+<p>The GMM estimator <span class="math inline">\(\tilde{\bs{\beta}}^{GMM}\)</span> is not feasible because it depends on the unknown covariance matrix <span class="math inline">\(\bs{H}\)</span>. The feasible GMM estimator is obtained by replacing <span class="math inline">\(\bs{H}\)</span> with its estimator <span class="math inline">\(\hat{\bs{H}}\)</span>. We can proceed in two steps to obtain the feasible GMM estimator.</p>
+<ol type="1">
+<li>First, we estimate the covariance matrix <span class="math inline">\(\bs{H}\)</span> by using an initial consistent estimator of <span class="math inline">\(\bs{\beta}\)</span>. In the linear IV regression model, we use the TSLS estimator <span class="math inline">\(\hat{\bs{\beta}}^{TSLS}\)</span> as the initial consistent estimator. Then, we can estimate <span class="math inline">\(\bs{H}\)</span> as <span id="eq-eq26-34"><span class="math display">\[
+\begin{align}
+\hat{\bs{H}}=\frac{1}{n}\sum_{i=1}^n\bs{Z}_i\bs{Z}^{'}_i\hat{u}^2_i,
+\end{align}
+\tag{29.23}\]</span></span> where <span class="math inline">\(\hat{u}_i\)</span> is the <span class="math inline">\(i\)</span>th element of <span class="math inline">\(\hat{\bs{U}}=\bs{Y}-\bs{X}\hat{\bs{\beta}}^{TSLS}\)</span>.</li>
+<li>Second, we replace <span class="math inline">\(\bs{H}\)</span> with <span class="math inline">\(\hat{\bs{H}}\)</span> in the GMM estimator. The feasible GMM estimator is given by <span id="eq-eq26-35"><span class="math display">\[
+\begin{align}
+\hat{\bs{\beta}}^{GMM}=(\bs{X}^{'}\bs{Z}\hat{\bs{H}}^{-1}\bs{Z}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Z}\hat{\bs{H}}^{-1}\bs{Z}^{'}\bs{Y}.
+\end{align}
+\tag{29.24}\]</span></span></li>
+</ol>
+<p>Since <span class="math inline">\(\hat{\bs{H}}\)</span> is a consistent estimator of <span class="math inline">\(\bs{H}\)</span>, it follows that <span class="math display">\[
+\begin{align*}
+\sqrt{n}(\hat{\bs{\beta}}^{GMM}-\bs{\beta})\xrightarrow{d}N(\bs{0},\bs{\Sigma}^{GMM}),
+\end{align*}
+\]</span> where <span class="math inline">\(\bs{\Sigma}^{GMM}=(\bs{Q}_{\bs{X}\bs{Z}}\bs{H}^{-1}\bs{Q}_{\bs{Z}\bs{X}})^{-1}\)</span>. Thus, the feasible GMM estimator is the efficient estimator among all the estimators in the class of GMM estimators.</p>
+<p>Using <span class="math inline">\(\hat{\bs{\beta}}^{GMM}\)</span>, we can formulate the heteroskedasticity-robust <span class="math inline">\(J\)</span> statistic, which is given by <span id="eq-eq26-36"><span class="math display">\[
+\begin{align}
+J^{GMM}=(\bs{Z}^{'}\hat{\bs{U}})^{'}\hat{\bs{H}}^{-1}(\bs{Z}^{'}\hat{\bs{U}})/n,
+\end{align}
+\tag{29.25}\]</span></span> where <span class="math inline">\(\hat{\bs{U}}=\bs{Y}-\bs{X}\hat{\bs{\beta}}^{GMM}\)</span>.</p>
+<div id="thm-thm26-8" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 29.14 (The <span class="math inline">\(J^{GMM}\)</span> statistic)</strong></span> The <span class="math inline">\(J^{GMM}\)</span> statistic is asymptotically distributed as <span class="math inline">\(\chi^2_{m-k}\)</span> under the null hypothesis that <span class="math inline">\(\E(\bs{Z}_iu_i)=0\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (The proof of <a href="#thm-thm26-8" class="quarto-xref">Theorem&nbsp;<span>29.14</span></a>). </span>The proof is similar to the proof of <a href="#thm-thm26-6" class="quarto-xref">Theorem&nbsp;<span>29.12</span></a>. The details are omitted.</p>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Hansen2022" class="csl-entry" role="listitem">
+Hansen, Bruce. 2022. <em>Econometrics</em>. Princeton University Press.
+</div>
+<div id="ref-MacKinnon1985" class="csl-entry" role="listitem">
+MacKinnon, James G, and Halbert White. 1985. <span>“Some Heteroskedasticity-Consistent Covariance Matrix Estimators with Improved Finite Sample Properties.”</span> <em>Journal of Econometrics</em> 29 (3): 305–25.
+</div>
+<div id="ref-White1980" class="csl-entry" role="listitem">
+White, Halbert. 1980. <span>“A Heteroskedasticity-Consistent Covariance Matrix Estimator and a Direct Test for Heteroskedasticity.”</span> <em>Econometrica</em> 48 (4): 817–38.
+</div>
+</div>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>See <span class="citation" data-cites="MacKinnon1985">MacKinnon and White (<a href="references.html#ref-MacKinnon1985" role="doc-biblioref">1985</a>)</span> and <span class="citation" data-cites="Hansen2022">Hansen (<a href="references.html#ref-Hansen2022" role="doc-biblioref">2022</a>)</span> for further discussion of heteroskedasticity-robust covariance matrix estimators.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Chapter18-TheoryRegression.html" class="pagination-link" aria-label="The Theory of Linear Regression with One Regressor">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./AppendixA.html" class="pagination-link" aria-label="Appendix for Chapter 14">
+        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter19-TheoryMultipleRegression.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,798 @@
+# Regression with a Binary Dependent Variable {#sec-chapter18}
+```{python}
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from statsmodels.iolib.summary2 import summary_col
+import scipy.stats as stats
+```
+
+## Binary dependent variables 
+In many empirical studies, the dependent variable is binary, taking on two values, say 0 and 1. For example, in the context of mortgage applications, the dependent variable could be a binary indicator variable denoting whether the mortgage application was denied (1) or approved (0). For practical reasons, the binary dependent variable is typically coded as 1 for the event of interest occurring and 0 for the event that does not occur.
+
+In this chapter, we use a dataset on mortgage applications from the Boston metropolitan area in 1990. The dependent variable is `deny`, a binary variable equal to 1 if a mortgage application was denied and 0 otherwise. The explanatory variables of interest are the payment-to-income ratio (`pirat`), which is the ratio of total monthly debt payments to total monthly income, and an applicant race dummy variable. The dataset is contained in the `hmda.csv` file. The three variables from the dataset that we will use are:
+
+- `deny`: 1 if the mortgage application was denied, 0 otherwise
+- `pirat`: Ratio of total monthly debt payments to total monthly income
+- `black`: 1 if the applicant is Black, 0 if White
+
+The descriptive statistics of these variables are presented in @tbl-t18-1. There are 2380 observations in the dataset. The average mortgage denial rate is 0.12, the average payment-to-income ratio is 0.33, and the proportion of Black applicants is 0.14.
+
+```{python}
+#| warning: false
+#| message: false
+# Import data
+mydata = pd.read_csv("data/hmda.csv")
+# Column names
+mydata.columns
+```
+
+```{python}
+#| tbl-cap: "Descriptive statistics"
+#| label: tbl-t18-1
+# Descriptive statistics
+mydata[["deny", "pirat", "black"]].describe().round(2).T
+```
+
+In @fig-f18-1, we present a scatter plot of the mortgage application denial (`deny`) against the payment-to-income ratio (`pirat`). Although `deny` is binary, we can still plot it against a continuous variable. The estimated regression line indicates a positive relationship between the payment-to-income ratio and `deny`. 
+
+```{python}
+#| fig-cap: Scatterplot of mortgage application denial and the payment-to-income ratio
+#| label: fig-f18-1
+# Fit a linear regression model
+r1 = smf.ols(formula="deny ~ pirat",
+         data = mydata).fit(cov_type="HC1")
+# Plotting
+# Set the style 
+sns.set(style="darkgrid")
+plt.figure(figsize=(6, 4))
+plt.scatter(mydata['pirat'], mydata['deny'], 
+            color='black', s=15, label='Data points')
+# Add labels
+plt.xlabel('P/I ratio')
+plt.ylabel('Deny')
+plt.ylim(-0.4, 1.4)
+
+# Add horizontal dashed lines
+plt.axhline(y=1, color='darkred', linestyle='--', linewidth=0.8)
+plt.axhline(y=0, color='darkred', linestyle='--', linewidth=0.8)
+
+# Add text annotations
+plt.text(2.5, 0.9, "Mortgage denied", fontsize=8, color='black')
+plt.text(2.5, -0.1, "Mortgage approved", fontsize=8, color='black')
+
+# Add the estimated regression line
+plt.plot(mydata['pirat'], r1.predict(), color='steelblue', linewidth=1)
+plt.show()
+```
+
+## Linear probability model
+
+A multiple linear regression model with a binary dependent variable is called a **linear probability model**. Thus, the linear probability model is a special case of the linear regression model where the dependent variable is binary. The linear probability model is given by
+$$
+\begin{align}
+Y_i=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\cdots+\beta_kX_{ki}+u_i,
+\end{align}
+$$
+
+where $Y_i\in\{0,1\}$, $X_{1i},X_{2i},\ldots,X_{ki}$ are the explanatory variables, $\beta_0,\beta_1,\ldots,\beta_k$ are the coefficients, and $u_i$ is the error term. Because $Y_i$ is a binary variable, we have 
+$$
+\begin{align*}
+&\E\left(Y_i|X_{1i},X_{2i},\ldots,X_{ki}\right)=0\times P(Y_i=0|X_{1i},X_{2i},\ldots,X_{ki})\\
+&+1\times P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}).
+\end{align*}
+$$
+
+Then, under the zero-conditional mean assumption $\E\left(u_i|X_{1i},X_{i2},\ldots,X_{ik}\right)=0$, we have $\E\left(Y_i|X_{1i},X_{2i},\ldots,X_{ki}\right)=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}$. Thus, the population regression function is given by 
+$$
+\begin{align}
+P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}.
+\end{align}
+$${#eq-eq18-1}
+
+The population regression line in @eq-eq18-1 indicates that the coefficient $\beta_j$ gives the effect of one unit change in $X_j$ on the probability that $Y=1$, holding other variables constant.
+
+
+::: {.callout-note icon=false}
+## Key Concept 18.1: Linear probability model
+The linear probability model suggests that
+$$
+\begin{align*}
+&\E\left(Y_i|X_{1i},X_{2i},\ldots,X_{ki}\right)=P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}).
+\end{align*}
+$$
+Thus, the population regression function is given by
+$$
+\begin{align*}
+P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}.
+\end{align*}
+$$
+The coefficients $\beta_j$ in the linear probability model gives the effect of one unit change in $X_j$ on the probability of $Y_i=1$, holding other variables constant.
+:::
+
+Almost all tools developed for the multiple linear regression model can be applied to the linear probability model. In particular, we can use the OLS estimator to estimate the coefficients in the linear probability model. Inference using t-statistics, confidence intervals, and F-statistics is conducted in the same way as in the multiple linear regression model. 
+
+By construction, the errors in the linear probability model are inherently heteroskedastic, which can be seen from 
+
+$$
+\begin{align}
+u_i=
+\begin{cases}
+1-P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}),\,&\text{with probability}\,P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}),\\
+-P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}),\,&\text{with probability}\, 1-P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki}).
+\end{cases}
+\end{align}
+$$
+
+Thus, the conditional variance of $u_i$ is given by
+$$
+\begin{align}
+&\var(u_i|X_{1i},X_{2i},\ldots,X_{ki})=\var(Y_i|X_{1i},X_{2i},\ldots,X_{ki})\\
+&=P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})\left(1-P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})\right).
+\end{align}
+$$ 
+
+Therefore, we should use heteroskedasticity-robust standard errors to obtain valid inference in the linear probability model.
+
+Using the mortgage dataset, we consider the following linear probability models:
+$$
+\begin{align*}
+&\text{Model 1}:\quad{\tt deny}=\beta_0+\beta_1{\tt pirat}+u,\\
+&\text{Model 2}:\quad {\tt deny}=\beta_0+\beta_1{\tt pirat}+\beta_2{\tt black}+u.
+\end{align*}
+$$
+
+We use the following code chunk to estimate these models and then present the estimation results in @tbl-t18-2.
+
+```{python}
+# Model 1
+r1 = smf.ols(formula="deny ~ pirat",
+         data = mydata).fit(cov_type="HC1")
+# Model 2
+r2 = smf.ols(formula="deny ~ pirat + black",
+         data = mydata).fit(cov_type="HC1")
+```
+
+:::{layout-ncol=1}
+```{python}
+#| tbl-cap: Estimation results
+#| label: tbl-t18-2
+# Estimation results
+models=["Model 1", "Model 2"]
+summary_col(results=[r1,r2],
+            model_names=models,
+            stars=True,
+            float_format='%0.3f')
+```
+:::
+
+According to the estimation results in @tbl-t18-2, the estimated linear probability models are 
+$$
+\begin{align*}
+&\text{Model 1}:\quad\hat{P}({\tt deny}=1|{\tt pirat})=-0.080+0.604{\tt pirat},\\
+&\text{Model 2}:\quad\hat{P}({\tt deny}=1|{\tt pirat},{\tt black})=-0.091+0.559{\tt pirat}+0.177{\tt black}.
+\end{align*}
+$$
+
+According to Model 1, if `pirat` increases by one percentage point (i.e., if `pirat` increases by 0.01), the probability of denial increases by $0.604 \times 0.01 = 0.00604 \approx 0.6\%$. According to Model 2, if `pirat` increases by one percentage point (i.e., by 0.01), the probability of denial increases by $0.559 \times 0.01 = 0.00559 \approx 0.6\%$, holding black constant. Additionally, holding `pirat` constant, being Black increases the probability of a mortgage application denial by about $17.7\%$. That is, a black applicant is $17.7$ percentage points more likely to have their mortgage application denied compared to a white applicant, holding constant their payment-to-income ratio.
+
+Although the linear probability model is easy to estimate and interpret, it has two main drawbacks. The first drawback is that the predicted probabilities from the linear probability model can be less than 0 or greater than 1. We assume that the population regression function is specified as $P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}$. In estimating this function, we do not constrain the predicted probabilities to lie within the valid interval [0,1].  In @fig-f18-2 and @fig-f18-3, we present the predicted probabilities for Models 1 and 2. These figures show that some of the predicted probabilities fall outside the valid interval [0,1].
+
+```{python}
+#| label: fig-f18-2
+#| fig-cap: Predicted probabilities based on Model 1
+# Model 1: Plot of predicted probabilities
+plt.figure(figsize=(6, 4))
+plt.plot(r1.predict(), 'o', color='steelblue', markersize=3)
+plt.axhline(y=0, color='black', linestyle='--', linewidth=0.8)  # Add horizontal line at y=0
+plt.axhline(y=1, color='black', linestyle='--', linewidth=0.8)  # Add horizontal line at y=1
+plt.xlabel('Index')
+plt.ylabel('Predicted probabilities')
+plt.show()
+```
+
+```{python}
+#| label: fig-f18-3
+#| fig-cap: Predicted probabilities based on Model 2
+# Model 2: Plot of predicted probabilities
+plt.figure(figsize=(6, 4))
+plt.plot(r2.predict(), 'o', color='steelblue', markersize=3)
+plt.axhline(y=0, color='black', linestyle='--', linewidth=0.8)  # Add horizontal line at y=0
+plt.axhline(y=1, color='black', linestyle='--', linewidth=0.8)  # Add horizontal line at y=1
+plt.xlabel('Index')
+plt.ylabel('Predicted probabilities')
+plt.show()
+```
+
+The second drawback of the linear probability model is that we assume a linear relationship between the explanatory variables and $P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})$. For instance, in our mortgage denial example, the effect of the payment-to-income ratio on the probability of mortgage denial is constant and given by $\beta_1$. However, the effect on the probability of mortgage denial can be different at different levels of the payment-to-income ratio.
+
+## Probit and logit models
+When the dependent variable is binary, we show that $\E\left(Y_i|X_{1i},X_{2i},\ldots,X_{ki}\right) = P(Y_i = 1|X_{1i},X_{2i},\ldots,X_{ki})$. Since probabilities lie in [0, 1], it is natural to use a nonlinear model to enforce these bounds when modeling $P(Y_i = 1|X_{1i},X_{2i},\ldots,X_{ki})$. Two popular nonlinear models for binary dependent variables are the probit and logit models. These models are based on the cumulative standard normal distribution function $\Phi(\cdot)$, and the logistic distribution function $F(\cdot)$, respectively.
+
+### Probit model
+
+In the Probit model, we use the cumulative standard normal distribution function to specify $P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})$:
+$$
+\begin{align}
+P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}),
+\end{align}
+$$
+
+where $\Phi(\cdot)$ is the the cumulative standard normal distribution function (cdf). 
+
+::: {#exm-exm18-1}
+Assume that there is a single regress such that $P(Y=1|X=x)=\Phi(\beta_0+\beta_1 x)$. In this specification, $z=\beta_0+\beta_1x$ plays the role of a quantile:
+$$
+\begin{align}
+\Phi(\beta_0+\beta_1 x)=\Phi(z)=P(Z\leq z),
+\end{align}
+$$
+where $Z\sim N(0,1)$. Suppose that $\beta_0=-2$, $\beta_1=3$ and $X=0.4$. Then, we have
+$$
+\begin{align*}
+ P(Y=1|X=0.4)=\Phi(-2+4\times0.4)=\Phi(-0.8)\approx0.212.
+\end{align*}
+$$
+
+```{python}
+# Probit model
+X, beta0, beta1 = 0.4, -2, 3
+z = beta0 + beta1 * X
+probability = stats.norm.cdf(z)
+print("Predicted probability:", probability.round(3))
+```
+
+Thus, when $X=0.4$, the predicted probability that $Y=1$ is $0.212$. Since $z=\beta_0+\beta_1x$, the sign of $\beta_1$ gives the direction of the relationship between $X$ and the probability of $Y = 1$. Thus, if $\beta_1>0$, then the probability of $Y = 1$ increases as $X$ increases. 
+:::
+
+The sign of $\beta_j$ in the probit model gives the direction of the relationship between $X_j$ and $P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})$ for $j=1,2,\ldots,k$.  However, unlike in the linear probability model, the magnitude of the effect is not directly given by $\beta_j$; instead, it depends on the values of the regressors and the estimated coefficients. We can determine this effect by computing the change in the predicted probability of $Y = 1$ when $X_j$ changes by one unit.
+
+::: {.callout-note icon=false}
+## Key Concept 18.2: Probit model, predicted probabilities and marginal effects
+- The sign of the coefficient gives the direction of the relationship between the explanatory variable and $P(Y=1|X_1,\ldots,X_k)$.
+- Assume that $X_1$ changes by $\Delta X_1$. Then, the effect on the conditional probability of $Y=1$ is given by
+$$
+\begin{align}
+\Delta P(Y=1|X_1,\ldots,X_k)&=\Phi(\beta_0+\beta_1(X_1+\Delta X_1)+\beta_2X_2+\ldots+\beta_kX_k)\\
+&\quad-\Phi(\beta_0+\beta_1X_1+\beta_2X_2+\ldots+\beta_kX_k).
+\end{align}
+$$
+- The partial effect (marginal effect) of a change in $X_1$ on $P(Y=1|X_1,\ldots,X_k)$, holding other variables constant, is given by
+$$
+\begin{align}
+\frac{\partial P(Y=1|X_1,\ldots,X_k)}{\partial X_1}=\beta_1\phi(\beta_0+\beta_1X_1+\beta_2X_2+\ldots+\beta_kX_k),
+\end{align}
+$$
+where $\phi(\cdot)$ is the standard normal probability density function (pdf). The partial effect is not constant and depends on the values of the regressors. We can use the sample mean of the regressors to compute the **partial effect at the average** (PEA):
+$$
+\begin{align}
+PEA=\beta_1\phi(\beta_0+\beta_1\bar{X}_1+\beta_2\bar{X}_2+\ldots+\beta_k\bar{X}_k).
+\end{align}
+$$
+Alternatively, instead of using the sample means, we can use the **average partial effect** (APE), which is given by:
+$$
+\begin{align}
+APE=\frac{1}{n}\sum_{i=1}^n\beta_1\phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}).
+\end{align}
+$$
+:::
+
+For our mortgage applications data, we consider the following probit models:
+$$
+\begin{align}
+&\text{Model 1}:\quad P({\tt deny}=1|{\tt pirat})=\Phi\left(\beta_0+\beta_1{\tt pirat}\right),\\
+&\text{Model 2}:\quad P\left({\tt deny}=1|{\tt pirat},{\tt black}\right)=\Phi\left(\beta_0+\beta_1{\tt pirat}+\beta_2{\tt black}\right).
+\end{align}
+$$
+
+The probit models can be estimated using the `smf.probit()` function from the `statsmodels` package. The following code chunk can be used to estimate these models and present the estimation results in @tbl-t18-4.
+
+```{python}
+# Model 1: Probit regression
+r1 = smf.probit('deny ~ pirat', 
+                  data=mydata).fit(cov_type="HC1", disp=0)
+
+# Model 2: Probit regression with additional predictor
+r2 = smf.probit('deny ~ pirat + black',  
+                  data=mydata).fit(cov_type="HC1", disp=0)
+```
+
+::: {layout-ncol=1}
+```{python}
+#| tbl-cap: "Estimation results for Probit models"
+#| label: tbl-t18-4
+# Estimation results
+models=["Model 1", "Model 2"]
+info={
+    'N':lambda x: f"{x.nobs:.0f}",
+    "AIC":lambda x: f"{x.aic:.2f}",
+    "BIC":lambda x: f"{x.bic:.2f}",
+    "Log-Likelihood":lambda x: f"{x.llf:.2f}"
+    }
+summary_col(results=[r1,r2],
+            model_names=models,
+            stars=True,
+            info_dict=info,
+            float_format='%0.3f')
+```
+:::
+
+According to the estimation results in @tbl-t18-4, the estimated models are
+$$
+\begin{align*}
+&\text{Model 1}:\quad \hat{P}({\tt deny}=1|{\tt pirat})=\Phi\left(-2.194+2.968{\tt pirat}\right),\\
+&\text{Model 2}:\quad \hat{P}({\tt deny}=1|{\tt pirat},{\tt black})=\Phi\left(-2.259+2.742{\tt pirat}+0.708{\tt black}\right),
+\end{align*}
+$$
+
+where $\hat{P}({\tt deny}=1|{\tt pirat})$ and $\hat{P}({\tt deny}=1|{\tt pirat},{\tt black})$ are the predicted probabilities.
+
+In @fig-f18-4, we present the scatter plot between `deny` and `pirat` along with the predicted probabilities based on the first model. Note that the normal cumulative distribution function (cdf) ensures that all predicted probabilities are in the interval [0, 1].
+
+```{python}
+#| label: fig-f18-4
+#| fig-cap: Predicted probabilities based on Model 1
+# Scatter plot and predicted probabilities based on Model 1
+# Scatter plot of observed data
+plt.figure(figsize=(6, 4))
+plt.scatter(mydata['pirat'], mydata['deny'], s=15, c='black')
+plt.xlabel('P/I ratio')
+plt.ylabel('Deny')
+plt.ylim(-0.4, 1.4)
+
+# Add horizontal dashed lines and text
+plt.axhline(y=1, linestyle='--', color='darkred')
+plt.axhline(y=0, linestyle='--', color='darkred')
+plt.text(2, 0.9, 'Mortgage denied', fontsize=10)
+plt.text(2, -0.1, 'Mortgage approved', fontsize=10)
+
+# Calculate and plot predicted probabilities
+x = np.linspace(0, 3, 300)  # Generates 300 points between 0 and 3
+y = r1.predict(pd.DataFrame({'pirat': x}))
+plt.plot(x, y, lw=1.5, color='steelblue', label='Predicted probabilities')
+
+# Add a legend
+plt.legend(frameon=False, fontsize=10)
+plt.show()
+```
+
+In Model 1, the predicted change in the denial probability when `pirat` increases from $0.3$ to $0.4$ can be computed as
+$$
+ \begin{align*}
+ &\Delta \hat{P}({\tt deny}=1|{\tt pirat})\\
+ &=\Phi\left(-2.194+2.968\times 0.4\right)- \Phi\left(-2.194+2.968\times 0.3\right)\approx0.060.
+ \end{align*}
+$$
+
+```{python}
+# Predicted probabilities for pirat = 0.3 and pirat = 0.4
+new_data = pd.DataFrame({'pirat': [0.3, 0.4]})
+predictions = r1.predict(new_data)
+
+# Compute difference in probabilities
+probability_difference = predictions.diff().iloc[-1]
+print("Difference in predicted probabilities:", probability_difference.round(3))
+```
+
+Using Model 2, for a white and a black applicant with `pirat = 0.3`, we compute the predicted denial probabilities as follows:
+$$
+\begin{align*}
+&\hat{P}({\tt deny}=1|{\tt pirat}=0.3,{\tt black}=0)=\Phi\left(-2.259+2.742\times0.3+0.708\times0\right)\approx0.075,\\
+&\hat{P}({\tt deny}=1|{\tt pirat}=0.3,{\tt black}=1)=\Phi\left(-2.259+2.742\times0.3+0.708\times1\right)\approx0.233.
+\end{align*}
+$$
+
+```{python}
+# Predicted probabilities for the white and black applicants with pirat = 0.3
+new_data = pd.DataFrame({'pirat': [0.3, 0.3], 'black': [0, 1]})
+predictions = r2.predict(new_data)
+print("Predicted denial probability for the white applicant:", predictions[0].round(3))
+print("Predicted denial probability for the black applicant:", predictions[1].round(3))
+
+# Compute difference in predicted probabilities
+probability_difference = predictions.diff().iloc[-1]
+print("Difference in predicted denial probabilities:", probability_difference.round(3))
+```
+
+These computations indicates that the difference in denial probabilities between these two hypothetical applicants is $15.8$ percentage points.
+
+The partial effects can be computed using the `get_margeff()` function in `statsmodels`. The following code chunk can be used to compute the partial effects at the mean and overall values of the regressors for Models 1 and 2. These results indicate that the partial effects at the mean and overall values of the regressors are the same for the probit model.
+
+```{python}
+# Partial effect at the average (PEA) for Model 1
+print(r1.get_margeff(at="mean").summary())
+```
+
+```{python}
+# Average partial effect (APE) for Model 1
+print(r1.get_margeff(at="overall").summary())
+```
+
+```{python}
+# Partial effect at the average (PEA) for Model 2
+print(r2.get_margeff(at="mean").summary())
+```
+
+```{python}
+# Average partial effect (APE) for Model 2
+print(r2.get_margeff(at="overall").summary())
+```
+
+### Logit model
+In the logit model, we use the logistic distribution function to specify $P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})$:
+$$
+\begin{align}
+P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=F(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}),
+\end{align}
+$$
+
+where $F(\cdot)$ is the logistic distribution function. The logistic distribution function is defined as $F(z)=\frac{1}{1+\exp(-z)}$. Thus, in the logit model, the conditional probability of $Y_i=1$ is specified as
+$$
+\begin{align}
+P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\frac{1}{1+\exp\left(-\left(\beta_0+\beta_1 
+X_{1i}+\beta_2 X_{2i}+\ldots+\beta_k X_{ki}\right)\right)}.
+\end{align}
+$$
+
+As in the case of the probit model, the sign of the coefficient in the logit model indicates the direction of the relationship between the explanatory variable and the probability of the event occurring. For the marginal effects (the partial effects), we can use the approach described in Key Concept 18.2.
+
+For our mortgage data applications, we consider the following logit models:
+$$
+\begin{align}
+&\text{Model 1}:\quad P({\tt deny}=1|{\tt pirat})=F\left(\beta_0+\beta_1{\tt pirat}\right),\\
+&\text{Model 2}:\quad P\left({\tt deny}=1|{\tt pirat},{\tt black}\right)=F\left(\beta_0+\beta_1{\tt pirat}+\beta_2{\tt black}\right).
+\end{align}
+$$
+
+The logit model is estimated using the `smf.logit()` function from the `statsmodels` package. 
+```{python}
+# Model 1: Logistic regression with 'pirat' as predictor
+r1 = smf.logit('deny ~ pirat', data=mydata).fit(cov_type="HC1", disp=0)
+
+# Model 2: Logistic regression with 'pirat' and 'black' as predictors
+r2 = smf.logit('deny ~ pirat + black', data=mydata).fit(cov_type="HC1", disp=0)
+```
+
+::: {layout-ncol=1}
+```{python}
+#| tbl-cap: Estimation results (Logit Models)
+#| label: tbl-t18-5
+# Estimation results for the logit models
+info={
+    'N':lambda x: f"{x.nobs:.0f}",
+    "AIC":lambda x: f"{x.aic:.2f}",
+    "BIC":lambda x: f"{x.bic:.2f}",
+    "Log-Likelihood":lambda x: f"{x.llf:.2f}"
+    }
+models=["Model 1", "Model 2"]
+summary_col(results=[r1,r2], stars=True,
+            model_names=models, 
+            info_dict=info,
+            float_format = '%.3f')
+```
+:::
+
+The estimation results are presented in @tbl-t18-5. According to the estimation results, the estimated logit models are
+$$
+\begin{align*}
+&\text{Model 1}:\quad\hat{P}({\tt deny}=1|{\tt pirat})=F\left(-4.028+5.884{\tt pirat}\right),\\
+&\text{Model 2}:\quad\hat{P}({\tt deny}=1|{\tt pirat},{\tt black})=F\left(-4.126+5.370{\tt pirat}+1.273{\tt black}\right),
+\end{align*}
+$$
+
+Using estimated Model 2, we compute the predicted denial probabilities for a white and a black applicant with `pirat = 0.3` as follows:
+$$
+\begin{align*}
+&\hat{P}({\tt deny}=1|{\tt pirat}=0.3,{\tt black}=0)=F\left(-4.126+5.370{\tt pirat}+1.273{\tt black}\right)\approx0.075,\\
+&\hat{P}({\tt deny}=1|{\tt pirat}=0.3,{\tt black}=1)=F\left(-4.126+5.370{\tt pirat}+1.273{\tt black}\right)\approx0.230.
+\end{align*}
+$$
+
+```{python}
+# Predicted probabilities for black = 0 and black = 1 with pirat = 0.3
+new_data = pd.DataFrame({'pirat': [0.3, 0.3], 'black': [0, 1]})
+predictions = r2.predict(new_data)
+print("Predicted denial probability for the white applicant:", predictions[0].round(3))
+print("Predicted denial probability for the black applicant:", predictions[1].round(3))
+
+# Compute difference in probabilities
+probability_difference = predictions.diff().iloc[-1]
+print("Difference in predicted probabilities:", probability_difference.round(2))
+```
+
+These computations indicate that for a white applicant with `pirat = 0.3`, the predicted denial probability is $7.5\%$, while for a black applicant with `pirat = 0.3`, it is $23\%$. The difference in denial probabilities between these two hypothetical applicants is approximately $15$ percentage points. 
+
+The logit and probit regressions provide similar predicted probabilities. In @fig-f18-5, we plot the predicted probabilities based on Model 1 for both probit and logit regressions.  The differences between predicted probabilities are small. Historically, the logit model has been more popular than the probit model because of its computational advantages. However, given the availability of modern computational tools, the choice between the probit and logit models is often based on the researcher's preference.
+
+```{python}
+#| label: fig-f18-5
+#| fig-cap: Predicted probabilities based on probit and logit models
+#| message: false
+#| warning: false
+# Fit Probit and Logit models
+probit = smf.probit('deny ~ pirat', data=mydata).fit(disp=0)
+logit = smf.logit('deny ~ pirat', data=mydata).fit(disp=0)
+
+# Scatter plot of observed data
+plt.figure(figsize=(6, 4))
+plt.scatter(mydata['pirat'], mydata['deny'], s=15, c='black')
+plt.xlabel('P/I ratio')
+plt.ylabel('Deny')
+plt.ylim(-0.4, 1.4)
+
+# Add horizontal dashed lines and text
+plt.axhline(y=1, linestyle='--', color='black')
+plt.axhline(y=0, linestyle='--', color='black')
+plt.text(2.2, 0.9, 'Mortgage denied', fontsize=9)
+plt.text(2.2, -0.1, 'Mortgage approved', fontsize=9)
+
+# Predicted probabilities for Probit and Logit models
+x = np.linspace(0, 3, 300)  # Generating 300 points between 0 and 3
+y_probit = probit.predict(pd.DataFrame({'pirat': x}))
+y_logit = logit.predict(pd.DataFrame({'pirat': x}))
+
+# Plot estimated regression lines
+plt.plot(x, y_probit, lw=1, color='blue', label='Probit model')
+plt.plot(x, y_logit, lw=1, color='red', linestyle='--', label='Logit model')
+
+# Add a legend
+plt.legend(loc='upper right', frameon=False, fontsize=9)
+plt.show()
+```
+
+
+## Estimation and inference in the probit and logit models
+We use the maximum likelihood estimator (MLE) to estimate the probit and logit models. To define this estimator, we first need to define the likelihood function.
+
+::: {#def-def18-1}
+## Likelihood function
+The likelihood function is the joint probability distribution of the data, given the unknown coefficients.
+:::
+
+Let $f(\bs{\beta}|\bs{Y},\bs{X})$ be the likelihood function of the probit model, where $\bs{\beta}=(\beta_0,\beta_1,\ldots,\beta_k)^{'}$ and $\bs{X}=(X^{'}_1,X^{'}_2,\ldots,X^{'}_k)^{'}$, and $\bs{Y}=(Y_1,Y_2,\ldots,Y_n)^{'}$. For the probit model, we have
+
+$$
+\begin{align*}
+&P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}),\\
+&P(Y_i=0|X_{1i},X_{2i},\ldots,X_{ki})=1-\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}),
+\end{align*}
+$$
+for $i=1,2,\ldots,n$. These results suggest that we can express $P(Y_i=y_i|X_{1i},X_{2i},\ldots,X_{ki})$ as
+$$
+\begin{align*}
+P(Y_i=y_i|X_{1i},X_{2i},\ldots,X_{ki})&=\left[\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right]^{y_i}\\
+&\times\left[1-\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right]^{1-y_i},
+\end{align*}
+$$
+where $y_i\in\{0,1\}$. Then, @def-def18-1 suggests the following likelihood function:
+$$
+\begin{align*}
+f(\bs{\beta}|\bs{Y},\bs{X})&=P(Y_1=y_1,Y_2=y_2,\ldots,Y_n=y_n|X_{1},X_{2},\ldots,X_{k})\\
+&=\prod_{i=1}^n\bigg(\left[\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right]^{y_i}\\
+&\times\left[1-\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right]^{1-y_i}\bigg).
+\end{align*}
+$$
+Then, the log-likelihood function is
+$$
+\begin{align}
+\ln\left(f(\bs{\beta}|\bs{Y},\bs{X})\right)&=\sum_{i=1}^nY_i\ln\left(\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right)\\
+&+\sum_{i=1}^n(1-Y_i)\ln\left(\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right).\nonumber
+\end{align}
+$${#eq-eq18-1}
+
+We use the log-likelihood function to define the MLE in the following way:
+$$
+\hat{\bs{\beta}}=\text{argmax}_{\bs{\beta}}\ln\left(f(\bs{\beta}|\bs{Y},\bs{X})\right).
+$$
+
+Since the log-likelihood function is a non-linear function of parameters, there is no analytical solution for the MLE. We can resort to numerical algorithms to compute the MLE. Under some standard conditions, it can be shown that the MLE is a consistent estimator and has an asymptotic normal distribution in large samples (see @Hansen2022 for more details). 
+
+To get the log likelihood function of the logit model, we need to replace $\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})$ in @eq-eq18-1 by 
+$$
+F(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})
+=\frac{1}{1+\exp(-(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}))}.
+$$
+
+The MLE of the logit model is also consistent and has an asymptotic normal distribution. For inference, we can use the estimated standard errors to conduct hypothesis tests and compute confidence intervals. As in the case of multiple linear regression models, we can resort to the F-statistic to test joint null hypotheses.
+
+## Measures of fit
+The maximized likelihood increases as additional regressors are added to the model. In @tbl-t18-4 and @tbl-t18-5, the maximized likelihood values are reported for each model (see Log Likelihood). These values are computed using $\ln(f(\hat{\bs{\beta}}|\bs{Y},\bs{X}))$. The usual $R^2$, or its adjusted version, is a poor measure of fit for models with binary dependent variables. In general, $R^2$ and $\bar{R}^2$ are invalid for nonlinear regression models because both measures assume a linear relationship between the dependent variable and the explanatory variable(s). 
+
+For the probit and logit models, we consider the following measures of fit:
+
+- Pseudo $R^2$,
+- Akaike Information Criterion (AIC),
+- Bayesian Information Criterion (BIC).
+
+Pseudo $R^2$ compares the value of the maximized log-likelihood of the model with all regressors (the full model) to the likelihood of a model with no regressors (null model, a model with only the constant term). Thus, the pseudo $R^2$ is given by 
+$$
+\begin{align}
+\text{Pseudo}\, R^2=1-\frac{\ln(f_{\text{full}}(\hat{\bs{\beta}}|\bs{Y},\bs{X}))}{\ln(f_{\text{null}}(\hat{\bs{\beta}}|\bs{Y},\bs{X}))}.
+\end{align}
+$$
+
+The information criteria AIC and BIC shows the predictive performance of the model. They are defined as follows:
+$$
+\begin{align}
+&\text{AIC}=-2\ln(f(\hat{\bs{\beta}}|\bs{Y},\bs{X}))+2k,\\
+&\text{BIC}=-2\ln(f(\hat{\bs{\beta}}|\bs{Y},\bs{X}))+k\ln(n).
+\end{align}
+$$
+
+where $k$ is the number of parameters in the model. The preferred model is the one with the smallest AIC and BIC values. 
+
+For the models given in @tbl-t18-2, we provide the pseudo $R^2$, AIC, and BIC values in @tbl-t18-6. These values indicate that Model 2 has a better fit than Model 1 according to all three measures of fit.
+
+```{python}
+#| tbl-cap: Measures of fit
+#| label: tbl-t18-6
+# Measures of fit
+m1 = [r1.prsquared,r1.aic,r1.bic]
+m2 = [r2.prsquared,r2.aic,r2.bic]
+df = pd.DataFrame({"Pseudo R^2": [m1[0],m2[0]],
+                  "AIC":[m1[1],m2[1]],
+                  "BIC":[m1[2],m2[2]]},
+                  index=["Model 1","Model 2"])
+df.round(3)
+```
+
+## Application to the Boston HMDA data
+### Data
+We consider the mortgage dataset contained in the file `hmda.csv`. The data pertain to mortgage applications made in 1990 in the greater Boston metropolitan area. Below, we provide a description of variables that we will use in our analysis:
+
+- `pirat`: Ratio of total monthly debt payments to total monthly income 
+- `hirat`: Ratio of monthly housing expenses to total monthly income 
+- `lvrat`: Ratio of size of loan to assessed value of property
+- `chist`: Credit scores ranging from 1 to 6, 6 being the worst
+- `mhist`: Mortgage scores ranging from 1 to 4, 4 being the worst
+- `phist`: Public bad credit record, 1 if any public record of credit problems, 0 otherwise
+- `insurance`: 1 if the applicant was ever denied mortgage insurance, 0 otherwise. If the loan-to-value ratio exceeds 80\%, the applicant typically was required to buy mortgage insurance.
+- `selfemp`: 1 if self-employed, 0 otherwise
+- `single`: 1 if applicant reported being single, 0 otherwise
+- `hschool`: 1 if applicant graduated from high school, 0 otherwise
+- `unemp`: 1989 Massachusetts unemployment rate in the applicant's industry
+- `condomin`: 1 if unit is a condominium, 0 otherwise
+- `black`: 1 if applicant is black, 0 if white
+- `deny`: 1 if mortgage application denied, 0 otherwise
+
+The first two variables `pirat` and `hirat` are directly related to the applicant's ability to pay the mortgage. The variable `lvrat` is related to the loan-to-value ratio, which is an important factor in the mortgage approval process. The variables `chist`, `mhist`, and `phist` are related to the applicant's credit history. The variable `insurance` is related to the mortgage insurance requirement. The next four variables `selfemp`, `single`, `hschool`, and `unemp` are related to the applicant's ability to repay the loan. The variable `condomin` is related to the type of property. 
+
+The previous results indicated that denial rates were higher for black applicants than for white applicants, holding constant their payment-to-income ratio. Note that many factors other than the payment-to-income ratio affect loan officers' decisions. If any of those other factors differ systematically by race, the estimators considered so far may suffer from omitted variable bias.
+
+We will attempt to control for applicant characteristics that a loan officer might legally consider when deciding on a mortgage application. In the 1990s, loan officers commonly used thresholds, or cutoff values, for the loan-to-value ratio. Therefore, we will group the loan-to-value ratios into three categories:
+
+- `low`: loan-to-value ratio less than 0.8
+- `medium`: loan-to-value ratio between 0.8 and 0.95
+- `high`: loan-to-value ratio greater than 0.95
+
+The following code chunk can be used to create these categories:
+```{python}
+df = mydata.copy()
+df['lvrat_s'] = pd.cut(df['lvrat'],[0,.799,.95,1.95], labels = ['low','medium','high'])
+```
+
+```{python}
+#| tbl-cap: Summary statistics for `lvrat_s`
+#| label: tbl-t18-7-0
+# Summary statistics
+df['lvrat_s'].value_counts().to_frame().T
+```
+
+The summary statistics for the variable `lvrat_s` are presented in @tbl-t18-7-0. The summary statistics for the other variables in the dataset are presented in @tbl-t18-7.
+
+::: {layout-ncol=1}
+```{python}
+#| tbl-cap: Summary statistics
+#| label: tbl-t18-7
+# Summary statistics
+df.describe().round(3).T
+```
+:::
+
+### Empirical models
+We consider the following models:
+
+1. Linear probability model (LPM) with `deny` as the dependent variable and `black`, `pirat`, `hirat`, `lvrat_s`, `chist`, `mhist`, `phist`, `insurance`, and `selfemp` as regressors.
+2. Logit model with the same regressors as in (1).
+3. Probit model with the same regressors as in (1).
+4. Probit model with the same regressors as in (1) plus `single`, `hschool`, and `unemp`.
+5. Probit model with the same regressors as in (4) plus `condomin` and additional dummies for `mhist` and `chist`.
+6. Probit model with the same regressors as in (4) plus interactions between `black` and `pirat` and between `black` and `hirat`.
+
+The first three models refer to the base specification. The fourth, fifth, and sixth models are used to investigate the sensitivity of the results in the base specifications to changes in the regression specification. The fourth model includes additional regressors that are likely to affect the mortgage approval process. The fifth model includes additional dummies for `mhist` and `chist` to control for the effect of the mortgage and credit score on the denial probability as well as `condomin` to control for the effect of the property type. The sixth model includes the interaction terms `black*pirat` and between `black*hirat` to test whether the effects of `pirat` and `hirat` differ between black and white applicants.
+
+### Estimation results
+The following code chunk can be used to estimate these models. The estimation results are presented in @tbl-t18-7.
+
+```{python}
+model1 = smf.ols(formula = 'deny ~ black + pirat + hirat + C(lvrat_s) + chist + mhist + phist + insurance + selfemp', 
+                   data = df).fit(cov_type='HC1')
+    
+model2 = smf.logit(formula = 'deny ~ black + pirat + hirat + C(lvrat_s) + chist + mhist + phist + insurance + selfemp', 
+                   data = df).fit(disp = 0, cov_type='HC1')
+
+model3 = smf.probit(formula = 'deny ~ black + pirat + hirat + C(lvrat_s)+chist+ mhist + phist + insurance + selfemp', 
+                    data = df).fit(disp = 0, cov_type='HC1')
+    
+model4 = smf.probit(formula = 'deny ~ black + pirat + hirat +C(lvrat_s)+chist + mhist + phist + insurance + selfemp + single + hschool + unemp', 
+                    data = df).fit(disp = 0, cov_type='HC1')
+		
+model5 = smf.probit(formula = 'deny ~ black + pirat + hirat + C(lvrat_s) + chist + mhist + phist + insurance + selfemp + single + hschool + unemp + condomin +\
+                               I(mhist==3) + I(mhist==4) + I(chist==3) + I(chist==4) + I(chist==5) + I(chist==6)', 
+                    data = df).fit(disp = 0, cov_type='HC1')
+
+model6 = smf.probit(formula = 'deny ~ black*(pirat + hirat) + C(lvrat_s) + chist + mhist + phist + insurance + selfemp + single + hschool + unemp', 
+                    data = df).fit(disp = 0, cov_type='HC1')
+```
+
+::: {layout-ncol=1}
+```{python}
+#| tbl-cap: Estimation results
+#| label: tbl-t18-8
+# Estimation results for the logit models
+info={
+    'N':lambda x: f"{x.nobs:.0f}",
+    "AIC":lambda x: f"{x.aic:.2f}",
+    "BIC":lambda x: f"{x.bic:.2f}",
+    "Log-Likelihood":lambda x: f"{x.llf:.2f}"
+    }
+models=["Model 1", "Model 2", "Model 3", "Model 4", "Model 5", "Model 6"]
+results = [model1, model2, model3, model4, model5, model6]
+summary_col(results=results, stars=True,
+           model_names=models, 
+           info_dict=info,
+           float_format = '%.3f')
+```
+:::
+
+Below, we summarize the main results from the estimation results in @tbl-t18-8:
+
+- We start with the linear probability model. An increase in the consumer credit score by 1 unit is estimated to increase the probability of a loan denial by approximately 0.031 percentage points. Having a high loan-to-value ratio increases the probability of denial: the coefficient for `lvrat_high` is 0.19. Thus, clients in this group are estimated to have a nearly 19% higher probability of denial than those in `lvrat_low`, ceteris paribus. Apart from the housing-expense-to-income ratio (`hirat`) and the mortgage credit score (`mhist`), all estimated coefficients are statistically significant. The estimated coefficient on the race dummy is 0.083, indicating that the denial probability for African American applicants is 8.3% higher than that for white applicants with the same characteristics.
+
+- The logit results in (2) and the probit results in (3) provide similar evidence of racial parity in the mortgage market, as the estimated coefficients on `black` are statistically significant at the 5% level in both models. All other coefficients, except for the coefficient for the housing expense-to-income ratio (which is not significantly different from zero), are statistically significant at the 5% level.
+
+- We cannot directly compare the coefficient estimates from (2)--(6) with those in (1). In order to make a statement about the effect of being non-white, we need to compute the estimated denial probability for two individuals that differ only in race. For the comparison, we consider two individuals that share mean values for all numeric regressors. For the qualitative variables, we assign the property that is most representative for the data at hand. For example, consider self-employment: 88% of all individuals in the sample are not self-employed (`selfemp=0`). We can use the following code chunk to compute the difference in the predicted denial probability for a white and a black applicant.
+
+```{python}
+# Estimated difference in denial probabilities
+X_new = pd.DataFrame(
+    {'black':[0, 1],
+     'pirat': [df['pirat'].mean(), df['pirat'].mean()],
+     'hirat': [df['hirat'].mean(), df['hirat'].mean()], 
+     'lvrat_s': ['medium', 'medium'],
+     'chist': [df['chist'].mean(), df['chist'].mean()], 
+     'mhist': [df['mhist'].mean(), df['mhist'].mean()], 
+     'phist': [0, 0], 'insurance': [0, 0],
+     'selfemp': [0, 0], 'single': [0, 0],
+     'hschool': [1, 1], 
+     'unemp': [df['unemp'].mean(), df['unemp'].mean()],
+     'condomin':[0, 0]}
+    )
+```
+
+```{python}
+#| tbl-cap: Estimated difference in denial probabilities
+#| label: tbl-t18-9
+pp = [np.diff(model1.predict(X_new))[0], np.diff(model2.predict(X_new))[0], 
+np.diff(model3.predict(X_new))[0], np.diff(model4.predict(X_new))[0], 
+np.diff(model5.predict(X_new))[0], np.diff(model6.predict(X_new))[0]]
+pd.DataFrame(pp, columns=['Difference in denial probability'], index=['Model 1', 'Model 2', 'Model 3', 'Model 4', 'Model 5', 'Model 6']).round(3)
+```
+
+- The estimated differences in denial probabilities are reported in @tbl-t18-9. The results indicate that the denial probability difference between white and black applicants is approximately $8.3\%$ in Model 1, $6\%$ in Model 2, $6.8\%$ in Model 3, $5.5\%$ in Model 4, $6.6\%$ in Model 5, and $5.5%$ in Model 6. Overall, the estimated difference ranges from $6\%$ to $8.3\%$ in the U.S. mortgage market. 
+
+- In Model 5, the estimated coefficients for the dummies for `mhist` and `chist`, as well as the estimated coefficient for the `condomin` dummy, are not statistically significant at the 5% level.
+
+- An interesting question related to racial parity can be investigated using Model 6. If the coefficient on `black:pirat` was different from zero, the effect of the payment-to-income ratio on the denial probability would be different for black and white applicants. Similarly, a non-zero coefficient on `black:hirat` would indicate that loan officers weight the risk of bankruptcy associated with a high loan-to-value ratio differently for black and white mortgage applicants. We will test for the joint significance of these two variables. Note that under the joint null hypothesis (the restricted model), we have Model 4. We can use the F-statistic to test the null hypothesis that the coefficients on `black:pirat` and `black:hirat` are jointly equal to zero. The following code chunk can be used to perform the test.
+
+```{python}
+# F-test for joint significance of black:pirat and black:hirat
+hypotheses = ['black:pirat=0', 'black:hirat=0']
+f_test = model6.f_test(hypotheses)
+print(f_test)
+```
+
+According to the test result, we fail to reject the joint null hypothesis that the coefficients on `black:pirat` and `black:hirat` are jointly equal to zero at the 5% significance level. 

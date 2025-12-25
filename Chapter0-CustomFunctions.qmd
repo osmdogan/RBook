@@ -1,0 +1,95 @@
+# Custom Functions {#sec-chapter4}
+## Introduction
+R allows users to create their own functions, called custom functions, to perform specific tasks. In this section, we show how to define custom functions in R using the `function` keyword.
+
+## Defining a custom function
+We use the keyword `function()` to define a custom function in R. The general syntax for defining a function is as follows:
+
+```{r}
+#| eval: false
+my_function <- function(arg1, arg2, ...) {
+  # code to execute
+  return(result)
+}
+```
+
+Here, `my_function` is the name of the function. The arguments are `arg1`, `arg2`, and `...`, where `...` allows for additional arguments to be passed to the function. The code block contains the instructions to be executed when the function is called. The `return()` statement specifies the value to be returned by the function.
+
+As an example, we consider a function to compute the $L_p$ distance between two vectors. The $L_p$ distance is defined as:
+$$
+d_p(x, y) = \left( \sum_{i=1}^{n} |x_i - y_i|^p \right)^{1/p}.
+$$
+where $x$ and $y$ are vectors of length $n$, and $p$ is a positive real number.
+
+We can define a custom function in R to compute the $L_p$ distance as follows:
+
+```{r}
+lp_distance <- function(x, y, p) {
+  if (length(x) != length(y)) {
+    stop("Vectors must be of the same length")
+  }
+  sum(abs(x - y)^p)^(1/p)
+}
+```
+
+The `lp_distance` function takes three arguments: `x`, `y`, and `p`. It first checks if the lengths of the vectors `x` and `y` are the same. If not, it stops execution and returns an error message. Otherwise, it computes the $L_p$ distance using the formula provided. The `return` statement is implicit here, as the last evaluated expression is returned by default. If we want to explicitly return the result, we can modify the function as follows:
+```{r}
+lp_distance <- function(x, y, p) {
+  if (length(x) != length(y)) {
+    stop("Vectors must be of the same length")
+  }
+  result <- sum(abs(x - y)^p)^(1/p)
+  return(result)
+}
+```
+
+If there are multiple outputs to return, we can use a list to return them. In the following example, we return both the computed distance and the input vectors as part of a list.
+
+```{r}
+lp_distance_with_details <- function(x, y, p) {
+  if (length(x) != length(y)) {
+    stop("Vectors must be of the same length")
+  }
+  distance <- sum(abs(x - y)^p)^(1/p)
+  details <- list(vector_x = x, vector_y = y, p_value = p)
+  return(list(distance = distance, details = details))
+}
+```
+
+## Calling a custom function
+We can call the `lp_distance` function with two vectors and a value for `p`. 
+```{r}
+vector1 <- c(1, 2, 3)
+vector2 <- c(4, 5, 6)
+p_value <- 2
+distance <- lp_distance(vector1, vector2, p_value)
+print(distance)
+```
+
+We can also use named arguments when calling the function:
+```{r}
+distance <- lp_distance(x=vector1, y=vector2, p=p_value)
+distance
+```
+
+The order of named arguments does not matter as shown in the following call.
+```{r}
+distance <- lp_distance(p=p_value, y=vector2, x=vector1)
+distance
+```
+
+In the case of the `lp_distance_with_details` function, we can call it and access both the distance and the details as follows:
+```{r}
+result <- lp_distance_with_details(vector1, vector2, p_value)
+print(result$distance)
+print(result$details)
+```
+
+
+
+
+
+
+
+
+ 

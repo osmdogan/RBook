@@ -1,0 +1,1271 @@
+# The Theory of Multiple Regression {#sec-chapter26}
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+plt.style.use('seaborn-v0_8-darkgrid')  
+from scipy.stats import multivariate_normal
+from mpl_toolkits.mplot3d import Axes3D
+```
+
+## Introduction
+In this chapter, we use matrix algebra to introduce multiple linear regression models and the OLS estimator. We then examine its algebraic properties in matrix form and derive both its asymptotic and exact sampling distributions. We also discuss the asymptotic and exact sampling distributions of the $t$ and $F$ statistics. Next, we extend our analysis to the generalized least squares (GLS) and feasible generalized least squares (FGLS) estimators. Finally, we present the instrumental variables (IV) and generalized method of moments (GMM) estimators, along with their asymptotic distributions. 
+
+We use matrix notation extensively throughout this chapter. In Appendix D, we provide a brief introduction to matrix algebra, including matrix operations, determinants, inverse matrix, rank, eigenvalues/eigenvectors, matrix square roots, and matrix norms. We also provide a brief introduction to the properties of quadratic forms, vector calculus, and random vectors. We assume that the reader is familiar with the material in this appendix.
+
+## The OLS estimator in matrix form
+
+The multiple linear regression model with $k$ regressors is given by
+$$
+\begin{align}
+Y_i=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}+u_i,\,i=1,2,\ldots,n,
+\end{align}
+$${#eq-eq26-1}
+where $Y_i$ is the dependent variable, $X_{ji}$ is the $j$th regressor, $\beta_j$ is the $j$th regression coefficient, and $u_i$ is the error term. To express the model in matrix form, we define the following vectors and matrices:
+$$
+\begin{align*}
+\bs{Y}=
+\begin{pmatrix}
+Y_1\\
+Y_2\\
+\vdots\\
+Y_n
+\end{pmatrix}
+,\,\bs{U}=
+\begin{pmatrix}
+u_1\\
+u_2\\
+\vdots\\
+u_n
+\end{pmatrix},
+\,
+\bs{\beta}=
+\begin{pmatrix}
+\beta_0\\
+\beta_1\\
+\vdots\\
+\beta_k
+\end{pmatrix},
+\,\text{and}\,
+\bs{X}=
+\begin{pmatrix}
+1&X_{11}&\cdots&X_{k1}\\
+1&X_{12}&\cdots&X_{k2}\\
+\vdots&\vdots&\ddots&\vdots\\
+1&X_{1n}&\cdots&X_{kn}
+\end{pmatrix}.
+\end{align*} 
+$$
+Note that
+
+* $\bs{Y}$ is the $n\times1$ vector of observations on the dependent variable,
+* $\bs{X}$ is the $n \times (k + 1)$ matrix of observations on the $k + 1$ regressors (including intercept term)
+* $\bs{U}$ is the $n\times 1$ vector of the error terms, and
+* $\bs{\beta}$ is the $(k + 1) \times 1$ vector of the $k + 1$ unknown regression
+coefficients.
+
+The first column of $\bs{X}$ is a column of ones, which corresponds to the intercept term $\beta_0$. The remaining columns of $\bs{X}$ correspond to the $k$ regressors. We can alternatively express $\bs{X}$ in two different ways. First, we can express $\bs{X}$ as
+$$
+\begin{align*}
+\bs{X}=
+\begin{pmatrix}
+1&X_{11}&\cdots&X_{k1}\\
+1&X_{12}&\cdots&X_{k2}\\
+\vdots&\vdots&\ddots&\vdots\\
+1&X_{1n}&\cdots&X_{kn}
+\end{pmatrix}
+=\begin{pmatrix}
+\bs{X}^{'}_{1}\\
+\bs{X}^{'}_{2}\\
+\vdots\\
+\bs{X}^{'}_{n}
+\end{pmatrix},
+\end{align*} 
+$$
+where $\bs{X}_i$ is the $(k+1)\times1$ column vector formulated from the $i$th row, i.e., $\bs{X}_i = (1, X_{1i},\cdots,X_{ki})^{'}$ for $i=1,\ldots,n$. Second, we can express $\bs{X}$ as
+$$
+\begin{align*}
+\bs{X}=
+\begin{pmatrix}
+1&X_{11}&\cdots&X_{k1}\\
+1&X_{12}&\cdots&X_{k2}\\
+\vdots&\vdots&\ddots&\vdots\\
+1&X_{1n}&\cdots&X_{kn}
+\end{pmatrix}
+=\begin{pmatrix}
+\bs{l}_n&\bs{X}_{1}&\bs{X}_{2}&\cdots& \bs{X}_{k}
+\end{pmatrix},
+\end{align*} 
+$$
+where $\bs{l}_n$ is the $n\times 1$ column vector of ones, and $\bs{X}_j$ is the $n\times 1$ column vector formulated from the $j$th column, i.e., $\bs{X}_j=(X_{j1},\ldots,X_{jn})^{'}$ for $j=1,\ldots,k$.
+
+Using $\bs{X}_i$ and $\bs{\beta}$, we can express the model for the $i$th observation as
+$$
+\begin{align}
+Y_i=\bs{X}^{'}_i\bs{\beta}+u_i,\,i=1,\ldots,n.
+\end{align}
+$${#eq-eq26-2}
+Stacking @eq-eq26-2 across $i$, we can write the multiple regression model in matrix form as
+$$
+\begin{align}
+\bs{Y}=\bs{X}\bs{\beta}+\bs{U}.
+\end{align}
+$${#eq-eq26-3}
+
+We consider the model under Assumptions 1-6 given in the following callout block.
+
+::: {.callout-important icon=false}
+## The extended least squares assumptions
+1. **Zero-conditional mean assumption**: $\E(u_i |\bs{X}_i) = 0$, i.e., the conditional distribution of $u_i$ given $\bs{X}_i$ has zero mean.
+2. **Random sampling assumption**: $(\bs{X}_i, Y_i)$, $i =1,2,\ldots,n$, are independently and identically distributed (i.i.d.) across observations.
+3. **No large outliers assumption**: $\bs{X}_i$ and $u_i$ have nonzero finite fourth moments.
+4. **No perfect multicollinearity**: $\bs{X}$ has full column rank, i.e., $\text{rank}(\bs{X})=k+1$.
+5. **Homoskedasticity assumption**: $\text{Var}(u_i|\bs{X}_i)=\sigma^2_u$, where $\sigma^2_u$ is a scalar unknown parameter.
+6. **Normal distribution assumption**: $u_i|\bs{X}_i\sim N(0,\sigma^2_u)$.
+:::
+
+The first three assumptions are the same as those used in the simple and multiple linear regression models covered in @sec-lrmone and @sec-multiple. Note that Assumption 3 also suggests that $\E[Y^4_i]=\E[(\bs{X}^{'}_i\bs{\beta}+u_i)^4]<\infty$. Assumption 4 corresponds to the no-perfect-multicollinearity assumption in the multiple linear regression model. This assumption requires that the columns of $\bs{X}$ are linearly independent; that is, we can not express any column of $\bs{X}$ as a linear combination of the other columns. Thus, the full column rank condition rules out perfect multicollinearity. The homoskedasticity assumption requires that the variance of the error term is constant across observations and is necessary for studying the efficiency of the OLS estimator. The normality assumption is required to derive the exact sampling distribution of the OLS estimator and test statistics. As we discuss in @sec-chapter25, we do not need neither the homoskedasticity nor the normality assumption to show that the OLS estimator is consistent and have asymptotic normal distribution.
+
+What are the conditional mean and variance of $\bs{U}$? Under Assumptions 1 and 2, we can express $\E(\bs{U}|\bs{X})$ as
+$$
+\begin{align*}
+\E(\bs{U}|\bs{X})=\E\left(\begin{pmatrix}
+u_1\\
+u_2\\
+\vdots\\
+u_n
+\end{pmatrix}|\bs{X}\right)
+=\begin{pmatrix}
+\E(u_1|\bs{X})\\
+\E(u_2|\bs{X})\\
+\vdots\\
+\E(u_n|\bs{X})
+\end{pmatrix}
+=\begin{pmatrix}
+\E(u_1|\bs{X}_1)\\
+\E(u_2|\bs{X}_2)\\
+\vdots\\
+\E(u_n|\bs{X}_n)
+\end{pmatrix}
+=\bs{0},
+\end{align*}
+$$
+where the third equality follows from Assumption 2. Under Assumptions 1, 2, and 5, we have 
+$$
+\begin{align*}
+\text{var}(\bs{U}|\bs{X})=\E\left((\bs{U}-\bs{\mu}_{\bs{U}})(\bs{U}-\bs{\mu}_{\bs{U}})^{'}|\bs{X}\right)=\E\left(\bs{U}\bs{U}^{'}|\bs{X}\right) = \sigma^2_u\bs{I}_n,
+\end{align*}
+$$
+where $\bs{I}_n$ is the $n \times n$ identity matrix. Thus, under Assumption 6, we have
+$$
+\begin{align}\label{e4}
+\bs{U}|\bs{X}\sim N(\bs{0},\sigma^2_u\bs{I}_n).
+\end{align}
+$$
+
+The OLS estimator minimizes the sum of squared prediction errors $\sum_{i=1}^n(Y_i-\bs{X}^{'}_i\bs{b})^{2}$, where $\bs{b}$ is a $(k+1)\times1$ vector of coefficients. Thus, the OLS estimator is defined by
+$$
+\begin{align}
+\hat{\bs{\beta}}=\argmin_{\bs{b}}\;\sum_{i=1}^n(Y_i-\bs{X}^{'}_i\bs{b})^{2}=\argmin_{\bs{b}}\;(\bs{Y}-\bs{X}\bs{b})^{'}(\bs{Y}-\bs{X}\bs{b}).
+\end{align}
+$${#eq-eq26-4}
+
+Let $\mathcal{S}(\bs{b})=(\bs{Y}-\bs{X}\bs{b})^{'}(\bs{Y}-\bs{X}\bs{b})$. The first-order condition for a minimum is
+$$
+\begin{align}
+\frac{\partial\mathcal{S}(\bs{b})}{\partial\bs{b}}=-2\bs{X}^{'}\bs{Y}+2\bs{X}^{'}\bs{X}\bs{b}=\bs{0}.
+\end{align}
+$${#eq-eq26-5}
+We can solve @eq-eq26-5 for $\bs{b}$ if $\bs{X}^{'}\bs{X}$ is invertible. Since $\bs{X}$ has full column rank by Assumption 4, $\bs{X}^{'}\bs{X}$ is invertible and we can derive the OLS estimator as
+$$
+\begin{align}
+\hat{\bs{\beta}}=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}.
+\end{align}
+$${#eq-eq26-6}
+
+To see that this solution is the global minimum, we need to show that $\mathcal{S}(\bs{b})$ is strictly convex. To that end, it suffices to show that the matrix of second-order derivatives (the Hessian matrix) is positive definite. The Hessian matrix is given by
+$$
+\begin{align}
+\frac{\partial^2\mathcal{S}(\bs{b})}{\partial\bs{b}\partial\bs{b}^{'}} = 2\bs{X}^{'}\bs{X},
+\end{align}
+$${#eq-eq26-7}
+which must be positive definite. Let $\bs{c}$ be an arbitrary $(k+1)\times 1$ nonzero vector, and define $\bs{v}=\bs{X}\bs{c}$. Then,
+$$
+\begin{align}
+\bs{c}^{'}\bs{X}^{'}\bs{X}\bs{c}=\bs{v}^{'}\bs{v}=\sum_{i=1}^n v_i^2,
+\end{align}
+$$
+which equals zero only if $v_i=0$ for $i=1,\ldots,n$. This can happen only if the columns of $\bs{X}$ are linearly dependent. However, this contradicts the assumption that $\bs{X}$ has full column rank. Hence, $\sum_{i=1}^n v_i^2 > 0$, showing that $\bs{X}^{'}\bs{X}$ is positive definite.
+
+
+## Algebraic properties of the OLS estimator
+In this section, we show some algebraic properties of the OLS estimator. The first property states that $\bs{X}$ is orthogonal to the residuals by construction. That is, the inner product of each column of $\bs{X}$ with $\hat{\bs{U}}$ is zero, meaning they form a right angle. This can be shown as follows. 
+$$
+\begin{align}
+\bs{X}^{'}\hat{\bs{U}}&=\bs{X}^{'}(\bs{Y}-\bs{X}\hat{\bs{\beta}})=\bs{X}^{'}\bs{Y}-\bs{X}^{'}\bs{X}\hat{\bs{\beta}}\\
+&=\bs{X}^{'}\bs{Y}-\bs{X}^{'}\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}=\bs{X}^{'}\bs{Y}-\bs{X}^{'}\bs{Y}=\bs{0}.
+\end{align}
+$${#eq-eq26-8}
+
+The second algebraic property is that the least-squares residuals sum to zero. Let $\bs{l}_n$ be the column vector of ones. Then, we can express $\bs{X}^{'}\hat{\bs{U}}$ as
+$$
+\begin{align*}
+\bs{X}^{'}\hat{\bs{U}}=\big(\bs{l}_n,\bs{X}_1,\ldots,\bs{X}_k\big)^{'}\hat{\bs{U}}=
+\left(\begin{array}{c}
+\bs{l}^{'}_n\hat{\bs{U}}\\
+\bs{X}_1^{'}\hat{\bs{U}}\\
+\vdots\\
+\bs{X}_k^{'}\hat{\bs{U}}\\
+\end{array}\right)=\bs{0}.
+\end{align*}
+$$
+where the last equality follows from the fact that $\bs{X}^{'}\hat{\bs{U}}=\bs{0}$. The first row of the above equation gives us $\bs{l}^{'}_n\hat{\bs{U}}=\sum_{i=1}^n\hat{u}_i$, which is the sum of least squares residuals and equals zero.
+
+The third property states that the regression hyperplane passes through the data means: $\bar{\bs{Y}}=\bar{\bs{X}}\hat{\bs{\beta}}$. From @eq-eq26-5, we have $\bs{X}^{'}\bs{Y}=\bs{X}^{'}\bs{X}\hat{\bs{\beta}}$, which can be expressed as
+$$
+\begin{align*}
+\left(\begin{array}{c}
+\bs{l}^{'}_n\\
+\bs{X}_1^{'}\\
+\vdots\\
+\bs{X}_k^{'}\\
+\end{array}\right)\bs{Y}=
+\left(\begin{array}{c}
+\bs{l}^{'}_n\\
+\bs{X}_1^{'}\\
+\vdots\\
+\bs{X}_k^{'}\\
+\end{array}\right)\big(\bs{l}_n,\bs{X}_1,\ldots,\bs{X}_k\big)\hat{\bs{\beta}}.
+\end{align*}
+$$
+
+From the first row, we obtain $\bs{l}^{'}_n\bs{Y}=\big(\bs{l}^{'}_n\bs{l}_n,\bs{l}^{'}_n\bs{X}_1,\ldots,\bs{l}^{'}_n\bs{X}_k\big)\hat{\bs{\beta}}$. Thus,
+$$
+\begin{align*}
+\bar{Y}=\frac{1}{n}\bs{l}^{'}_n\bs{Y}=\big(\frac{1}{n}\bs{l}^{'}_n\bs{l}_n,\frac{1}{n}\bs{l}^{'}_n\bs{X}_1,\ldots,\frac{1}{n}\bs{l}^{'}_n\bs{X}_k\big)\hat{\bs{\beta}}=\bar{\bs{X}}\hat{\bs{\beta}}.
+\end{align*}
+$$
+
+The final property states that the mean of the fitted values (the mean of predicted values) equals the mean of the actual values: $\bar{\hat{\bs{Y}}}=\bar{\bs{Y}}$. This property can be easily verified from $\hat{\bs{Y}}=\bs{X}\hat{\bs{\beta}}$:
+$$
+\begin{align*}
+\bar{\hat{\bs{Y}}}&=\frac{1}{n}\bs{l}^{'}_n\bs{X}\hat{\bs{\beta}}=\frac{1}{n}\bs{l}^{'}_n\bs{X}\hat{\bs{\beta}}+\frac{1}{n}\bs{l}^{'}_n\hat{\bs{U}}\\
+&=\frac{1}{n}\bs{l}^{'}_n\big(\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}}\big)=\frac{1}{n}\bs{l}^{'}_n\bs{Y}=\bar{\bs{Y}},
+\end{align*}
+$$
+where the second equality follows from the fact that $\bs{l}^{'}_n\hat{\bs{U}}=0$.
+
+We close this section by defining two useful projection matrices. From the definition of the least squares residuals, we have the following equation:
+$$
+\begin{align*}
+\hat{\bs{U}}&=\bs{Y}-\bs{X}\hat{\bs{\beta}}=\bs{Y}-\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}\\
+&=\left(\bs{I}_n-\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\right)\bs{Y}=\bs{M}_{\bs{X}}\bs{Y},
+\end{align*}
+$$
+where $\bs{M}_{\bs{X}}=\left(\bs{I}_n-\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\right)$. This matrix is also called the residual maker matrix or annihilator matrix. It is symmetric and idempotent, i.e., $\bs{M}_{\bs{X}}^{'}=\bs{M}_{\bs{X}}$ and $\bs{M}^{2}_{\bs{X}}=\bs{M}_{\bs{X}}$. 
+
+There is another projection matrix that produces the fitted values $\hat{\bs{Y}}$ from the actual values. To see this, note that
+$$
+\begin{align*}
+\hat{\bs{Y}}&=\bs{Y}-\hat{\bs{U}}=\bs{Y}-\bs{M}_{\bs{X}}\bs{Y}=\big(\bs{I}_n-\bs{I}_n+\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\big)\bs{Y}\\
+&=\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}=\bs{P}_{\bs{X}}\bs{Y},
+\end{align*}
+$$
+where $\bs{P}_{\bs{X}}=\bs{X}(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}$. This matrix is also symmetric and idempotent.
+
+Note that $\bs{P}_{\bs{X}}\bs{X}=\bs{X}$, $\bs{M}_{\bs{X}}\bs{X}=\bs{0}$, and $\bs{P}_{\bs{X}}\bs{M}_{\bs{X}}=\bs{0}$. Using $\bs{M}_{\bs{X}}$ and $\bs{P}_{\bs{X}}$, we can derive the following useful results.
+
+* We can decompose $\bs{Y}$ as $\bs{Y}=\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}}=\bs{P}_{\bs{X}}\bs{Y}+\bs{M}_{\bs{X}}\bs{Y}$. In this decomposition, $\bs{P}_{\bs{X}}\bs{Y}$ is the projection of $\bs{Y}$ onto the space spanned by the columns of $\bs{X}$, and $\bs{M}_{\bs{X}}\bs{Y}$ is the projection of $\bs{Y}$ onto the orthogonal complement of the column space of $\bs{X}$. The two projections are orthogonal to each other because $\bs{P}_{\bs{X}}\bs{M}_{\bs{X}}=\bs{0}$. Thus, the predicted values $\hat{\bs{Y}}$ and the residuals $\hat{\bs{U}}$ are orthogonal to each other, i.e., $\hat{\bs{Y}}^{'}\hat{\bs{U}}=\bs{0}$.
+
+* The sum of squared residuals can be expressed as $\hat{\bs{U}}^{'}\hat{\bs{U}}=\bs{Y}^{'}\bs{M}_{\bs{X}}^{'}\bs{M}_{\bs{X}}\bs{Y} =\bs{Y}^{'}\bs{M}_{\bs{X}}^{'}\bs{Y}=\hat{\bs{U}}^{'}\bs{Y}$.
+
+* Alternatively, we can express $\hat{\bs{U}}^{'}\hat{\bs{U}}$ as
+$$
+\begin{align*}
+\hat{\bs{U}}^{'}\hat{\bs{U}}&=(\bs{Y}-\bs{P}_{\bs{X}}\bs{Y})^{'}(\bs{Y}-\bs{P}_{\bs{X}}\bs{Y})\\
+&=\bs{Y}^{'}\bs{Y}-\bs{Y}^{'}\bs{P}_{\bs{X}}^{'}\bs{Y}-\bs{Y}^{'}\bs{P}_{\bs{X}}\bs{Y}+\bs{Y}^{'}\bs{P}_{\bs{X}}^{'}\bs{P}_{\bs{X}}\bs{Y}\\
+&=\bs{Y}^{'}\bs{Y}-\bs{Y}^{'}\bs{P}_{\bs{X}}^{'}\bs{P}_{\bs{X}}\bs{Y}\\
+&=\bs{Y}^{'}\bs{Y}-\hat{\bs{\beta}}^{'}\bs{X}^{'}\bs{X}\hat{\bs{\beta}}.
+\end{align*}
+$$
+
+## Goodness of fit
+
+The following symmetric idempotent matrix is useful for deriving the goodness of fit measures: 
+$$
+\begin{align*}
+\mb{M}_0&=\bs{I}_n-\bs{l}_n(\bs{l}_n^{'}\bs{l}_n)^{-1}\bs{l}_n^{'}=\bs{I}_n-\frac{1}{n}\bs{l}_n\bs{l}_n^{'}\\
+&=\begin{pmatrix}
+1-\frac{1}{n}&-\frac{1}{n}&\cdots&-\frac{1}{n}\\
+-\frac{1}{n}&1-\frac{1}{n}&\cdots&-\frac{1}{n}\\
+\vdots&\vdots&\ddots&\vdots\\
+-\frac{1}{n}&-\frac{1}{n}&\cdots&1-\frac{1}{n}\\
+\end{pmatrix}.
+\end{align*}
+$$
+
+This matrix is often called the deviation-from-the-mean matrix or the centering matrix. For example, $\mb{M}_0\bs{Y}$ is the column vector of deviations of its elements from its mean:
+$$
+\begin{align*}
+\mb{M}_0\bs{Y}&=\left(\bs{I}_n-\frac{1}{n}\bs{l}_n\bs{l}_n^{'}\right)\bs{Y}=\bs{Y}-\frac{1}{n}\bs{l}_n\bs{l}_n^{'}\bs{Y}\\
+&=\bs{Y}-\frac{1}{n}\sum_{i=1}^n Y_i\bs{l}_n=\begin{pmatrix}
+Y_1-\bar{Y}\\
+Y_2-\bar{Y}\\
+\vdots\\
+Y_n-\bar{Y}
+\end{pmatrix}.
+\end{align*}
+$$
+
+Using $\mb{M}_0$, we can express $\bs{Y}=\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}}$ as
+$$
+\begin{align*}
+\mb{M}_0\bs{Y}=\mb{M}_0\bs{X}\hat{\bs{\beta}}+\mb{M}_0\hat{\bs{U}}
+=\mb{M}_0\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}},
+\end{align*}
+$$
+where the second equality follows because $\mb{M}_0\hat{\bs{U}}=\hat{\bs{U}}-\frac{1}{n}\bs{l}_n\bs{l}_n^{'}\hat{\bs{U}}=\hat{\bs{U}}$ as $\bs{l}_n^{'}\hat{\bs{U}}=\bs{0}$. Thus, we can write the sum of the squared deviations of the elements of $\bs{Y}$ from its mean as
+$$
+\begin{align*}
+(\mb{M}_0\bs{Y})^{'}\mb{M}_0\bs{Y}&=\bs{Y}^{'}\mb{M}_0\bs{Y}=(\mb{M}_0\bs{X}
+\hat{\bs{\beta}}+\hat{\bs{U}})^{'}
+(\mb{M}_0\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}})\\ 
+&=\hat{\bs{\beta}}^{'}\bs{X}^{'}\mb{M}_0\bs{X}\hat{\bs{\beta}}+
+\hat{\bs{\beta}}^{'}\bs{X}^{'}\hat{\bs{U}}+
+\hat{\bs{U}}^{'}\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}}^{'}\hat{\bs{U}}\\ 
+&=\hat{\bs{\beta}}^{'}\bs{X}^{'}\mb{M}_0\bs{X}\hat{\bs{\beta}}+\hat{\bs{U}}^{'}\hat{\bs{U}}\\
+&=\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{Y}}+\hat{\bs{U}}^{'}\hat{\bs{U}}.
+\end{align*}
+$$
+Let $TSS=\bs{Y}^{'}\mb{M}_0\bs{Y}$ be the total sum of squares, $ESS=\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{Y}}$ be the explained sum of squares, and $RSS=\hat{\bs{U}}^{'}\hat{\bs{U}}$ be the residual sum of squares. Clearly, $TSS=ESS+RSS$ holds. Then, a natural measure of goodness-of-fit is
+$$
+\begin{align*}
+R^2=\frac{ESS}{TSS}=\frac{\hat{\bs{\beta}}^{'}\bs{X}^{'}\mb{M}_0\bs{X}\hat{\bs{\beta}}}{\bs{Y}^{'}\mb{M}_0\bs{Y}}=1-\frac{\hat{\bs{U}}^{'}\hat{\bs{U}}}{\bs{Y}^{'}\mb{M}_0\bs{Y}}=1-
+\frac{RSS}{TSS}.
+\end{align*}
+$$
+
+We can also express $R^2$ as the square of the sample correlation coefficient between $\bs{Y}$ and $\hat{\bs{Y}}$. That is,
+$$
+\begin{align*}
+R^2=r^2_{\bs{Y}\hat{\bs{Y}}}=\frac{s^2_{\bs{Y}\hat{\bs{Y}}}}{s^2_{\bs{Y}}s^2_{\hat{\bs{Y}}}},
+\end{align*}
+$$
+where $s_{\bs{Y}\hat{\bs{Y}}}$ is the sample covariance between $\bs{Y}$ and $\hat{\bs{Y}}$, and $s^2_{\bs{Y}}$ and $s^2_{\hat{\bs{Y}}}$ are the sample variances of $\bs{Y}$ and $\hat{\bs{Y}}$, respectively. To see this, first note that we can express $r^2_{\bs{Y}\hat{\bs{Y}}}$ as
+$$
+\begin{align*}
+r^2_{\bs{Y}\hat{\bs{Y}}}&=\frac{\left(\sum_{i=1}^n(\hat{Y}_i-\bar{\hat{Y}})(Y_i-\bar{Y})\right)^2}{\sum_{i=1}^n(Y_i-\bar{Y})^2\sum_{i=1}^n(\hat{Y}_i-\bar{\hat{Y}})^2}\\
+&=\frac{(\hat{\bs{Y}}^{'}\mb{M}_0\bs{Y})^2}{(\bs{Y}^{'}\mb{M}_0\bs{Y})(\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{Y}})}.
+\end{align*}
+$$
+
+Note that $ESS=\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{Y}}=\hat{\bs{Y}}^{'}\mb{M}_0(\bs{Y}-\hat{\bs{U}})=\hat{\bs{Y}}^{'}\mb{M}_0\bs{Y}-\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{U}}=\hat{\bs{Y}}^{'}\mb{M}_0\bs{Y}$ because $\mb{M}_0\hat{\bs{U}}=\hat{\bs{U}}$ and $\hat{\bs{Y}}^{'}\hat{\bs{U}}=0$. Thus, we have
+$$
+\begin{align*}
+r^2_{\bs{Y}\hat{\bs{Y}}}=\frac{(\hat{\bs{Y}}^{'}\mb{M}_0\bs{Y})^2}{(\bs{Y}^{'}\mb{M}_0\bs{Y})(\hat{\bs{Y}}^{'}\mb{M}_0\hat{\bs{Y}})}=\frac{(ESS)^2}{TSS\cdot ESS}=\frac{ESS}{TSS}=R^2.
+\end{align*}
+$$
+
+Recall that $R^2$ always lies between $0$ and $1$.  One serious drawback of $R^2$ is that it never decreases as we include more explanatory variables in $\bs{X}$, even when they do not contribute to explain $\bs{Y}$. Hence, we modify $R^2$ so that it penalizes for adding superfluous regressors into the model. The modified measure, known as the adjusted $R^2$, is given by
+$$
+\begin{align*}
+\bar{R}^2=1-\frac{\hat{\bs{U}}^{'}\hat{\bs{U}}/(n-k-1)}{\bs{Y}^{'}\mb{M}_0\bs{Y}/(n-1)}.
+\end{align*}
+$$
+
+## Asymptotic distribution of the OLS estimator
+We first show that the OLS estimator is unbiased under Assumptions 1-4. To see this, first note that we can express the OLS estimator as
+$$
+\begin{align}
+\hat{\bs{\beta}}&=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}(\bs{X}\bs{\beta}+\bs{U})\\
+&=\bs{\beta}+(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{U}.
+\end{align}
+$$
+
+Since $\E(\bs{U}|\bs{X})=\bs{0}$ holds under Assumptions 1 and 2, we have 
+$$
+\begin{align*}
+\E(\hat{\bs{\beta}}|\bs{X})=\bs{\beta}+(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\E(\bs{U}|\bs{X})=\bs{\beta},
+\end{align*}
+$$
+which shows that the OLS estimator is conditionally unbiased. Finally, by the law of iterated expectations, we have
+$$
+\E(\hat{\bs{\beta}})=\E(\E(\hat{\bs{\beta}}|\bs{X}))=\E(\bs{\beta})=\bs{\beta}.
+$$
+
+Next, we show that the OLS estimator is consistent in the following theorem.
+
+:::{#thm-thm26-1-0}
+## Consistency of the OLS estimator
+Assume that Assumptions 1-4 hold and that $\bs{Q}_{\bs{X}}=\E(\bs{X}_i\bs{X}^{'}_i)$ is positive definite. Then, the OLS estimator $\hat{\bs{\beta}}$ is consistent, i.e., $\hat{\bs{\beta}}\xrightarrow{p}\bs{\beta}$ as $n\to\infty$.
+:::
+
+:::{.proof}
+## Proof of @thm-thm26-1-0
+Note that we can express the OLS estimator as
+$$
+\begin{align*}
+\hat{\bs{\beta}}=\bs{\beta}+\left(\frac{1}{n}\bs{X}^{'}\bs{X}\right)^{-1}\left(\frac{1}{n}\bs{X}^{'}\bs{U}\right).
+\end{align*}
+$$
+
+We use the law of large numbers to show the following results:
+
+1. $\frac{1}{n}\bs{X}^{'}\bs{X}\xrightarrow{p}\bs{Q}_{\bs{X}}$, and 
+2. $\frac{1}{n}\bs{X}^{'}\bs{U}\xrightarrow{p}\bs{0}_{k+1}$.
+
+Note that $\frac{1}{n}\bs{X}^{'}\bs{X}=\frac{1}{n}\sum_{i=1}^n\bs{X}_i\bs{X}^{'}_i$. The $(h,l)$th element of this matrix is given by $\frac{1}{n}\sum_{i=1}^nX_{hi}X_{li}$. By Assumption 2, $\{X_{hi}X_{li}\}$ are i.i.d. across $i$. By Assumption 3, the elements of $\bs{X}_i$ have finite fourth moments, then it follows form the Cauchy–Schwarz inequality that
+$$
+\begin{align*}
+\E\left(X_{hi}^2X_{li}^2\right)\leq \sqrt{\E(X_{hi}^4)\E(X_{li}^4)}<\infty.
+\end{align*}
+$$
+Thus, $X_{hi}X_{li}$ has a finite variance. Then, by the law of large numbers, we have $\frac{1}{n}\sum_{i=1}^nX_{hi}X_{li}\xrightarrow{p}\E(X_{hi}X_{li})$. Since this is true for all elements of $\frac{1}{n}\bs{X}^{'}\bs{X}$, we obtain $\frac{1}{n}\bs{X}^{'}\bs{X}\xrightarrow{p}\E(\bs{X}_i\bs{X}^{'}_i)=\bs{Q}_{\bs{X}}$.
+
+Similarly, we can express $\frac{1}{n}\bs{X}^{'}\bs{U}$ as $\frac{1}{n}\bs{X}^{'}\bs{U}=\frac{1}{n}\sum_{i=1}^n\bs{X}_iu_i$. Thus, the $j$th element of $\frac{1}{n}\bs{X}^{'}\bs{U}$ is $\frac{1}{n}\sum_{i=1}^nX_{ji}u_i$ for $j=1,\ldots,k+1$. By Assumption 2, $\{X_{ji}u_i\}$ are i.i.d. across $i$. Also, by the Cauchy–Schwarz inequality, we have
+$$
+\E\left(X_{ji}^2u_i^2\right)\leq \sqrt{\E(X_{ji}^4)\E(u_i^4)}<\infty,
+$$
+where the last inequality follows from Assumption 3. Then, by the law of large numbers, we have $\frac{1}{n}\sum_{i=1}^nX_{ji}u_i\xrightarrow{p}\E(X_{ji}u_i)=0$. Thus, we obtain $\frac{1}{n}\bs{X}^{'}\bs{U}\xrightarrow{p}\bs{0}_{k+1}$.
+
+Finally, using the continuous mapping theorem, we obtain
+$$
+\hat{\bs{\beta}}=\bs{\beta}+\left(\frac{1}{n}\bs{X}^{'}\bs{X}\right)^{-1}\left(\frac{1}{n}\bs{X}^{'}\bs{U}\right)\xrightarrow{p}\bs{\beta}+\bs{Q}^{-1}_{\bs{X}}\bs{0}_{k+1}=\bs{\beta}.
+$$
+:::
+
+To derive the asymptotic distribution of $\hat{\bs{\beta}}$, we need a multivariate central limit theorem that applies to vector-valued random variables.
+
+:::{#thm-thm26-0}
+## Multivariate central limit theorem
+Let $\{\bs{W}_i\}_{i=1}^n$ be a sequence of i.i.d. $m$-dimensional random variables with mean $\bs{\mu}_{\bs{W}}$ and covariance matrix $\bs{\Sigma}_{\bs{W}}$, where $\bs{\Sigma}_{\bs{W}}$ is positive definite and finite. Define $\overline{\bs{W}}=\frac{1}{n}\sum_{i=1}^n\bs{W}_i$. Then, 
+$$
+\sqrt{n}(\overline{\bs{W}}-\bs{\mu}_{\bs{W}})\xrightarrow{d}N(\bs{0}_m,\bs{\Sigma}_{\bs{W}}).
+$$
+:::
+
+:::{.proof}
+## The proof of @thm-thm26-0
+See @sec-appendixD.
+:::
+
+Using the multivariate central limit theorem, we can derive the asymptotic distribution of the OLS estimator. The following theorem states that the OLS estimator is asymptotically normally distributed.
+
+:::{#thm-thm26-1}
+## Asymptotic distribution of the OLS estimator
+Assume that Assumptions 1-4 hold. Let $\bs{Q}_{\bs{X}}=\E(\bs{X}_i\bs{X}^{'}_i)$ and $\bs{\Sigma}_{\bs{V}}=\E(\bs{V}_i\bs{V}^{'}_i)$, where $\bs{V}_i=\bs{X}_iu_i$. Assume that $\bs{Q}_{\bs{X}}$ is positive definite.  Then, we have
+$$
+\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})\xrightarrow{d}N\left(\bs{0}_{k+1},\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\right),
+$$
+where $\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}=\bs{Q}^{-1}_{\bs{X}}\bs{\Sigma}_{\bs{V}}\bs{Q}^{-1}_{\bs{X}}$.
+:::
+
+:::{.proof}
+## The proof of @thm-thm26-1
+Note that we can express $\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})$ as
+$$
+\begin{align}
+\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})=\left(\frac{\bs{X}^{'}\bs{X}}{n}\right)^{-1}\left(\frac{\bs{X}^{'}\bs{U}}{\sqrt{n}}\right).
+\end{align}
+$${#eq-eq26-10}
+
+Thus, we need to show that 
+
+1. $\frac{1}{n}\bs{X}^{'}\bs{X}\xrightarrow{p}\bs{Q}_{\bs{X}}$, and 
+2. $\frac{1}{\sqrt{n}}\bs{X}^{'}\bs{U}$ obeys the multivariate central limit theorem in @thm-thm26-0, i.e.,  $\frac{1}{\sqrt{n}}\bs{X}^{'}\bs{U}\xrightarrow{d}N\left(\bs{0}_{k+1},\,\bs{\Sigma}_{\bs{V}}\right)$.
+
+The first result follows from the law of large numbers as shown in the proof of @thm-thm26-1-0. Thus, we need to only show the second result. Note that $\frac{1}{\sqrt{n}}\bs{X}^{'}\bs{U}=\frac{1}{\sqrt{n}}\sum_{i=1}^n\bs{V}_i$, where $\bs{V}_i=\bs{X}_iu_i$. By Assumption 1, we have
+$$
+\E(\bs{V}_i)=\E\left(\bs{X}_iu_i\right)=\E\left(\E\left(\bs{X}_iu_i|\bs{X}_i\right)\right)=\E\left(\bs{X}_i\E\left(u_i|\bs{X}_i\right)\right)=\bs{0}.
+$$
+
+To apply the multivariate central limit theorem in @thm-thm26-0, we need to show that $\{\bs{V}_i\}$ are i.i.d across $i$ and $\bs{\Sigma}_{\bs{V}}$ is finite. Assumption 2 ensures that $\{\bs{V}_i\}$ are i.i.d across $i$. To show that $\bs{\Sigma}_{\bs{V}}$ is finite, we consider the $(h,l)$th element of $\bs{\Sigma}_{\bs{V}}=\E\left(\bs{V}_i\bs{V}^{'}_i\right)=\E\left(\bs{X}_i\bs{X}^{'}_iu^2_i\right)$, which is given by
+$$
+\bs{\Sigma}_{\bs{V},hl}=\E\left(X_{hi}u_iX_{li}u_i\right)=\E\left(X_{hi}X_{li}u^2_i\right),
+$$
+where $h,l\in\{1,\ldots,k+1\}$. Then, applying the expectation inequality and the Cauchy-Cauchy–Schwarz inequality, we obtain
+$$
+\begin{align*}
+|\bs{\Sigma}_{\bs{V},hl}|&=\left|\E\left(X_{hi}X_{li}u^2_i\right)\right|\leq\E\left(\left|X_{hi}X_{li}u^2_i\right|\right)\\
+&\leq \sqrt{\E\left(X^2_{hi}X^2_{li}\right)\E(u^4_i)}\\
+&\leq \left(\E(X^4_{hi})\right)^{1/4}\left(\E(X^4_{li})\right)^{1/4}\sqrt{\E(u^4_i)}<\infty,
+\end{align*}
+$$
+where the first inequality follows from the expectation inequality, the second and the third from the Cauchy-Schwarz inequality, and the last from Assumption 3. Thus, we conclude that $\bs{\Sigma}_{\bs{V}}$ is finite.
+
+Then, by the multivariate central limit theorem in @thm-thm26-0, we have
+$$
+\frac{1}{\sqrt{n}}\bs{X}^{'}\bs{U}=\frac{1}{\sqrt{n}}\sum_{i=1}^n\bs{V}_i\xrightarrow{d}N\left(\bs{0}_{k+1},\,\bs{\Sigma}_{\bs{V}}\right).
+$$
+Finally, the desired result follows from Slutsky's theorem.
+:::
+
+For inference, we need an estimator of $\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}$. The heteroskedasticity-robust estimator of $\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}$ is given by
+$$
+\begin{align}
+\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}=\left(\frac{\bs{X}^{'}\bs{X}}{n}\right)^{-1}\hat{\bs{\Sigma}}_{\bs{V}}\left(\frac{\bs{X}^{'}\bs{X}}{n}\right)^{-1},
+\end{align}
+$$
+where $\hat{\bs{\Sigma}}_{\bs{V}}=\frac{1}{n}\sum_{i=1}^{n}\bs{X}_i\bs{X}^{'}_i\hat{u}^2_i$. @White1980 showed that $\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}$ is a consistent estimator of $\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}$. The estimator $\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}$ is called the **heteroskedasticity-robust covariance matrix estimator**. In particular, it is called the HC0 covariance matrix estimator, indicating that it is a baseline estimator. By scaling this estimator with $n/(n-k-1)$, we obtain another version, called the HC1 estimator. The HC1 estimator is the most commonly used one in practice.^[See @MacKinnon1985 and @Hansen2022 for further discussion of heteroskedasticity-robust covariance matrix estimators.]
+
+:::{#thm-thm29-3-1}
+## Consistency of the heteroskedasticity-robust covariance matrix estimator
+Under the assumptions of @thm-thm26-1, $\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\xrightarrow{p}\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}$ as $n\to\infty$.
+:::
+
+:::{.proof}
+## The proof of @thm-thm29-3-1
+See @sec-appendixD.
+:::
+
+Note that the asymptotic variance of $\hat{\bs{\beta}}$ is $\hat{\bs{\Sigma}}_{\hat{\bs{\beta}}}=n^{-1}\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}$. The heteroskedasticity-robust standard error for the $j$th regression coefficient is the square root of the $j$th diagonal element of $\hat{\bs{\Sigma}}_{\hat{\bs{\beta}}}$:
+$$
+\begin{align}
+SE(\hat{\beta}_j)=\sqrt{\hat{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}},
+\end{align}
+$$
+where $\hat{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}$ is the $(j,j)$th element of $\hat{\bs{\Sigma}}_{\hat{\bs{\beta}}}$. Then, the heteroskedasticity-robust t-statistic for testing the null hypothesis $H_0:\beta_j=c$ is given by
+$$
+\begin{align}
+t=\frac{\hat{\beta}_j-c}{SE(\hat{\beta}_j)}.
+\end{align}
+$$
+
+:::{#thm-thm26-t}
+## Asymptotic distribution of the heteroskedasticity-robust t-statistic
+Assume that Assumptions 1-4 hold. Under the null hypothesis, $t$ has the asymptotic standard normal distribution, i.e., $t\xrightarrow{d}N(0,1)$.
+:::
+
+:::{.proof}
+## The proof of @thm-thm26-t
+The heteroskedasticity-robust t-statistic can be written as
+$$
+\begin{align}
+t=\frac{\hat{\beta}_j-c}{SE(\hat{\beta}_j)}=\frac{\hat{\beta}_j-c}{\sqrt{\hat{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}}}=\frac{\hat{\beta}_j-c}{\sqrt{\bs{\Sigma}_{\hat{\bs{\beta}},jj}}}\div \sqrt{\frac{\hat{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}}{\bs{\Sigma}_{\hat{\bs{\beta}},jj}}}.
+\end{align}
+$$
+Under the null hypothesis, $\frac{\hat{\beta}_j-c}{\sqrt{\bs{\Sigma}_{\hat{\bs{\beta}},jj}}}\xrightarrow{d}N(0,1)$ and $\sqrt{\frac{\hat{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}}{\bs{\Sigma}_{\hat{\bs{\beta}},jj}}}\xrightarrow{p}1$. Then, it follows from Slutsky's theorem that
+$$
+\begin{align}
+t\xrightarrow{d}N(0,1).
+\end{align}
+$$
+:::
+
+In @sec-inference2, we show that a joint null hypothesis that imposes $q$ linear restrictions on the regression coefficients can be expressed as
+$$
+\begin{align}
+H_0:\bs{R}\bs{\beta}=\bs{r},
+\end{align}
+$${#eq-eq26-14}
+where $\bs{R}$ is a $q\times(k + 1)$ nonrandom matrix with full row rank and $\bs{r}$ is a nonrandom $q\times1$ vector.
+
+:::{#exm-exm26-1}
+Consider $H_0:\beta_1=0,\beta_2=0, \beta_3=3$. This null hypothesis imposes $q=3$ restrictions. Then, for this null hypothesis, we have
+$$ 
+\begin{align}
+\bs{R}=
+\begin{pmatrix}
+0&1&0&0&0&\cdots&0\\
+0&0&1&0&0&\cdots&0\\
+0&0&0&1&0&\cdots&0\\
+\end{pmatrix}_{3\times(k+1)}
+\quad\text{and}\quad \bs{r}=
+\begin{pmatrix}
+0\\
+0\\
+3
+\end{pmatrix}.
+\end{align}
+$$
+If we consider $H_0:\beta_1=0$ and $\beta_2+\beta_3=1$, then 
+$$
+\begin{align}
+\bs{R}=
+\begin{pmatrix}
+0&1&0&0&0&\cdots&0\\
+0&0&1&1&0&\cdots&0
+\end{pmatrix}_{2\times(k+1)}
+\quad\text{and}\quad \bs{r}=
+\begin{pmatrix}
+0\\
+1
+\end{pmatrix}.
+\end{align}
+$$
+:::
+
+We can use the heteroskedasticity-robust F-statistic for testing the joint hypothesis in @eq-eq26-14. The heteroskedasticity-robust F-statistic is given by
+$$
+\begin{align}
+F=\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(\bs{R}\hat{\bs{\Sigma}}_{\hat{\bs{\beta}}}\bs{R}^{'}\right)^{-1}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)/q.
+\end{align}
+$$
+
+:::{#thm-thm26-2}
+## Asymptotic distribution of the heteroskedasticity-robust F-statistic
+Assume that Assumptions 1-4 hold. Then, under the null hypothesis, we have
+$$
+\begin{align}
+F\xrightarrow{d}F_{q,\infty}.
+\end{align}
+$$
+:::
+
+:::{.proof}
+## The proof of @thm-thm26-2
+The proof requires some properties of random variables that have multivariate normal distribution. See Appendix D for these properties. Under $H_0$, we have $\sqrt{n}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)=\sqrt{n}\bs{R}\left(\hat{\bs{\beta}}-\bs{\beta}\right)\xrightarrow{d}N\left(\bs{0},\bs{R}\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\bs{R}^{'}\right)$. Then, it follows that
+$$ 
+\begin{align*}
+&\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(\bs{R}\bs{\Sigma}_{\hat{\bs{\beta}}}\bs{R}^{'}\right)^{-1}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)=\sqrt{n}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(n\bs{R}\bs{\Sigma}_{\hat{\bs{\beta}}}\bs{R}^{'}\right)^{-1}\sqrt{n}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)\\
+&=
+\left(\sqrt{n}\bs{R}\left(\hat{\bs{\beta}}-\bs{\beta}\right)\right)^{'}\left(\bs{R}\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\bs{R}^{'}\right)^{-1}\left(\sqrt{n}\bs{R}\left(\hat{\bs{\beta}}-\bs{\beta}\right)\right)\xrightarrow{d}\chi^2_q.
+\end{align*}
+$$
+Since $\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\xrightarrow{p}\bs{\Sigma}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}$, it follows from Slutsky's theorem that 
+$$
+\begin{align*}
+\left(\sqrt{n}\left(\bs{R}\hat{\bs{\beta}}-\bs{\beta}\right)\right)^{'}\left(\bs{R}\hat{\bs{\Sigma}}_{\sqrt{n}(\hat{\bs{\beta}}-\bs{\beta})}\bs{R}^{'}\right)^{-1}\left(\sqrt{n}\left(\bs{R}\hat{\bs{\beta}}-\bs{\beta}\right)\right)\xrightarrow{d}\chi^2_q.
+\end{align*}
+$$
+Thus, $F\xrightarrow{d}\chi^2_q/q\equiv F_{q,\infty}$. 
+:::
+
+## Exact sampling distribution of the OLS estimator
+In this section, we also assume that Assumptions 5 and 6 hold. In the proof @thm-thm26-1, we show that $\hat{\bs{\beta}}=\bs{\beta}+(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{U}$. The conditional variance of $\hat{\bs{\beta}}$ given $\bs{X}$ is
+$$
+\begin{align*}
+\bs{\Sigma}_{\hat{\bs{\beta}}|\bs{X}}&=\E\left((\hat{\bs{\beta}}-\bs{\beta})(\hat{\bs{\beta}}-\bs{\beta})^{'}|\bs{X}\right)=\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{U}\bs{U}^{'}\bs{X}(\bs{X}^{'}\bs{X})^{-1}|\bs{X}\right)\\
+&=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}(\sigma^2_u\bs{I}_n)\bs{X}(\bs{X}^{'}\bs{X})^{-1}=\sigma^2_u(\bs{X}^{'}\bs{X})^{-1},
+\end{align*}
+$$
+where the third equality follows from Assumption 5. 
+
+Note that we have $\bs{U}|\bs{X}\sim N(\bs{0},\sigma^2_u\bs{I}_n)$ under Assumptions 1-6. Also, $\hat{\bs{\beta}}=\bs{\beta}+(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{U}$ indicates that $\hat{\bs{\beta}}$ is a linear function of $\bs{U}$. Then, using the properties of the multivariate normal distribution given in Appendix D, we can determine the conditional distribution of $\hat{\bs{\beta}}$ given $\bs{X}$ as
+$$
+\begin{align}
+\hat{\bs{\beta}}|\bs{X}\sim N\left(\bs{\beta},\,\bs{\Sigma}_{\hat{\bs{\beta}}|\bs{X}}\right).
+\end{align}
+$$
+
+It is important to note that this result is exact in the sense that it holds for any sample size. In particular, we do not need a large sample size for this result to hold.
+
+We can also determine the exact conditional distribution of the OLS residuals. First, note that we can express the OLS residuals as
+$$
+\begin{align*}
+\hat{\bs{U}}=\bs{M}_{\bs{X}}\bs{Y}=\bs{M}_{\bs{X}}(\bs{X}\hat{\bs{\beta}}+\bs{U})=\bs{M}_{\bs{X}}\bs{U},
+\end{align*}
+$$
+where the last equality follows from the fact that $\bs{M}_{\bs{X}}\bs{X}=\bs{0}$. Then, using $\hat{\bs{U}}=\bs{M}_{\bs{X}}\bs{U}$, we can determine the conditional mean and variance of $\hat{\bs{U}}$ as
+$$
+\begin{align*}
+&\E(\hat{\bs{U}}|\bs{X})=\E\left(\bs{M}_{\bs{X}}\bs{U}|\bs{X}\right)=\bs{M}_{\bs{X}}\E\left(\bs{U}|\bs{X}\right)=\bs{0},\\
+&\text{var}(\hat{\bs{U}}|\bs{X})=\text{var}\left(\bs{M}_{\bs{X}}\bs{U}|\bs{X}\right)=\bs{M}_{\bs{X}}\text{var}\left(\bs{U}|\bs{X}\right)\bs{M}_{\bs{X}}^{'}=\sigma^2_u\bs{M}_{\bs{X}},
+\end{align*}
+$$
+where we use the fact that $\text{var}(\bs{U}|\bs{X})=\sigma^2_u\bs{I}_n$ and $\bs{M}_{\bs{X}}\bs{M}_{\bs{X}}=\bs{M}_{\bs{X}}$. 
+
+Finally, since $\hat{\bs{U}}$ is a linear function of $\bs{U}$ and $\bs{U}|\bs{X}\sim N(\bs{0},\sigma^2_u\bs{I}_n)$, we can determine the conditional distribution of $\hat{\bs{U}}$ given $\bs{X}$ as
+$$
+\begin{align*}
+\hat{\bs{U}}|\bs{X}\sim N\left(\bs{0},\,\bs{\Sigma}_{\hat{\bs{U}}|\bs{X}}\right),
+\end{align*}
+$$
+where $\bs{\Sigma}_{\hat{\bs{U}}|\bs{X}}=\sigma^2_u\bs{M}_{\bs{X}}$.
+
+Also, note that the conditional covariance between $\hat{\bs{\beta}}$ and $\hat{\bs{U}}$ is zero:
+$$
+\begin{align*}
+\text{cov}(\hat{\bs{\beta}},\hat{\bs{U}}|\bs{X})&=\E\left((\hat{\bs{\beta}}-\bs{\beta})(\hat{\bs{U}})^{'}|\bs{X}\right)\\
+&=\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{U}(\bs{M}_{\bs{X}}\bs{U})^{'}|\bs{X}\right)\\
+&=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\E\left(\bs{U}\bs{U}^{'}|\bs{X}\right)\bs{M}_{\bs{X}}\\
+&=\sigma^2_u(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{M}_{\bs{X}}\\
+&=\bs{0}_{(k+1)\times n},
+\end{align*}
+$$
+where the last equality follows from the fact that $\bs{X}^{'}\bs{M}_{\bs{X}}=\bs{0}_{(k+1)\times n}$. Using this fact and the properties of the multivariate normal distribution, we can determine the joint conditional distribution of $(\hat{\bs{\beta}},\hat{\bs{U}})$ given $\bs{X}$ as
+$$
+\begin{align*}
+\begin{pmatrix}
+\hat{\bs{\beta}}\\
+\hat{\bs{U}}
+\end{pmatrix}
+\bigg|\bs{X}
+\sim N\left(\begin{pmatrix}
+\bs{\beta}\\
+\bs{0}
+\end{pmatrix},\,\begin{pmatrix}
+\bs{\Sigma}_{\hat{\bs{\beta}}|\bs{X}} & \bs{0}_{(k+1)\times n}\\
+\bs{0}_{n\times (k+1)} & \bs{\Sigma}_{\hat{\bs{U}}|\bs{X}}
+\end{pmatrix}\right).
+\end{align*}
+$${#eq-eq26-11-2}
+
+The joint normality and $\text{cov}(\hat{\bs{\beta}},\hat{\bs{U}}|\bs{X})=\bs{0}_{(k+1)\times n}$ imply that $\hat{\bs{\beta}}$ is statistically independent of $\hat{\bs{U}}$. In particular, any function of $\hat{\bs{\beta}}$ is statistically independent of any function of $\hat{\bs{U}}$. We use this fact to determine the exact sampling distributions of the $t$ and $F$ statistics below.
+
+The standard error of regression (SER) is
+$$
+\begin{align}
+s^2_{\hat{u}}=\frac{1}{n-k-1}\sum_{i=1}^n\hat{u}^2_i=\frac{1}{n-k-1}\hat{\bs{U}}^{'}\hat{\bs{U}}=\frac{1}{n-k-1}\bs{U}^{'}\bs{M}_{\bs{X}}\bs{U},
+\end{align}
+$$
+where the final equality follows because $\hat{\bs{U}}^{'}\hat{\bs{U}}=(\bs{M}_{\bs{X}}\bs{U})^{'}(\bs{M}_{\bs{X}}\bs{U})=\bs{U}^{'}\bs{M}_{\bs{X}}\bs{M}_{\bs{X}}\bs{U}=\bs{U}^{'}\bs{M}_{\bs{X}}\bs{U}$. The degrees-of-freedom adjustment ensures that $s^2_{\hat{u}}$ is unbiased. This can be seen from
+$$
+\begin{align*}
+\E(s^2_{\hat{u}}|\bs{X})&=\frac{1}{n-k-1}\E\left(\bs{U}^{'}\bs{M}_{\bs{X}}\bs{U}|\bs{X}\right)=\frac{1}{n-k-1}\E\left(\tr\left(\bs{U}^{'}\bs{M}_{\bs{X}}\bs{U}\right)|\bs{X}\right)\\
+&=\frac{1}{n-k-1}\E\left(\tr\left(\bs{M}_{\bs{X}}\bs{U}\bs{U}^{'}\right)|\bs{X}\right)=\frac{1}{n-k-1}\tr\left(\E\left(\bs{M}_{\bs{X}}\bs{U}\bs{U}^{'}|\bs{X}\right)\right)\\
+&=\frac{1}{n-k-1}\tr\left(\bs{M}_{\bs{X}}\E\left(\bs{U}\bs{U}^{'}|\bs{X}\right)\right)=\frac{\sigma^2_u}{n-k-1}\tr\left(\bs{M}_{\bs{X}}\right)=\sigma^2_u.
+\end{align*}
+$$
+Then, $\E(s^2_{\hat{u}})=\E\left(\E(s^2_{\hat{u}}|\bs{X})\right)=\E(\sigma^2_u)=\sigma^2_u$. 
+
+Under Assumptions 1-6, we can also determine the exact sampling distribution of $s^2_{\hat{u}}$. Since $s^2_{\hat{u}}=\frac{1}{n-k-1}\bs{U}^{'}\bs{M}_{\bs{X}}\bs{U}$, by Theorem D.6 in Appendix D, we have
+$$
+\begin{align*}
+\frac{(n-k-1)s^2_{\hat{u}}}{\sigma^2_u}=(\bs{U}/\sigma_u)^{'}\bs{M}_{\bs{X}}(\bs{U}/\sigma_u)\sim \chi^2_{n-k-1},
+\end{align*}
+$${#eq-eq26-18}
+where the degrees of freedom of the chi-squared distribution is $n-k-1$ because the rank of $\bs{M}_{\bs{X}}$ is $n-k-1$. Thus, we have
+$$
+\begin{align}
+s^2_{\hat{u}}\sim \frac{\sigma^2_u}{n-k-1}\chi^2_{n-k-1}.
+\end{align}
+$$
+
+The homoskedasticity-only estimator of $\bs{\Sigma}_{\hat{\bs{\beta}}|\bs{X}}$ is given by
+$$
+\begin{align}
+\tilde{\bs{\Sigma}}_{\hat{\bs{\beta}}}=s^2_{\hat{u}}(\bs{X}^{'}\bs{X})^{-1}.
+\end{align}
+$$
+Let the $\hat{\beta}_j$ be the $j$th element of $\hat{\bs{\beta}}$. Then, the homokedasticity-only standard error of $\hat{\beta}_j$ is
+$$ 
+\begin{align}
+SE(\hat{\beta}_j)=\sqrt{\tilde{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}},
+\end{align}
+$$
+where $\tilde{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}$ is the $(j,j)$th element of $\tilde{\bs{\Sigma}}_{\hat{\bs{\beta}}}$.
+
+Consider $H_0:\beta_j=\beta_{j,0}$, where $\beta_{j,0}$ is a known constant. Then, the $t$-statistic for testing this hypothesis is 
+$$
+\tilde{t}=\frac{\hat{\beta}_j-\beta_{j,0}}{\sqrt{\tilde{\bs{\Sigma}}_{\hat{\bs{\beta}},jj}}}.
+$$
+
+:::{#thm-thm26-3}
+## Exact sampling distribution of the homoskedasticity-only t-statistic
+Under all six of the extended least squares assumptions, the
+exact sampling distribution of $\tilde{t}$ is the Student t distribution with $n- k - 1$ degrees of freedom. 
+:::
+
+:::{.proof}
+## The proof of @thm-thm26-3
+Note that we can write $\tilde{t}$ as
+$$
+\tilde{t}=\frac{(\hat{\beta}_j-\beta_{j,0})/\sqrt{\bs{\Sigma}_{\hat{\bs{\beta}},jj}}}{\sqrt{W/(n-k-1)}},
+$$
+where $W=\frac{(n-k-1)s^2_{\hat{u}}}{\sigma^2_u}$. Under the null, the numerator is distributed as $N(0,1)$. The variable $W$ in the denominator is distributed as $W\sim \chi_{n-k-1}$ by @eq-eq26-18. If we can also show that $W$ is independent of the numerator, then we can conclude that $\tilde{t}$ has the Student t distribution with $n-k-1$ degrees of freedom. The independence result follows from @eq-eq26-11-2.
+:::
+
+Finally, we determine the distribution of the homoskedasticity-only $F$-statistic under Assumptions 1-6. The homoskedasticity-only $F$-statistic for testing $H_0:\bs{R}\bs{\beta}=\bs{r}$ is
+$$ 
+\begin{align}
+\tilde{F}=\frac{\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(\bs{R}(\bs{X}^{'}\bs{X})^{-1}\bs{R}^{'}\right)^{-1}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)/q}{s^2_{\hat{u}}}.
+\end{align}
+$$
+
+:::{#thm-thm26-4}
+## Exact sampling distribution of the homoskedasticity-only F-statistic
+Assume that all six assumptions hold. Then, under the null hypothesis, we have 
+$$
+\begin{align}
+\tilde{F}\sim F_{q,n-k-1}.
+\end{align}
+$$
+:::
+
+:::{.proof}
+## The proof of @thm-thm26-4
+Note that we can express $\tilde{F}$ as $\tilde{F}=(W_1/q)/(W_2/(n-k-1))$, where 
+
+* $W_1=\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(\sigma^2_u\bs{R}(\bs{X}^{'}\bs{X})^{-1}\bs{R}^{'}\right)^{-1}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)$, and
+* $W_2=\frac{(n-k-1)s^2_{\hat{u}}}{\sigma^2_u}$.
+
+The numerator is distributed as $\chi^2_q$ and the denominator is distributed as $\chi^2_{n-k-1}$. The independence of $W_1$ and $W_2$ follows from @eq-eq26-11-2. Thus, we have $\tilde{F}\sim F_{q,n-k-1}$.
+:::
+
+## Efficiency of the OLS estimator with homoskedastic errors
+The first five assumptions imply the following Gauss-Markov conditions:
+
+1. $\E(\bs{U}|\bs{X})=\bs{0}_{n\times1}$,
+2. $\E(\bs{U}\bs{U}^{'}|\bs{X})=\sigma^2_u\bs{I}_n$, and
+3. $\bs{X}$ has full column rank.
+
+An estimator $\tilde{\bs{\beta}}$ is a linear function of $\bs{Y}$ if it can be expressed as $\tilde{\bs{\beta}}=\bs{A}^{'}\bs{Y}$, where $\bs{A}$ may depend on $\bs{X}$ and nonrandom constants but not on $\bs{Y}$. For example, the OLS estimator $\hat{\bs{\beta}}=(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Y}$ is linear because it can be written as $\hat{\bs{\beta}}=\bs{A}^{'}\bs{Y}$, where $\bs{A}=\bs{X}(\bs{X}^{'}\bs{X})^{-1}$. 
+
+:::{#thm-thm26-6-1}
+## Gauss-Markov Theorem
+Suppose the three Gauss-Markov conditions hold. Then, the OLS estimator is efficient among all linear and conditionally unbiased estimators; that is, the OLS estimator is the best linear unbiased estimator (BLUE).
+::: 
+
+:::{.proof}
+## The proof of @thm-thm26-6-1
+Note that under the Gauss-Markov conditions, the conditional variance of the OLS estimator  is given by $\sigma^2_u(\bs{X}^{'}\bs{X})^{-1}$. Let $\tilde{\beta}=\bs{A}^{'}\bs{Y}$ be a conditionally unbiased linear estimator of $\bs{\beta}$. Then, under the first assumption, we have
+$$
+\E(\tilde{\bs{\beta}}|\bs{X})=\bs{A}^{'}\E(\bs{Y}|\bs{X})=\bs{A}^{'}\bs{X}\bs{\beta},
+$$
+indicating that $\bs{A}^{'}\bs{X}=\bs{I}_k$. The conditional variance of $\tilde{\bs{\beta}}$ is given by
+$$
+\text{var}(\tilde{\bs{\beta}}|\bs{X})=\text{var}(\bs{A}^{'}\bs{Y}|\bs{X})=\bs{A}^{'}\text{var}(\bs{Y}|\bs{X})\bs{A}=\sigma^2_u\bs{A}^{'}\bs{A},
+$$
+where in the last equality we use the fact that $\text{var}(\bs{Y}|\bs{X})=\text{var}(\bs{U}|\bs{X})=\sigma^2_u\bs{I}_n$. Thus, we need to show that 
+$$
+\sigma^2_u\bs{A}^{'}\bs{A}-\sigma^2_u(\bs{X}^{'}\bs{X})^{-1}\geq0.
+$$
+
+Let $\bs{C}=\bs{A}-\bs{X}(\bs{X}^{'}\bs{X})^{-1}$. Then, we have
+$$
+\begin{align}
+\bs{A}^{'}\bs{A}-(\bs{X}^{'}\bs{X})^{-1}&=\left(\bs{C}+\bs{X}(\bs{X}^{'}\bs{X})^{-1}\right)^{'}\left(\bs{C}+\bs{X}(\bs{X}^{'}\bs{X})^{-1}\right)-(\bs{X}^{'}\bs{X})^{-1}\\
+&=\bs{C}^{'}\bs{C}+\bs{C}^{'}\bs{X}(\bs{X}^{'}\bs{X})^{-1}+(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{C}\\
+&=\bs{C}^{'}\bs{C}\geq0,
+\end{align}
+$$
+where the third equality follows from $\bs{C}^{'}\bs{X}=\bs{A}^{'}\bs{X}-(\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{X}=\bs{A}^{'}\bs{X}-\bs{I}_k=\bs{0}_{k\times k}$. 
+:::
+
+## Control variables and the conditional mean independence assumption
+In this section, we consider the following model with control variables:
+$$
+\begin{align}
+Y_i=\beta_0+\beta_1X_{1i}+\cdots+\beta_kX_{ki}+\beta_{k+1}W_{1i}+\cdots+\beta_{k+r}W_{ri}+u_i,
+\end{align}
+$$
+where $W_{1},\ldots,W_{r}$ are control variables. Let $\bs{\beta}=(\beta_0,\beta_1,\ldots,\beta_k)^{'}$, $\bs{\gamma}=(\beta_{k+1},\ldots,\beta_{k+r})^{'}$, $\bs{X}_i=(1,X_{1i},\ldots,X_{ki})^{'}$, and $\bs{W}_i=(W_{1i},\ldots,W_{ri})^{'}$. Then, we can express the model in matrix form as
+$$
+\begin{align}
+Y_i=\bs{X}^{'}_i\bs{\beta}+\bs{W}^{'}_i\bs{\gamma}+u_i.
+\end{align}
+$$
+Stacking over $i$, we obtain
+$$
+\begin{align}
+\bs{Y}=\bs{X}\bs{\beta}+\bs{W}\bs{\gamma}+\bs{U},
+\end{align}
+$$
+where $\bs{Y}=(Y_1,\ldots,Y_n)^{'}$, $\bs{X}=(\bs{X}_1,\ldots,\bs{X}_n)^{'}$, $\bs{W}=(\bs{W}_1,\ldots,\bs{W}_n)^{'}$, and $\bs{U}=(u_1,\ldots,u_n)^{'}$. Let $\mb{X}=(\bs{X},\bs{W})$ and $\bs{\theta}=(\bs{\beta}^{'},\bs{\gamma}^{'})^{'}$. Then, we can express the model as
+$$
+\begin{align}
+\bs{Y}=\mb{X}\bs{\theta}+\bs{U}.
+\end{align}
+$$
+The OLS estimator of $\bs{\theta}$ is given by
+$$
+\begin{align}
+\hat{\bs{\theta}}=
+\begin{pmatrix}
+\hat{\bs{\beta}}\\
+\hat{\bs{\gamma}}
+\end{pmatrix}
+=(\mb{X}^{'}\mb{X})^{-1}\mb{X}^{'}\bs{Y}=
+\begin{pmatrix}
+\bs{X}^{'}\bs{X}&\bs{X}^{'}\bs{W}\\
+\bs{W}^{'}\bs{X}&\bs{W}^{'}\bs{W}   
+\end{pmatrix}^{-1}
+\begin{pmatrix}
+\bs{X}^{'}\bs{Y}\\
+\bs{W}^{'}\bs{Y}
+\end{pmatrix}.
+\end{align}
+$$
+Let $\bs{M}_{\bs{W}}=\bs{I}_n-\bs{W}(\bs{W}^{'}\bs{W})^{-1}\bs{W}^{'}$. Then, using the matrix inverse formula, we can show that 
+$$
+\begin{align}
+\begin{pmatrix}
+\bs{X}^{'}\bs{X}&\bs{X}^{'}\bs{W}\\
+\bs{W}^{'}\bs{X}&\bs{W}^{'}\bs{W}   
+\end{pmatrix}^{-1}
+=
+\begin{pmatrix}
+\bs{K}_{11}&\bs{K}_{12}\\
+\bs{K}_{21}&\bs{K}_{22}
+\end{pmatrix},
+\end{align}
+$$
+where 
+
+* $\bs{K}_{11}=(\bs{X}^{'}\bs{M}_{\bs{W}}\bs{X})^{-1}$,
+* $\bs{K}_{12}=-(\bs{X}^{'}\bs{M}_{\bs{W}}\bs{X})^{-1}\bs{X}^{'}\bs{W}(\bs{W}^{'}\bs{W})^{-1}$,
+* $\bs{K}_{21}=-(\bs{W}^{'}\bs{W})^{-1}\bs{W}^{'}\bs{X}(\bs{X}^{'}\bs{M}_{\bs{W}}\bs{X})^{-1}$, and
+* $\bs{K}_{22}=(\bs{W}^{'}\bs{W})^{-1}+\bs{K}_{21}\bs{X}^{'}\bs{W}(\bs{W}^{'}\bs{W})^{-1}$.
+
+Using this matrix inverse result, we can express the OLS estimator of $\bs{\beta}$ as
+$$
+\begin{align}
+\hat{\bs{\beta}}=\bs{K}_{11}\bs{X}^{'}\bs{Y}+\bs{K}_{12}\bs{W}^{'}\bs{Y}=(\bs{X}^{'}\bs{M}_{\bs{W}}\bs{X})^{-1}\bs{X}^{'}\bs{M}_{\bs{W}}\bs{Y}.
+\end{align}
+$$
+This result indicates that the OLS estimator of $\bs{\beta}$ can be obtained by regressing $\tilde{\bs{Y}}=\bs{M}_{\bs{W}}\bs{Y}$ on $\tilde{\bs{X}}=\bs{M}_{\bs{W}}\bs{X}$. Note that $\tilde{\bs{Y}}$ is the residual vector from the regression of $\bs{Y}$ on $\bs{W}$, and $\tilde{\bs{X}}$ is the residual matrix obtained from the regression of $\bs{X}$ on $\bs{W}$. Thus, this result gives the proof of the Frisch-Waugh theorem given in Section 13.3.
+
+To show the large sample properties of the OLS estimator $\hat{\bs{\beta}}$, we assume the following assumptions.
+
+::: {.callout-important icon=false}
+## The least squares assumptions for the model with control variables
+1. **Conditional mean independence assumption**: $\E(u_i |\bs{X}_i,\bs{W}_i) = \E(u_i |\bs{W}_i)$.
+2. **Random sampling assumption**: $(\bs{X}_i,\bs{W}_i, Y_i)$, $i =1,2,\ldots,n$, are independently and identically distributed (i.i.d.) across observations.
+3. **No large outliers assumption**: $\bs{X}_i$, $\bs{W}_i$, and $u_i$ have nonzero finite fourth moments.
+4. **No perfect multicollinearity**: $\mb{X}$ has full column rank, i.e., $\text{rank}(\mb{X})=k+r+1$.
+:::
+
+These assumptions are identical to those stated in Section 13.8, except that we use matrix algebra notation to express them.
+
+:::{#thm-thm26-control}
+## The OLS estimator for the model with control variables
+Assume that the least squares assumptions for the model with control variables hold. Then, the OLS estimator $\hat{\bs{\beta}}$ is consistent and has an asymptotic normal distribution.
+:::
+:::{.proof}
+## The proof of @thm-thm26-control
+The proof closely follows that of @thm-thm26-1 and is thus omitted.
+:::
+
+## Generalized least squares estimation
+In this section, we consider $\bs{Y}=\bs{X}\bs{\beta}+\bs{U}$ under the generalized least squares (GLS) assumptions given in the following callout block.
+
+::: {.callout-important icon=false}
+## The generalized least squares assumptions
+1. $\E(u_i |\bs{X}) = \bs{0}$.
+2. $\E(\bs{U}\bs{U}^{'}|\bs{X})=\bs{\Omega}(\bs{X})$, 
+where $\bs{\Omega}(\bs{X})$ is an $n\times n$ positive definite matrix that depends on $\bs{X}$.
+3. $\bs{X}_i$ and $u_i$ have nonzero suitable finite moments.
+4. $\bs{X}$ has full column rank, i.e., $\text{rank}(\bs{X})=k+1$.
+:::
+
+The first assumption is implied by the first two extended assumptions of the OLS estimator. However, we do not require i.i.d. sampling across $i$ for the GLS estimation. The second assumption allows for heteroskedasticity and/or correlation of the errors across $i$. The moment existence assumption depends on the specific form of $\bs{\Omega}(\bs{X})$. For example, if $\bs{\Omega}(\bs{X})=\sigma^2_u\bs{I}_n$, then we will require the existence of non-zero finite fourth moments as in the case of the OLS estimator. The fourth assumption is needed for ruling out perfect multicollinearity.
+
+We consider the GLS estimation under two cases. In the first case, we assume that $\bs{\Omega}(\bs{X})$ is known. In the second case, we assume that the functional form of $\bs{\Omega}(\bs{X})$ is known upto some unknown parameters. To ease the notation, we will drop the dependence of $\bs{\Omega}(\bs{X})$ on $\bs{X}$ and write $\bs{\Omega}$ instead.
+
+In the first case, we can transform model by $\bs{\Omega}$ such that the transformed model has homoskedastic errors. Let $\bs{F}$ be a matrix that satifies $\bs{F}\bs{F}^{'}=\bs{\Omega}^{-1}$. Then, we can transform the model by premultiplying both sides of the model by $\bs{F}^{'}$ to get
+$$
+\begin{align}
+\tilde{\bs{Y}} =\tilde{\bs{X}}\bs{\beta}+\tilde{\bs{U}},
+\end{align}
+$$
+where $\tilde{\bs{Y}}=\bs{F}^{'}\bs{Y}$, $\tilde{\bs{X}}=\bs{F}^{'}\bs{X}$, and $\tilde{\bs{U}}=\bs{F}^{'}\bs{U}$. Note that $\E(\tilde{\bs{U}}|\tilde{\bs{X}})=\E(\bs{F}^{'}\bs{U}|\tilde{\bs{X}})=\bs{F}^{'}\E(\bs{U}|\tilde{\bs{X}})=\bs{0}_{n\times1}$. Also note that $\E(\tilde{\bs{U}}\tilde{\bs{U}}^{'}|\tilde{\bs{X}})=\E(\bs{F}^{'}\bs{U}\bs{U}^{'}\bs{F}|\tilde{\bs{X}})=\bs{F}^{'}\E(\bs{U}\bs{U}^{'}|\tilde{\bs{X}})\bs{F}=\bs{F}^{'}\bs{\Omega}\bs{F}=\bs{I}_n$. Thus, the transformed model has homoskedastic errors. 
+
+The GLS estimator is the OLS estimator of the transformed model and is given by
+$$
+\begin{align}
+\tilde{\bs{\beta}}^{GLS}&=\left(\tilde{\bs{X}}^{'}\tilde{\bs{X}}\right)^{-1}\tilde{\bs{X}}^{'}\tilde{\bs{Y}}=\left(\bs{X}^{'}\bs{F}\bs{F}^{'}\bs{X}\right)^{-1}\left(\bs{X}^{'}\bs{F}\bs{F}^{'}\bs{Y}\right)\\
+&=\left(\bs{X}^{'}\bs{\Omega}^{-1}\bs{X}\right)^{-1}\left(\bs{X}^{'}\bs{\Omega}^{-1}\bs{Y}\right).
+\end{align}
+$${#eq-eq26-22}
+
+Given the fact that the transformed model is homoskedastic, it follows that
+$$
+\begin{align}
+&\E(\tilde{\bs{\beta}}^{GLS}|\bs{X})=\bs{\beta},\\
+&\text{var}(\tilde{\bs{\beta}}^{GLS}|\bs{X})=\left(\bs{X}^{'}\bs{\Omega}^{-1}\bs{X}\right)^{-1}.
+\end{align}
+$$
+
+Also, since the transformed model satisfies the Gauss-Markov conditions, we can use the Gauss-Markov theorem to show that the GLS estimator is efficient among all linear and conditionally unbiased estimators. That is, the GLS estimator is the best linear unbiased estimator (BLUE).
+
+In the second case, we assume that the functional form of $\bs{\Omega}$ is known up to some unknown parameters. In this case, we can use an estimator of $\bs{\Omega}$ to formulate the following estimator:
+$$
+\begin{align}
+\hat{\bs{\beta}}^{GLS}=\left(\bs{X}^{'}\hat{\bs{\Omega}}^{-1}\bs{X}\right)^{-1}\left(\bs{X}^{'}\hat{\bs{\Omega}}^{-1}\bs{Y}\right),
+\end{align}
+$${#eq-eq26-23}
+where $\hat{\bs{\Omega}}$ is an estimator of $\bs{\Omega}$. This GLS estimator is called the feasible generalized least squares (FGLS) estimator. 
+
+## Instrumental variables and generalized method of moments estimation
+
+### The TSLS estimator
+Let $\bs{X}$ be the $n\times(k + r + 1)$ matrix of the regressors that contains both  the endogenous regressors and exogenous regressors. We assume that  the $i$th row vector of $\bs{X}$ is $\bs{X}_i = (1, X_{1i}, X_{2i},\ldots, X_{ki}, W_{1i}, W_{2i},\ldots,W_{ri})^{'}$. Let $\bs{Z}$ be the $n\times(m + r + 1)$ matrix of all the
+exogenous regressors, both those included in the model (the $W$'s) and
+those excluded from the model. The $i$th row of $\bs{Z}$ is $\bs{Z}_i = (1, Z_{1i}, Z_{2i},\ldots, Z_{mi},W_{1i}, W_{2i},\ldots,W_{ri})^{'}$. We assume that $\bs{Z}$ satifies the instrument exogeneity condition:
+$$
+\begin{align}
+\E(\bs{Z}_iu_i)=\bs{0}.
+\end{align}
+$${#eq-eq26-24}
+
+Let $\hat{\bs{X}}$ be the matrix of predicted values with the $i$th row given by $(1, \hat{X}_{1i}, \hat{X}_{2i},\ldots, \hat{X}_{ki}, W_{1i}, W_{2i},\ldots,W_{ri})$, where $\hat{X}_{1i}$ is the predicted value from the regression of $X_{1i}$ on $\bs{Z}$ and so forth. Because the $W's$ are contained in $\bs{Z}$, the predicted value from a regression of $W_{1i}$ on $\bs{Z}$ is just $W_{1i}$ and so forth. Using the projection matrix $\bs{P}_{\bs{Z}} = \bs{Z}(\bs{Z}^{'}\bs{Z})^{-1}\bs{Z}^{'}$, the predicted values are  $\hat{\bs{X}}=\bs{P}_{\bs{Z}}\bs{X}$. 
+
+The TSLS estimator is the OLS estimator of the regression of $\bs{Y}$ on $\hat{\bs{X}}$ and is given by
+$$
+\begin{align}
+\hat{\bs{\beta}}^{TSLS}=(\hat{\bs{X}}^{'}\hat{\bs{X}})^{-1}\hat{\bs{X}}^{'}\bs{Y}=(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{Y}.
+\end{align}
+$${#eq-eq26-25}
+
+Using $\bs{Y}=\bs{X}\bs{\beta}+\bs{U}$, we can express the TSLS estimator as
+$$
+\begin{align}
+\sqrt{n}(\hat{\bs{\beta}}^{TSLS}-\bs{\beta})&=\left(\frac{\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X}}{n}\right)^{-1}\frac{\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{Y}}{\sqrt{n}}\\
+&=\left[\frac{\bs{X}^{'}\bs{Z}}{n}\left(\frac{\bs{Z}^{'}\bs{Z}}{n}\right)^{-1}\frac{\bs{Z}^{'}\bs{X}}{n}\right]^{-1}\left[\frac{\bs{X}^{'}\bs{Z}}{n}\left(\frac{\bs{Z}^{'}\bs{Z}}{n}\right)^{-1}\frac{\bs{Z}^{'}\bs{U}}{\sqrt{n}}\right].
+\end{align}
+$$
+
+We assume the following conditions for the asymptotic distribution of the TSLS estimator:
+
+1. $\frac{\bs{X}^{'}\bs{Z}}{n}\xrightarrow{p}\bs{Q}_{\bs{X}\bs{Z}}$, where $\bs{Q}_{\bs{X}\bs{Z}}=\E(\bs{X}_i\bs{Z}^{'}_i)$,
+2. $\frac{\bs{Z}^{'}\bs{Z}}{n}\xrightarrow{p}\bs{Q}_{\bs{Z}\bs{Z}}$, where $\bs{Q}_{\bs{Z}\bs{Z}}=\E(\bs{Z}_i\bs{Z}^{'}_i)$, and
+3. $\frac{\bs{Z}^{'}\bs{U}}{\sqrt{n}}\xrightarrow{d}\bs{\Psi}_{\bs{Z}\bs{U}}$, where $\bs{\Psi}_{\bs{Z}\bs{U}}\sim N(\bs{0},\bs{H})$ and $\bs{H}=\E(\bs{Z}_i\bs{Z}^{'}_iu^2_i)$.
+
+Under these assumptions, it follows from Slutsky's theorem that
+$$
+\begin{align*}
+\sqrt{n}(\hat{\bs{\beta}}^{TSLS}-\bs{\beta})\xrightarrow{d}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{\Psi}_{\bs{Z}\bs{U}}\sim N(\bs{0},\bs{\Sigma}^{TSLS}),
+\end{align*}
+$$
+where
+$$
+\begin{align*}
+\bs{\Sigma}^{TSLS}=\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{H}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+$$
+We can estimate $\bs{\Sigma}^{TSLS}$ by substituting sample moments for the population
+moments:
+$$
+\begin{align*}
+\hat{\bs{\Sigma}}^{TSLS}=\left(\hat{\bs{Q}}_{\bs{X}\bs{Z}}\hat{\bs{Q}}^{-1}_{\bs{Z}\bs{Z}}\hat{\bs{Q}}_{\bs{Z}\bs{X}}\right)^{-1}\hat{\bs{Q}}_{\bs{X}\bs{Z}}\hat{\bs{Q}}^{-1}_{\bs{Z}\bs{Z}}\hat{\bs{H}}\hat{\bs{Q}}^{-1}_{\bs{Z}\bs{Z}}\hat{\bs{Q}}_{\bs{Z}\bs{X}}\left(\hat{\bs{Q}}_{\bs{X}\bs{Z}}\hat{\bs{Q}}^{-1}_{\bs{Z}\bs{Z}}\hat{\bs{Q}}_{\bs{Z}\bs{X}}\right)^{-1},
+\end{align*}
+$$
+where
+
+* $\hat{\bs{Q}}_{\bs{X}\bs{Z}}=\bs{X}^{'}\bs{Z}/n$, $\hat{\bs{Q}}_{\bs{Z}\bs{Z}}=\bs{Z}^{'}\bs{Z}/n$, $\hat{\bs{Q}}_{\bs{Z}\bs{X}}=\bs{Z}^{'}\bs{X}/n$,and
+* $\hat{\bs{H}}=\frac{1}{n}\sum_{i=1}^n\bs{Z}_i\bs{Z}^{'}_i\hat{u}^2_i$, and $\hat{u}_i$ is the $i$th element of $\hat{\bs{U}}=\bs{Y}-\bs{X}\hat{\bs{\beta}}^{TSLS}$.
+
+When the error terms are homoskedastic, the covariance matrix of the TSLS estimator simplifies. Assume that $\E(u^2_i|\bs{Z}_i)=\sigma^2_u$. Then, by the law of iterated expectations, we have
+$$
+\begin{align*}
+\bs{H}=\E(\bs{Z}_i\bs{Z}^{'}_iu^2_i)=\E\left(\E(\bs{Z}_i\bs{Z}^{'}_iu^2_i|\bs{Z}_i)\right)=\E(\bs{Z}_i\bs{Z}^{'}_i\E(u^2_i|\bs{Z}_i)=\sigma^2_u\bs{Q}_{\bs{Z}\bs{Z}}.
+\end{align*}
+$$
+Thus, $\bs{\Sigma}^{TSLS}$ simplifies to
+$$
+\begin{align*}
+\bs{\Sigma}^{TSLS}=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+$$
+This homoskedasticity-only covariance matrix estimator can be estimated by substituting sample moments for the population moments:
+$$
+\begin{align*}
+\tilde{\bs{\Sigma}}^{TSLS}=\hat{\sigma}^2_u\left(\hat{\bs{Q}}_{\bs{X}\bs{Z}}\hat{\bs{Q}}^{-1}_{\bs{Z}\bs{Z}}\hat{\bs{Q}}_{\bs{Z}\bs{X}}\right)^{-1},
+\end{align*}
+$$
+where $\hat{\sigma}^2_u=\frac{1}{n-k-1}\hat{\bs{U}}^{'}\hat{\bs{U}}$ and $\hat{\bs{U}}=\bs{Y}-\bs{X}\hat{\bs{\beta}}^{TSLS}$.
+
+### The class of IV estimators
+The TSLS estimator is a special case of the IV estimator. The IV estimator can be formulated in two equivalent ways. The first way is based on the instrument exogeneity condition:
+$$
+\begin{align}
+\E\left((\bs{Y}-\bs{X}\bs{\beta})^{'}\bs{Z}\right)=0.
+\end{align}
+$${#eq-eq26-27}
+This moment condition constitutes $m+r+1$ equations involving $k+r+1$ unknowns. When $m=k$, we can consider the sample analog of @eq-eq26-27: $(\bs{Y}-\bs{X}\bs{b})^{'}\bs{Z}=0$. Then, the IV estimator is the value of $\bs{b}$ that satisfies the sample analog of @eq-eq26-27. However, when $m>k$, there are infinitely many values of $\bs{b}$ that satisfy the sample analog of @eq-eq26-27. 
+
+When parameters are overidentified, we can resort to the second way of defining the IV estimator. The second way is based on minimizing the quadratic form involving all the moment conditions. Let $\bs{A}$ be a $(m+r+1)\times(m+r+1)$ matrix of weights. Then, the IV estimator is the value of $\bs{b}$ that minimizes
+$$
+\begin{align}
+\bs{Q}(\bs{b})=\left(\bs{Y}-\bs{X}\bs{b}\right)^{'}\bs{Z}\bs{A}\bs{Z}^{'}\left(\bs{Y}-\bs{X}\bs{b}\right).
+\end{align}
+$${#eq-eq26-28}
+The minimization problem is solved by differentiating $\bs{Q}(\bs{b})$ with respect to $\bs{b}$ and setting the resulting derivative equal to zero. The solution is given by
+$$
+\begin{align}
+\hat{\bs{\beta}}^{IV}_{\bs{A}}=\left(\bs{X}^{'}\bs{Z}\bs{A}\bs{Z}^{'}\bs{X}\right)^{-1}\bs{X}^{'}\bs{Z}\bs{A}\bs{Z}^{'}\bs{Y}.
+\end{align}
+$${#eq-eq26-29}
+The TSLS estimator is a special case of the IV estimator when $\bs{A}=(\bs{Z}^{'}\bs{Z})^{-1}$. Thus, the TSLS estimator is the IV estimator that minimizes the quadratic form involving the sample moment conditions with the weights given by $\bs{A}=(\bs{Z}^{'}\bs{Z})^{-1}$.
+
+Using the same argument as in the case of the TSLS estimator, we can show that the IV estimator is asymptotically normally distributed. The asymptotic distribution of the IV estimator is given by
+$$
+\begin{align*}
+\sqrt{n}(\hat{\bs{\beta}}^{IV}_{\bs{A}}-\bs{\beta})\xrightarrow{d}N(\bs{0},\bs{\Sigma}^{IV}_{\bs{A}}),
+\end{align*}
+$$
+where
+$$
+\begin{align*}
+\bs{\Sigma}^{IV}_{\bs{A}}=\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{H}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+$$
+
+Since $\bs{H}=\sigma^2_u\bs{Q}_{\bs{Z}\bs{Z}}$ under homoskedasticity, the covariance matrix of the IV estimator becomes
+$$
+\begin{align*}
+\bs{\Sigma}^{IV}_{\bs{A}}=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+$$
+
+:::{#thm-thm26-5}
+## The efficiency of the TSLS estimator under homoskedasticity
+If the errors are homoskedastic, then the TSLS estimator is efficient among all IV estimators that are based on the linear moment conditions.
+:::
+
+:::{.proof}
+## The proof of @thm-thm26-5
+Recall that the covariance matrix of the TSLS estimator is given by $\bs{\Sigma}^{TSLS}=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}$. Then, we can express $\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS}$ as
+$$
+\begin{align*}
+\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS}&=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\\
+&-\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\\
+&=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\left[\bs{Q}_{\bs{Z}\bs{Z}}-\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\right]\\
+&\times\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+$$
+Let $\bs{F}$ be the square root matrix of $\bs{Q}_{\bs{Z}\bs{Z}}$ such that $\bs{F}^{'}\bs{F}=\bs{Q}_{\bs{Z}\bs{Z}}$ and $\bs{F}^{-1}\bs{F}^{-1'}=\bs{Q}_{\bs{Z}\bs{Z}}^{-1}$. Then, we can express $\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS}$ as
+$$
+\begin{align*}
+\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS}&=\sigma^2_u\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{F}^{'}\\
+&\times\left(\bs{I}-\bs{F}^{-1'}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{F}^{-1}\bs{F}^{-1'}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{F}^{-1}\right)\\
+&\times\bs{F}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}.
+\end{align*}
+$$
+Let $\bs{D}=\bs{F}^{-1'}\bs{Q}_{\bs{Z}\bs{X}}$ and $\bs{d}=\bs{F}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\left(\bs{Q}_{\bs{X}\bs{Z}}\bs{A}\bs{Q}_{\bs{Z}\bs{X}}\right)^{-1}\bs{c}$, where $\bs{c}\in\mathbb{R}^{k+r+1}$. Then, we can express $\bs{c}^{'}(\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS})\bs{c}$ as
+$$
+\begin{align*}
+\bs{c}^{'}(\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS})\bs{c}&= \sigma^2_u\bs{d}^{'}\left(\bs{I}-\bs{D}(\bs{D}^{'}\bs{D})^{-1}\bs{D}^{'}\right)\bs{d}.
+\end{align*}
+$$
+Since $\bs{I}-\bs{D}(\bs{D}^{'}\bs{D})^{-1}\bs{D}^{'}$ is a positive semidefinite matrix, we have $\bs{c}^{'}(\bs{\Sigma}^{IV}_{\bs{A}}-\bs{\Sigma}^{TSLS})\bs{c}\geq0$. Thus, the TSLS estimator is efficient among all IV estimators that are based on the linear moment conditions.
+:::
+
+Using the homoskedasticity-only F-statistic formula, we can determine the expression of the $J$ statistic. Under homoskedasticity, the $J$ statistic is the homoskedasticity-only F-statistic for testing the null hypothesis that all coefficients on $\bs{Z}$ from the regression of $\hat{\bs{U}}$ on $\bs{Z}$ are equal to zero. The unrestericted model is the regression of $\hat{\bs{U}}$ on $\bs{Z}$ and the restricted model is the regression without any regressors. Thus, $SSR_u=\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}$ and $SSR_r=\hat{\bs{U}}^{'}\hat{\bs{U}}$. The $J$ statistic is then given by
+$$
+\begin{align}
+J&=(m+r)\times F\\
+&=\frac{\left(\hat{\bs{U}}^{'}\hat{\bs{U}}-\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}} \right)}{\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}/(n-m-r-1)}\\
+&=\frac{\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}}}{\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}/(n-m-r-1)}.
+\end{align}
+$${#eq-eq26-30} 
+
+:::{#thm-thm26-6}
+## The $J$ statistic under homoskedasticity
+If the errors are homoskedastic, then under the null hypothesis that $\E(\bs{Z}_iu_i)=0$, we have 
+$$
+\begin{align}
+J\xrightarrow{d}\chi^2_{m-k}.
+\end{align}
+$$
+:::
+
+:::{.proof}
+## The proof of @thm-thm26-6
+Note that
+$$
+\begin{align*}
+\hat{\bs{U}} &= \bs{Y} - \bs{X}\hat{\bs{\beta}}^{TSLS} = \bs{Y} - \bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{Y}\\
+&=\bs{X}\bs{\beta}+\bs{U} - \bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}(\bs{X}\bs{\beta}+\bs{U})\\
+&=\left(\bs{I}-\bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}\right)\bs{U}.
+\end{align*}
+$$
+Thus, we can express $\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}}$ as
+$$
+\begin{align*}
+\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}} &= \bs{U}^{'}\left(\bs{I}-\bs{P}_{\bs{Z}}\bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\right)\bs{P}_{\bs{Z}}\left(\bs{I}-\bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}\right)\bs{U}\\
+&=\bs{U}^{'}\left(\bs{P}_{\bs{Z}}-\bs{P}_{\bs{Z}}\bs{X}(\bs{X}^{'}\bs{P}_{\bs{Z}}\bs{X})^{-1}\bs{X}^{'}\bs{P}_{\bs{Z}}\right)\bs{U}.
+\end{align*}
+$$
+Let $\bs{B}=\bs{Z}(\bs{Z}^{'}\bs{Z})^{-1/2}$, which is defined because $\bs{Z}$ has full column rank. Then, we can express $\bs{P}_{\bs{Z}}$ as $\bs{P}_{\bs{Z}}=\bs{B}\bs{B}^{'}$. Using this expression, we can write $\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}}$ as
+$$
+\begin{align*}
+\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}} &= \bs{U}^{'}\left(\bs{B}\bs{B}^{'}-\bs{B}\bs{B}^{'}\bs{X}(\bs{X}^{'}\bs{B}\bs{B}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{B}\bs{B}^{'}\right)\bs{U}\\
+&=\bs{U}^{'}\bs{B}\left(\bs{I}-\bs{B}^{'}\bs{X}(\bs{X}^{'}\bs{B}\bs{B}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{B}\right)\bs{B}^{'}\bs{U}\\
+&=\bs{U}^{'}\bs{B}\bs{M}_{\bs{B}^{'}\bs{X}}\bs{B}^{'}\bs{U},
+\end{align*}
+$$
+where $\bs{M}_{\bs{B}^{'}\bs{X}}=\bs{I}-\bs{B}^{'}\bs{X}(\bs{X}^{'}\bs{B}\bs{B}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{B}$ is symmetric and idempotent. 
+
+Under the null hypothesis that $\E(\bs{Z}_iu_i)=0$, we have $\frac{1}{\sqrt{n}}\bs{Z}^{'}\bs{U}=\frac{1}{\sqrt{n}}\sum_{i=1}^n\bs{Z}_iu_i\xrightarrow{d}N(0,\sigma^2_u\bs{Q}_{\bs{Z}\bs{Z}})$. Also, $\frac{1}{\sqrt{n}}\bs{B}^{'}\bs{X}=(\bs{Z}^{'}\bs{Z}/n)^{-1/2}(\bs{Z}^{'}\bs{X}/n)\xrightarrow{p}\bs{Q}^{-1/2}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}$. Using these results, we can show that
+
+* $\bs{B}^{'}\bs{U}=(\bs{Z}^{'}\bs{Z})^{-1/2'}\bs{Z}^{'}\bs{U}=(\bs{Z}^{'}\bs{Z}/n)^{-1/2'}(\bs{Z}^{'}\bs{U}/\sqrt{n})\xrightarrow{d}\sigma_u\bs{z}$, where $\bs{z}\sim N(\bs{0},\bs{I}_{m+r+1})$.
+* $\bs{M}_{\bs{B}^{'}\bs{X}}\xrightarrow{p}\bs{I}-\bs{Q}^{-1/2}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}(\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1/2'}_{\bs{Z}\bs{Z}}\bs{Q}^{-1/2}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}})^{-1}\bs{Q}_{\bs{X}\bs{Z}}\bs{Q}^{-1/2'}_{\bs{Z}\bs{Z}}=\bs{M}_{\bs{Q}^{-1/2}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}}$.
+* Under the null hypothesis, it also follows that $\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}/(n-m-r-1)\xrightarrow{p}\sigma^2_u$.
+
+Then, combining these results, we have
+$$
+\begin{align*}
+J=\frac{\hat{\bs{U}}^{'}\bs{P}_{\bs{Z}}\hat{\bs{U}}}{\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}/(n-m-r-1)}=\frac{\bs{U}^{'}\bs{B}\bs{M}_{\bs{B}^{'}\bs{X}}\bs{B}^{'}\bs{U}}{\hat{\bs{U}}^{'}\bs{M}_{\bs{Z}}\hat{\bs{U}}/(n-m-r-1)}
+\xrightarrow{d}\bs{z}^{'}\bs{M}_{\bs{Q}^{-1/2}_{\bs{Z}\bs{Z}}\bs{Q}_{\bs{Z}\bs{X}}}\bs{z},
+\end{align*}
+$$
+where $\bs{z}\sim N(\bs{0},\bs{I}_{m+r+1})$. Thus, $J\sim \chi^2_{m-k}$ by Theorem D.6 in Appendix D.
+:::
+
+### Generalized method of moments
+When the error terms are heteroskedastic, the TSLS estimator is not the most efficient estimator within the class of IV estimators. Also, the distributional result given in @thm-thm26-6 for the J-statistic does not hold. In this case, we can use the generalized method of moments (GMM) estimator. We use the GMM estimator to formulate a J-statistic that is valid under heteroskedasticity.
+
+When the moment conditions are linear, the cass of the GMM estimator consists of all the estimators that can be obtained by minimizing the quadratic form in @eq-eq26-28. Our goal is to find the GMM estimator that is efficient among all the estimators in the class of GMM estimators. To do this, we need to find the optimal weighting matrix $\bs{A}$. In the heteroskedastic case, the optimal wieghting matrix is given by $\bs{A}=\bs{H}^{-1}$, where $\bs{H}=\E(\bs{Z}_i\bs{Z}^{'}_iu^2_i)$. The GMM estimator is obtained by minimizing the quadratic form
+$$
+\begin{align}
+\bs{Q}(\bs{b})=\left(\bs{Y}-\bs{X}\bs{b}\right)^{'}\bs{Z}\bs{H}^{-1}\bs{Z}^{'}\left(\bs{Y}-\bs{X}\bs{b}\right).
+\end{align}
+$${#eq-eq26-31}
+Then, the efficient GMM estimator is given by
+$$
+\begin{align}
+\tilde{\bs{\beta}}^{GMM}=(\bs{X}^{'}\bs{Z}\bs{H}^{-1}\bs{Z}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Z}\bs{H}^{-1}\bs{Z}^{'}\bs{Y}.
+\end{align}
+$${#eq-eq26-32}
+The asymptotic distribution can be determined by using the same arguments as in the case of the IV estimator. In particular, the covariance matrix of the GMM estimator is obtained by substituting $\bs{A}=\bs{H}^{-1}$ into the covariance matrix of the IV estimator. The asymptotic distribution of the GMM estimator is given by
+$$
+\begin{align*}
+\sqrt{n}(\tilde{\bs{\beta}}^{GMM}-\bs{\beta})\xrightarrow{d}N(\bs{0},\bs{\Sigma}^{GMM}),
+\end{align*}
+$$
+where $\bs{\Sigma}^{GMM}=(\bs{Q}_{\bs{X}\bs{Z}}\bs{H}^{-1}\bs{Q}_{\bs{Z}\bs{X}})^{-1}$.
+
+:::{#thm-thm26-7}
+## The GMM estimator
+The GMM estimator in @eq-eq26-32 is the most efficient estimator among all the estimators in the class of GMM estimators.
+:::
+:::{.proof}
+## The proof of @thm-thm26-7
+The proof requires showing that $\bs{c}(\bs{\Sigma}^{GMM}-\bs{\Sigma}^{IV}_{\bs{A}})\bs{c}\leq0$ for all $\bs{c}\in\mathbb{R}^{k+r+1}$. We can follow the same steps as in the proof of @thm-thm26-5. The only difference is that we need to replace $\sigma^2_u\bs{Q}_{\bs{Z}\bs{Z}}$ with $\bs{H}^{-1}$. We omit the details here. 
+:::
+
+The GMM estimator $\tilde{\bs{\beta}}^{GMM}$ is not feasible because it depends on the unknown covariance matrix $\bs{H}$. The feasible GMM estimator is obtained by replacing $\bs{H}$ with its estimator $\hat{\bs{H}}$. We can proceed in two steps to obtain the feasible GMM estimator.
+
+1. First, we estimate the covariance matrix $\bs{H}$ by using an initial consistent estimator of $\bs{\beta}$. In the linear IV regression model, we use the TSLS estimator $\hat{\bs{\beta}}^{TSLS}$ as the initial consistent estimator. Then, we can estimate $\bs{H}$ as
+$$
+\begin{align}
+\hat{\bs{H}}=\frac{1}{n}\sum_{i=1}^n\bs{Z}_i\bs{Z}^{'}_i\hat{u}^2_i,
+\end{align}
+$${#eq-eq26-34}
+where $\hat{u}_i$ is the $i$th element of $\hat{\bs{U}}=\bs{Y}-\bs{X}\hat{\bs{\beta}}^{TSLS}$.
+2. Second, we replace $\bs{H}$ with $\hat{\bs{H}}$ in the GMM estimator. The feasible GMM estimator is given by
+$$
+\begin{align}
+\hat{\bs{\beta}}^{GMM}=(\bs{X}^{'}\bs{Z}\hat{\bs{H}}^{-1}\bs{Z}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{Z}\hat{\bs{H}}^{-1}\bs{Z}^{'}\bs{Y}.
+\end{align}
+$${#eq-eq26-35}
+
+Since $\hat{\bs{H}}$ is a consistent estimator of $\bs{H}$, it follows that
+$$
+\begin{align*}
+\sqrt{n}(\hat{\bs{\beta}}^{GMM}-\bs{\beta})\xrightarrow{d}N(\bs{0},\bs{\Sigma}^{GMM}),
+\end{align*}
+$$
+where $\bs{\Sigma}^{GMM}=(\bs{Q}_{\bs{X}\bs{Z}}\bs{H}^{-1}\bs{Q}_{\bs{Z}\bs{X}})^{-1}$. Thus, the feasible GMM estimator is the efficient estimator among all the estimators in the class of GMM estimators.
+
+Using $\hat{\bs{\beta}}^{GMM}$, we can formulate the heteroskedasticity-robust $J$ statistic, which is given by
+$$
+\begin{align}
+J^{GMM}=(\bs{Z}^{'}\hat{\bs{U}})^{'}\hat{\bs{H}}^{-1}(\bs{Z}^{'}\hat{\bs{U}})/n,
+\end{align}
+$${#eq-eq26-36}
+where $\hat{\bs{U}}=\bs{Y}-\bs{X}\hat{\bs{\beta}}^{GMM}$. 
+
+:::{#thm-thm26-8}
+## The $J^{GMM}$ statistic
+The $J^{GMM}$ statistic is asymptotically distributed as $\chi^2_{m-k}$ under the null hypothesis that $\E(\bs{Z}_iu_i)=0$. 
+:::
+
+:::{.proof}
+## The proof of @thm-thm26-8
+The proof is similar to the proof of @thm-thm26-6. The details are omitted.
+:::
+
+

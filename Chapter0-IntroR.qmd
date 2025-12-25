@@ -1,0 +1,211 @@
+# Introduction to R {#sec-chapter1}
+
+## What is R?
+[R](https://www.r-project.org/) is a high-level computer language and environment for statistics and econometrics. It is widely used for data analysis in academia and industry. It performs a variety of statistical techniques, produces high quality graphics, and enables writing custom functions for specific tasks. `R` is an open-source software, which means that it is free to use and distribute. It runs on Windows, macOS, and Linux.
+
+## How to install R
+`R` is free and can be downloaded from the Comprehensive R Archive Network (CRAN) at <https://cran.r-project.org/>. The `R` Core Team, which consists of several volunteer developers, maintains and updates the software. The current R Core Team can be seen at [Contributors](https://www.r-project.org/contributors.html).
+
+## A bit of history
+`R` is based on the `S` programming language. The first version of `S` was developed at Bell Labs by John Chambers and others in the mid-1970s and was intended for data analysis and statistical modeling. Ross Ihaka and Robert Gentleman from the Department of Statistics at the University of Auckland created `R` as an open-source implementation of `S` in the early 1990s. The first version of `R` was released on February 29, 2000. Since then, `R` has grown in popularity and is now widely used in academia and industry for data analysis and statistical computing. The current version is `Version 4.5.1` as of November 2025.
+
+## Packages
+In addition to the base system, there are user-contributed add-on packages. In R, a package is a collection of functions, examples, and documentation developed for a specific task. On CRAN, there are more than 23,000 packages available (as of November 2025) that extend the functionality of R in various ways. This feature makes R a very powerful and flexible tool for data analysis.
+
+The repository for R packages is CRAN. To install a package, you need to be connected to the internet and use the `R` command `install.packages("name of package")`. For example, you can install the `modelsummary` package by typing
+
+```{r}
+#| eval: false
+#  Install the modelsummary package
+install.packages("modelsummary")
+```
+
+To load package into our current session, we need to load the package by typing:
+```{r}
+#| message: false
+#| warning: false
+#| eval: false
+# Load the modelsummary package
+library(modelsummary)
+# or use
+require(modelsummary)
+```
+
+Once the package is loaded, you can use the functions and datasets provided by the package. For example, the `modelsummary` package provides a function called `datasummary_skim` that summarizes the main statistics of a dataset. In the following example, we will load the `caschool` dataset from a CSV file and use the `datasummary_skim` function to summarize the test scores and student-teacher ratio.
+
+```{r}
+#| message: false
+#| warning: false
+# Load the caschool dataset
+caschool <- read.table("data/caschool.csv", header = TRUE, sep = ",")
+
+# Column names of the dataset
+colnames(caschool)
+```
+
+```{r}
+# Load the modelsummary package
+library(modelsummary)
+
+# Summary statistics of test scores and student teacher ratio
+datasummary_skim(caschool[, c("testscr", "str")])
+```
+
+
+To see all available functions in a package, you can use the `help(package = "name of package")` command. For example, to see all functions in the `modelsummary` package, you can type:
+```{r}
+#| eval: false
+# To see all functions in the modelsummary package
+help(package = "modelsummary")
+```
+
+## Integrated Development Environments (IDEs)
+After installing `R`, you may want to install an Integrated Development Environment (IDE) to make coding easier. The most popular IDE for `R` is [RStudio](https://posit.co/download/rstudio-desktop/), which is free and available for Windows, macOS, and Linux. @fig-chapter1-f1 shows the layout of RStudio with its four main panes: Source, Console, Environment/History, and Files/Plots/Packages/Help. The most important panes are the source and console panes. The source pane allows users to view and edit various code-related files. The `R` console is where computations are performed.
+
+![RStudio Panes Layout (Source: [RStudio](https://docs.posit.co/ide/user/ide/guide/ui/ui-panes.html))](figures/rstudio.jpeg){#fig-chapter1-f1}
+
+Another recently developed IDE by Posit is [Positron](https://posit.co/products/positron/). Positron is a next-generation IDE for data science and scientific computing. It supports multiple languages including `R`, Python, Julia, and others. @fig-chapter1-f2 shows the layout of Positron IDE with its various panes similar to RStudio but with additional features for multi-language support.
+
+![Positron IDE Layout (Source: [Positron](https://positron.posit.co/welcome.html))](figures/positron.png){#fig-chapter1-f2}
+
+## R as a calculator
+You can use `R` as a calculator by typing mathematical expressions directly into the console. In @tbl-chapter1-t1, we summarize some basic binary, math, trigonometric, and rounding functions available in `R`.
+
+::: {style="font-size: 85%"}
+| **Category**         | **1**      | **2**       | **3**     | **4**     | **5**       | **6**       |
+|:----------------------|:-----------|:------------|:----------|:----------|:------------|:------------|
+| **Binary Operations** | `+`        | `-`         | `*`       | `/`       | `^`         | `%%`        |
+| **Math Functions**    | `abs`      | `sqrt`      | `log`     | `exp`     | `log10`     | `factorial` |
+| **Trig Functions**    | `sin`      | `cos`       | `tan`     | `asin`    | `acos`      | `atan`      |
+| **Rounding**          | `round`    | `ceiling`   | `floor`   | `trunc`   | `signif`    | `zapsmall`  |
+| **Math Quantities**   | `Inf`      | `-Inf`      | `NaN`     | `pi`      | `exp(1)`    | `1i`        |
+: Some basic operations and functions in R {#tbl-chapter1-t1 .stripped .hover}
+:::
+
+The binary operators are `+`:	addition,`-`:	subtraction, `*`:	multiplication, `^`: exponentiation, and `%%` is for modular arithmetic (i.e., remainder after division). Some math quantities include `Inf`: positive infinity, `-Inf`: negative infinity, `NaN`: not a number, `pi`: the mathematical constant $\pi$, `exp(1)`: Euler's number $e$, and `1i`: imaginary unit.
+
+Here are some examples of using `R` as a calculator:
+```{r}
+# Basic arithmetic operations
+3 + 5
+5%%4 # remainder of 5 divided by 4
+2^3   # 2 raised to the power of 3
+
+log(2) # natural logarithm of 2
+exp(1) # e raised to the power of 1
+ceiling(3.2) # smallest integer greater than 3.2
+
+# Examples of special quantities
+1/0 # positive infinity (Inf)
+0/0 # not a number (NaN)
+1/Inf # 0
+Inf - Inf # not a number (NaN)
+NaN + 1 # not a number (NaN)
+```
+
+In @tbl-chapter1-t2, we provide some useful mathematical functions available in `R`.
+
+::: {style="font-size: 85%"}
+| **Function**                     | **Description** |
+|:-----------------------|:--------------------------|
+| `log(x)`                         | log to base $e$ of $x$ |
+| `exp(x)`                         | inverse of $\ln(x)$ or $e^x$ |
+| `log(x, n)`                      | $\log$ to base $n$ of $x$ |
+| `log10(x)`                       | $\log$ to base $10$ of $x$ |
+| `sqrt(x)`                        | square root of $x$ |
+| `abs(x)`                         | the absolute value of $x$ |
+| `factorial(x)`                   | $x! = x\times(x-1)\times(x-2)\times\cdots\times2\times1$ |
+| `choose(n, x)`                   | binomial coefficient $n!/(x!(n-x)!)$ |
+| `gamma(x)`                       | $\Gamma(x)$; for integer $x$, equals $(x-1)!$ |
+| `lgamma(x)`                      | $\ln(\Gamma(x))$ |
+| `floor(x)`                       | greatest integer less than $x$ |
+| `ceiling(x)`                     | smallest integer greater than $x$ |
+| `trunc(x)`                       | closest integer to $0$ between $x$ and $0$ |
+| `round(x, digits = a)`           | round $x$ to $a$ decimal places |
+| `signif(x, digits = b)`          | give $x$ to $b$ digits |
+| `runif(n)`                       | generates $n$ random numbers between $0$ and $1$ from a uniform distribution |
+| `cos(x)`                         | cosine of $x$ in radians |
+| `sin(x)`                         | sine of $x$ in radians |
+| `tan(x)`                         | tangent of $x$ in radians |
+| `acos(x)`, `asin(x)`, `atan(x)`  | inverse trigonometric transformations |
+| `acosh(x)`, `asinh(x)`, `atanh(x)` | inverse hyperbolic trigonometric transformations |
+: Useful mathematical functions {#tbl-chapter1-t2 .stripped .hover}
+:::
+
+
+## Objects and Functions
+When using R, we usually create objects and perform functions on those objects. In R, everything is an object and each object has a specific class (or type) that determines how it behaves and what operations can be performed on it.
+
+The assignment operator in R is `<-` or `=` which is used to assign an object a name `x` using either `x <- object` or `x = object`. Note that `object -> x` is equivalent to `x <- object`. 
+
+Each built-in function has a set of formal arguments some with default values. These can be found in the function's documentation. Note that R is case sensitive.
+Suppose that we want to find the mean of a set of numbers. We will put these numbers in a container type called vector. We first assign this vector a name `x` and then call the function `mean`.
+
+```{r}
+# Creating a vector of numbers
+x = c(0,5,7,9,1,2,8)
+
+# Checking the class of the object x
+class(x) 
+
+# Calling the mean function
+mean(x)
+```
+
+Suppose that we want to create a function named `mysd` that computes the standard deviation of a given vector of numbers. We can use the key-word `function` to create new functions in `R`.
+
+```{r}
+# Defining the function
+mysd <- function(numbers){
+  sqrt(var(numbers))
+  }
+
+# Calling the function
+mysd(x)
+```
+
+## Documentation
+
+To look at the documentation for a specific function from a loaded package, use `?function_name` or `help("function_name")`. Also, in RStudio, there is a pane for help on the right where we can search for the relevant topic or package name.
+```{r}
+#| eval: false
+# Help document on the mean function
+?mean
+help("mean")
+```
+
+To get help documentation on an installed package use `help(package="package name")`. This command will also return a complete list of functions contained in the package.
+```{r}
+#| eval: false
+# Help document on the stats package
+help(package="stats")
+```
+
+The base system and some packages also include demos. To see a complete list of demos in the base system, type `demo()` in the console. To run a particular demo, use `demo("topic")`. Some packages include a vignette, which is a file containing additional documentation and examples. To list all vignettes from all installed packages, use `vignette()`. To access a specific vignette, use `vignette("name_of_vignette")`.
+
+## Working Directory and Workspace
+When we load, save datasets, or save graphs, we need to specify the file path. To avoid typing the path each time, we can set a working directory. To do this in Rstudio, click `Session > Set Working Directory > Choose Directory`. You can also use `setwd(file_path)` to set the working directory. To view the current directory, use `getwd()`.
+```{r}
+#| eval: false
+# To see the current working directory
+getwd()
+```
+
+```{r}
+#| eval: false
+# Setting the working directory
+setwd("C:/Users/YourName/Documents/RProjects")
+```
+
+In RStudio, the Environment pane is where all the objects you create during a session are stored. In Positron, the SESSION pane serves a similar purpose. The following functions are useful for managing the workspace.
+
+* `ls()`:  Lists all objects in the current workspace.
+* `rm()`:  Removes objects from the workspace.
+* `save()`: Saves specified objects to a file.
+* `load()`: Loads objects from a file into the workspace.
+* `list()`: Lists all files in the current working directory.
+* `search()`: Shows the currently loaded packages.
+* `library()`: Shows all installed packages.
+* `rm(object names)`: Removes an object by its name.
+* `rm(list=ls())`: Removes all objects from the workspace.
+

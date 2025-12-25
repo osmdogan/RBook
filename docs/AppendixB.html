@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Appendix B — Appendix for Chapter 24 – Introduction to Econometrics with Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./AppendixC.html" rel="next">
+<link href="./AppendixA.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./AppendixA.html">Appendices</a></li><li class="breadcrumb-item"><a href="./AppendixB.html"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Econometrics with Python</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part0-Python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Python</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroPython.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroNumpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to NumPy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-ControlStructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Control Structures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-CustomFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Custom Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-StatFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Statistical Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Pandas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-NumericalAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Applications in Numerical Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-SymbolicMath.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Symbolic Computing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and Review</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentals of Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Further Topics in Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Analysis of Economic Time Series Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theoretical Topics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixB.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">B.1</span> Introduction</a></li>
+  <li><a href="#sec-OLS_MSPE" id="toc-sec-OLS_MSPE" class="nav-link" data-scroll-target="#sec-OLS_MSPE"><span class="header-section-number">B.2</span> MSPE of the OLS estimator</a></li>
+  <li><a href="#sec-RidgeOLSconnect" id="toc-sec-RidgeOLSconnect" class="nav-link" data-scroll-target="#sec-RidgeOLSconnect"><span class="header-section-number">B.3</span> Connection between the Ridge and OLS estimators</a></li>
+  <li><a href="#sec-LassoOLSconnect" id="toc-sec-LassoOLSconnect" class="nav-link" data-scroll-target="#sec-LassoOLSconnect"><span class="header-section-number">B.4</span> Connection between the Lasso and OLS estimators</a></li>
+  <li><a href="#sec-PCderive" id="toc-sec-PCderive" class="nav-link" data-scroll-target="#sec-PCderive"><span class="header-section-number">B.5</span> Derivation of the Principal Components when <span class="math inline">\(k&gt;2\)</span></a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/AppendixB.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./AppendixA.html">Appendices</a></li><li class="breadcrumb-item"><a href="./AppendixB.html"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-bigdataDerivations" class="quarto-section-identifier">Appendix B — Appendix for Chapter 24</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2" data-number="B.1">
+<h2 data-number="B.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">B.1</span> Introduction</h2>
+<p>In this appendix, we derive the mean squared prediction error (MSPE) of the OLS estimator. We then show the connection between the Ridge and Lasso estimators and the OLS estimator. Finally, we show how the principal components are determined when <span class="math inline">\(k&gt;2\)</span>. Throughout all derivations, we use the matrix notation introduced in Chapter 26. Therefore, we recommend that readers review Chapter 26 and the accompanying Appendix D for a refresher on matrix notation before proceeding.</p>
+</section>
+<section id="sec-OLS_MSPE" class="level2" data-number="B.2">
+<h2 data-number="B.2" class="anchored" data-anchor-id="sec-OLS_MSPE"><span class="header-section-number">B.2</span> MSPE of the OLS estimator</h2>
+<p>In this section, we show the MSPE of the OLS estimator is approximately given by <span class="math inline">\(\sigma_{u}^2\left(1+\frac{k}{n}\right)\)</span>. Let <span class="math inline">\(\bs{X}^{oos}_i=(X_{1i}^{oos},X_{2i}^{oos},...,X_{ki}^{oos})^{'}\)</span> be the <span class="math inline">\(i\)</span>th observation of the out-of-sample data and <span class="math inline">\(\hat{\bs{\beta}}=(\widehat{\beta}_1,\widehat{\beta}_2,...,\widehat{\beta}_k)^{'}\)</span> be the OLS estimator of <span class="math inline">\(\bs{\beta}=(\beta_1,\beta_2,...,\beta_k)^{'}\)</span>. The MSPE of the OLS estimator is given by</p>
+<p><span class="math display">\[
+\begin{align*}
+\text{MSPE} &amp;= \sigma_{u}^2 + \E\left(\left[(\widehat{\beta}_1-\beta_1)X_{1i}^{oos}+\cdots+(\widehat{\beta}_k-\beta_k)X_{ki}^{oos}\right]^2\right)\\
+&amp;=\sigma_{u}^2 + \E\left(\left(\bs{X}_i^{oos'}(\widehat{\bs{\beta}}-\bs{\beta})\right)^2\right)\\
+&amp;=\sigma_{u}^2 + \E\left(\bs{X}_i^{oos'}(\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i^{oos}\right)\\
+&amp;=\sigma_{u}^2 + \E\left(\tr\left(\bs{X}_i^{oos'}(\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i^{oos}\right)\right)\\
+&amp;=\sigma_{u}^2 + \E\left(\tr\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i^{oos}\bs{X}_i^{oos'}\right)\right)\\
+&amp;=\sigma_{u}^2 + \tr\left(\E\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\bs{X}_i^{oos}\bs{X}_i^{oos'}\right)\right)\\
+&amp;=\sigma_{u}^2 + \tr\left(\E\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\right)\E\left(\bs{X}_i^{oos}\bs{X}_i^{oos'}\right)\right)\\
+&amp;=\sigma_{u}^2 + \tr\left(\E\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\right)\bs{Q}_{xx}\right),
+\end{align*}
+\]</span> where the seventh equality is by independence under the external validity assumption, and the last equality holds under the assumption that <span class="math inline">\(\E\left(\bs{X}_i^{oos}\bs{X}_i^{oos'}\right)\equiv\bs{Q}_{xx}\)</span> exists and finite. Using the argument in Section 26.6 of Chapter 26, we can show that the covariance matrix of the OLS estimator is given by <span class="math display">\[
+\begin{align*}
+\E\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\right)
+&amp;=\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{u}\bs{u}^{'}\bs{X}(\bs{X}^{'}\bs{X})^{-1}\right)\\
+&amp;=\E\left(\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\bs{u}\bs{u}^{'}\bs{X}(\bs{X}^{'}\bs{X})^{-1}|\bs{X}\right)\right)\\
+&amp;=\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\E\left(\bs{u}\bs{u}^{'}|\bs{X}\right)\bs{X}(\bs{X}^{'}\bs{X})^{-1}\right)\\
+&amp;=\E\left((\bs{X}^{'}\bs{X})^{-1}\bs{X}^{'}\sigma_{u}^2\mathbf{I}_n\bs{X}(\bs{X}^{'}\bs{X})^{-1}\right)\\
+&amp;= \sigma_{u}^2\E\left((\bs{X}^{'}\bs{X})^{-1}\right).
+\end{align*}
+\]</span> Hence, we have <span class="math display">\[
+\begin{align*}
+\text{MSPE}&amp;=\sigma_{u}^2 + \tr\left(\E\left((\widehat{\bs{\beta}}-\bs{\beta})(\widehat{\bs{\beta}}-\bs{\beta})^{'}\right)\bs{Q}_{xx}\right)\\
+&amp;=\sigma_{u}^2 + \tr\left(\sigma_{u}^2\E\left((\bs{X}^{'}\bs{X})^{-1}\right)\bs{Q}_{xx}\right)\\
+&amp;=\sigma_{u}^2 + \tr\left(\sigma_{u}^2\E\left(\left(n\frac{1}{n}\bs{X}^{'}\bs{X}\right)^{-1}\right)\bs{Q}_{xx}\right)\\
+&amp;=\sigma_{u}^2 + \frac{1}{n}\sigma_{u}^2\tr\left(\E\left(\left(\frac{1}{n}\bs{X}^{'}\bs{X}\right)^{-1}\right)\bs{Q}_{xx}\right).
+\end{align*}
+\]</span></p>
+<p>By the law of large numbers, we have <span class="math inline">\(\frac{1}{n}\bs{X}^{'}\bs{X}=\frac{1}{n}\sum_{i=1}^n\bs{X}_i\bs{X}^{'}_i\xrightarrow{p}\bs{Q}_{xx}\)</span>. Thus, for large <span class="math inline">\(n\)</span>, <span class="math display">\[
+\begin{align*}
+\text{MSPE} &amp;\approx \sigma_{u}^2 + \frac{1}{n}\sigma_{u}^2\tr\left(\E\left(\bs{Q}_{xx}^{-1}\right)\bs{Q}_{xx}\right)\\
+&amp;=\sigma_{u}^2 + \frac{1}{n}\sigma_{u}^2\tr\left(\bs{Q}_{xx}^{-1}\bs{Q}_{xx}\right)\\
+&amp;=\sigma_{u}^2 + \frac{1}{n}\sigma_{u}^2\tr\left(\mathbf{I}_{k}\right)=\sigma_{u}^2,\left(1+\frac{k}{n}\right).
+\end{align*}
+\]</span></p>
+</section>
+<section id="sec-RidgeOLSconnect" class="level2" data-number="B.3">
+<h2 data-number="B.3" class="anchored" data-anchor-id="sec-RidgeOLSconnect"><span class="header-section-number">B.3</span> Connection between the Ridge and OLS estimators</h2>
+<p>In this section, we focus on the connection between the Ridge and OLS estimators. In matrix form, the Ridge estimator minimizes the following expression: <span class="math display">\[
+\left(\bs{Y} - \bs{X}\bs{b}\right)^{'}\left(\bs{Y} - \bs{X}\bs{b}\right) + \lambda_R \bs{b}^{'}\bs{b}.
+\]</span> From the first-order conditions, we have <span class="math display">\[
+-2\bs{X}^{'}\left(\bs{Y} - \bs{X}\bs{b}\right) + 2 \lambda_R \bs{b} = 0.
+\]</span> Then, the Ridge estimator is <span class="math display">\[
+\widehat{\bs{\beta}}_{R} = \left(\bs{X}^{'}\bs{X} + \lambda_R\mathbf{I}_k\right)^{-1}\bs{X}^{'}\bs{Y}.
+\]</span> Note that when the regressors are uncorrelated, <span class="math inline">\(\bs{X}^{'}\bs{X}\)</span> is a diagonal matrix, where the <span class="math inline">\(j\)</span>-th diagonal element is given by <span class="math inline">\(\sum_{i=1}^n X_{ji}^2\)</span>. In that case, the Ridge estimator for the <span class="math inline">\(j\)</span>-th regressor is <span class="math display">\[
+\begin{align*}
+\widehat{\beta}_{R,j} &amp;= \left(\sum_{i=1}^n X_{ji}^2 + \lambda_R\right)^{-1}\sum_{i=1}^n X_{ji}Y_i\\
+&amp;= \left(1 + \lambda_R/\sum_{i=1}^n X_{ji}^2\right)^{-1}\left(\sum_{i=1}^n X_{ji}^2\right)^{-1}\sum_{i=1}^n X_{ji}Y_i\\
+&amp;=\left(1 + \lambda_R/\sum_{i=1}^n X_{ji}^2\right)^{-1}\widehat{\beta}_{OLS,j}.
+\end{align*}
+\]</span></p>
+<p>This expression shows that the Ridge estimator shrinks the OLS estimator toward zero by <span class="math inline">\(\left(1 + \lambda_R/\sum_{i=1}^n X_{ji}^2\right)^{-1}\)</span> when the regressors are uncorrelated. Further, if the regressors are standardized, then <span class="math inline">\(\sum_{i=1}^n X_{ji}^2=n-1\)</span> and the Ridge shrinkage is by the factor <span class="math inline">\(\left(1 + \lambda_R/(n-1)\right)^{-1}\)</span>.</p>
+</section>
+<section id="sec-LassoOLSconnect" class="level2" data-number="B.4">
+<h2 data-number="B.4" class="anchored" data-anchor-id="sec-LassoOLSconnect"><span class="header-section-number">B.4</span> Connection between the Lasso and OLS estimators</h2>
+<p>In this section, we focus on the connection between the Lasso and OLS estimators. In matrix form, the Lasso estimator minimizes the following expression <span class="math display">\[
+\left(\bs{Y} - \bs{X}\bs{b}\right)^{'}\left(\bs{Y} - \bs{X}\bs{b}\right) + \lambda_L \sum_{j=1}^k|b_j|.
+\]</span> From the first-order conditions, for the <span class="math inline">\(j\)</span>-th regressor we have <span class="math display">\[
+-2 X_j^{'}\left(\bs{Y} - \bs{X}\bs{b}\right) + \lambda_L \sgn(b_j) = 0.
+\]</span> Then, the Lasso estimator satisfies <span class="math display">\[
+-2 X_j^{'}\left(\bs{Y} - \bs{X}\widehat{\bs{\beta}}_{L}\right) + \lambda_L \sgn(\widehat{\beta}_{L,j}) = 0
+\]</span> for <span class="math inline">\(j=1,2,...,k\)</span>. Note that when the regressors are uncorrelated, <span class="math inline">\(\bs{X}^{'}\bs{X}\)</span> is a diagonal matrix, where the <span class="math inline">\(j\)</span>-th diagonal element is given by <span class="math inline">\(\sum_{i=1}^n X_{ji}^2\)</span>. In that case, <span class="math display">\[
+-2 \sum_{i=1}^n X_{ji}Y_i + 2 \sum_{i=1}^n X_{ji}^2 \widehat{\beta}_{L,j} + \lambda_L \sgn(\widehat{\beta}_{L,j}) = 0 .
+\]</span> Hence, <span class="math display">\[
+\widehat{\beta}_{L,j} = \widehat{\beta}_{OLS,j} - \frac{\lambda_L}{2\sum_{i=1}^n X_{ji}^2} \sgn(\widehat{\beta}_{L,j}).
+\]</span> Further, if the regressors are standardized, then <span class="math inline">\(\sum_{i=1}^n X_{ji}^2=n-1\)</span>, then we have <span class="math display">\[
+\widehat{\beta}_{L,j} = \left\{\begin{array}{ll}
+\widehat{\beta}_{OLS,j} - \frac{\lambda_L}{2(n-1)}, &amp; \widehat{\beta}_{OLS,j} &gt; \frac{\lambda_L}{2(n-1)},\\
+0,&amp; |\widehat{\beta}_{OLS,j}| \le \frac{\lambda_L}{2(n-1)},\\
+\widehat{\beta}_{OLS,j} + \frac{\lambda_L}{2(n-1)}, &amp; \widehat{\beta}_{OLS,j} &lt; -\frac{\lambda_L}{2(n-1)}.
+\end{array}\right.
+\]</span> This result shows that the Lasso estimator is a transformation of the OLS estimator. In particular, it sets the small OLS estimate to zero and moves the other estimates toward zero by <span class="math inline">\(\lambda_L/2(n-1)\)</span>.</p>
+</section>
+<section id="sec-PCderive" class="level2" data-number="B.5">
+<h2 data-number="B.5" class="anchored" data-anchor-id="sec-PCderive"><span class="header-section-number">B.5</span> Derivation of the Principal Components when <span class="math inline">\(k&gt;2\)</span></h2>
+<p>In this section, we show how the principal components can be obtained when <span class="math inline">\(k &gt; 2\)</span>. The argument requires a basic understanding of eigenvalues and eigenvectors. Therefore, we recommend that readers refer to Appendix D for a brief review of eigenvalues and eigenvectors before proceeding.</p>
+<p>Let <span class="math inline">\(PC_j\)</span> be the <span class="math inline">\(j\)</span>th principal component and let <span class="math inline">\(\bs{w}_j\)</span> denote the corresponding <span class="math inline">\(k\times 1\)</span> vector of weights, i.e., <span class="math inline">\(PC_j = \bs{X}\bs{w}_j\)</span>. The variance of the <span class="math inline">\(j\)</span>th principal component is <span class="math inline">\(PC_j^{'}PC_j=\bs{w}_j^{'}\bs{X}^{'}\bs{X}\bs{w}_j\)</span> and the sum of the squared weights is <span class="math inline">\(\bs{w}_j^{'}\bs{w}_j\)</span>. Note also that since <span class="math inline">\(\bs{X}\)</span> is standardized, <span class="math inline">\(PC_j^{'}PC_j/(n-1)\)</span> is the sample variance of the <span class="math inline">\(j\)</span>th principal component.</p>
+<p>We can obtain the <span class="math inline">\(j\)</span>th principal component from the following constrained optimization problem: <span class="math display">\[
+\max_{\bs{w}_j} \bs{w}_j^{'}\bs{X}^{'}\bs{X}\bs{w}_j\quad \text{s.t.}\,\,\bs{w}_j^{'}\bs{w}_j=1\,\, \text{and}\,\, PC_j^{'}PC_i=0\,\,\, \text{for}\,\, i&lt;j.
+\]</span></p>
+<p>The linear combination weights for the first principal component <span class="math inline">\(\bs{w}_1\)</span> can be chosen to maximize <span class="math inline">\(\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_1\)</span> subject to <span class="math inline">\(\bs{w}_1^{'}\bs{w}_1=1\)</span>. The constrained maximization problem can be solved by maximizing the Lagrangian, <span class="math inline">\(\mathcal{L}=\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_1-\lambda_1(\bs{w}_1^{'}\bs{w}_1-1)\)</span>, where <span class="math inline">\(\lambda_1\)</span> is the Lagrange multiplier. Taking the derivative of the Lagrangian with respect to <span class="math inline">\(\bs{w}_1\)</span>, we obtain <span class="math display">\[
+\begin{align*}
+&amp;\frac{\partial\mathcal{L}}{\partial\bs{w}_1} = 2\bs{X}^{'}\bs{X}\bs{w}_1-2\lambda_1\bs{w}_1=0\Rightarrow \bs{X}^{'}\bs{X}\bs{w}_1=\lambda_1\bs{w}_1.
+\end{align*}
+\]</span></p>
+<p>Thus, the first-order condition suggests that <span class="math inline">\(\bs{w}_1\)</span> is an eigenvector of <span class="math inline">\(\bs{X}^{'}\bs{X}\)</span> and <span class="math inline">\(\lambda_1\)</span> is the corresponding eigenvalue, where the eigenvector is normalized to have unit length. If we pre-multiply both sides of <span class="math inline">\(\bs{X}^{'}\bs{X}\bs{w}_1=\lambda_1\bs{w}_1\)</span> by <span class="math inline">\(\bs{w}_1^{'}\)</span>, we obtain <span class="math display">\[
+PC_1^{'}PC_1=\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_1=\lambda_1\bs{w}_1^{'}\bs{w}_1=\lambda_1.
+\]</span></p>
+<p>This expression suggests that <span class="math inline">\(PC_1^{'}PC_1\)</span> is maximized when <span class="math inline">\(\lambda_1\)</span> is the largest eigenvalue of <span class="math inline">\(\bs{X}^{'}\bs{X}\)</span> and <span class="math inline">\(\bs{w}_1\)</span> is the corresponding eigenvector of <span class="math inline">\(\bs{X}^{'}\bs{X}\)</span>.</p>
+<p>Next, we consider the second principal component. We need to choose <span class="math inline">\(\bs{w}_2\)</span> to maximize <span class="math inline">\(\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_2\)</span> such that <span class="math inline">\(\bs{w}_2^{'}\bs{w}_2=1\)</span> and <span class="math inline">\(PC_2^{'}PC_1=\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_1=0\)</span>. This can be solved by maximizing the Lagrangian, <span class="math display">\[
+\mathcal{L}=\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_2-\lambda_2(\bs{w}_2^{'}\bs{w}_2-1)-\gamma_{21}\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_1,
+\]</span> where <span class="math inline">\(\lambda_2\)</span> and <span class="math inline">\(\gamma_{21}\)</span> are Lagrange multipliers. Taking the derivative of the Lagrangian with respect to <span class="math inline">\(\bs{w}_2\)</span>, we have</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp;\frac{\partial\mathcal{L}}{\partial\bs{w}_2}=2\bs{X}^{'}\bs{X}\bs{w}_2-2\lambda_2\bs{w}_2-\gamma_{21}\bs{X}^{'}\bs{X}\bs{w}_1 = 0\\
+&amp;\Rightarrow \bs{X}^{'}\bs{X}\bs{w}_2=\lambda_2\bs{w}_2+\frac{1}{2}\gamma_{21}\bs{X}^{'}\bs{X}\bs{w}_1.
+\end{align*}
+\]</span></p>
+<p>Using <span class="math inline">\(\bs{X}^{'}\bs{X}\bs{w}_1=\lambda_1\bs{w}_1\)</span> and the fact that <span class="math inline">\(\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_1=0\)</span>, we have <span class="math inline">\(\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_1=\lambda_1\bs{w}_2^{'}\bs{w}_1=0\)</span>. Hence,</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp;\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_2=\lambda_2\bs{w}_1^{'}\bs{w}_2+\frac{1}{2}\gamma_{21}\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_1\\
+&amp;\implies\frac{1}{2}\gamma_{21}\bs{w}_1^{'}\bs{X}^{'}\bs{X}\bs{w}_1=0.
+\end{align*}
+\]</span></p>
+<p>Therefore, <span class="math inline">\(\gamma_{21}\)</span> must be zero. Hence, we obtain <span class="math display">\[
+\bs{X}^{'}\bs{X}\bs{w}_2=\lambda_2\bs{w}_2.
+\]</span> Thus, the Lagrangian is maximized by choosing <span class="math inline">\(\bs{w}_2\)</span> to be the eigenvector corresponding to the largest of the remaining eigenvalues, that is, to the second largest eigenvalue of <span class="math inline">\(\bs{X}^{'}\bs{X}\)</span>. Notice again that <span class="math inline">\(PC_2^{'}PC_2=\bs{w}_2^{'}\bs{X}^{'}\bs{X}\bs{w}_2=\lambda_2\bs{w}_2^{'}\bs{w}_2=\lambda_2\)</span>.</p>
+<p>If we continue in the same manner, we can show that <span class="math inline">\(\bs{w}_j\)</span> is the <span class="math inline">\(j\)</span>th largest eigenvalue of <span class="math inline">\(\bs{X}^{'}\bs{X}\)</span>, <span class="math inline">\(PC_j^{'}PC_j=\lambda_j\)</span>, and <span class="math inline">\(PC_j^{'}PC_i=0\)</span> for <span class="math inline">\(i\ne j\)</span>. If <span class="math inline">\(k&lt;n\)</span>, only the first <span class="math inline">\(k\)</span> eigenvalues of <span class="math inline">\(\bs{X}^{'}\bs{X}\)</span> are non-zero so the total number of principal components is <span class="math inline">\(\min(k,n)\)</span>.</p>
+<p>Finally, note that since trace of a matrix is the sum of its eigenvalues, we have <span class="math display">\[
+\begin{align*}
+&amp;\tr(\bs{X}^{'}\bs{X})=\sum_{j=1}^{\min(k,n)}\lambda_j=\sum_{j=1}^{\min(k,n)}PC_j^{'}PC_j\\
+&amp;\implies \frac{1}{n-1}\tr(\bs{X}^{'}\bs{X})=\sum_{j=1}^{\min(k,n)}\frac{PC_j^{'}PC_j}{n-1}.
+\end{align*}
+\]</span> Note that the <span class="math inline">\(j\)</span>th diagonal element of <span class="math inline">\(\tr(\bs{X}^{'}\bs{X})/(n-1)\)</span> is the variance of the <span class="math inline">\(j\)</span>th predictor. Thus, we have <span class="math inline">\(\sum_{j=1}^{k}\var(X_j) = \sum_{j=1}^{\min(k,n)}\var(PC_j)\)</span>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./AppendixA.html" class="pagination-link" aria-label="Appendix for Chapter 14">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./AppendixC.html" class="pagination-link" aria-label="Appendix for Chapter 28">
+        <span class="nav-page-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/AppendixB.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
