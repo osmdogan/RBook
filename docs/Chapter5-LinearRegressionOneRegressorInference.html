@@ -540,7 +540,7 @@ window.Quarto = {
 </header>
 
 
-<div id="bf039ff4" class="cell" data-execution_count="1">
+<div id="2870bf7a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -648,7 +648,7 @@ Figure&nbsp;14.1: Rejection regions and critical points
 </div>
 <div id="exm-exm12-1" class="theorem example">
 <p><span class="theorem-title"><strong>Example 14.1</strong></span> Assume that <span class="math inline">\(\alpha=5\%\)</span> and <span class="math inline">\(H_1:\beta_1\ne c\)</span>. Then, the critical value on the left tail is the <span class="math inline">\(2.5\)</span>th percentile of <span class="math inline">\(N(0,1)\)</span>, which is <span class="math inline">\(-z_{\alpha/2}=-1.96\)</span>, and the critical value on the right tail is the <span class="math inline">\(97.5\)</span>th percentile of <span class="math inline">\(N(0,1)\)</span>, which is <span class="math inline">\(z_{\alpha/2}=1.96\)</span>. In Python, we can compute these critical values as follows:</p>
-<div id="c8a80a18" class="cell" data-execution_count="2">
+<div id="b23c87e3" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>left_critical <span class="op">=</span> stats.norm.ppf(<span class="fl">0.025</span>, loc<span class="op">=</span><span class="dv">0</span>, scale<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>right_critical <span class="op">=</span> stats.norm.ppf(<span class="fl">0.975</span>, loc<span class="op">=</span><span class="dv">0</span>, scale<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Left critical value:"</span>, np.<span class="bu">round</span>(left_critical, <span class="dv">2</span>))</span>
@@ -677,7 +677,7 @@ P_{H_0}\left(|t| &gt; |t_{\text{calc}}|\right)=2\times\Phi(-|t_{\text{calc}}|)\,
 \end{align}
 \]</span></p>
 <p>We can compute the <span class="math inline">\(p\)</span>-value in Python as follows:</p>
-<div id="2dc6e069" class="cell" data-execution_count="3">
+<div id="231820f2" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute p-value</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>t_calc <span class="op">=</span> <span class="op">-</span><span class="fl">2.5</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>p_value <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> stats.norm.cdf(<span class="op">-</span>np.<span class="bu">abs</span>(t_calc), loc<span class="op">=</span><span class="dv">0</span>, scale<span class="op">=</span><span class="dv">1</span>)</span>
@@ -714,7 +714,7 @@ Key Concept 12.1: Testing <span class="math inline">\(H_0:\beta_1= c\)</span> ve
 \end{align}
 \]</span></p>
 <p>In the data set, the test scores are denoted by <code>testscr</code> and the student-teacher ratio by <code>str</code>.</p>
-<div id="7fd595b2" class="cell" data-execution_count="4">
+<div id="42883277" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>CAschool <span class="op">=</span> pd.read_excel(<span class="st">"data/caschool.xlsx"</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Column names</span></span>
@@ -728,7 +728,7 @@ Key Concept 12.1: Testing <span class="math inline">\(H_0:\beta_1= c\)</span> ve
 </div>
 </div>
 <p>Consider <span class="math inline">\(H_0: \beta_1 = 0\)</span> against <span class="math inline">\(H_1: \beta_1 \neq 0\)</span>. We use the <code>smf.ols()</code> method to estimate the model.</p>
-<div id="722a1a37" class="cell" data-execution_count="5">
+<div id="dc4caf0b" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify the model</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'testscr~str'</span>,data<span class="op">=</span>CAschool)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the fit method to obtain parameter estimates</span></span>
@@ -741,8 +741,8 @@ Key Concept 12.1: Testing <span class="math inline">\(H_0:\beta_1= c\)</span> ve
 Dep. Variable:                testscr   R-squared:                       0.051
 Model:                            OLS   Adj. R-squared:                  0.049
 Method:                 Least Squares   F-statistic:                     22.58
-Date:                Sat, 11 Oct 2025   Prob (F-statistic):           2.78e-06
-Time:                        11:44:35   Log-Likelihood:                -1822.2
+Date:                Thu, 25 Dec 2025   Prob (F-statistic):           2.78e-06
+Time:                        15:24:51   Log-Likelihood:                -1822.2
 No. Observations:                 420   AIC:                             3648.
 Df Residuals:                     418   BIC:                             3657.
 Df Model:                           1                                         
@@ -769,7 +769,7 @@ t = \frac{\hat{\beta}_1-0}{SE(\hat{\beta}_1)} \approx \frac{-2.28}{0.48} \approx
 \end{align}
 \]</span></p>
 <p>Note that the <code>result1.summary()</code> function also returns the <span class="math inline">\(t\)</span>-statistics. The column named <code>t</code> in the output includes the <span class="math inline">\(t\)</span>-statistics. Also note that we can return <span class="math inline">\(t\)</span>-statistics through the <code>result1.tvalues</code> attribute:</p>
-<div id="62fea0d1" class="cell" data-execution_count="6">
+<div id="aafb77c2" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># t-statistics</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>result1.tvalues</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
@@ -779,7 +779,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>Assume that the significance level is <span class="math inline">\(\alpha = 0.05\)</span>. Then, the corresponding critical value can be determined in the following way.</p>
-<div id="1cd8cc8f" class="cell" data-execution_count="7">
+<div id="a32d91bb" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Critical value for 5 percent significance level</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>critical <span class="op">=</span> stats.norm.ppf(<span class="fl">0.975</span>, loc<span class="op">=</span><span class="dv">0</span>, scale<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>np.<span class="bu">round</span>(critical,<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -794,7 +794,7 @@ dtype: float64</code></pre>
 \end{align}
 \]</span></p>
 <p>where <span class="math inline">\(t_{\text{calc}}\)</span> is the actual <span class="math inline">\(t\)</span>-statistic computed, which is <span class="math inline">\(t\approx -4.75\)</span>. Then, we can compute the <span class="math inline">\(p\)</span>-value in the following way:</p>
-<div id="b8760e04" class="cell" data-execution_count="8">
+<div id="bee33484" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p-value for the two-sided alternative hypothesis</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> result1.tvalues[<span class="st">"str"</span>]</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># t=result1.tvalues.iloc[1]</span></span>
@@ -805,7 +805,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>Alternatively, we can return <span class="math inline">\(p\)</span>-values through the <code>result1.pvalues</code> attribute:</p>
-<div id="b9b68a31" class="cell" data-execution_count="9">
+<div id="7caa452a" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p-values</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>p_value <span class="op">=</span> result1.pvalues</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>p_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -816,7 +816,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>Note that this value is slightly different from the one that we computed above by <code>p_value = 2 * stats.norm.cdf(-np.abs(t), loc=0, scale=1)</code>. By default, the <code>model1.fit()</code> function uses the <span class="math inline">\(t\)</span> distribution for the computation. Thus, we need to use the t distribution to get the same result:</p>
-<div id="f6743f1d" class="cell" data-execution_count="10">
+<div id="224d3da2" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> result1.tvalues[<span class="st">"str"</span>]</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># t=result1.tvalues.iloc[1]</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>p_value <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> stats.t.cdf(<span class="op">-</span>np.<span class="bu">abs</span>(t), df<span class="op">=</span><span class="dv">418</span>)</span>
@@ -843,7 +843,7 @@ dtype: float64</code></pre>
 \end{align*}
 \]</span></p>
 <p>In our test score example, the <span class="math inline">\(95\%\)</span> confidence interval is computed in the following way:</p>
-<div id="5880f665" class="cell" data-execution_count="11">
+<div id="df10e30e" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Confidence interval for beta_1</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>lower_bound <span class="op">=</span> result1.params[<span class="st">"str"</span>] <span class="op">-</span> critical<span class="op">*</span>result1.bse[<span class="st">"str"</span>]</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>upper_bound <span class="op">=</span> result1.params[<span class="st">"str"</span>] <span class="op">+</span> critical<span class="op">*</span>result1.bse[<span class="st">"str"</span>]</span>
@@ -853,7 +853,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>Alternatively, we can resort to the <code>result1.conf_int()</code> method to return the confidence intervals for all parameters.</p>
-<div id="b649ccf2" class="cell" data-execution_count="12">
+<div id="362f1dab" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Confidence intervals for all parameters</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>result1.conf_int(alpha<span class="op">=</span><span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
@@ -928,7 +928,7 @@ D_i &amp;= \left\{\begin{array}{ll}
 \]</span></p>
 <p>That is, <span class="math inline">\(\beta_1\)</span> gives the difference between the mean test score in districts with low student-teacher ratios and the mean test score in districts with high student-teacher ratios.</p>
 <p>The dummy variable can be created by using a logical operator. The command <code>mydata$str &lt; 20</code> will return <span class="math inline">\(1\)</span> if <span class="math inline">\(STR &lt; 20\)</span>, otherwise <span class="math inline">\(0\)</span>.</p>
-<div id="0338218d" class="cell" data-execution_count="13">
+<div id="40123683" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the dummy variable D</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>CAschool[<span class="st">"D"</span>] <span class="op">=</span> CAschool[<span class="st">"str"</span>] <span class="op">&lt;</span> <span class="dv">20</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>CAschool[[<span class="st">"testscr"</span>, <span class="st">"str"</span>, <span class="st">"D"</span>]].head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1031,7 +1031,7 @@ Figure&nbsp;14.3: Scatterplot of D and Test Score.
 </div>
 </div>
 <p>As in the case of a continuous regressor, we can use the <code>smf.ols()</code> function to estimate a dummy variable regression model.</p>
-<div id="01752c52" class="cell" data-execution_count="16">
+<div id="5b8517ec" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify the model</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'testscr ~ D'</span>, data<span class="op">=</span>CAschool)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the fit method to obtain parameter estimates</span></span>
@@ -1044,8 +1044,8 @@ Figure&nbsp;14.3: Scatterplot of D and Test Score.
 Dep. Variable:                testscr   R-squared:                       0.037
 Model:                            OLS   Adj. R-squared:                  0.035
 Method:                 Least Squares   F-statistic:                     15.99
-Date:                Sat, 11 Oct 2025   Prob (F-statistic):           7.52e-05
-Time:                        11:44:36   Log-Likelihood:                -1825.4
+Date:                Thu, 25 Dec 2025   Prob (F-statistic):           7.52e-05
+Time:                        15:24:51   Log-Likelihood:                -1825.4
 No. Observations:                 420   AIC:                             3655.
 Df Residuals:                     418   BIC:                             3663.
 Df Model:                           1                                         
@@ -1119,7 +1119,7 @@ Figure&nbsp;14.4: The dummy variable regression model
 \end{align*}
 \]</span></p>
 <p>The <code>smf.ols()</code> function uses these formulas to compute the standard errors, i.e., it only reports the homoskedasticity-only standard errors. To get heteroskedasticity-robust standard errors, we need to supply <code>cov_type="HC1"</code> in the <code>fit</code> method, as shown below.</p>
-<div id="d725ee5d" class="cell" data-execution_count="18">
+<div id="e2646472" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify the model</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>model3 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'testscr~str'</span>, data<span class="op">=</span>CAschool)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the fit method to obtain parameter estimates</span></span>
@@ -1132,8 +1132,8 @@ Figure&nbsp;14.4: The dummy variable regression model
 Dep. Variable:                testscr   R-squared:                       0.051
 Model:                            OLS   Adj. R-squared:                  0.049
 Method:                 Least Squares   F-statistic:                     19.26
-Date:                Sat, 11 Oct 2025   Prob (F-statistic):           1.45e-05
-Time:                        11:44:36   Log-Likelihood:                -1822.2
+Date:                Thu, 25 Dec 2025   Prob (F-statistic):           1.45e-05
+Time:                        15:24:52   Log-Likelihood:                -1822.2
 No. Observations:                 420   AIC:                             3648.
 Df Residuals:                     418   BIC:                             3657.
 Df Model:                           1                                         

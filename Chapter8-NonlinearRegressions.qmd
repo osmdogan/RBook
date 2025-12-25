@@ -318,7 +318,7 @@ The [Maclaurin series expansions](https://en.wikipedia.org/wiki/Taylor_series) o
 $$
 \begin{align}
 &e^x=1+x+\frac{x^2}{2}+\frac{x^3}{6}+\cdots=\sum_{n=0}^{\infty}\frac{x^n}{n!},\\
-&\ln(1-x)=-x-\frac{x^2}{2}-\frac{x^3}{3}-\cdots=\sum_{n=1}^{\infty}(-1)^{n+1}\frac{x^n}{n},\\
+&\ln(1-x)=-x-\frac{x^2}{2}-\frac{x^3}{3}-\cdots=-\sum_{n=1}^{\infty}\frac{x^n}{n},\\
 &\ln(1+x)=x-\frac{x^2}{2}+\frac{x^3}{3}-\cdots=\sum_{n=1}^{\infty}(-1)^{n+1}\frac{x^n}{n}.
 \end{align}
 $$
@@ -935,11 +935,11 @@ r5 = smf.ols(formula=
 data = mydata).fit(cov_type="HC3")
 # Creating new data for predictions
 new_data = pd.DataFrame({
-    'str': np.arange(16, 24.01, 0.01),
-    'el_pct': [mydata['el_pct'].mean()] * len(np.arange(16, 24.01, 0.01)),
-    'meal_pct': [mydata['meal_pct'].mean()] * len(np.arange(16, 24.01, 0.01)),
-    'avginc': [mydata['avginc'].mean()] * len(np.arange(16, 24.01, 0.01)),
-    'hiel': [mydata['hiel'].mean()] * len(np.arange(16, 24.01, 0.01))
+    'str': np.arange(14, 26.01, 0.01),
+    'el_pct': [mydata['el_pct'].mean()] * len(np.arange(14, 26.01, 0.01)),
+    'meal_pct': [mydata['meal_pct'].mean()] * len(np.arange(14, 26.01, 0.01)),
+    'avginc': [mydata['avginc'].mean()] * len(np.arange(14, 26.01, 0.01)),
+    'hiel': [mydata['hiel'].mean()] * len(np.arange(14, 26.01, 0.01))
 })
 new_data['log_avginc'] = np.log(new_data['avginc'])
 
@@ -956,16 +956,16 @@ r7_fitted = r7.predict(new_data)
 plt.figure(figsize=(6, 5))
 plt.scatter(mydata['str'], mydata['testscr'], color='steelblue', 
       s=15)
-plt.xlim(14, 26)
+plt.xlim(13, 27)
 plt.ylim(600, 725)
 plt.xlabel('STR (X)')
 plt.ylabel('Test Score (Y)')
 plt.grid(True, linestyle='--', linewidth=0.5)
 
 # Plotting the fitted lines
-plt.plot(new_data['str'], r2_fitted, color='blue', linewidth=1, label='Model 2')
+plt.plot(new_data['str'], r2_fitted, color='blue', linewidth=2, label='Model 2')
 plt.plot(new_data['str'], r5_fitted, color='red', linewidth=2, label='Model 5')
-plt.plot(new_data['str'], r7_fitted, color='black', linewidth=1, label='Model 7')
+plt.plot(new_data['str'], r7_fitted, color='black', linewidth=2, label='Model 7')
 
 # Adding the legend
 plt.legend(loc='upper right', frameon=False)
@@ -1015,7 +1015,7 @@ plt.plot(new_data['str'], r6_fitted_hiel_1, color='red',
     linewidth=2, label='Model 6 with HiEL = 1')
 
 # Adding plot details
-plt.xlim(13, 26)
+plt.xlim(13, 27)
 plt.ylim(600, 725)
 plt.xlabel('STR (X)')
 plt.ylabel('Test Score (Y)')

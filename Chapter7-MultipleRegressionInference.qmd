@@ -86,8 +86,7 @@ results_table
 ```
 :::
 
-We consider testing $H_0:\beta_1=0$ versus $H_1:\beta_1\ne0$. 
-Using heteroskedasticity-robust standard errors, we can compute the $t$-statistic as $t=\frac{\hat{\beta}_1-0}{\text{SE}(\hat{\beta}_1)}=-0.29/0.48=-0.60$. Since $|t|=0.60<1.96$, we fail to reject $H_0$. 
+We consider testing $H_0:\beta_1=0$ versus $H_1:\beta_1\ne0$. Using heteroskedasticity-robust standard errors, we can compute the $t$-statistic as $t=\frac{\hat{\beta}_1-0}{\text{SE}(\hat{\beta}_1)}=-0.29/0.48=-0.60$. Since $|t|=0.60<1.96$, we fail to reject $H_0$. 
 
 The p-value is $2\Phi(-|t_{calc}|)=2\Phi(-0.60)$. Using the following code chunk, we find that $p$-value$=0.552>0.05$, and thus, we fail to reject $H_0$ at the $5\%$ significance level. Both the $t$-statistic and the $p$-value suggest that the student-teacher ratio does not have a statistically significant effect on the test scores at the $5\%$ significance level.
 
@@ -121,7 +120,7 @@ $$
 \end{align*}
 $$
 
-where $\beta_{j0}, \beta_{l0},\dots,\beta_{m0}$ are hypothesized known values.  Two specific examples are given in the following: 
+where $\beta_{j0}, \beta_{l0},\dots,\beta_{m0}$ are hypothesized known values. Two specific examples are given in the following: 
 $$
 \begin{align*}
 &H_0: \beta_1=0, \beta_3=0,\\
@@ -287,7 +286,7 @@ $$
 \end{align*}
 $$
 
-We can use the `result2.f_test` function to compute the heteroskedasticity-robust $F$-statistic. In the following code chunk, the null hypothesis is specified through `hypothesis="str=0,expn_stu=0"`. 
+We can use the `result2.f_test` function to compute the heteroskedasticity-robust $F$-statistic. In the following code chunk, the null hypothesis is specified through `hypothesis="str=0, expn=0"`. 
 
 ```{python}
 # Define the joint null hypothesis
@@ -342,8 +341,7 @@ H_0:\beta_1=\beta_2\quad\text{versus}\quad H_1:\beta_1\ne\beta_2
 \end{align}
 $$
 
-The null hypothesis imposes a single restriction ($q = 1$) on
-two parameters. Since the restriction is linear in terms of parameters, we can still use the $F$-statistic to test this null hypothesis. Thus, we can resort to the `result2.f_test` function to compute the $F$-statistic. The following code chunk illustrates the computation.
+The null hypothesis imposes a single restriction ($q = 1$) on two parameters. Since the restriction is linear in terms of parameters, we can still use the $F$-statistic to test this null hypothesis. Thus, we can resort to the `result2.f_test` function to compute the $F$-statistic. The following code chunk illustrates the computation.
 
 ```{python}
 # Define the joint null hypothesis

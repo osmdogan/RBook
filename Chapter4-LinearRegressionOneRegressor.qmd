@@ -67,11 +67,34 @@ $$ {#eq-eq11-3}
 for $i=1,2,\dots,n$. 
 
 ### Data
-The data set is the California school district data set provided in the `caschools.xlsx` (`caschools.csv`) file. The data set is collected in 1999 on $n=420$ school districts and includes observations on several district-level variables. 
+The dataset is the California school districts dataset provided in the `caschools.xlsx` (`caschools.csv`) file. This dataset contains information on kindergarten through eighth-grade students across 420 California school districts (K-6 and K-8 districts) in 1999. It is a district-level dataset that includes variables on average student performance and demographic characteristics. @tbl-chapter11-t0 provides a description of the variables in this dataset.^[In @sec-CaschoolsData, we provide choropleth maps to show how variables of interest are distributed across California school districts.]
 
-- Test score is the average of the reading and math scores on a standardized test administered to fifth-grade students. This variable is denoted as `testscr`.
+::: {layout-ncol=1}
+::: {style="font-size: 85%"}
+| Variable     | Description |
+|---------------|-------------|
+| `dist_code`   | District code |
+| `read_scr`    | Average reading score |
+| `math_scr`    | Average math score |
+| `county`      | County |
+| `district`    | District |
+| `gr_span`     | Grade span of district |
+| `enrl_tot`    | Total enrollment |
+| `teachers`    | Number of teachers |
+| `computer`    | Number of computers |
+| `testscr`     | Average test score (= (read_scr + math_scr)/2) |
+| `comp_stu`    | Computers per student (= computer / enrl_tot) |
+| `expn_stu`    | Expenditures per student |
+| `str`         | Student-teacher ratio (= teachers / enrl_tot) |
+| `el_pct`      | Percentage of English learners (students for whom English is a second language) |
+| `meal_pct`    | Percentage of students who qualify for a reduced-price lunch |
+| `clw_pct`     | Percentage of students who are in the public assistance program CalWorks^[For the details, see <https://www.cdss.ca.gov/calworks>.] |
+| `aving`       | District average income (in \$1000s) |
+: California school districts dataset {#tbl-chapter11-t0 .stripped .hover}
+:::
+:::
 
-- The student–teacher ratio is the number of students in the district divided by the number of full-time equivalent teachers. This variable is denoted as `str`.
+The reading and math scores are the average test scores on the Stanford 9 Achievement Test (SAT-9) in 1999. The SAT-9 is a standardized achievement test administered to almost all students from grades 2 through 11 in California public schools. The `testscr` variable is the average of the reading and math scores. 
 
 ```{python}
 # Import data
@@ -88,7 +111,7 @@ We can use the `describe` method to get descriptive statistics of data. The summ
 CAschool[["str", "testscr"]].round(3).describe().T
 ```
 
-In @fig-fig11-f1, we provide the scatter plot of the test score and the student teacher ratio. The figure indicates a negative relationship between test score and student-teacher ratio. That is, as the student-teacher ratio increases, the test score tends to decrease. 
+In @fig-fig11-f1, we present a scatter plot of the test score against the student–teacher ratio. The figure indicates a negative relationship between test scores and the student–teacher ratio; that is, as the student–teacher ratio increases, test scores tend to decrease. 
 
 ```{python}
 #| fig-cap: The scatter plot of test score and student-teacher ratio

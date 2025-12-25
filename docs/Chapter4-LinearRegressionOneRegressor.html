@@ -524,7 +524,7 @@ window.Quarto = {
 </header>
 
 
-<div id="4db03fbe" class="cell" data-execution_count="1">
+<div id="5a63c75a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -582,16 +582,109 @@ Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i=1,\dots,n,
 \tag{13.3}\]</span></span> for <span class="math inline">\(i=1,2,\dots,n\)</span>.</p>
 <section id="data" class="level3" data-number="13.3.1">
 <h3 data-number="13.3.1" class="anchored" data-anchor-id="data"><span class="header-section-number">13.3.1</span> Data</h3>
-<p>The data set is the California school district data set provided in the <code>caschools.xlsx</code> (<code>caschools.csv</code>) file. The data set is collected in 1999 on <span class="math inline">\(n=420\)</span> school districts and includes observations on several district-level variables.</p>
-<ul>
-<li><p>Test score is the average of the reading and math scores on a standardized test administered to fifth-grade students. This variable is denoted as <code>testscr</code>.</p></li>
-<li><p>The student–teacher ratio is the number of students in the district divided by the number of full-time equivalent teachers. This variable is denoted as <code>str</code>.</p></li>
-</ul>
-<div id="db3deeb5" class="cell" data-execution_count="2">
+<p>The dataset is the California school districts dataset provided in the <code>caschools.xlsx</code> (<code>caschools.csv</code>) file. This dataset contains information on kindergarten through eighth-grade students across 420 California school districts (K-6 and K-8 districts) in 1999. It is a district-level dataset that includes variables on average student performance and demographic characteristics. <a href="#tbl-chapter11-t0" class="quarto-xref">Table&nbsp;<span>13.1</span></a> provides a description of the variables in this dataset.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-chapter11-t0" class="stripped hover quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chapter11-t0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;13.1: California school districts dataset
+</figcaption>
+<div aria-describedby="tbl-chapter11-t0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="stripped table-hover caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>dist_code</code></td>
+<td style="text-align: left;">District code</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>read_scr</code></td>
+<td style="text-align: left;">Average reading score</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>math_scr</code></td>
+<td style="text-align: left;">Average math score</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>county</code></td>
+<td style="text-align: left;">County</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>district</code></td>
+<td style="text-align: left;">District</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>gr_span</code></td>
+<td style="text-align: left;">Grade span of district</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>enrl_tot</code></td>
+<td style="text-align: left;">Total enrollment</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>teachers</code></td>
+<td style="text-align: left;">Number of teachers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>computer</code></td>
+<td style="text-align: left;">Number of computers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>testscr</code></td>
+<td style="text-align: left;">Average test score (= (read_scr + math_scr)/2)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>comp_stu</code></td>
+<td style="text-align: left;">Computers per student (= computer / enrl_tot)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>expn_stu</code></td>
+<td style="text-align: left;">Expenditures per student</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Student-teacher ratio (= teachers / enrl_tot)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>el_pct</code></td>
+<td style="text-align: left;">Percentage of English learners (students for whom English is a second language)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>meal_pct</code></td>
+<td style="text-align: left;">Percentage of students who qualify for a reduced-price lunch</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>clw_pct</code></td>
+<td style="text-align: left;">Percentage of students who are in the public assistance program CalWorks<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>aving</code></td>
+<td style="text-align: left;">District average income (in $1000s)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>The reading and math scores are the average test scores on the Stanford 9 Achievement Test (SAT-9) in 1999. The SAT-9 is a standardized achievement test administered to almost all students from grades 2 through 11 in California public schools. The <code>testscr</code> variable is the average of the reading and math scores.</p>
+<div id="bbcb614f" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>CAschool<span class="op">=</span>pd.read_csv(<span class="st">'data/caschool.csv'</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>CAschool.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>Index(['Observation Number', 'dist_cod', 'county', 'district', 'gr_span',
        'enrl_tot', 'teachers', 'calw_pct', 'meal_pct', 'computer', 'testscr',
        'comp_stu', 'expn_stu', 'str', 'avginc', 'el_pct', 'read_scr',
@@ -599,17 +692,17 @@ Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i=1,\dots,n,
       dtype='object')</code></pre>
 </div>
 </div>
-<p>We can use the <code>describe</code> method to get descriptive statistics of data. The summary statistics are presented in <a href="#tbl-t11-1" class="quarto-xref">Table&nbsp;<span>13.1</span></a>. Across 420 school districts, the average student-teacher ratio and the average test scores are around <span class="math inline">\(19.7\)</span> and <span class="math inline">\(654.2\)</span>, respectively.</p>
+<p>We can use the <code>describe</code> method to get descriptive statistics of data. The summary statistics are presented in <a href="#tbl-t11-1" class="quarto-xref">Table&nbsp;<span>13.2</span></a>. Across 420 school districts, the average student-teacher ratio and the average test scores are around <span class="math inline">\(19.7\)</span> and <span class="math inline">\(654.2\)</span>, respectively.</p>
 <div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>CAschool[[<span class="st">"str"</span>, <span class="st">"testscr"</span>]].<span class="bu">round</span>(<span class="dv">3</span>).describe().T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="tbl-t11-1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t11-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;13.1: Summary Statistics
+Table&nbsp;13.2: Summary Statistics
 </figcaption>
 <div aria-describedby="tbl-t11-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="21">
 <div>
 
 
@@ -659,7 +752,7 @@ Table&nbsp;13.1: Summary Statistics
 </figure>
 </div>
 </div>
-<p>In <a href="#fig-fig11-f1" class="quarto-xref">Figure&nbsp;<span>13.1</span></a>, we provide the scatter plot of the test score and the student teacher ratio. The figure indicates a negative relationship between test score and student-teacher ratio. That is, as the student-teacher ratio increases, the test score tends to decrease.</p>
+<p>In <a href="#fig-fig11-f1" class="quarto-xref">Figure&nbsp;<span>13.1</span></a>, we present a scatter plot of the test score against the student–teacher ratio. The figure indicates a negative relationship between test scores and the student–teacher ratio; that is, as the student–teacher ratio increases, test scores tend to decrease.</p>
 <div id="cell-fig-fig11-f1" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The scatter plot of test score and student-teacher ratio</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sns.<span class="bu">set</span>(style<span class="op">=</span><span class="st">'darkgrid'</span>)</span>
@@ -686,7 +779,7 @@ Figure&nbsp;13.1: The scatter plot of test score and student-teacher ratio
 <h3 data-number="13.3.2" class="anchored" data-anchor-id="estimation-results"><span class="header-section-number">13.3.2</span> Estimation Results</h3>
 <p>We use the <code>statsmodels.api</code> and the <code>statsmodels.formula.api</code> modules to estimate regressions. We import these modules under the names <code>sm</code> and <code>smf</code>, respectively. There are two options for running OLS regressions: (i) the <code>smf.ols()</code> function and (ii) the <code>sm.OLS()</code> function. To see all available models that can be estimated by these functions, we can use <code>dir(smf)</code> and <code>dir(sm)</code>.</p>
 <p>In the case of <code>smf</code>, we can use <code>R</code>-style formulas to specify estimation equations. In the following, we use the <code>smf.ols()</code> function to estimate the model. Note that the estimation equation is specified as <code>formula='testscr ~ str'</code>, where <code>~</code> symbol separates the dependent and independent variables.</p>
-<div id="14bf118f" class="cell" data-execution_count="5">
+<div id="2431a136" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify the model</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'testscr ~ str'</span>, data<span class="op">=</span>CAschool)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the fit function to obtain parameter estimates</span></span>
@@ -699,8 +792,8 @@ Figure&nbsp;13.1: The scatter plot of test score and student-teacher ratio
 Dep. Variable:                testscr   R-squared:                       0.051
 Model:                            OLS   Adj. R-squared:                  0.049
 Method:                 Least Squares   F-statistic:                     22.58
-Date:                Sat, 11 Oct 2025   Prob (F-statistic):           2.78e-06
-Time:                        11:45:28   Log-Likelihood:                -1822.2
+Date:                Thu, 25 Dec 2025   Prob (F-statistic):           2.78e-06
+Time:                        15:23:20   Log-Likelihood:                -1822.2
 No. Observations:                 420   AIC:                             3648.
 Df Residuals:                     418   BIC:                             3657.
 Df Model:                           1                                         
@@ -721,12 +814,12 @@ Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
 </div>
 </div>
-<p>All estimated quantities are stored in the <code>result1</code> object. We can use <code>dir(result1)</code> to see available attributes. In <a href="#tbl-t11-2" class="quarto-xref">Table&nbsp;<span>13.2</span></a>, we list some important attributes of the <code>result1</code> object.</p>
+<p>All estimated quantities are stored in the <code>result1</code> object. We can use <code>dir(result1)</code> to see available attributes. In <a href="#tbl-t11-2" class="quarto-xref">Table&nbsp;<span>13.3</span></a>, we list some important attributes of the <code>result1</code> object.</p>
 <div style="font-size: 90%">
 <div id="tbl-t11-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t11-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;13.2: Some important attributes
+Table&nbsp;13.3: Some important attributes
 </figcaption>
 <div aria-describedby="tbl-t11-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -784,26 +877,26 @@ Table&nbsp;13.2: Some important attributes
 </div>
 </div>
 <p>Below, we illustrate some of these attributes.</p>
-<div id="e895fb84" class="cell" data-execution_count="6">
+<div id="c42840ea" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of observations</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>result1.nobs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="24">
 <pre><code>420.0</code></pre>
 </div>
 </div>
-<div id="2d884665" class="cell" data-execution_count="7">
+<div id="dd7531d1" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimated parameters</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>result1.params</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="25">
 <pre><code>Intercept    698.932952
 str           -2.279808
 dtype: float64</code></pre>
 </div>
 </div>
-<div id="443ef0e9" class="cell" data-execution_count="8">
+<div id="0d18cfdf" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The first five residuals</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>result1.resid[<span class="dv">0</span>:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="26">
 <pre><code>0    32.652600
 1    11.339167
 2   -12.706887
@@ -812,18 +905,18 @@ dtype: float64</code></pre>
 dtype: float64</code></pre>
 </div>
 </div>
-<div id="c58e210a" class="cell" data-execution_count="9">
+<div id="09e24512" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The first five predictions</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>result1.predict()[<span class="dv">0</span>:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="27">
 <pre><code>array([658.14738785, 649.86084512, 656.30686253, 659.36199297,
        656.3659006 ])</code></pre>
 </div>
 </div>
-<div id="a91fcdb9" class="cell" data-execution_count="10">
+<div id="3c500ac4" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The first five predictions</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>result1.fittedvalues[<span class="dv">0</span>:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div class="cell-output cell-output-display" data-execution_count="28">
 <pre><code>0    658.147388
 1    649.860845
 2    656.306863
@@ -833,7 +926,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>Next, we describe how to use the <code>sm.OLS()</code> function for regression analysis. In this case, we need to supply the dependent and independent variable(s) as arrays through the <code>endog</code> and <code>exog</code> arguments, respectively.</p>
-<div id="bb5f17d5" class="cell" data-execution_count="11">
+<div id="1566dd6f" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange the data</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>CAschool[<span class="st">"const"</span>] <span class="op">=</span> <span class="dv">1</span> <span class="co"># add a constant column</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the dependent and independent variables</span></span>
@@ -841,7 +934,7 @@ dtype: float64</code></pre>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> CAschool[[<span class="st">"const"</span>, <span class="st">"str"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that we need to explicitly specify the intercept term: <code>CAschool["const"] = 1</code>, which adds a column of ones to the dataframe <code>CAschool</code>.</p>
-<div id="b6fd5bf8" class="cell" data-execution_count="12">
+<div id="c2fd2ef7" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify the model</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> sm.OLS(endog<span class="op">=</span>y, exog<span class="op">=</span>X)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the model</span></span>
@@ -854,8 +947,8 @@ dtype: float64</code></pre>
 Dep. Variable:                testscr   R-squared:                       0.051
 Model:                            OLS   Adj. R-squared:                  0.049
 Method:                 Least Squares   F-statistic:                     22.58
-Date:                Sat, 11 Oct 2025   Prob (F-statistic):           2.78e-06
-Time:                        11:45:28   Log-Likelihood:                -1822.2
+Date:                Thu, 25 Dec 2025   Prob (F-statistic):           2.78e-06
+Time:                        15:23:20   Log-Likelihood:                -1822.2
 No. Observations:                 420   AIC:                             3648.
 Df Residuals:                     418   BIC:                             3657.
 Df Model:                           1                                         
@@ -931,8 +1024,8 @@ SER &amp;= s_{\hat{u}} = \sqrt{\frac{1}{n-2}\sum_{i=1}^n\left(\hat{u}_i - \bar{\
 \end{align*}
 \]</span> where the fourth equality is due to <span class="math inline">\(\sum_{i=1}^n \hat{u}_i = 0\)</span>, which means <span class="math inline">\(\bar{\hat{u}} = 0\)</span>. The SER has the same units as <span class="math inline">\(𝑌\)</span> and measures the spread of the observations around the regression line.</p>
 <p>The <span class="math inline">\(R^2\)</span> ranges between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, and a high value of <span class="math inline">\(R^2\)</span> indicates that the model explains a large fraction of the variation in <span class="math inline">\(Y\)</span>. The SER is always non-negative, and a smaller value indicates that the model fits the data better.</p>
-<p>In the following code chunk, we compute both measures of fit for the test score regression in <a href="#eq-eq11-3" class="quarto-xref">Equation&nbsp;<span>13.3</span></a>. The estimates are given in <a href="#tbl-t11-3" class="quarto-xref">Table&nbsp;<span>13.3</span></a>. The <span class="math inline">\(R^2=0.05\)</span> means that the <code>STR</code> regressor explains <span class="math inline">\(5\%\)</span> of the variance of the dependent variable <code>TestScore</code>. The SER estimate is <span class="math inline">\(18.6\)</span>, providing an estimate of the standard deviation of the error terms in units of test score points.</p>
-<div id="67f2293e" class="cell" data-execution_count="14">
+<p>In the following code chunk, we compute both measures of fit for the test score regression in <a href="#eq-eq11-3" class="quarto-xref">Equation&nbsp;<span>13.3</span></a>. The estimates are given in <a href="#tbl-t11-3" class="quarto-xref">Table&nbsp;<span>13.4</span></a>. The <span class="math inline">\(R^2=0.05\)</span> means that the <code>STR</code> regressor explains <span class="math inline">\(5\%\)</span> of the variance of the dependent variable <code>TestScore</code>. The SER estimate is <span class="math inline">\(18.6\)</span>, providing an estimate of the standard deviation of the error terms in units of test score points.</p>
+<div id="661cbd33" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Measures of fit</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> CAschool.testscr</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> result1.nobs</span>
@@ -948,10 +1041,10 @@ SER &amp;= s_{\hat{u}} = \sqrt{\frac{1}{n-2}\sum_{i=1}^n\left(\hat{u}_i - \bar{\
 <div id="tbl-t11-3" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="15">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;13.3: Measures of fit
+Table&nbsp;13.4: Measures of fit
 </figcaption>
 <div aria-describedby="tbl-t11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="15">
+<div class="cell-output cell-output-display" data-execution_count="33">
 <div>
 
 
@@ -1259,6 +1352,13 @@ Figure&nbsp;13.5: Simulation results
 <p>In the next chapter, we will show how to formulate estimators for <span class="math inline">\(\sigma^2_{\hat{\beta}_1}\)</span> and <span class="math inline">\(\sigma^2_{\hat{\beta}_0}\)</span> given in <a href="#thm-thm11.1" class="quarto-xref">Theorem&nbsp;<span>13.1</span></a>. We will also show how to use these estimators to conduct hypothesis tests and construct confidence intervals for the parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>In <span class="quarto-unresolved-ref">?sec-CaschoolsData</span>, we provide choropleth maps to show how variables of interest are distributed across California school districts.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>For the details, see <a href="https://www.cdss.ca.gov/calworks" class="uri">https://www.cdss.ca.gov/calworks</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
