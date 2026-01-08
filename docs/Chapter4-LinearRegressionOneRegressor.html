@@ -57,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -102,12 +102,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-
 <script>
 window.MathJax = {
   tex: {
@@ -495,6 +489,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">13.3.1</span> Data</a></li>
   <li><a href="#estimation-results" id="toc-estimation-results" class="nav-link" data-scroll-target="#estimation-results"><span class="header-section-number">13.3.2</span> Estimation Results</a></li>
+  <li><a href="#interpretation-of-results" id="toc-interpretation-of-results" class="nav-link" data-scroll-target="#interpretation-of-results"><span class="header-section-number">13.3.3</span> Interpretation of results</a></li>
   </ul></li>
   <li><a href="#measures-of-fit-and-prediction-accuracy" id="toc-measures-of-fit-and-prediction-accuracy" class="nav-link" data-scroll-target="#measures-of-fit-and-prediction-accuracy"><span class="header-section-number">13.4</span> Measures of fit and prediction accuracy</a></li>
   <li><a href="#the-least-squares-assumptions-for-causal-inference" id="toc-the-least-squares-assumptions-for-causal-inference" class="nav-link" data-scroll-target="#the-least-squares-assumptions-for-causal-inference"><span class="header-section-number">13.5</span> The least squares assumptions for causal inference</a></li>
@@ -524,13 +519,13 @@ window.Quarto = {
 </header>
 
 
-<div id="5a63c75a" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="the-linear-regression-model" class="level2" data-number="13.1">
 <h2 data-number="13.1" class="anchored" data-anchor-id="the-linear-regression-model"><span class="header-section-number">13.1</span> The linear regression model</h2>
@@ -571,7 +566,7 @@ Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i=1,\dots,n,
 <li>The OLS residuals and the explanatory variable are uncorrelated: <span class="math inline">\(\sum_{i=1}^n X_i\hat{u}_i = 0\)</span>.</li>
 <li>The regression line passes through the sample mean: <span class="math inline">\(\bar{Y} = \hat{\beta}_0 + \hat{\beta}_1 \bar{X}\)</span>.</li>
 </ul>
-<p>These algebraic properties are proved in <a href="AppendixA.html#sec-OlsDerivation" class="quarto-xref"><span>Section A.1</span></a>. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 29</span></a>, we extent these results to a multiple linear regression model.</p>
+<p>These algebraic properties are proved in <a href="AppendixA.html#sec-OlsDerivation" class="quarto-xref"><span>Section A.2</span></a>. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 28</span></a>, we extent these results to a multiple linear regression model.</p>
 </section>
 <section id="estimating-the-relationship-between-test-scores-and-the-studentteacher-ratio" class="level2" data-number="13.3">
 <h2 data-number="13.3" class="anchored" data-anchor-id="estimating-the-relationship-between-test-scores-and-the-studentteacher-ratio"><span class="header-section-number">13.3</span> Estimating the relationship between test scores and the student–teacher ratio</h2>
@@ -679,93 +674,115 @@ Table&nbsp;13.1: California school districts dataset
 </div>
 </div>
 </div>
-<p>The reading and math scores are the average test scores on the Stanford 9 Achievement Test (SAT-9) in 1999. The SAT-9 is a standardized achievement test administered to almost all students from grades 2 through 11 in California public schools. The <code>testscr</code> variable is the average of the reading and math scores.</p>
-<div id="bbcb614f" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>CAschool<span class="op">=</span>pd.read_csv(<span class="st">'data/caschool.csv'</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>CAschool.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="20">
-<pre><code>Index(['Observation Number', 'dist_cod', 'county', 'district', 'gr_span',
-       'enrl_tot', 'teachers', 'calw_pct', 'meal_pct', 'computer', 'testscr',
-       'comp_stu', 'expn_stu', 'str', 'avginc', 'el_pct', 'read_scr',
-       'math_scr'],
-      dtype='object')</code></pre>
+<p>The reading and math scores are the average test scores on the Stanford 9 Achievement Test (SAT-9) in 1999. The SAT-9 is a standardized achievement test administered to almost all students from grades 2 through 11 in California public schools. The <code>testscr</code> variable is the average of the reading and math scores. The summary statistics are presented in <a href="#tbl-t11-1" class="quarto-xref">Table&nbsp;<span>13.2</span></a>. Across 420 school districts, the average student-teacher ratio and the average test scores are around <span class="math inline">\(19.7\)</span> and <span class="math inline">\(654.2\)</span>, respectively.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>CAschools <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/caschool.csv"</span>, <span class="at">sep=</span><span class="st">","</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<p>We can use the <code>describe</code> method to get descriptive statistics of data. The summary statistics are presented in <a href="#tbl-t11-1" class="quarto-xref">Table&nbsp;<span>13.2</span></a>. Across 420 school districts, the average student-teacher ratio and the average test scores are around <span class="math inline">\(19.7\)</span> and <span class="math inline">\(654.2\)</span>, respectively.</p>
-<div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>CAschool[[<span class="st">"str"</span>, <span class="st">"testscr"</span>]].<span class="bu">round</span>(<span class="dv">3</span>).describe().T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t11-1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="3">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">datasummary_skim</span>(CAschools[,<span class="fu">c</span>(<span class="st">"str"</span>,<span class="st">"testscr"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t11-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t11-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;13.2: Summary Statistics
 </figcaption>
 <div aria-describedby="tbl-t11-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="21">
-<div>
+<div class="cell-output-display">
+<!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
 
-<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">count</th>
-<th data-quarto-table-cell-role="th">mean</th>
-<th data-quarto-table-cell-role="th">std</th>
-<th data-quarto-table-cell-role="th">min</th>
-<th data-quarto-table-cell-role="th">25%</th>
-<th data-quarto-table-cell-role="th">50%</th>
-<th data-quarto-table-cell-role="th">75%</th>
-<th data-quarto-table-cell-role="th">max</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">str</td>
-<td>420.0</td>
-<td>19.640417</td>
-<td>1.891805</td>
-<td>14.00</td>
-<td>18.5825</td>
-<td>19.723</td>
-<td>20.8720</td>
-<td>25.80</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">testscr</td>
-<td>420.0</td>
-<td>654.156548</td>
-<td>19.053348</td>
-<td>605.55</td>
-<td>640.0500</td>
-<td>654.450</td>
-<td>666.6625</td>
-<td>706.75</td>
-</tr>
-</tbody>
-</table>
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_de8qo4mmwr4vvu19r1ib = TinyTable.createTableFunctions("tinytable_de8qo4mmwr4vvu19r1ib");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '2', j: 1 }, { i: '2', j: 2 }, { i: '2', j: 3 }, { i: '2', j: 4 }, { i: '2', j: 5 }, { i: '2', j: 6 }, { i: '2', j: 7 }, { i: '2', j: 8 }, { i: '2', j: 9 } ], css_id: 'tinytable_css_ajfc1vf7z42215vjfabj',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '1', j: 2 }, { i: '1', j: 3 }, { i: '1', j: 4 }, { i: '1', j: 5 }, { i: '1', j: 6 }, { i: '1', j: 7 }, { i: '1', j: 8 }, { i: '1', j: 9 } ], css_id: 'tinytable_css_chzxmc8bdmtfz0d7tqww',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 }, { i: '0', j: 9 } ], css_id: 'tinytable_css_0v8wxj2qzzgu95097bgm',}, 
+          ];
 
-</div>
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_de8qo4mmwr4vvu19r1ib.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_de8qo4mmwr4vvu19r1ib td.tinytable_css_ajfc1vf7z42215vjfabj, #tinytable_de8qo4mmwr4vvu19r1ib th.tinytable_css_ajfc1vf7z42215vjfabj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_de8qo4mmwr4vvu19r1ib td.tinytable_css_chzxmc8bdmtfz0d7tqww, #tinytable_de8qo4mmwr4vvu19r1ib th.tinytable_css_chzxmc8bdmtfz0d7tqww { text-align: left }
+    #tinytable_de8qo4mmwr4vvu19r1ib td.tinytable_css_0v8wxj2qzzgu95097bgm, #tinytable_de8qo4mmwr4vvu19r1ib th.tinytable_css_0v8wxj2qzzgu95097bgm {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_de8qo4mmwr4vvu19r1ib" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">Unique</th>
+                <th scope="col" data-row="0" data-col="3">Missing Pct.</th>
+                <th scope="col" data-row="0" data-col="4">Mean</th>
+                <th scope="col" data-row="0" data-col="5">SD</th>
+                <th scope="col" data-row="0" data-col="6">Min</th>
+                <th scope="col" data-row="0" data-col="7">Median</th>
+                <th scope="col" data-row="0" data-col="8">Max</th>
+                <th scope="col" data-row="0" data-col="9">Histogram</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">str</td>
+                  <td data-row="1" data-col="2">412</td>
+                  <td data-row="1" data-col="3">0</td>
+                  <td data-row="1" data-col="4">19.6</td>
+                  <td data-row="1" data-col="5">1.9</td>
+                  <td data-row="1" data-col="6">14.0</td>
+                  <td data-row="1" data-col="7">19.7</td>
+                  <td data-row="1" data-col="8">25.8</td>
+                  <td data-row="1" data-col="9"><img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAABLAAAAGQCAMAAACJa2lsAAAABlBMVEUAAAD///+l2Z/dAAANcElEQVR4nO3UUbLsQI5jwZr9b7rN8n/CuiXdd4JF9xVIARD/+X8AQ/yn/gCA/y2DBYxhsIAxDBYwhsECxjBYwBgGCxjDYAFjGCxgDIMFjGGwgDEMFjCGwQLGMFh7/ecv1T/HfyfF2stgMY5i7WWwGEex9jJYjKNYexksxlGsvQwW4yjWXgaLcRRrL4PFOIq1l8FiHMXay2AxjmLtZbAYR7H2MliMo1h7GSzGUay9DBbjKNZeBotxFGsvg8U4irWXwWIcxdrLYDGOYu1lsBhHsfYyWIyjWHsZLMZRrL0MFuMo1l4Gi3EUay+DxTiKtZfBYhzF2stgMY5i7WWwGEex9jJYjKNYexksxlGsvQwW4yjWXgaLcRRrL4PFOIq1l8FiHMXay2AxjmLtZbAYR7H2MliMo1h7GSzGUay9DBbjKNZeBotxFGsvg8U4irWXwWIcxdrLYDGOYu1lsBhHsfYyWIyjWHsZLMZRrL0MFuMo1l4Gi3EUay+DxTiKtZfBYhzF2stgMY5i7WWwGEex9jJYjKNYexksxlGsvQwW4yjWXgaLcRRrL4PFOIq1l8FiHMXay2AxjmLtZbAYR7H2MliMo1h7GSzGUay9DBbjKNZeBotxFGsvg8U4irXXnw7Wn6pfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyH6venaeq1+OjOz3qmfnufrlyMh+r3p2nqtfjozs96pn57n65cjIfq96dp6rX46M7PeqZ+e5+uXIyP5q9TJcqo6FjOyvVi/DpepYyMj+avUyXKqOhYzsr1Yvw6XqWMjI/mr1MlyqjoWM7K9WL8Ol6ljIyP5q9TJcqo6FjOyvVi/DpepYyMj+avUyXKqOhYzsr1Yvw6XqWMjI/mr1MlyqjoWM7K9WL8Ol6ljIyP5q9TJcqo6FjOyvVi/DpepYyMj+avUyXKqOhYzsr1Yvw6XqWMjI/mr1MlyqjoWM7K9WL8Ol6ljIyP5q9TJcqo6FjOyvVi/DpepYyMj+avUyXKqOhYzsr1Yvw6XqWMjI/mr1MlyqjoWM7K9WL8Ol6ljIyP5q9TJcqo6FjOyvVi/DpepYyMj+avUyXKqOhYzsr1Yvw6XqWMjI/mr1MlyqjoWM7K9WL8Ol6ljIyP5q9TJcqo6FjOyvVi/DpepYyMj+avUybFRnzol4rlYf70Z15pyI52r18W5UZ86JeK5WH+9GdeaciOdq9fFuVGfOiXiuVh/vRnXmnIjnavXxblRnzol4rlYf70Z15pyI52r18W5UZ86JeK5WH+9GdeaciOdq9fFuVGfOiXiuVh/vRnXmnIjnavXxblRnzol4rlYf70Z15pyI52r18W5UZ86JeK5WH+9GdeaciOdq9fFuVGfOiXiuVh/vRnXmnIjnavXxblRnzol4rlYf70Z15pyI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" style="height: 1em;" class="figure-img"></td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1">testscr</td>
+                  <td data-row="2" data-col="2">379</td>
+                  <td data-row="2" data-col="3">0</td>
+                  <td data-row="2" data-col="4">654.2</td>
+                  <td data-row="2" data-col="5">19.1</td>
+                  <td data-row="2" data-col="6">605.6</td>
+                  <td data-row="2" data-col="7">654.4</td>
+                  <td data-row="2" data-col="8">706.8</td>
+                  <td data-row="2" data-col="9"><img src="data:image/png;base64, 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" style="height: 1em;" class="figure-img"></td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 </figure>
 </div>
 </div>
 <p>In <a href="#fig-fig11-f1" class="quarto-xref">Figure&nbsp;<span>13.1</span></a>, we present a scatter plot of the test score against the student–teacher ratio. The figure indicates a negative relationship between test scores and the student–teacher ratio; that is, as the student–teacher ratio increases, test scores tend to decrease.</p>
-<div id="cell-fig-fig11-f1" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The scatter plot of test score and student-teacher ratio</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sns.<span class="bu">set</span>(style<span class="op">=</span><span class="st">'darkgrid'</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>fig,axs <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">4</span>))</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>axs.scatter(CAschool.<span class="bu">str</span>, CAschool.testscr, color<span class="op">=</span><span class="st">"steelblue"</span>,s<span class="op">=</span><span class="dv">15</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>axs.set_xlabel(<span class="st">'STR'</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>axs.set_ylabel(<span class="st">"Test Score"</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(CAschools, <span class="fu">aes</span>(<span class="at">x =</span> str, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"STR"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Score"</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-fig11-f1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-fig11-f1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-fig11-f1-output-1.png" width="448" height="361" class="figure-img">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-fig11-f1-1.png" class="img-fluid figure-img" width="480">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig11-f1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;13.1: The scatter plot of test score and student-teacher ratio
@@ -777,98 +794,89 @@ Figure&nbsp;13.1: The scatter plot of test score and student-teacher ratio
 </section>
 <section id="estimation-results" class="level3" data-number="13.3.2">
 <h3 data-number="13.3.2" class="anchored" data-anchor-id="estimation-results"><span class="header-section-number">13.3.2</span> Estimation Results</h3>
-<p>We use the <code>statsmodels.api</code> and the <code>statsmodels.formula.api</code> modules to estimate regressions. We import these modules under the names <code>sm</code> and <code>smf</code>, respectively. There are two options for running OLS regressions: (i) the <code>smf.ols()</code> function and (ii) the <code>sm.OLS()</code> function. To see all available models that can be estimated by these functions, we can use <code>dir(smf)</code> and <code>dir(sm)</code>.</p>
-<p>In the case of <code>smf</code>, we can use <code>R</code>-style formulas to specify estimation equations. In the following, we use the <code>smf.ols()</code> function to estimate the model. Note that the estimation equation is specified as <code>formula='testscr ~ str'</code>, where <code>~</code> symbol separates the dependent and independent variables.</p>
-<div id="2431a136" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify the model</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">'testscr ~ str'</span>, data<span class="op">=</span>CAschool)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the fit function to obtain parameter estimates</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>result1 <span class="op">=</span> model1.fit()</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the estimation results</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result1.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In R, we use the <code>lm</code> function from the <code>stats</code> package to estimate the regression model. The syntax is <code>lm(y~x,data)</code>, where <code>y</code> is the dependent variable, <code>x</code> is the explanatory variable, and <code>data</code> is the data frame that contains <code>y</code> and <code>x</code>. We use the <code>summary</code> function to obtain the regression results.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate the regression model</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str, <span class="at">data =</span> CAschools)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                            OLS Regression Results                            
-==============================================================================
-Dep. Variable:                testscr   R-squared:                       0.051
-Model:                            OLS   Adj. R-squared:                  0.049
-Method:                 Least Squares   F-statistic:                     22.58
-Date:                Thu, 25 Dec 2025   Prob (F-statistic):           2.78e-06
-Time:                        15:23:20   Log-Likelihood:                -1822.2
-No. Observations:                 420   AIC:                             3648.
-Df Residuals:                     418   BIC:                             3657.
-Df Model:                           1                                         
-Covariance Type:            nonrobust                                         
-==============================================================================
-                 coef    std err          t      P&gt;|t|      [0.025      0.975]
-------------------------------------------------------------------------------
-Intercept    698.9330      9.467     73.825      0.000     680.323     717.543
-str           -2.2798      0.480     -4.751      0.000      -3.223      -1.337
-==============================================================================
-Omnibus:                        5.390   Durbin-Watson:                   0.129
-Prob(Omnibus):                  0.068   Jarque-Bera (JB):                3.589
-Skew:                          -0.012   Prob(JB):                        0.166
-Kurtosis:                       2.548   Cond. No.                         207.
-==============================================================================
+<pre><code>
+Call:
+lm(formula = testscr ~ str, data = CAschools)
 
-Notes:
-[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-47.727 -14.251   0.483  12.822  48.540 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 698.9330     9.4675  73.825  &lt; 2e-16 ***
+str          -2.2798     0.4798  -4.751 2.78e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 18.58 on 418 degrees of freedom
+Multiple R-squared:  0.05124,   Adjusted R-squared:  0.04897 
+F-statistic: 22.58 on 1 and 418 DF,  p-value: 2.783e-06</code></pre>
 </div>
 </div>
-<p>All estimated quantities are stored in the <code>result1</code> object. We can use <code>dir(result1)</code> to see available attributes. In <a href="#tbl-t11-2" class="quarto-xref">Table&nbsp;<span>13.3</span></a>, we list some important attributes of the <code>result1</code> object.</p>
-<div style="font-size: 90%">
-<div id="tbl-t11-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<p>The class of the <code>model</code> object is <code>lm</code>. This object is a list that contains the estimated coefficients, fitted values, residuals, and some other components of the model. We can use the <code>names</code> function to list all components of the <code>model</code> object.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List the components of the model object</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "coefficients"  "residuals"     "effects"       "rank"         
+ [5] "fitted.values" "assign"        "qr"            "df.residual"  
+ [9] "xlevels"       "call"          "terms"         "model"        </code></pre>
+</div>
+</div>
+<p>In the following table, we describe these components.</p>
+<div style="font-size: 85%">
+<div id="tbl-chapter11-t1" class="stripped hover quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t11-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;13.3: Some important attributes
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chapter11-t1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;13.3: Some components of the <code>model</code> object
 </figcaption>
-<div aria-describedby="tbl-t11-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table class="caption-top table">
+<div aria-describedby="tbl-chapter11-t1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="stripped table-hover caption-top table">
 <colgroup>
-<col style="width: 37%">
-<col style="width: 62%">
+<col style="width: 57%">
+<col style="width: 42%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Attribute</th>
+<th style="text-align: left;">Component</th>
 <th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;"><code>nobs</code></td>
-<td style="text-align: left;">returns the number of observations used in the estimation.</td>
+<td style="text-align: left;"><code>coefficients</code></td>
+<td style="text-align: left;">Estimated coefficients of the regression model</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><code>params</code></td>
-<td style="text-align: left;">returns the estimated parameters in a list.</td>
+<td style="text-align: left;"><code>fitted.values</code></td>
+<td style="text-align: left;">Fitted values: <span class="math inline">\(\hat{Y}_i=\hat{\beta}_0+\hat{\beta}_1 X_i\)</span></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><code>resid</code></td>
-<td style="text-align: left;">returns the residuals in a list.</td>
+<td style="text-align: left;"><code>residuals</code></td>
+<td style="text-align: left;">Residuals: <span class="math inline">\(\hat{u}_i=Y_i-\hat{Y}_i\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><code>predict</code></td>
-<td style="text-align: left;">returns predicted values in an array.</td>
+<td style="text-align: left;"><code>rank</code></td>
+<td style="text-align: left;">The rank of the regressors matrix</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><code>model.exog</code></td>
-<td style="text-align: left;">returns exogenous variables in an array.</td>
+<td style="text-align: left;"><code>df.residual</code></td>
+<td style="text-align: left;">Degrees of freedom of the residuals: <span class="math inline">\(n-k-1\)</span></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><code>model.exog_names</code></td>
-<td style="text-align: left;">returns the names of exogenous variables in a list.</td>
+<td style="text-align: left;"><code>call</code></td>
+<td style="text-align: left;">The function call used to estimate the model</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><code>model.endog</code>, <code>model.endog_names</code></td>
-<td style="text-align: left;">returns the endogenous variable values/name.</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><code>model.loglike</code></td>
-<td style="text-align: left;">returns the likelihood function evaluated at params.</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>rsquared</code>, <code>rsquared_adj</code></td>
-<td style="text-align: left;">returns unadjusted/adjusted <span class="math inline">\(R^2\)</span>.</td>
+<td style="text-align: left;"><code>model</code></td>
+<td style="text-align: left;">The data frame used to estimate the model</td>
 </tr>
 </tbody>
 </table>
@@ -876,123 +884,149 @@ Table&nbsp;13.3: Some important attributes
 </figure>
 </div>
 </div>
-<p>Below, we illustrate some of these attributes.</p>
-<div id="c42840ea" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of observations</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>result1.nobs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="24">
-<pre><code>420.0</code></pre>
-</div>
-</div>
-<div id="dd7531d1" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimated parameters</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>result1.params</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="25">
-<pre><code>Intercept    698.932952
-str           -2.279808
-dtype: float64</code></pre>
-</div>
-</div>
-<div id="0d18cfdf" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The first five residuals</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>result1.resid[<span class="dv">0</span>:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="26">
-<pre><code>0    32.652600
-1    11.339167
-2   -12.706887
-3   -11.661981
-4   -15.515925
-dtype: float64</code></pre>
-</div>
-</div>
-<div id="09e24512" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The first five predictions</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>result1.predict()[<span class="dv">0</span>:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="27">
-<pre><code>array([658.14738785, 649.86084512, 656.30686253, 659.36199297,
-       656.3659006 ])</code></pre>
-</div>
-</div>
-<div id="3c500ac4" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The first five predictions</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>result1.fittedvalues[<span class="dv">0</span>:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="28">
-<pre><code>0    658.147388
-1    649.860845
-2    656.306863
-3    659.361993
-4    656.365901
-dtype: float64</code></pre>
-</div>
-</div>
-<p>Next, we describe how to use the <code>sm.OLS()</code> function for regression analysis. In this case, we need to supply the dependent and independent variable(s) as arrays through the <code>endog</code> and <code>exog</code> arguments, respectively.</p>
-<div id="1566dd6f" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange the data</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>CAschool[<span class="st">"const"</span>] <span class="op">=</span> <span class="dv">1</span> <span class="co"># add a constant column</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the dependent and independent variables</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> CAschool.testscr</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> CAschool[[<span class="st">"const"</span>, <span class="st">"str"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Note that we need to explicitly specify the intercept term: <code>CAschool["const"] = 1</code>, which adds a column of ones to the dataframe <code>CAschool</code>.</p>
-<div id="c2fd2ef7" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify the model</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> sm.OLS(endog<span class="op">=</span>y, exog<span class="op">=</span>X)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the model</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>result2 <span class="op">=</span> model2.fit()</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Print estimation results</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result2.summary())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can access these components using the <code>$</code> operator. Below, we provide some examples.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the coefficients</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                            OLS Regression Results                            
-==============================================================================
-Dep. Variable:                testscr   R-squared:                       0.051
-Model:                            OLS   Adj. R-squared:                  0.049
-Method:                 Least Squares   F-statistic:                     22.58
-Date:                Thu, 25 Dec 2025   Prob (F-statistic):           2.78e-06
-Time:                        15:23:20   Log-Likelihood:                -1822.2
-No. Observations:                 420   AIC:                             3648.
-Df Residuals:                     418   BIC:                             3657.
-Df Model:                           1                                         
-Covariance Type:            nonrobust                                         
-==============================================================================
-                 coef    std err          t      P&gt;|t|      [0.025      0.975]
-------------------------------------------------------------------------------
-const        698.9330      9.467     73.825      0.000     680.323     717.543
-str           -2.2798      0.480     -4.751      0.000      -3.223      -1.337
-==============================================================================
-Omnibus:                        5.390   Durbin-Watson:                   0.129
-Prob(Omnibus):                  0.068   Jarque-Bera (JB):                3.589
-Skew:                          -0.012   Prob(JB):                        0.166
-Kurtosis:                       2.548   Cond. No.                         207.
-==============================================================================
-
-Notes:
-[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+<pre><code>(Intercept)         str 
+ 698.932952   -2.279808 </code></pre>
 </div>
 </div>
-<p>The estimated regression model can be written as <span class="math display">\[
-\begin{aligned}
-\widehat{TestScore} &amp; = 698.93 - 2.28 \times STR.
-\end{aligned}
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the fitted values</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>model<span class="sc">$</span>fitted.values[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1        2        3        4        5 
+658.1474 649.8608 656.3069 659.3620 656.3659 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of residuals</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-47.7267 -14.2507   0.4826   0.0000  12.8222  48.5404 </code></pre>
+</div>
+</div>
+<p>There are also functions to extract specific components from the model object, such as <code>coef</code>, <code>fitted</code>, and <code>residuals</code>. In <a href="#tbl-chapter11-t2" class="quarto-xref">Table&nbsp;<span>13.4</span></a>, we summarize some of these functions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the coefficients</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)         str 
+ 698.932952   -2.279808 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the fitted values</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fitted</span>(model)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1        2        3        4        5 
+658.1474 649.8608 656.3069 659.3620 656.3659 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of residuals</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">residuals</span>(model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-47.7267 -14.2507   0.4826   0.0000  12.8222  48.5404 </code></pre>
+</div>
+</div>
+<div style="font-size: 85%">
+<div id="tbl-chapter11-t2" class="stripped hover quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chapter11-t2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;13.4: Some generic functions for the <code>model</code> object
+</figcaption>
+<div aria-describedby="tbl-chapter11-t2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="stripped table-hover caption-top table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>coef(model)</code></td>
+<td style="text-align: left;">Estimated regression coefficients</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>residuals(model)</code></td>
+<td style="text-align: left;">OLS residuals</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>fitted(model)</code></td>
+<td style="text-align: left;">Predicted values</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>vcov(model)</code></td>
+<td style="text-align: left;">Variance–covariance matrix of coefficients</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>summary(model)</code></td>
+<td style="text-align: left;">Detailed regression output</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>confint(model)</code></td>
+<td style="text-align: left;">Confidence intervals for coefficients</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>logLik(model)</code></td>
+<td style="text-align: left;">Log-likelihood value</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>AIC(model)</code></td>
+<td style="text-align: left;">Akaike Information Criterion</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>BIC(model)</code></td>
+<td style="text-align: left;">Bayesian Information Criterion</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>model.frame(model)</code></td>
+<td style="text-align: left;">Data used in estimation</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>formula(model)</code></td>
+<td style="text-align: left;">Model formula</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>nobs(model)</code></td>
+<td style="text-align: left;">Sample size</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="interpretation-of-results" class="level3" data-number="13.3.3">
+<h3 data-number="13.3.3" class="anchored" data-anchor-id="interpretation-of-results"><span class="header-section-number">13.3.3</span> Interpretation of results</h3>
+<p>The estimated model can be expressed as <span class="math display">\[
+\widehat{\text{TestScore}}_i = 698.933-2.279 \cdot \text{STR}_i.
 \]</span></p>
-<p>According to the estimated model, if <code>str</code> increases by one then on average test score decline by 2.28 points. <a href="#fig-fig11-2" class="quarto-xref">Figure&nbsp;<span>13.2</span></a> shows the scatterplot between the test score and the student-teacher ratio along with the estimated regression function.</p>
-<div id="cell-fig-fig11-2" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">4</span>))</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot of the data points</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>ax.scatter(CAschool[<span class="st">'str'</span>], CAschool[<span class="st">'testscr'</span>], color<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="st">'Data Points'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, s<span class="op">=</span><span class="dv">15</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the fitted regression line</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>ax.plot(CAschool[<span class="st">'str'</span>], result1.fittedvalues, color<span class="op">=</span><span class="st">'steelblue'</span>, label<span class="op">=</span><span class="st">'Fitted Line'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set labels</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Student-teacher ratio'</span>)</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Test score'</span>)</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Show legend</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the plot</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<p>According to the estimated model, if <code>str</code> increases by one then on average test scores decline by 2.28 points. <a href="#fig-fig11-2" class="quarto-xref">Figure&nbsp;<span>13.2</span></a> shows the scatterplot between the test score and the student-teacher ratio along with the estimated regression function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(CAschools, <span class="fu">aes</span>(<span class="at">x =</span> str, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"STR"</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Score"</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-fig11-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-fig11-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-fig11-2-output-1.png" width="448" height="361" class="figure-img">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-fig11-2-1.png" class="img-fluid figure-img" width="480">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig11-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;13.2: The estimated regression line
@@ -1024,84 +1058,103 @@ SER &amp;= s_{\hat{u}} = \sqrt{\frac{1}{n-2}\sum_{i=1}^n\left(\hat{u}_i - \bar{\
 \end{align*}
 \]</span> where the fourth equality is due to <span class="math inline">\(\sum_{i=1}^n \hat{u}_i = 0\)</span>, which means <span class="math inline">\(\bar{\hat{u}} = 0\)</span>. The SER has the same units as <span class="math inline">\(𝑌\)</span> and measures the spread of the observations around the regression line.</p>
 <p>The <span class="math inline">\(R^2\)</span> ranges between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, and a high value of <span class="math inline">\(R^2\)</span> indicates that the model explains a large fraction of the variation in <span class="math inline">\(Y\)</span>. The SER is always non-negative, and a smaller value indicates that the model fits the data better.</p>
-<p>In the following code chunk, we compute both measures of fit for the test score regression in <a href="#eq-eq11-3" class="quarto-xref">Equation&nbsp;<span>13.3</span></a>. The estimates are given in <a href="#tbl-t11-3" class="quarto-xref">Table&nbsp;<span>13.4</span></a>. The <span class="math inline">\(R^2=0.05\)</span> means that the <code>STR</code> regressor explains <span class="math inline">\(5\%\)</span> of the variance of the dependent variable <code>TestScore</code>. The SER estimate is <span class="math inline">\(18.6\)</span>, providing an estimate of the standard deviation of the error terms in units of test score points.</p>
-<div id="661cbd33" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Measures of fit</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> CAschool.testscr</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> result1.nobs</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>R2 <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> (np.<span class="bu">sum</span>(result1.resid<span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> (np.<span class="bu">sum</span>((y<span class="op">-</span>np.mean(y))<span class="op">**</span><span class="dv">2</span>)))</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>SER <span class="op">=</span> np.sqrt(np.<span class="bu">sum</span>(result1.resid<span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> (n<span class="op">-</span><span class="dv">2</span>))</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>fit_measures <span class="op">=</span> pd.DataFrame([R2,SER])</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>fit_measures.index <span class="op">=</span> [<span class="st">"R^2"</span>, <span class="st">"SER"</span>]</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>fit_measures.columns <span class="op">=</span> [<span class="st">""</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In the output of the <code>summary</code> function, these measures are referred as <code>Multiple R-squared</code> and <code>Residual standard error</code>. In the following code chunk, we compute both measures of fit manually for the test score regression in <a href="#eq-eq11-3" class="quarto-xref">Equation&nbsp;<span>13.3</span></a>. The estimates are given in <a href="#tbl-t11-3" class="quarto-xref">Table&nbsp;<span>13.5</span></a>. The <span class="math inline">\(R^2=0.05\)</span> means that the <code>STR</code> regressor explains <span class="math inline">\(5\%\)</span> of the variance of the dependent variable <code>TestScore</code>. The SER estimate is <span class="math inline">\(18.6\)</span>, providing an estimate of the standard deviation of the error terms in units of test score points.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Measures of fit</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> CAschools<span class="sc">$</span>testscr</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nobs</span>(model)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>R2 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">sum</span>(<span class="fu">residuals</span>(model)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>((y <span class="sc">-</span> <span class="fu">mean</span>(y))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>SER <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(<span class="fu">residuals</span>(model)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">2</span>))</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>fit_measures <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(R2, SER),</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="fu">c</span>(<span class="st">"R^2"</span>, <span class="st">"SER"</span>)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print measures</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>fit_measures.<span class="bu">round</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t11-3" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="15">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Measures of fit</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit_measures, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">col.names =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t11-3" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;13.4: Measures of fit
+Table&nbsp;13.5: Measures of fit
 </figcaption>
 <div aria-describedby="tbl-t11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="33">
-<div>
-
-
-<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
-</tr>
-</thead>
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">R^2</td>
-<td>0.05</td>
+<td style="text-align: left;">R^2</td>
+<td style="text-align: right;">0.051</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">SER</td>
-<td>18.58</td>
+<td style="text-align: left;">SER</td>
+<td style="text-align: right;">18.581</td>
 </tr>
 </tbody>
 </table>
-
-</div>
 </div>
 </div>
 </figure>
 </div>
 </div>
-<p>In the above code chunk, we use the expressions for <span class="math inline">\(R^2\)</span> and <span class="math inline">\(SER\)</span> to compute these measures. Alternatively, we can use the <code>result1.rsquared</code> method for returning <span class="math inline">\(R^2\)</span> and <code>result1.mse_resid</code> for returning <span class="math inline">\(s^2_{\hat{u}}\)</span>.</p>
 <p>Recall that the predicted value for the <span class="math inline">\(i\)</span>th outcome variable is defined as <span class="math inline">\(\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i\)</span>. These predicted values are referred to as <strong>in-sample predictions</strong> when computed from the <span class="math inline">\(X_i\)</span> values already used in the OLS estimation. If we use <span class="math inline">\(X_i\)</span> values that are not in the estimation sample, the prediction is referred to as an <strong>out-of-sample prediction</strong>. In either case, the prediction error is given by <span class="math inline">\(Y_i - \hat{Y}_i\)</span>. For the standard deviation of both in-sample and out-of-sample prediction errors, we can use <span class="math inline">\(s_{\hat{u}}\)</span>. Thus, a model will produce relatively accurate predictions if it has a relatively smaller <span class="math inline">\(s_{\hat{u}}\)</span>. Therefore, we usually report <span class="math inline">\(\hat{Y}_i \pm s_{\hat{u}}\)</span> along with the predicted value <span class="math inline">\(\hat{Y}_i\)</span>. For the test score regression in <a href="#eq-eq11-3" class="quarto-xref">Equation&nbsp;<span>13.3</span></a>, we provide the plots of the predicted values along with those of <span class="math inline">\(\hat{Y}_i \pm s_{\hat{u}}\)</span> in <a href="#fig-fig11-3" class="quarto-xref">Figure&nbsp;<span>13.3</span></a>.</p>
-<div id="cell-fig-fig11-3" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The in-sample predicted values</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the figure and axis</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">4</span>))</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot of the data points</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>ax.scatter(CAschool[<span class="st">'str'</span>], CAschool[<span class="st">'testscr'</span>], color<span class="op">=</span><span class="st">'black'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, s<span class="op">=</span><span class="dv">15</span>)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the fitted regression line</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>ax.plot(CAschool[<span class="st">'str'</span>], result1.fittedvalues, color<span class="op">=</span><span class="st">'steelblue'</span>, label<span class="op">=</span> <span class="vs">r'$\hat</span><span class="sc">{Y}</span><span class="vs">$'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the upper and lower bounds based on mse_resid</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>upper_bound <span class="op">=</span> result1.fittedvalues <span class="op">+</span> np.sqrt(result1.mse_resid)</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>lower_bound <span class="op">=</span> result1.fittedvalues <span class="op">-</span> np.sqrt(result1.mse_resid)</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the two additional lines</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>ax.plot(CAschool[<span class="st">'str'</span>], upper_bound, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>, label<span class="op">=</span> <span class="vs">r'$\hat</span><span class="sc">{Y}</span><span class="vs">+s_{\hat</span><span class="sc">{u}</span><span class="vs">}$'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>ax.plot(CAschool[<span class="st">'str'</span>], lower_bound, color<span class="op">=</span><span class="st">'green'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>, label<span class="op">=</span> <span class="vs">r'$\hat</span><span class="sc">{Y}</span><span class="vs">-s_{\hat</span><span class="sc">{u}</span><span class="vs">}$'</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Set labels and title</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Student-teacher ratio'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Test score'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Show legend</span></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>ax.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the plot</span></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>plt.tight_layout() <span class="co"># Ensure everything fits well in the figure</span></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In-sample predicted values</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>fitted_vals <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>s_u_hat <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(<span class="fu">residuals</span>(model)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> model<span class="sc">$</span>df.residual)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">str =</span> CAschools<span class="sc">$</span>str,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">testscr =</span> CAschools<span class="sc">$</span>testscr,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">fitted =</span> fitted_vals,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> fitted_vals <span class="sc">+</span> s_u_hat,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> fitted_vals <span class="sc">-</span> s_u_hat</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> str)) <span class="sc">+</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> testscr),</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.7</span>,</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">1.5</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> fitted, <span class="at">color =</span> <span class="st">"Yhat"</span>),</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> upper, <span class="at">color =</span> <span class="st">"Upper"</span>),</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> lower, <span class="at">color =</span> <span class="st">"Lower"</span>),</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Student-teacher ratio"</span>,</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test score"</span>,</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">""</span></span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Yhat"</span> <span class="ot">=</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Upper"</span> <span class="ot">=</span> <span class="st">"red"</span>,</span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Lower"</span> <span class="ot">=</span> <span class="st">"green"</span></span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Yhat"</span> <span class="ot">=</span> <span class="fu">expression</span>(<span class="fu">hat</span>(Y)),</span>
+<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Upper"</span> <span class="ot">=</span> <span class="fu">expression</span>(<span class="fu">hat</span>(Y) <span class="sc">+</span> s[<span class="fu">hat</span>(u)]),</span>
+<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Lower"</span> <span class="ot">=</span> <span class="fu">expression</span>(<span class="fu">hat</span>(Y) <span class="sc">-</span> s[<span class="fu">hat</span>(u)])</span>
+<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-fig11-3" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-fig11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-fig11-3-output-1.png" width="464" height="368" class="figure-img">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-fig11-3-1.png" class="img-fluid figure-img" width="480">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;13.3: The in-sample predicted values
@@ -1135,80 +1188,68 @@ The least squares assumptions
 \E(u_i |X_i) = 0\implies \corr(X,u_i)=0,
 \]</span> where the last equality again follows from the law of iterated expectations. Then, the contrapositive of this statement gives the following useful result: <span class="math display">\[
 \corr(X,u_i)\ne 0\implies \E(u_i |X_i)\ne 0.
-\]</span> This last result is important because it provides a way to check the plausibility of the zero-conditional mean assumption. If we think that the error term <span class="math inline">\(u_i\)</span> is likely to include a variable that is correlated with the regressor <span class="math inline">\(X_i\)</span>, then we can claim that <span class="math inline">\(\E(u_i |X_i)\ne 0\)</span>.</p>
+\]</span></p>
+<p>This last result is important because it provides a way to check the plausibility of the zero-conditional mean assumption. If we think that the error term <span class="math inline">\(u_i\)</span> is likely to include a variable that is correlated with the regressor <span class="math inline">\(X_i\)</span>, then we can claim that <span class="math inline">\(\E(u_i |X_i)\ne 0\)</span>.</p>
 <p>In the following code chunk, we consider two data-generating processes to illustrate the zero-conditional mean assumption. We assume that the zero-conditional mean assumption holds in the first process but is violated in the second. In both cases, we assume that <span class="math inline">\(X\)</span> takes integer values between <span class="math inline">\(-4\)</span> and <span class="math inline">\(4\)</span>: <code>x_values = np.random.randint(low=-4, high=5, size=size)</code>. In the first process, we generate the error terms independently from the standard normal distribution, i.e., <span class="math inline">\(u \sim N(0, 1)\)</span>. In this case, since <span class="math inline">\(u\)</span> is independent of <span class="math inline">\(X\)</span>, we have <span class="math inline">\(\E(u|X)=\E(u)=0\)</span>. In contrast, in the second process, we generate the error terms according to <span class="math inline">\(u \sim N(0.5X, 1)\)</span> so that <span class="math inline">\(\E(u|X)=0.5X\)</span>.</p>
-<p>In <a href="#fig-f11.3" class="quarto-xref">Figure&nbsp;<span>13.4</span></a>, we use boxplots to present the distribution of <span class="math inline">\(u\)</span> against <span class="math inline">\(X\)</span>. In <a href="#fig-f11.3-1" class="quarto-xref">Figure&nbsp;<span>13.4 (a)</span></a>, the conditional mean of <span class="math inline">\(u\)</span> remains close to zero across all values of <span class="math inline">\(X\)</span>. Thus, in this case, <span class="math inline">\(\E(u|X)=0\)</span> holds. On the other hand, <a href="#fig-f11.3-2" class="quarto-xref">Figure&nbsp;<span>13.4 (b)</span></a> shows that the mean of <span class="math inline">\(u\)</span> varies with <span class="math inline">\(X\)</span>, indicating that <span class="math inline">\(\E(u|X)\)</span> depends on <span class="math inline">\(X\)</span>.</p>
-<div class="cell" data-layout-nrow="2" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the zero-conditional mean assumption</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_data(seed, size, zero_conditional_mean<span class="op">=</span><span class="va">True</span>):</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Generates a DataFrame based on whether zero-conditional mean assumption holds.</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">    - seed (int): Random seed for reproducibility.</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co">    - size (int): Number of observations.</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co">    - zero_conditional_mean (bool): Flag to determine if zero-conditional mean assumption holds.</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co">    - pd.DataFrame: DataFrame containing 'x' and 'u'.</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    np.random.seed(seed)</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    x_values <span class="op">=</span> np.random.randint(low<span class="op">=-</span><span class="dv">4</span>, high<span class="op">=</span><span class="dv">5</span>, size<span class="op">=</span>size)</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> zero_conditional_mean:</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>        u_values <span class="op">=</span> np.random.normal(size<span class="op">=</span>size)</span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>        u_values <span class="op">=</span> np.random.normal(size<span class="op">=</span>size) <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> x_values</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">'x'</span>: x_values.astype(<span class="bu">str</span>),</span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">'u'</span>: u_values</span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_boxplot(df, title):</span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="co">    Plots a boxplot with overlayed stripplot.</span></span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
-<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a><span class="co">    - df (pd.DataFrame): DataFrame containing 'x' and 'u'.</span></span>
-<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="co">    - title (str): Title for the plot.</span></span>
-<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">6</span>))</span>
-<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot the boxplot with horizontal boxes</span></span>
-<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>    sns.boxplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"u"</span>, y<span class="op">=</span><span class="st">"x"</span>, hue<span class="op">=</span><span class="st">"x"</span>, width<span class="op">=</span><span class="fl">0.6</span>, palette<span class="op">=</span><span class="st">"vlag"</span>)</span>
-<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add points to show each observation</span></span>
-<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>    sns.stripplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"u"</span>, y<span class="op">=</span><span class="st">"x"</span>, size<span class="op">=</span><span class="dv">2</span>, color<span class="op">=</span><span class="st">".3"</span>, jitter<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Tweak the visual presentation</span></span>
-<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>    <span class="co">#plt.title(title)</span></span>
-<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">'u'</span>)</span>
-<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'X'</span>)</span>
-<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>    plt.xlim(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>)  <span class="co"># Adjust limits if necessary</span></span>
-<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">True</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
-<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>    sns.despine(trim<span class="op">=</span><span class="va">True</span>, left<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate data</span></span>
-<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> generate_data(seed<span class="op">=</span><span class="dv">45</span>, size<span class="op">=</span><span class="dv">2000</span>, zero_conditional_mean<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> generate_data(seed<span class="op">=</span><span class="dv">45</span>, size<span class="op">=</span><span class="dv">2000</span>, zero_conditional_mean<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
-<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a>plot_boxplot(df1, title<span class="op">=</span><span class="st">"Zero-Conditional Mean Assumption Holds"</span>)</span>
-<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>plot_boxplot(df2, title<span class="op">=</span><span class="st">"Zero-Conditional Mean Assumption Does Not Hold"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="fig-f11.3" class="quarto-layout-panel">
+<p>In <a href="#fig-f11-3" class="quarto-xref">Figure&nbsp;<span>13.4</span></a>, we use boxplots to present the distribution of <span class="math inline">\(u\)</span> against <span class="math inline">\(X\)</span>. In <a href="#fig-f11-3" class="quarto-xref">Figure&nbsp;<span>13.4</span></a>(a), the conditional mean of <span class="math inline">\(u\)</span> remains close to zero across all values of <span class="math inline">\(X\)</span>. Thus, in this case, <span class="math inline">\(\E(u|X)=0\)</span> holds. On the other hand, <a href="#fig-f11-3" class="quarto-xref">Figure&nbsp;<span>13.4</span></a>(b) shows that the mean of <span class="math inline">\(u\)</span> varies with <span class="math inline">\(X\)</span>, indicating that <span class="math inline">\(\E(u|X)\)</span> depends on <span class="math inline">\(X\)</span>.</p>
+<div class="cell" data-layout-nrow="2">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate data</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>generate_data <span class="ot">&lt;-</span> <span class="cf">function</span>(seed, size, <span class="at">zero_conditional_mean =</span> <span class="cn">TRUE</span>) {</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(seed)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  x_values <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="sc">-</span><span class="dv">4</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">size =</span> size, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (zero_conditional_mean) {</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    u_values <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(size)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    u_values <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(size) <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> x_values</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">factor</span>(x_values),</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">u =</span> u_values</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>plot_boxplot <span class="ot">&lt;-</span> <span class="cf">function</span>(df) {</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> u, <span class="at">y =</span> x, <span class="at">fill =</span> x)) <span class="sc">+</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">width =</span> <span class="fl">0.6</span>,</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">outlier.shape =</span> <span class="cn">NA</span>,</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">alpha =</span> <span class="fl">0.8</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">height =</span> <span class="fl">0.15</span>,</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="fl">0.8</span>,</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"gray30"</span>,</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">alpha =</span> <span class="fl">0.6</span></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>) <span class="sc">+</span></span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">"u"</span>,</span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"X"</span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">generate_data</span>(<span class="at">seed =</span> <span class="dv">45</span>, <span class="at">size =</span> <span class="dv">2000</span>, <span class="at">zero_conditional_mean =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">generate_data</span>(<span class="at">seed =</span> <span class="dv">45</span>, <span class="at">size =</span> <span class="dv">2000</span>, <span class="at">zero_conditional_mean =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_boxplot</span>(df1)</span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_boxplot</span>(df2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-f11-3" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-f11.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="fig-f11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
-<div class="cell-output cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-f11.3" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-f11.3-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-f11-3" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-f11-3-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-f11.3-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-f11.3-output-1.png" data-ref-parent="fig-f11.3" width="586" height="509" class="figure-img">
+<div aria-describedby="fig-f11-3-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-f11-3-1.png" class="img-fluid figure-img" data-ref-parent="fig-f11-3" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-f11.3-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-f11-3-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) The zero-conditional mean assumption holds
 </figcaption>
 </figure>
@@ -1216,13 +1257,13 @@ The least squares assumptions
 </div>
 </div>
 <div class="quarto-layout-row">
-<div class="cell-output cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-f11.3" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-f11.3-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-f11-3" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-f11-3-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-f11.3-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-f11.3-output-2.png" data-ref-parent="fig-f11.3" width="586" height="509" class="figure-img">
+<div aria-describedby="fig-f11-3-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-f11-3-2.png" class="img-fluid figure-img" data-ref-parent="fig-f11-3" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-f11.3-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-f11-3-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) The zero-conditional mean assumption does not hold
 </figcaption>
 </figure>
@@ -1230,14 +1271,14 @@ The least squares assumptions
 </div>
 </div>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f11.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;13.4: The zero-conditional mean assumption
 </figcaption>
 </figure>
 </div>
 </div>
 <p>The second assumption requires a random sample on <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. This assumption generally holds because data are usually collected on a randomly selected sample from the population of interest.</p>
-<p>The final assumption requires that <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> cannot take large values. We need this assumption because the OLS estimator is sensitive to large values in the data set. This assumption is stated in terms of the fourth moments of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, and is also used to establish the asymptotic normality of the OLS estimators, as shown in <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 29</span></a>.</p>
+<p>The final assumption requires that <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> cannot take large values. We need this assumption because the OLS estimator is sensitive to large values in the data set. This assumption is stated in terms of the fourth moments of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, and is also used to establish the asymptotic normality of the OLS estimators, as shown in <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 28</span></a>.</p>
 </section>
 <section id="the-sampling-distribution-of-the-ols-estimators" class="level2" data-number="13.6">
 <h2 data-number="13.6" class="anchored" data-anchor-id="the-sampling-distribution-of-the-ols-estimators"><span class="header-section-number">13.6</span> The sampling distribution of the OLS estimators</h2>
@@ -1297,50 +1338,67 @@ Y_i-\bar{Y}=\beta_1(X_i-\bar{X})+(u_i-\bar{u}).
 </ul>
 <p>We investigate the properties of the OLS estimators in the simulation setting given in the following code chunk. We assume that the population regression model is given by <span class="math inline">\(Y_i=\beta_0+X_i\beta_1+u_i\)</span>, where <span class="math inline">\(\beta_0=1.5\)</span>, <span class="math inline">\(\beta_1=3\)</span>, <span class="math inline">\(X_i\sim N(0,1)\)</span>, and <span class="math inline">\(u_i\sim N(0,1)\)</span>. We first assume that the population size is <span class="math inline">\(N=5000\)</span> and then generate the population data. We consider four sample size with <span class="math inline">\(n\in \{50, 100, 200, 500\}\)</span>. For each sample size, we generate <span class="math inline">\(1000\)</span> samples from the population and estimate the model with each sample. Thus, we obtain <span class="math inline">\(1000\)</span> estimates of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> for each sample size. We then construct the histograms of these estimates along with the kernel density plots. The simulation results are shown in <a href="#fig-f11-5" class="quarto-xref">Figure&nbsp;<span>13.5</span></a>.</p>
 <p>Each histogram and kernel density plot in <a href="#fig-f11-5" class="quarto-xref">Figure&nbsp;<span>13.5</span></a> is centered around the true value <span class="math inline">\(\beta_1=3\)</span>, indicating that the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> is unbiased. The shape of the histograms and kernel density plots are bell-shaped, suggesting that the sampling distribution of the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> resembles the normal distribution. We also observe that the variance of the OLS estimator decreases as <span class="math inline">\(n\)</span> increases from <span class="math inline">\(50\)</span> to <span class="math inline">\(500\)</span>. All of these observations are consistent with <a href="#thm-thm11.1" class="quarto-xref">Theorem&nbsp;<span>13.1</span></a>.</p>
-<div id="cell-fig-f11-5" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Properties of the OLS estimators</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">45</span>)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set number repetitions a</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>reps <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set sample sizes</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> [<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">500</span>]</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Population regression model</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">5000</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.random.normal(size<span class="op">=</span>N)</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> <span class="fl">1.5</span> <span class="op">+</span> <span class="dv">3</span> <span class="op">*</span> X <span class="op">+</span> np.random.normal(size<span class="op">=</span>N)</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>population <span class="op">=</span> pd.DataFrame({<span class="st">'X'</span>: X, <span class="st">'Y'</span>: Y})</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the matrix of outcomes</span></span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>fit <span class="op">=</span> np.zeros((reps, <span class="dv">2</span>))</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the plot with 2x2 subplots</span></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">7.5</span>, <span class="fl">5.5</span>))</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>axs <span class="op">=</span> axs.flatten()</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Outer loop: sampling and plotting</span></span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j, size <span class="kw">in</span> <span class="bu">enumerate</span>(n):</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Inner loop: sampling and estimating the coefficients</span></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(reps):</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>        sample <span class="op">=</span> population.sample(size, replace<span class="op">=</span><span class="va">True</span>) <span class="co"># Sample with replacement</span></span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>        model <span class="op">=</span> smf.ols(<span class="st">'Y ~ X'</span>, data<span class="op">=</span>sample).fit()</span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>        fit[i, :] <span class="op">=</span> model.params</span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Draw histogram</span></span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    axs[j].hist(fit[:, <span class="dv">1</span>], bins<span class="op">=</span><span class="dv">30</span>, density<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, </span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">"steelblue"</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Draw density estimates</span></span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>    sns.kdeplot(fit[:, <span class="dv">1</span>], ax<span class="op">=</span>axs[j], color<span class="op">=</span><span class="st">"red"</span>, fill<span class="op">=</span><span class="va">False</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set the plot titles and labels</span></span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>    axs[j].set_xlim(<span class="fl">2.6</span>, <span class="fl">3.40</span>)</span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    axs[j].set_title(<span class="ss">f"n = </span><span class="sc">{</span>size<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    axs[j].set_xlabel(<span class="vs">r'$\hat{\beta}_1$'</span>)</span>
-<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust layout and show the plot</span></span>
-<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">45</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of repetitions</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>reps <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample sizes</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>n_vals <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">500</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Population regression model</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fl">1.5</span> <span class="sc">+</span> <span class="dv">3</span> <span class="sc">*</span> X <span class="sc">+</span> <span class="fu">rnorm</span>(N)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>population <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">X =</span> X, <span class="at">Y =</span> Y)</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to run the simulation for a given sample size</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>simulate_beta <span class="ot">&lt;-</span> <span class="cf">function</span>(size, reps, population) {</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  beta_hat <span class="ot">&lt;-</span> <span class="fu">numeric</span>(reps)</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(reps)) {</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    sample_data <span class="ot">&lt;-</span> population[<span class="fu">sample</span>(<span class="fu">nrow</span>(population), size, <span class="at">replace =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> X, <span class="at">data =</span> sample_data)</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    beta_hat[i] <span class="ot">&lt;-</span> <span class="fu">coef</span>(model)[<span class="dv">2</span>]</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>  beta_hat</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate individual plots</span></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">lapply</span>(n_vals, <span class="cf">function</span>(size) {</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>  beta_hat <span class="ot">&lt;-</span> <span class="fu">simulate_beta</span>(size, reps, population)</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">beta =</span> beta_hat), <span class="fu">aes</span>(<span class="at">x =</span> beta)) <span class="sc">+</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),</span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">bins =</span> <span class="dv">30</span>,</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">2.6</span>, <span class="fl">3.4</span>)) <span class="sc">+</span></span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"n = "</span>, size),</span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(beta)[<span class="dv">1</span>]),</span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="cn">NULL</span></span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>    ) </span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange plots in a 2x2 grid</span></span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">grobs =</span> plots,</span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">2</span>,</span>
+<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">2</span></span>
+<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-f11-5" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-f11-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-f11-5-output-1.png" width="704" height="511" class="figure-img">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-f11-5-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f11-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;13.5: Simulation results
@@ -1356,7 +1414,7 @@ Figure&nbsp;13.5: Simulation results
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>In <span class="quarto-unresolved-ref">?sec-CaschoolsData</span>, we provide choropleth maps to show how variables of interest are distributed across California school districts.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>In <a href="AppendixA.html#sec-CaschoolsData" class="quarto-xref"><span>Section A.1</span></a>, we provide choropleth maps to show how variables of interest are distributed across California school districts.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>For the details, see <a href="https://www.cdss.ca.gov/calworks" class="uri">https://www.cdss.ca.gov/calworks</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
@@ -1454,7 +1512,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/RBook\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -1798,7 +1856,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+<p>Introduction to Econometrics with R was written by Osman Doğan and Süleyman Taşpınar.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

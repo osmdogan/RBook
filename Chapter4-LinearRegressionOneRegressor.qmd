@@ -1,12 +1,15 @@
 # Linear Regression with One Regressor {#sec-lrmone}
 
-```{python}
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
+
+```{r}
+#| warning: false
+#| message: false
+# Load necessary libraries
+library(tidyverse)
+library(modelsummary)
+library(stargazer)
+library(knitr)
+library(gridExtra)
 ```
 
 ## The linear regression model
@@ -94,141 +97,142 @@ The dataset is the California school districts dataset provided in the `caschool
 :::
 :::
 
-The reading and math scores are the average test scores on the Stanford 9 Achievement Test (SAT-9) in 1999. The SAT-9 is a standardized achievement test administered to almost all students from grades 2 through 11 in California public schools. The `testscr` variable is the average of the reading and math scores. 
+The reading and math scores are the average test scores on the Stanford 9 Achievement Test (SAT-9) in 1999. The SAT-9 is a standardized achievement test administered to almost all students from grades 2 through 11 in California public schools. The `testscr` variable is the average of the reading and math scores. The summary statistics are presented in @tbl-t11-1. Across 420 school districts, the average student-teacher ratio and the average test scores are around $19.7$ and $654.2$, respectively. 
 
-```{python}
+
+
+```{r}
 # Import data
-CAschool=pd.read_csv('data/caschool.csv')
-CAschool.columns
+CAschools <- read.csv("data/caschool.csv", sep=",", header=TRUE)
 ```
 
-We can use the `describe` method to get descriptive statistics of data. The summary statistics are presented in @tbl-t11-1. Across 420 school districts, the average student-teacher ratio and the average test scores are around $19.7$ and $654.2$, respectively. 
-
-```{python}
+```{r}
 #| tbl-cap: Summary Statistics
 #| label: tbl-t11-1
 # Summary statistics
-CAschool[["str", "testscr"]].round(3).describe().T
+datasummary_skim(CAschools[,c("str","testscr")])
 ```
 
 In @fig-fig11-f1, we present a scatter plot of the test score against the student–teacher ratio. The figure indicates a negative relationship between test scores and the student–teacher ratio; that is, as the student–teacher ratio increases, test scores tend to decrease. 
 
-```{python}
+```{r}
 #| fig-cap: The scatter plot of test score and student-teacher ratio
 #| label: fig-fig11-f1
-# The scatter plot of test score and student-teacher ratio
-sns.set(style='darkgrid')
-fig,axs = plt.subplots(figsize=(5, 4))
-axs.scatter(CAschool.str, CAschool.testscr, color="steelblue",s=15)
-axs.set_xlabel('STR')
-axs.set_ylabel("Test Score")
-plt.show()
+#| fig-width: 5
+#| fig-height: 4
+ggplot(CAschools, aes(x = str, y = testscr)) +
+  geom_point(color = "steelblue", size = 1.5) +
+  labs(
+    x = "STR",
+    y = "Test Score"
+  )
 ```
-
 
 ### Estimation Results
-We use the `statsmodels.api` and the `statsmodels.formula.api` modules to estimate regressions. We import these modules under the names `sm` and `smf`, respectively. There are two options for running OLS regressions: (i) the `smf.ols()` function and (ii) the `sm.OLS()` function. To see all available models that can be estimated by these functions, we can use `dir(smf)` and `dir(sm)`. 
+In R, we use the `lm` function from the `stats` package to estimate the regression model. The syntax is `lm(y~x,data)`, where `y` is the dependent variable, `x` is the explanatory variable, and `data` is the data frame that contains `y` and `x`. We use the `summary` function to obtain the regression results.
 
-In the case of `smf`, we can use `R`-style formulas to specify estimation equations. In the following, we use the `smf.ols()` function to estimate the model. Note that the estimation equation is specified as `formula='testscr ~ str'`, where `~` symbol separates the dependent and independent variables.
 
-```{python}
-# Specify the model
-model1 = smf.ols(formula='testscr ~ str', data=CAschool)
-# Use the fit function to obtain parameter estimates
-result1 = model1.fit()
-# Print the estimation results
-print(result1.summary())
+```{r}
+# Estimate the regression model
+model <- lm(testscr ~ str, data = CAschools)
+summary(model)
 ```
 
-All estimated quantities are stored in the `result1` object. We can use `dir(result1)` to see available attributes. In @tbl-t11-2, we list some important attributes of the `result1` object. 
+The class of the `model` object is `lm`. This object is a list that contains the estimated coefficients, fitted values, residuals, and some other components of the model. We can use the `names` function to list all components of the `model` object.
 
-::: {style="font-size: 90%"}
-| Attribute                          | Description                                                |
-|:-----------------------------------|:-----------------------------------------------------------|
-| `nobs`                             | returns the number of observations used in the estimation. |
-| `params`                           | returns the estimated parameters in a list.                |
-| `resid`                            | returns the residuals in a list.                           |
-| `predict`                          | returns predicted values in an array.                      |
-| `model.exog`                       | returns exogenous variables in an array.                   |
-| `model.exog_names`                 | returns the names of exogenous variables in a list.        |
-| `model.endog`, `model.endog_names` | returns the endogenous variable values/name.               |
-| `model.loglike`                    | returns the likelihood function evaluated at params.       |
-| `rsquared`, `rsquared_adj`         | returns unadjusted/adjusted $R^2$.                         |
-: Some important attributes {#tbl-t11-2}
+```{r}
+# List the components of the model object
+names(model)
+```
+
+In the following table, we describe these components.
+
+::: {style="font-size: 85%"}
+| Component        | Description |
+|:------------------|:-------------|
+| `coefficients`   | Estimated coefficients of the regression model |
+| `fitted.values`  | Fitted values: $\hat{Y}_i=\hat{\beta}_0+\hat{\beta}_1 X_i$ |
+| `residuals`      | Residuals: $\hat{u}_i=Y_i-\hat{Y}_i$ |
+| `rank`           | The rank of the regressors matrix |
+| `df.residual`    | Degrees of freedom of the residuals: $n-k-1$ |
+| `call`           | The function call used to estimate the model |
+| `model`         | The data frame used to estimate the model |
+: Some components of the `model` object {#tbl-chapter11-t1 .stripped .hover}
 :::
 
-Below, we illustrate some of these attributes.
+We can access these components using the `$` operator. Below, we provide some examples.
 
-```{python}
-# Number of observations
-result1.nobs
+```{r}
+# Access the coefficients
+model$coefficients
 ```
 
-```{python}
-# Estimated parameters
-result1.params
+```{r}
+# Access the fitted values
+model$fitted.values[1:5]
 ```
 
-```{python}
-# The first five residuals
-result1.resid[0:5]
+```{r}
+# Summary of residuals
+summary(model$residuals)
 ```
 
-```{python}
-# The first five predictions
-result1.predict()[0:5]
+There are also functions to extract specific components from the model object, such as `coef`, `fitted`, and `residuals`. In @tbl-chapter11-t2, we summarize some of these functions.
+
+```{r}
+# Access the coefficients
+coef(model)
 ```
 
-```{python}
-# The first five predictions
-result1.fittedvalues[0:5]
+```{r}
+# Access the fitted values
+fitted(model)[1:5]
 ```
 
-Next, we describe how to use the `sm.OLS()` function for regression analysis. In this case, we need to supply the dependent and independent variable(s) as arrays through the `endog` and `exog` arguments, respectively. 
-
-```{python}
-# Arrange the data
-CAschool["const"] = 1 # add a constant column
-# Define the dependent and independent variables
-y = CAschool.testscr
-X = CAschool[["const", "str"]]
+```{r}
+# Summary of residuals
+summary(residuals(model))
 ```
 
-Note that we need to explicitly specify the intercept term: `CAschool["const"] = 1`, which adds a column of ones to the dataframe `CAschool`. 
+::: {style="font-size: 85%"}
+| Function                 | Description                                |
+|:------------------------------------ |:------------------------------------------ |
+| `coef(model)`                        | Estimated regression coefficients          |
+| `residuals(model)`                   | OLS residuals                              |
+| `fitted(model)`                      | Predicted values                           |
+| `vcov(model)`                        | Variance–covariance matrix of coefficients |
+| `summary(model)`                     | Detailed regression output                 |
+| `confint(model)`                     | Confidence intervals for coefficients      |
+| `logLik(model)`                      | Log-likelihood value                       |
+| `AIC(model)`                         | Akaike Information Criterion               |
+| `BIC(model)`                         | Bayesian Information Criterion             |                   
+| `model.frame(model)`                 | Data used in estimation                    |
+| `formula(model)`                     | Model formula                              |
+| `nobs(model)`                        | Sample size                                |
+: Some generic functions for the `model` object {#tbl-chapter11-t2 .stripped .hover}
+:::
 
-```{python}
-# Specify the model
-model2 = sm.OLS(endog=y, exog=X)
-# Fit the model
-result2 = model2.fit()
-# Print estimation results
-print(result2.summary())
-```
-
-The estimated regression model can be written as 
+### Interpretation of results
+The estimated model can be expressed as
 $$
-\begin{aligned}
-\widehat{TestScore} & = 698.93 - 2.28 \times STR.
-\end{aligned}
+\widehat{\text{TestScore}}_i = 698.933-2.279 \cdot \text{STR}_i.
 $$
 
-According to the estimated model, if `str` increases by one then on average test score decline by 2.28 points. @fig-fig11-2 shows the scatterplot between the test score and the student-teacher ratio along with the estimated regression function. 
+According to the estimated model, if `str` increases by one then on average test scores decline by 2.28 points. @fig-fig11-2 shows the scatterplot between the test score and the student-teacher ratio along with the estimated regression function. 
 
-```{python}
-#| fig-cap: The estimated regression line 
+```{r}
+#| fig-cap: The estimated regression line
 #| label: fig-fig11-2
-fig, ax = plt.subplots(figsize=(5, 4))
-# Scatter plot of the data points
-ax.scatter(CAschool['str'], CAschool['testscr'], color='black', label='Data Points', alpha=0.7, s=15)
-# Plot the fitted regression line
-ax.plot(CAschool['str'], result1.fittedvalues, color='steelblue', label='Fitted Line', linewidth=1)
-# Set labels
-ax.set_xlabel('Student-teacher ratio')
-ax.set_ylabel('Test score')
-# Show legend
-ax.legend(frameon=False)
-# Display the plot
-plt.show()
+#| fig-width: 5
+#| fig-height: 4
+#| message: false
+ggplot(CAschools, aes(x = str, y = testscr)) +
+  geom_point(color = "steelblue", size = 1.5) +
+  geom_smooth(method = "lm", color = "black", se = FALSE) +
+  labs(
+    x = "STR",
+    y = "Test Score"
+  )
 ```
 
 ## Measures of fit and prediction accuracy
@@ -257,56 +261,90 @@ where the fourth equality is due to $\sum_{i=1}^n \hat{u}_i = 0$, which means $\
 
 The $R^2$ ranges between $0$ and $1$, and a high value of $R^2$ indicates that the model explains a large fraction of the variation in $Y$. The SER is always non-negative, and a smaller value indicates that the model fits the data better.
 
-In the following code chunk, we compute both measures of fit for the test score regression in @eq-eq11-3. The estimates are given in @tbl-t11-3. The $R^2=0.05$ means that the `STR` regressor explains $5\%$ of the variance of the dependent variable `TestScore`. The SER estimate is $18.6$, providing an estimate of the standard deviation of the error terms in units of test score points.
+In the output of the `summary` function, these measures are referred as `Multiple R-squared` and `Residual standard error`. In the following code chunk, we compute both measures of fit manually for the test score regression in @eq-eq11-3. The estimates are given in @tbl-t11-3. The $R^2=0.05$ means that the `STR` regressor explains $5\%$ of the variance of the dependent variable `TestScore`. The SER estimate is $18.6$, providing an estimate of the standard deviation of the error terms in units of test score points.
 
-```{python}
+```{r}
 # Measures of fit
-y = CAschool.testscr
-n = result1.nobs
-R2 = 1 - (np.sum(result1.resid**2) / (np.sum((y-np.mean(y))**2)))
-SER = np.sqrt(np.sum(result1.resid**2) / (n-2))
-fit_measures = pd.DataFrame([R2,SER])
-fit_measures.index = ["R^2", "SER"]
-fit_measures.columns = [""]
-```
+y <- CAschools$testscr
+n <- nobs(model)
 
-```{python}
+R2 <- 1 - sum(residuals(model)^2) / sum((y - mean(y))^2)
+SER <- sqrt(sum(residuals(model)^2) / (n - 2))
+
+fit_measures <- data.frame(
+  value = c(R2, SER),
+  row.names = c("R^2", "SER")
+)
+```	
+
+```{r}
 #| tbl-cap: Measures of fit
 #| label: tbl-t11-3
-# Print measures
-fit_measures.round(2)
+# Measures of fit
+kable(fit_measures, digits = 3, col.names = NULL)
 ```
-
-In the above code chunk, we use the expressions for $R^2$ and $SER$ to compute these measures. Alternatively, we can use the `result1.rsquared` method for returning $R^2$ and `result1.mse_resid` for returning $s^2_{\hat{u}}$.
 
 Recall that the predicted value for the $i$th outcome variable is defined as $\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i$. These predicted values are referred to as **in-sample predictions** when computed from the $X_i$ values already used in the OLS estimation. If we use $X_i$ values that are not in the estimation sample, the prediction is referred to as an **out-of-sample prediction**. In either case, the prediction error is given by $Y_i - \hat{Y}_i$. For the standard deviation of both in-sample and out-of-sample prediction errors, we can use $s_{\hat{u}}$. Thus, a model will produce relatively accurate predictions if it has a relatively smaller $s_{\hat{u}}$. Therefore, we usually report $\hat{Y}_i \pm s_{\hat{u}}$ along with the predicted value $\hat{Y}_i$. For the test score regression in @eq-eq11-3, we provide the plots of the predicted values along with those of $\hat{Y}_i \pm s_{\hat{u}}$ in @fig-fig11-3.
 
-```{python}
+
+```{r}
 #| fig-cap: The in-sample predicted values
 #| label: fig-fig11-3
-# The in-sample predicted values
-# Create the figure and axis
-fig, ax = plt.subplots(figsize=(5, 4))
-# Scatter plot of the data points
-ax.scatter(CAschool['str'], CAschool['testscr'], color='black', alpha=0.7, s=15)
-# Plot the fitted regression line
-ax.plot(CAschool['str'], result1.fittedvalues, color='steelblue', label= r'$\hat{Y}$', linewidth=1)
-# Compute the upper and lower bounds based on mse_resid
-upper_bound = result1.fittedvalues + np.sqrt(result1.mse_resid)
-lower_bound = result1.fittedvalues - np.sqrt(result1.mse_resid)
-# Plot the two additional lines
-ax.plot(CAschool['str'], upper_bound, color='red', linestyle='-', label= r'$\hat{Y}+s_{\hat{u}}$', linewidth=1)
-ax.plot(CAschool['str'], lower_bound, color='green', linestyle='-', label= r'$\hat{Y}-s_{\hat{u}}$', linewidth=1)
-# Set labels and title
-ax.set_xlabel('Student-teacher ratio', fontsize=12)
-ax.set_ylabel('Test score', fontsize=12)
-# Show legend
-ax.legend(frameon=False)
-# Display the plot
-plt.tight_layout() # Ensure everything fits well in the figure
-plt.show()
+#| fig-width: 5
+#| fig-height: 4
+
+# In-sample predicted values
+fitted_vals <- fitted(model)
+s_u_hat <- sqrt(sum(residuals(model)^2) / model$df.residual)
+
+plot_data <- data.frame(
+  str = CAschools$str,
+  testscr = CAschools$testscr,
+  fitted = fitted_vals,
+  upper = fitted_vals + s_u_hat,
+  lower = fitted_vals - s_u_hat
+)
+
+ggplot(plot_data, aes(x = str)) +
+  geom_point(
+    aes(y = testscr),
+    color = "black",
+    alpha = 0.7,
+    size = 1.5
+  ) +
+  geom_line(
+    aes(y = fitted, color = "Yhat"),
+    linewidth = 0.8
+  ) +
+  geom_line(
+    aes(y = upper, color = "Upper"),
+    linewidth = 0.8
+  ) +
+  geom_line(
+    aes(y = lower, color = "Lower"),
+    linewidth = 0.8
+  ) +
+  labs(
+    x = "Student-teacher ratio",
+    y = "Test score",
+    color = ""
+  ) +
+  scale_color_manual(
+    values = c(
+      "Yhat" = "steelblue",
+      "Upper" = "red",
+      "Lower" = "green"
+    ),
+    labels = c(
+      "Yhat" = expression(hat(Y)),
+      "Upper" = expression(hat(Y) + s[hat(u)]),
+      "Lower" = expression(hat(Y) - s[hat(u)])
+    )
+  ) +
+  theme(legend.position = "right")
 
 ```
+
 
 ## The least squares assumptions for causal inference
 In this section, we provide the least square assumptions. These assumptions ensure two important results. First, under these assumptions, we can interpret the slope parameter $\beta_1$ as the causal effect of $X$ on $Y$. Second, these assumptions ensure that the OLS estimator has large sample properties, namely consistency and asymptotic normal distributions. We list these assumptions below.
@@ -317,6 +355,7 @@ In this section, we provide the least square assumptions. These assumptions ensu
 2. The random sampling assumption: $(X_i, Y_i):\, i =1,2,\dots,n$ are independently and identically distributed (i.i.d.) across observations.
 3. The no large outliers assumption: $\E(X_i^4)<\infty$ and $\E(Y_i^4)<\infty$.
 :::
+
 The first assumption has important implications. First of all, it suggests that $\E(u_i)=\E(\E(u_i|X_i))=0$, where we use the law of iterated expectations. Second, we can show that 
 $$
 \E(u_i |X_i) = 0\implies \corr(X,u_i)=0,
@@ -325,78 +364,66 @@ where the last equality again follows from the law of iterated expectations. The
 $$
 \corr(X,u_i)\ne 0\implies \E(u_i |X_i)\ne 0.
 $$
+
 This last result is important because it provides a way to check the plausibility of the zero-conditional mean assumption. If we think that the error term $u_i$ is likely to include a variable that is correlated with the regressor $X_i$, then we can claim that $\E(u_i |X_i)\ne 0$.
 
 In the following code chunk, we consider two data-generating processes to illustrate the zero-conditional mean assumption. We assume that the zero-conditional mean assumption holds in the first process but is violated in the second. In both cases, we assume that $X$ takes integer values between $-4$ and $4$: ` x_values = np.random.randint(low=-4, high=5, size=size)`. In the first process, we generate the error terms independently from the standard normal distribution, i.e., $u \sim N(0, 1)$. In this case, since $u$ is independent of $X$, we have $\E(u|X)=\E(u)=0$. In contrast, in the second process, we generate the error terms according to $u \sim N(0.5X, 1)$ so that $\E(u|X)=0.5X$. 
 
-In @fig-f11.3, we use boxplots to present the distribution of $u$ against $X$. In @fig-f11.3-1, the conditional mean of $u$ remains close to zero across all values of $X$. Thus, in this case, $\E(u|X)=0$ holds. On the other hand, @fig-f11.3-2 shows that the mean of $u$ varies with $X$, indicating that $\E(u|X)$ depends on $X$.
+In @fig-f11-3, we use boxplots to present the distribution of $u$ against $X$. In @fig-f11-3(a), the conditional mean of $u$ remains close to zero across all values of $X$. Thus, in this case, $\E(u|X)=0$ holds. On the other hand, @fig-f11-3(b) shows that the mean of $u$ varies with $X$, indicating that $\E(u|X)$ depends on $X$.
 
-```{python}
+```{r}
 #| fig-cap: The zero-conditional mean assumption
-#| label: fig-f11.3
+#| label: fig-f11-3
 #| layout-nrow: 2
-#| fig-subcap: 
+#| fig-subcap:
 #|   - "The zero-conditional mean assumption holds"
 #|   - "The zero-conditional mean assumption does not hold"
-# Illustrating the zero-conditional mean assumption
-def generate_data(seed, size, zero_conditional_mean=True):
-    """
-    Generates a DataFrame based on whether zero-conditional mean assumption holds.
-    
-    Parameters:
-    - seed (int): Random seed for reproducibility.
-    - size (int): Number of observations.
-    - zero_conditional_mean (bool): Flag to determine if zero-conditional mean assumption holds.
-    
-    Returns:
-    - pd.DataFrame: DataFrame containing 'x' and 'u'.
-    """
-    np.random.seed(seed)
-    x_values = np.random.randint(low=-4, high=5, size=size)
-    if zero_conditional_mean:
-        u_values = np.random.normal(size=size)
-    else:
-        u_values = np.random.normal(size=size) + 0.5 * x_values
-    
-    df = pd.DataFrame({
-        'x': x_values.astype(str),
-        'u': u_values
-    })
-    
-    return df
-
-def plot_boxplot(df, title):
-    """
-    Plots a boxplot with overlayed stripplot.
-    
-    Parameters:
-    - df (pd.DataFrame): DataFrame containing 'x' and 'u'.
-    - title (str): Title for the plot.
-    """
-    plt.figure(figsize=(7, 6))
-    
-    # Plot the boxplot with horizontal boxes
-    sns.boxplot(data=df, x="u", y="x", hue="x", width=0.6, palette="vlag")
-    
-    # Add points to show each observation
-    sns.stripplot(data=df, x="u", y="x", size=2, color=".3", jitter=True)
-    
-    # Tweak the visual presentation
-    #plt.title(title)
-    plt.xlabel('u')
-    plt.ylabel('X')
-    plt.xlim(-5, 5)  # Adjust limits if necessary
-    plt.grid(True, linestyle='--', alpha=0.7)
-    sns.despine(trim=True, left=True)
-    plt.show()
-
 # Generate data
-df1 = generate_data(seed=45, size=2000, zero_conditional_mean=True)
-df2 = generate_data(seed=45, size=2000, zero_conditional_mean=False)
+generate_data <- function(seed, size, zero_conditional_mean = TRUE) {
+  set.seed(seed)
+  x_values <- sample(-4:4, size = size, replace = TRUE)
+  
+  if (zero_conditional_mean) {
+    u_values <- rnorm(size)
+  } else {
+    u_values <- rnorm(size) + 0.5 * x_values
+  }
+  
+  data.frame(
+    x = factor(x_values),
+    u = u_values
+  )
+}
 
-# Plot
-plot_boxplot(df1, title="Zero-Conditional Mean Assumption Holds")
-plot_boxplot(df2, title="Zero-Conditional Mean Assumption Does Not Hold")
+plot_boxplot <- function(df) {
+  ggplot(df, aes(x = u, y = x, fill = x)) +
+    geom_boxplot(
+      width = 0.6,
+      outlier.shape = NA,
+      alpha = 0.8
+    ) +
+    geom_jitter(
+      height = 0.15,
+      size = 0.8,
+      color = "gray30",
+      alpha = 0.6
+    ) +
+    scale_fill_brewer(palette = "RdBu") +
+    labs(
+      x = "u",
+      y = "X"
+    ) +
+    coord_cartesian(xlim = c(-5, 5)) +
+    theme(
+      legend.position = "none"
+    )
+}
+
+df1 <- generate_data(seed = 45, size = 2000, zero_conditional_mean = TRUE)
+df2 <- generate_data(seed = 45, size = 2000, zero_conditional_mean = FALSE)
+
+plot_boxplot(df1)
+plot_boxplot(df2)
 ```
 
 The second assumption requires a random sample on $X$ and $Y$. This assumption generally holds because data are usually collected on a randomly selected sample from the population of interest. 
@@ -470,6 +497,7 @@ $$
 \end{align*}
 $$
 :::
+
 We prove @thm-thm11.1 in @sec-chapter25. There are three important observations from @thm-thm11.1:
 
 * The OLS estimators are unbiased. 
@@ -480,47 +508,65 @@ We investigate the properties of the OLS estimators in the simulation setting gi
 
 Each histogram and kernel density plot in @fig-f11-5 is centered around the true value $\beta_1=3$, indicating that the OLS estimator $\hat{\beta}_1$ is unbiased. The shape of the histograms and kernel density plots are bell-shaped, suggesting that the sampling distribution of the OLS estimator $\hat{\beta}_1$ resembles the normal distribution. We also observe that the variance of the OLS estimator decreases as $n$ increases from $50$ to $500$. All of these observations are consistent with @thm-thm11.1.
 
-```{python}
+
+```{r}
 #| fig-cap: Simulation results
 #| label: fig-f11-5
-# Properties of the OLS estimators
 # Set seed for reproducibility
-np.random.seed(45)
-# Set number repetitions a
-reps = 1000
-# Set sample sizes
-n = [50, 100, 200, 500]
+set.seed(45)
+
+# Number of repetitions
+reps <- 1000
+
+# Sample sizes
+n_vals <- c(50, 100, 200, 500)
+
 # Population regression model
-N = 5000
-X = np.random.normal(size=N)
-Y = 1.5 + 3 * X + np.random.normal(size=N)
-population = pd.DataFrame({'X': X, 'Y': Y})
-# Initialize the matrix of outcomes
-fit = np.zeros((reps, 2))
-# Set up the plot with 2x2 subplots
-fig, axs = plt.subplots(2, 2, figsize=(7.5, 5.5))
-axs = axs.flatten()
-# Outer loop: sampling and plotting
-for j, size in enumerate(n):
-    # Inner loop: sampling and estimating the coefficients
-    for i in range(reps):
-        sample = population.sample(size, replace=True) # Sample with replacement
-        model = smf.ols('Y ~ X', data=sample).fit()
-        fit[i, :] = model.params
+N <- 5000
+X <- rnorm(N)
+Y <- 1.5 + 3 * X + rnorm(N)
+population <- data.frame(X = X, Y = Y)
 
-    # Draw histogram
-    axs[j].hist(fit[:, 1], bins=30, density=True, alpha=0.6, 
-    color="steelblue", edgecolor='black')
-    # Draw density estimates
-    sns.kdeplot(fit[:, 1], ax=axs[j], color="red", fill=False, linewidth=1)
-    # Set the plot titles and labels
-    axs[j].set_xlim(2.6, 3.40)
-    axs[j].set_title(f"n = {size}")
-    axs[j].set_xlabel(r'$\hat{\beta}_1$')
+# Function to run the simulation for a given sample size
+simulate_beta <- function(size, reps, population) {
+  beta_hat <- numeric(reps)
+  
+  for (i in seq_len(reps)) {
+    sample_data <- population[sample(nrow(population), size, replace = TRUE), ]
+    model <- lm(Y ~ X, data = sample_data)
+    beta_hat[i] <- coef(model)[2]
+  }
+  
+  beta_hat
+}
 
-# Adjust layout and show the plot
-plt.tight_layout()
-plt.show()
+# Generate individual plots
+plots <- lapply(n_vals, function(size) {
+  beta_hat <- simulate_beta(size, reps, population)
+  
+  ggplot(data.frame(beta = beta_hat), aes(x = beta)) +
+    geom_histogram(
+      aes(y = after_stat(density)),
+      bins = 30,
+      fill = "steelblue",
+      alpha = 0.6,
+      color = "black"
+    ) +
+    geom_density(color = "red", linewidth = 1) +
+    coord_cartesian(xlim = c(2.6, 3.4)) +
+    labs(
+      title = paste0("n = ", size),
+      x = expression(hat(beta)[1]),
+      y = NULL
+    ) 
+})
+
+# Arrange plots in a 2x2 grid
+grid.arrange(
+  grobs = plots,
+  nrow = 2,
+  ncol = 2
+)
 ```
 
 In the next chapter, we will show how to formulate estimators for $\sigma^2_{\hat{\beta}_1}$ and $\sigma^2_{\hat{\beta}_0}$ given in @thm-thm11.1. We will also show how to use these estimators to conduct hypothesis tests and construct confidence intervals for the parameters $\beta_0$ and $\beta_1$.
