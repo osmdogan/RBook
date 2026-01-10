@@ -1,14 +1,15 @@
 # Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals {#sec-inference1}
 
-```{python}
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-from statsmodels.iolib.summary2 import summary_col
-import scipy.stats as stats
+
+```{r}
+#| warning: false
+#| message: false
+# Load necessary libraries
+library(tidyverse)
+library(modelsummary)
+library(stargazer)
+library(readxl)
+library(sandwich)
 ```
 
 ## Testing hypotheses about one of the regression parameters
@@ -83,13 +84,15 @@ Rejection regions and critical points
 :::
 
 :::{#exm-exm12-1}
-Assume that $\alpha=5\%$ and $H_1:\beta_1\ne c$. Then, the critical value on the left tail is the $2.5$th percentile of $N(0,1)$, which is $-z_{\alpha/2}=-1.96$, and the critical value on the right tail is the $97.5$th percentile of $N(0,1)$, which is $z_{\alpha/2}=1.96$. In Python, we can compute these critical values as follows:
+Assume that $\alpha=5\%$ and $H_1:\beta_1\ne c$. Then, the critical value on the left tail is the $2.5$th percentile of $N(0,1)$, which is $-z_{\alpha/2}=-1.96$, and the critical value on the right tail is the $97.5$th percentile of $N(0,1)$, which is $z_{\alpha/2}=1.96$. In R, we can compute these critical values as follows:
 
-```{python}
-left_critical = stats.norm.ppf(0.025, loc=0, scale=1)
-right_critical = stats.norm.ppf(0.975, loc=0, scale=1)
-print("Left critical value:", np.round(left_critical, 2))
-print("Right critical value:", np.round(right_critical, 2))
+```{r}
+left_critical  <- qnorm(0.025, mean = 0, sd = 1)
+right_critical <- qnorm(0.975, mean = 0, sd = 1)
+
+cat("Left critical value:", round(left_critical, 2))
+cat("Right critical value:", round(right_critical, 2))
+
 ```
 :::
 
@@ -115,13 +118,14 @@ $$
 \end{align}
 $$
 
-We can compute the $p$-value in Python as follows:
-```{python}
+We can compute the $p$-value in R as follows:
+```{r}
 # Compute p-value
-t_calc = -2.5
-p_value = 2 * stats.norm.cdf(-np.abs(t_calc), loc=0, scale=1)
-print("p-value:", np.round(p_value, 4))
+t_calc <- -2.5
+p_value <- 2 * pnorm(-abs(t_calc), mean = 0, sd = 1)
+cat("p-value:", round(p_value, 4))
 ```
+
 Since $p\text{-value} < 0.05$, we reject $H_0$ at the $5\%$ significance level.
 :::
 
@@ -133,8 +137,7 @@ Since $p\text{-value} < 0.05$, we reject $H_0$ at the $5\%$ significance level.
 :::
 
 ## Application to the test score example
-
-Recall that there are two options for running OLS regressions: (i) the `smf.ols()` function and (ii) the `sm.OLS()` function. In the first option, `statsmodels` allows users to fit statistical models using `R`-style formulas. We use the data set contained in the `caschool.xlsx` file to estimate the following model:
+We use the data set contained in the `caschool.xlsx` file to estimate the following model:
 $$
 \begin{align}
 \text{TestScore}_i = \beta_0 + \beta_1 \text{STR}_i + u_i,
@@ -143,23 +146,22 @@ $$
 
 In the data set, the test scores are denoted by `testscr` and the student-teacher ratio by `str`. 
 
-```{python}
-#| warning: false
+```{r}
 # Import data
-CAschool = pd.read_excel("data/caschool.xlsx")
+CAschool = read_excel("data/caschool.xlsx")
 # Column names
-CAschool.columns
+colnames(CAschool)
 ```
 
-Consider $H_0: \beta_1 = 0$ against $H_1: \beta_1 \neq 0$. We use the `smf.ols()` method to estimate the model.
+Consider $H_0: \beta_1 = 0$ against $H_1: \beta_1 \neq 0$. We use the `lm` function to estimate the model.
 
-```{python}
+```{r}
 # Specify the model
-model1 = smf.ols(formula='testscr~str',data=CAschool)
+model1 <- lm(testscr ~ str, data = CAschool)
 # Use the fit method to obtain parameter estimates
-result1 = model1.fit()
+result1 = summary(model1)
 # Print the estimation results
-print(result1.summary())
+print(result1)
 ```
 
 Using the estimation results, we can compute $t$-statistic as
@@ -169,19 +171,19 @@ t = \frac{\hat{\beta}_1-0}{SE(\hat{\beta}_1)} \approx \frac{-2.28}{0.48} \approx
 \end{align}
 $$
 
-Note that the `result1.summary()` function also returns the $t$-statistics. The column named `t` in the output includes the $t$-statistics. Also note that we can return $t$-statistics through the `result1.tvalues` attribute:
+Note that the `summary` function also returns the $t$-statistics. The column named `t value` in the output includes the $t$-statistics. Also note that we can return $t$-statistics through `result1$coefficients`:
 
-```{python}
+```{r}
 # t-statistics
-result1.tvalues
+result1$coefficients[, "t value"]
 ```
 
 Assume that the significance level is $\alpha = 0.05$. Then, the corresponding critical value can be determined in the following way.
 
-```{python}
+```{r}
 # Critical value for 5 percent significance level
-critical = stats.norm.ppf(0.975, loc=0, scale=1)
-np.round(critical,2)
+critical = qnorm(0.975, mean = 0, sd = 1)
+round(critical, 2)
 ```
 
 Since $|t| = |-4.75| = 4.75 > 1.96$, we reject $H_0$ at the $5\%$ significance level. Thus, the estimated effect of class size on test scores is statistically significant at the $5\%$ significance level.
@@ -195,28 +197,24 @@ $$
 
 where $t_{\text{calc}}$ is the actual $t$-statistic computed, which is $t\approx -4.75$. Then, we can compute the $p$-value in the following way:
 
-```{python}
+```{r}
 # p-value for the two-sided alternative hypothesis
-t = result1.tvalues["str"]
-# t=result1.tvalues.iloc[1]
-p_value = 2 * stats.norm.cdf(-np.abs(t), loc=0, scale=1)
-p_value
+t = result1$coefficients["str", "t value"]
+2 * pnorm(-abs(t), mean = 0, sd = 1)
 ```
 
-Alternatively, we can return $p$-values through the `result1.pvalues` attribute:
+Alternatively, we can extract $p$-values from `result1$coefficients`:
 
-```{python}
+```{r}
 # p-values
-p_value = result1.pvalues
-p_value
+result1$coefficients[, "Pr(>|t|)"]
 ```
 
-Note that this value is slightly different from the one that we computed above by `p_value = 2 * stats.norm.cdf(-np.abs(t), loc=0, scale=1)`. By default, the `model1.fit()` function uses the $t$ distribution for the computation. Thus, we need to use the t distribution to get the same result:
+Note that this value is slightly different from the one that we computed above by `2 * pnorm(-abs(t), mean = 0, sd = 1)`. By default, the `lm` function uses the $t$ distribution for the computation. Thus, we need to use the t distribution to get the same result:
 
-```{python}
-t = result1.tvalues["str"]
-# t=result1.tvalues.iloc[1]
-p_value = 2 * stats.t.cdf(-np.abs(t), df=418)
+```{r}
+t = result1$coefficients["str", "t value"]
+p_value = 2 * pt(-abs(t), df=418)
 p_value
 ```
 
@@ -240,23 +238,21 @@ $$
 
 In our test score example, the $95\%$ confidence interval is computed in the following way:
 
-```{python}
+```{r}
 # Confidence interval for beta_1
-lower_bound = result1.params["str"] - critical*result1.bse["str"]
-upper_bound = result1.params["str"] + critical*result1.bse["str"]
-np.round([lower_bound, upper_bound], 6)
+lower_bound = result1$coefficients["str", "Estimate"] - critical*result1$coefficients["str", "Std. Error"]
+upper_bound = result1$coefficients["str", "Estimate"] + critical*result1$coefficients["str", "Std. Error"]
+round(c(lower_bound, upper_bound), 6)
+```
+Alternatively, we can use the `confint` function to compute the confidence interval:
+
+```{r}
+# Confidence interval
+confint(model1, level = 0.95)
 ```
 
-Alternatively, we can resort to the `result1.conf_int()` method to return the confidence intervals for all parameters. 
 
-```{python}
-# Confidence intervals for all parameters
-result1.conf_int(alpha=0.05)
-```
-
-Again note that these values are slightly different from the ones that we computed above by `lower_bound` and `upper_bound`. By default, the `model1.fit()` function uses the t distribution for the computation instead of the normal distribution. 
-
-Note that the $95\%$ two-sided confidence interval does not include the hypothesized value in $H_0:\beta_1=0$, and therefore, we reject $H_0$ at the $5\%$ significance level. 
+Again note that these values are slightly different from the ones that we computed above by `lower_bound` and `upper_bound`. By default, the `lm` function uses the critical value from the $t$ distribution for the computation. Finally, note that the $95\%$ two-sided confidence interval does not include the hypothesized value in $H_0:\beta_1=0$, and therefore, we reject $H_0$ at the $5\%$ significance level.
 
 ::: {.callout-note icon=false}
 ## Key Concept 12.2: Confidence Intervals for $\beta_1$
@@ -297,52 +293,54 @@ That is, $\beta_1$ gives the difference between the mean test score in districts
 
 The dummy variable can be created by using a logical operator. The command `mydata$str < 20` will return $1$ if $STR < 20$, otherwise $0$. 
 
-```{python}
+```{r}
 # Create the dummy variable D
-CAschool["D"] = CAschool["str"] < 20
-CAschool[["testscr", "str", "D"]].head()
+CAschool$D <- CAschool$str < 20
+
+# Display first rows of selected columns
+head(CAschool[, c("testscr", "str", "D")])
 ```
 
 @fig-fig12-2 shows the scatter plot of `TestScore` and `D`. Since `D` takes only two values, namely $0$ and $1$, we observe that the data points are clustered at `x=0` and `x=1`. 
 
-```{python}
+```{r}
 #| fig-cap: Scatterplot of D and Test Score.
 #| label: fig-fig12-2
+#| fig-width: 5
+#| fig-height: 3
 # Scatterplot without jitter
-sns.set(style='darkgrid')
-fig, ax = plt.subplots(figsize=(5, 3))
-ax.scatter(CAschool['D'], CAschool['testscr'], 
-            s=1.5, c='steelblue', marker='o') # s is for size, c for color, and marker for point shape
-ax.set_xlabel('D')
-ax.set_ylabel('Test Score')
-plt.show()
+ggplot(CAschool, aes(x = D, y = testscr)) +
+  geom_point(color = "steelblue", size = 0.5) +
+  labs(x = "D", y = "Test Score")
 ```
 
 In @fig-fig12-3, we create a jittered version of `D` by adding some random noise: `jittered_D = CAschool['D'] + np.random.normal(0, 0.02, size=len(CAschool['D']))`, and construct a scatter plot between `TestScore` and `jittered_D`.
 
-```{python}
+```{r}
 #| fig-cap: Scatterplot of D and Test Score.
 #| label: fig-fig12-3
+#| fig-width: 5
+#| fig-height: 3
 # Scatterplot with jitter
-sns.set(style='darkgrid')
-fig, ax = plt.subplots(figsize=(5, 3))
-# Add jitter to the dummy variable 'D'
-jittered_D = CAschool['D'] + np.random.normal(0, 0.02, size=len(CAschool['D'])) # Adjust the jitter scale as needed
-# Scatter plot with jitter
-ax.scatter(jittered_D, CAschool['testscr'], s=4, c='steelblue', marker='o')
-ax.set_xlabel('D')
-ax.set_ylabel('Test Score')
-plt.show()
+ggplot(CAschool, aes(x = D, y = testscr)) +
+  geom_jitter(
+    width = 0.02,   # jitter scale (matches np.random.normal(0, 0.02))
+    size = 1,
+    color = "steelblue"
+  ) +
+  labs(x = "D", y = "Test Score")
 ```
 
-As in the case of a continuous regressor, we can use the `smf.ols()` function to estimate a dummy variable regression model. 
-```{python}
+As in the case of a continuous regressor, we can use the `lm` function to estimate a dummy variable regression model. 
+```{r}
 # Specify the model
-model2 = smf.ols(formula='testscr ~ D', data=CAschool)
-# Use the fit method to obtain parameter estimates
-result2 = model2.fit()
+model2 <- lm(testscr ~ D, data = CAschool)
+
+# Obtain parameter estimates
+result2 <- summary(model2)
+
 # Print the estimation results
-print(result2.summary())
+print(result2)
 ```
 
 The estimated regression function is
@@ -356,24 +354,21 @@ The estimate of $\beta_1$ is $7.38$, which indicates that students in the distri
 
 @fig-fig12-4 shows the scatter plot along with the estimated regression function. Since $\beta_1=7.38$, the estimated regression line is upward sloping, which indicates that the test scores are higher in districts with low student-teacher ratios. 
 
-```{python}
+```{r}
 #| fig-cap: The dummy variable regression model
 #| label: fig-fig12-4
-# Set the style for seaborn
-sns.set_style('darkgrid')
-# Create the figure and axis objects
-fig, ax = plt.subplots(figsize=(5, 3))
-# Add jitter to the dummy variable 'D'
-jittered_D = CAschool['D'] + np.random.normal(0, 0.02, size=len(CAschool['D'])) # Adjust the jitter scale as needed
-# Scatter plot with jitter
-ax.scatter(jittered_D, CAschool['testscr'], s=4, c='steelblue', marker='o')
-# Plot the regression line (without jitter)
-ax.plot(CAschool['D'], result2.fittedvalues, color='black', linewidth=1)
-# Set labels for axes
-ax.set_xlabel('D')
-ax.set_ylabel('Test Score')
-# Display the plot
-plt.show()
+#| fig-width: 5
+#| fig-height: 3
+#| warning: false
+#| message: false
+# Dummy variable regression plot
+ggplot(CAschool, aes(x = as.numeric(D), y = testscr)) +
+  geom_jitter(width = 0.02, size = 0.8, color = "steelblue") +
+  geom_smooth(method = "lm", se = FALSE, color = "black", linewidth = 0.6) +
+  labs(
+    x = "D",
+    y = "Test Score"
+  )
 ```
 
 ## Heteroskedasticity versus Homoskedasticity
@@ -396,32 +391,29 @@ $$
 \end{align*}
 $$
 
-The `smf.ols()` function uses these formulas to compute the standard errors, i.e., it only reports the homoskedasticity-only standard errors. To get heteroskedasticity-robust standard errors, we need to supply `cov_type="HC1"` in the `fit` method, as shown below. 
+The `lm` function uses these formulas to compute the standard errors, i.e., it only reports the homoskedasticity-only standard errors. To get heteroskedasticity-robust standard errors, we use the `vcovHC` function from the `sandwich` package.
 
-```{python}
-# Specify the model
-model3 = smf.ols(formula='testscr~str', data=CAschool)
-# Use the fit method to obtain parameter estimates
-result3 = model3.fit(cov_type="HC1")
-# Print the estimation results
-print(result3.summary())
+```{r}
+result3 <- lm(testscr ~ str,
+         data = CAschool)
+vcov <- vcovHC(result3, type = "HC1")
+robust_se <- sqrt(diag(vcov))
 ```
 
-In the following, we use the `summary_col` function to present results contained in `result1` and `result2` side by side. The estimation results are presented in @tbl-t12-1. The estimation results in this table indicate that the heteroskedasticity-robust standard errors are relatively large.
+In the following, we use the `modelsummary` function to present results side by side. Note that we use the `vcov = list(NULL, robust_se)` option to specify the standard errors for each model. Alternatively, we can also use `vcov=c("classical", "HC1")` to obtain the same result. Note that in this alternative approach, we do not need to compute the robust standard errors manually through the `vcovHC` function. The estimation results are presented in @tbl-t12-1. The estimation results in this table indicate that the heteroskedasticity-robust standard errors are relatively large.
 
-:::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: "The estimation results for the test scores regressions"
 #| label: tbl-t12-1
-# Print results in table form
-models = ['Homoskedastic Model', 'Heteroskedastic Model']
-results_table=summary_col(results=[result1,result3],
-                          float_format='%0.3f', 
-                          stars=True,
-                          model_names=models)
-results_table
+modelsummary(
+  list(
+    "Homoskedastic"   = result3,
+    "Heteroskedastic" = result3
+  ),
+  vcov = list(NULL, robust_se),
+  output = "html"
+)
 ```
-:::
 
 ::: {.callout-note icon=false}
 ## Key Concept 12.3: Heteroskedasticity and Homoskedasticity
@@ -433,7 +425,7 @@ results_table
 
 In practice, which standard errors should we use? @Stock2020 write that "At a general level, economic theory rarely gives any reason to believe that the errors are homoskedastic. It therefore is prudent to assume that the errors might be heteroskedastic unless you have compelling reasons to believe otherwise." Therefore, we recommend using heteroskedasticity-robust standard errors in practice.
 
-## The theoretical foundations of ordinary least squares
+## The theoretical foundation of the ordinary least squares method
 
 In this section, we consider the OLS estimator of $\beta_1$ under the following assumptions.
 
