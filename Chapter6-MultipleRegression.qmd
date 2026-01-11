@@ -1,15 +1,16 @@
 # Linear Regression with Multiple Regressors {#sec-multiple}
 
-```{python}
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-from statsmodels.iolib.summary2 import summary_col
-import scipy.stats as stats
-from mpl_toolkits.mplot3d import Axes3D
+```{r}
+#| warning: false
+#| message: false
+# Load necessary libraries
+library(tidyverse)
+library(modelsummary)
+library(readxl)
+library(MASS) 
+library(knitr)
+library(gridExtra)
+library(plotly) 
 ```
 
 ## Omitted variable bias
@@ -112,67 +113,56 @@ $$
 &\text{TestScore}_i=\beta_0+\beta_1\times\text{STR}_i+\beta_2\times\text{PctEL}_i+u_i,
 \end{align}
 $$
-for $i=1,\dots,420$, where $\text{PctEL}_i$ is the percentage of English learners in the $i$th district. We use the following code chunks to import data from the `caschool.xlsx` file.
+for $i=1,\dots,420$, where $\text{PctEL}_i$ is the percentage of English learners in the $i$th district. 
 
-```{python}
-#| warning: false
-#| message: false
+We use the following code chunks to import data from the `caschool.xlsx` file. In @tbl-t13-1, we provide summary statistics for the key variables.
+
+```{r}
 # Import data
-mydata = pd.read_excel("data/caschool.xlsx")
-```
-
-```{python}
+CAschool <- read_excel("data/caschool.xlsx")
 # Column names
-mydata.columns
+colnames(CAschool)
 ```
 
-The `describe` method can be used to get descriptive statistics provided in @tbl-t13-1 on `str`, `el_pct`, and `testscr`.
 
-:::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: Summary statistics
 #| label: tbl-t13-1
 # Summary statistics
-mydata[["str", "el_pct", "testscr"]].round(3).describe().T
+datasummary_skim(CAschool[,c("str", "el_pct", "testscr")])
 ```
-:::
 
 In @tbl-t13-2, we provide sample correlation coefficients between variables. We see that `PctEL` is negatively correlated with `testscr` and positively correlated with `str`.
 
-:::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: The sample correlation coefficients
 #| label: tbl-t13-2
-# Correlation coefficients
-mydata[["str","el_pct", "testscr"]].corr()
+datasummary_correlation(
+CAschool[, c("str", "el_pct", "testscr")],
+fmt = 3
+)
 ```
-:::
 
-In the following code chunk, we use the `smf.ols()` function to estimate both models.
+In the following, we estimate two models specified above. We then use the `modelsummary` package to present the results in a table format.
 
-```{python}
+```{r}
 # Estimation
-model1 = smf.ols(formula='testscr~str', data=mydata)
-result1 = model1.fit()
-model2 = smf.ols(formula='testscr~str+el_pct', data=mydata)
-result2 = model2.fit()
+model1 <- lm(testscr ~ str, data = CAschool)
+model2 <- lm(testscr ~ str + el_pct, data = CAschool)
 ```
 
-Using the `summary_col()` function from the `statsmodels.iolib.summary2`, we can present the estimation results contained in `result1` and `result2` as shown in @tbl-t13-3. 
-
-:::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: "Estimation Results"
 #| label: tbl-t13-3
-# Print results in table form
-models = ['Model 1', 'Model 2']
-results_table = summary_col(results=[result1, result2],
-                            float_format='%0.3f', 
-                            stars=True,
-                            model_names=models)
-results_table
+modelsummary(
+list(
+"Model 1" = model1,
+"Model 2" = model2
+),
+fmt = 3,
+stars = TRUE
+)
 ```
-:::
 
 Using the estimation results in @tbl-t13-3, we can write the estimated regression equations as
 $$
@@ -220,46 +210,39 @@ $$
 
 Note that $\bar{R}^2< R^2$, but if $n$ is large, the two will be very close because $(n-1)/(n-k-1)$ approaches one as $n$ increases. Also, adding a new regressor to the model affects $\bar{R}^2$ in two opposing directions. On the one hand, the new regressor decreases the $SSR$, which tends to increase $\bar{R}^2$. On the other hand, the factor $(n-1)(n-k-1)$ increases, which tends to reduce $\bar{R}^2$. Therefore, the net effect on $\bar{R}^2$ depends on which of these two effects is relatively larger.
 
-The results in @tbl-t13-3 show that including `PctEL` in the regression increases the $R^2$ from 0.051 to 0.426. Thus, including `PctEL` substantially improves the fit of the regression. Because $n$ is large and we have only two regressors, the difference between $R^2$ and $\bar{R}^2$ is very small: $R^2 = 0.426$ vs. $\bar{R}^2 = 0.424$. Note that @tbl-t13-3 does not include the SER measures. In the following code chunk, we compute the SER measures for both models.
+The results in @tbl-t13-3 show that including `PctEL` in the regression increases the $R^2$ from 0.051 to 0.426. Thus, including `PctEL` substantially improves the fit of the regression. Because $n$ is large and we have only two regressors, the difference between $R^2$ and $\bar{R}^2$ is very small: $R^2 = 0.426$ vs. $\bar{R}^2 = 0.424$. Note that @tbl-t13-3 does not include the SER measures. In the following code chunk, we compute all measures of fit for the second model.
 
-```{python}
-# Computing SER for both models
-SER1 = np.sqrt(np.sum(result1.resid**2) / result1.df_resid)
-SER2 = np.sqrt(np.sum(result2.resid**2) / result2.df_resid)
-# Print the SER values
-print("The SER for Model 1 is:", np.round(SER1, 1))
-print("The SER for Model 2 is:", np.round(SER2, 1))
+```{r}
+# Sample size and number of regressors
+n <- nobs(model2)
+k <- length(coef(model2)) - 1  # number of regressors excluding intercept
+
+# Mean of test scores
+y_mean <- mean(CAschool$testscr)
+
+# Sum of squares
+SSR <- sum(resid(model2)^2)
+TSS <- sum((CAschool$testscr - y_mean)^2)
+ESS <- sum((fitted(model2) - y_mean)^2)
+
+# Measures of fit
+SER  <- sqrt(SSR / (n - k - 1))
+RMSE <- sqrt(SSR / n)
+Rsq  <- 1 - SSR / TSS
+adj_Rsq <- 1 - ((n - 1) / (n - k - 1)) * (SSR / TSS)
+
+# Create a data frame for the fit measures
+fit_measures <- data.frame(
+  value = round(c(SER, RMSE, Rsq, adj_Rsq), 3),
+  row.names = c("SER", "RMSE", "R^2", "Adj. R^2")
+)
 ```
 
-The SER value $18.6$ falls to $14.5$ when `PctEL` is included as a second regressor into the model. Finally, in the following code chunk, we compute these measures of fit manually for the second model. The results are given in @tbl-t13-t4.
-
-```{python}
-# Computing SER, RMSE, R^2, and adjusted R^2 for the second model
-n = result2.nobs
-k = result2.k_constant
-y_mean = np.mean(mydata["testscr"]) # mean of avg. test-scores
-
-SSR = np.sum(result2.resid**2)
-TSS = np.sum((mydata["testscr"] - y_mean) ** 2)
-ESS = np.sum((result2.fittedvalues - y_mean) ** 2)
-
-# Compute measures
-SER = np.sqrt(SSR/(n - k - 1))
-RMSE = np.sqrt(SSR/n)
-Rsq = 1 - (SSR / TSS)
-adj_Rsq = 1 - ((n - 1) / (n - k - 1)) * SSR / TSS
-
-# Print measures
-fit_measures = pd.DataFrame([SER, RMSE, Rsq, adj_Rsq], 
-    index=["SER", "RMSE", "R^2", "Adj.R^2"], 
-    columns=[""])
-```
-
-```{python}
+```{r}
 #| tbl-cap: Measures of fit for the MLRM
 #| label: tbl-t13-t4
-# Print the measures of fit
-fit_measures
+# Measures of fit for the second model
+kable(fit_measures, digits = 3, col.names = NULL)
 ```
 
 ## The least squares assumptions for causal inference in multiple regression
@@ -300,106 +283,122 @@ $$
 \right).
 $$
 
-We set the sample size $n$ to 100 and generate 10000 samples. Using each sample, we estimate the model and store the estimated coefficients in the `coefs` array. We then generate histograms and density plots for each estimated coefficient. We provide the simulation results in @fig-fig13-1. The histograms and density plots for $\hat{\beta}_0$, $\hat{\beta}_1$, and $\hat{\beta}_2$ are bell-shaped and centered around the respective true parameter values. The surface plot in @fig-fig13-1 resembles that of a bivariate normal distribution, suggesting that $\hat{\beta}_1$ and $\hat{\beta}_2$ have a joint bivariate normal distribution. 
+We set the sample size $n$ to 100 and generate 10000 samples. Using each sample, we estimate the model and store the estimated coefficients in the `coefs` array. We then generate histograms and density plots for each estimated coefficient. We provide the simulation results in @fig-fig13-1. The histograms and density plots for $\hat{\beta}_0$, $\hat{\beta}_1$, and $\hat{\beta}_2$ are bell-shaped and centered around the respective true parameter values. 
 
-```{python}
+```{r}
 # Set sample size and number of simulations
-n = 100
-n_simulations = 10000
+n <- 100
+n_simulations <- 10000
 
-# Initialize array for coefficients
-coefs = np.zeros((n_simulations, 3))
+# Initialize matrix for coefficients (intercept + 2 regressors)
+coefs <- matrix(0, nrow = n_simulations, ncol = 3)
 
 # Set seed for reproducibility
-np.random.seed(15)
+set.seed(15)
 
 # Loop for sampling and estimation
-for i in range(n_simulations):
-    # Generate multivariate normal samples
-    mean = [2, 1.5]
-    cov = [[5, 1.5], [1.5, 5]]
-    X = stats.multivariate_normal.rvs(mean=mean, cov=cov, size=n)
-    
-    # Generate random errors
-    u = np.random.standard_t(df=3,size=n)
-    
-    # Generate dependent variable
-    Y = 0.5 + 1.5 * X[:, 0] + 1 * X[:, 1] + u
-    
-    # Fit linear regression using statsmodels
-    X_with_const = sm.add_constant(X) # Add constant term for intercept
-    model = sm.OLS(Y, X_with_const).fit()
-    coefs[i, :] = model.params # Store the coefficients
+for (i in 1:n_simulations) {
+  
+  # Generate multivariate normal samples
+  mean <- c(2, 1.5)
+  cov <- matrix(c(5, 1.5,
+                  1.5, 5), nrow = 2)
+  X <- mvrnorm(n = n, mu = mean, Sigma = cov)
+  
+  # Generate random errors (t with 3 df)
+  u <- rt(n, df = 3)
+  
+  # Generate dependent variable
+  Y <- 0.5 + 1.5 * X[, 1] + 1 * X[, 2] + u
+  
+  # Fit linear regression
+  model <- lm(Y ~ X[, 1] + X[, 2])
+  
+  # Store coefficients
+  coefs[i, ] <- coef(model)
+}
 ```
 
-```{python}
+
+```{r}
+#| warning: false
+#| message: false
+# Histogram + density for beta_0
+p1 <- ggplot(data.frame(b0 = coefs[, 1]), aes(x = b0)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 50, fill = "steelblue", alpha = 0.6) +
+  geom_density() +
+  geom_vline(xintercept = mean(coefs[, 1]),
+             linetype = "dashed", linewidth = 0.7) +
+  labs(x = expression(hat(beta)[0]), y = "Density") +
+  xlim(-0.5, 1.5)
+
+# Histogram + density for beta_1
+p2 <- ggplot(data.frame(b1 = coefs[, 2]), aes(x = b1)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 50, fill = "steelblue", alpha = 0.6) +
+  geom_density() +
+  geom_vline(xintercept = mean(coefs[, 2]),
+             linetype = "dashed", linewidth = 0.7) +
+  labs(x = expression(hat(beta)[1]), y = "Density") +
+  xlim(1.2, 1.8)
+
+# Histogram + density for beta_2
+p3 <- ggplot(data.frame(b2 = coefs[, 3]), aes(x = b2)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 50, fill = "steelblue", alpha = 0.6) +
+  geom_density() +
+  geom_vline(xintercept = mean(coefs[, 3]),
+             linetype = "dashed", linewidth = 0.7) +
+  labs(x = expression(hat(beta)[2]), y = "Density") +
+  xlim(0.6, 1.4)
+```
+
+```{r}
 #| fig-cap: Histogram and density plots of the simulation results
 #| label: fig-fig13-1
-# Simulation results
-# Set seaborn style
-sns.set(style='darkgrid')
+#| fig-width: 12
+#| fig-height: 9
+#| warning: false
+#| message: false
+grid.arrange(p1, p2, p3, ncol = 2)
+```
 
-# Create the figure
-fig = plt.figure(figsize=(8, 7))
+In @fig-fig13-2, we provide the surface plot of the joint distribution of $\hat{\beta}_1$ and $\hat{\beta}_2$. This plot shows that the estimated joint distribution of $\hat{\beta}_1$ and $\hat{\beta}_2$ resembles a bivariate normal distribution.
 
-# Histogram and density plot for beta_0
-ax1 = fig.add_subplot(221)
-sns.histplot(coefs[:, 0], bins=50, kde=True, color='steelblue', stat='density', ax=ax1, alpha=0.6)
-ax1.axvline(np.mean(coefs[:, 0]), color='black', linestyle='dashed', linewidth=1, label='Mean')
-ax1.set_xlabel(r'$\hat{\beta}_0$', fontsize=12)
-ax1.set_ylabel('Density', fontsize=12)
-ax1.legend(frameon=False)
-ax1.set_xlim(-0.5,1.5)
+```{r}
+#| fig-cap: The surface plot of the joint distribution of beta1 and beta2
+#| label: fig-fig13-2
+#| fig-width: 8
+#| fig-height: 6
+#| warning: false
+#| message: false
 
-# Histogram and density plot for beta_1
-ax2 = fig.add_subplot(222)
-sns.histplot(coefs[:, 1], bins=50, kde=True, color='steelblue', stat='density', ax=ax2, alpha=0.6)
-ax2.axvline(np.mean(coefs[:, 1]), color='black', linestyle='dashed', linewidth=1, label='Mean')
-ax2.set_xlabel(r'$\hat{\beta}_1$', fontsize=12)
-ax2.set_ylabel('Density', fontsize=12)
-ax2.legend(frameon=False)
-ax2.set_xlim(1.2,1.8)
+# Kernel density estimation
+kde <- kde2d(
+  x = coefs[, 2],   # beta_1
+  y = coefs[, 3],   # beta_2
+  n = 100,
+  lims = c(1.2, 1.8, 0.6, 1.4)
+)
 
-# Histogram and density plot for beta_2
-ax3 = fig.add_subplot(223)
-sns.histplot(coefs[:, 2], bins=50, kde=True, color='steelblue', stat='density', ax=ax3, alpha=0.6)
-ax3.axvline(np.mean(coefs[:, 2]), color='black', linestyle='dashed', linewidth=1, label='Mean')
-ax3.set_xlabel(r'$\hat{\beta}_2$', fontsize=12)
-ax3.set_ylabel('Density', fontsize=12)
-ax3.set_xlim(0.6,1.4)
-ax3.legend(frameon=False)
+# Create 3D surface plot
+fig3d <- plot_ly(
+  x = kde$x,
+  y = kde$y,
+  z = kde$z
+) %>% add_surface()
 
-# Kernel density estimation for beta_1 and beta_2
-kde = stats.gaussian_kde(coefs[:, 1:].T)
+# Define axis labels
+fig3d <- fig3d %>% layout(
+  scene = list(
+    xaxis = list(title = "beta1"),
+    yaxis = list(title = "beta2"),
+    zaxis = list(title = "Density")
+  )
+)
 
-# Create grid for 3D plot
-x_grid = np.linspace(1.2, 1.8, 100)
-y_grid = np.linspace(0.6, 1.4, 100)
-X_grid, Y_grid = np.meshgrid(x_grid, y_grid)
-Z_grid = kde(np.vstack([X_grid.ravel(), Y_grid.ravel()])).reshape(X_grid.shape)
-
-# 3D density estimate plot for beta_1 and beta_2
-ax4 = fig.add_subplot(224, projection='3d')
-surf = ax4.plot_surface(X_grid, Y_grid, Z_grid, cmap='coolwarm', edgecolor='none', rstride=1, cstride=1, alpha=0.85)
-ax4.contour(X_grid, Y_grid, Z_grid, zdir='z', offset=np.min(Z_grid), cmap='coolwarm', linestyles="solid")
-ax4.set_xlabel(r'$\hat{\beta}_1$', fontsize=12)
-ax4.set_ylabel(r'$\hat{\beta}_2$', fontsize=12)
-#ax4.set_zlabel('Estimated Density', fontsize=12)
-
-# Add color bar for surface
-fig.colorbar(surf, ax=ax4, shrink=0.5, aspect=10)
-
-# Remove ticks from 3D plot
-ax4.set_xticks([])
-ax4.set_yticks([])
-ax4.set_zticks([])
-
-# Set a different viewing angle for better perspective
-ax4.view_init(elev=30, azim=220)
-
-# Adjust layout for better spacing
-plt.tight_layout()
-plt.show()
+fig3d
 ```
 
 ## Multicollinearity
@@ -430,50 +429,40 @@ $$
 \text{Northeast}+\text{Midwest}+\text{South}+\text{West}=1.
 $$
 
-To resolve this, we will treat the last dummy variable as the **base category** and exclude it from the regression model. 
+To resolve this, we will treat the last dummy variable as the **base category** and exclude it from the regression model. @tbl-t13-5 provides summary statistics.
 
-We use the following code chunks to import the data. @tbl-t13-5 provides summary statistics.
-```{python}
+```{r}
+#| warning: false
+#| message: false
 # Import data
-mydata = pd.read_excel("data/ch8_cps.xlsx")
+mydata <- read_excel("data/ch8_cps.xlsx")
 # Display column names
-mydata.columns
+colnames(mydata)
 ```
 
-:::{layout-ncol=1}
-```{python}
+
+```{r}
 #| tbl-cap: Summary statistics
 #| label: tbl-t13-5
 # Summary statistics
-mydata.round(3).describe().T
-```
-:::
-
-In the following, we use the `smf.ols` function from the `statsmodels.formula.api` module to estimate the regression model. 
-```{python}
-# Estimation
-model3 = smf.ols(formula='ahe ~ yrseduc + female + northeast + midwest + south',
-                 data=mydata)
-result3 = model3.fit()
+datasummary_skim(mydata, fmt = 3)
 ```
 
-The estimation results contained in the `result3` object are shown in @tbl-t13-6. The coefficient on each dummy variable shows the average difference in the dependent variable relative to the base category. For example, the estimated coefficient on `northeast` is 1.105, meaning that, holding the other variables constant, a person living in the Northeast region earns, on average, 1.105 more dollars hourly than a person living in the West (the base category). 
+In the following, we estimate the model and then provide the regression results. The estimation results are shown in @tbl-t13-6. The coefficient on each dummy variable shows the average difference in the dependent variable relative to the base category. For example, the estimated coefficient on `northeast` is 1.105, meaning that, holding the other variables constant, a person living in the Northeast region earns, on average, 1.105 more dollars hourly than a person living in the West (the base category). 
 
 The estimated coefficient on `female` is -6.367. This estimate indicates that holding other variables constant, women earn on average 6.367 fewer dollars hourly than men. The estimated coefficient on `Yrseduc` is 2.981, which means that for each additional year of education, average hourly earnings increase by 2.981 dollars, holding other variables constant.
 
-:::{layout-ncol=1}
-```{python}
+
+```{r}
+model3 <- lm(ahe ~ yrseduc + female + northeast + midwest + south, data = mydata)
+```
+
+```{r}
 #| tbl-cap: "The dummy variable trap"
 #| label: tbl-t13-6
 # Print results in table form
-models = ['Model 3']
-results_table = summary_col(results=[result3],
-                            float_format='%0.3f', 
-                            stars=True,
-                            model_names=models)
-results_table
+modelsummary(model3, stars = TRUE)
 ```
-:::
 
 ## Control variables and conditional mean independence
 In this section, we divide the regressors into two groups. The first group includes the variables of interest, denoted by $X_1, \dots, X_k$. We aim to measure the causal effects of these variables on the dependent variable. The second group of regressors includes control variables, denoted by $W_1, \dots, W_r$. A **control variable** is a regressor that accounts for an omitted factor affecting the dependent variable. Thus, our multiple linear regression model with control variables can be written as
@@ -526,3 +515,4 @@ where $\E\left(v_i|X_{1i},X_{i2},\dots,X_{ik},W_{1i},\dots,W_{ri}\right)=0$. Thu
 The proof @thm-thm13.3 shows that the OLS estimators $\hat{\delta}_0,\dots,\hat{\delta}_r$ are unbiased and consistent estimators of $\delta_0,\dots,\delta_r$. From $\beta_{k+j}=\delta_j-\gamma_j$, we can derive the OLS estimators of the coefficients on the control variables as $\hat{\beta}_{k+j}=\hat{\delta}_j-\hat{\gamma}_j$. However, this approach is not feasible because we do not have consistent estimators of $\gamma_j$ for $j=1,\dots,r$. 
 
 @thm-thm13.3 justifies the use of control variables in the multiple linear regression model. According to this theorem, control variables should be selected so that, once included in the model, the variable of interest becomes uncorrelated with the error term. In the empirical application presented in the next chapter, we discuss how to choose control variables in practice.
+
