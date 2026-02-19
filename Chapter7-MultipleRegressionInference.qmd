@@ -23,12 +23,9 @@ Y_i=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\dots+\beta_kX_{ki}+u_i,
 $${#eq-eq14-1}
 for $i=1,2,\dots,n$. We want to test $H_0:\beta_j=\beta_{j0}$ versus $H_1:\beta_j\ne\beta_{j0}$, where $\beta_{j0}$ is the hypothesized value (known) and $j=1,2,\dots,k$. As in @sec-inference1, we can follow the following steps to test the null hypothesis:
  
-- Step 1: Use Python to compute the standard error of $\hat{\beta}_j$, denoted as $\text{SE}(\hat{\beta}_j)$.
-
+- Step 1: Use R to compute the standard error of $\hat{\beta}_j$, denoted as $\text{SE}(\hat{\beta}_j)$.
 - Step 2: Compute the $t$-statistic under $H_0$: $t=\frac{\hat{\beta}_j-\beta_{j0}}{\text{SE}(\hat{\beta}_j)}$.
-
 - Step 3: Compute the $p$-value under $H_0$: $\text{p-value}=2\times\Phi(-|t^{act}|)$, where $t_{calc}$ is the $t$-statistic computed in Step 2.
-
 - Step 4: Reject $H_0$ at the $5\%$ significance level if $\text{p-value}<0.05$, or equivalently, if $|t_{calc}|>1.96$.
 
 The theoretical justification for this procedure is based on the large-sample properties of the OLS estimators, as summarized in @thm-thm13-1 of @sec-multiple. In particular, this testing approach requires a large sample size to ensure that the normal distribution provides a good approximation to the sampling distribution of the $t$-statistic. 
@@ -51,7 +48,7 @@ $$
 \end{align}
 $${#eq-eq14-2}
 
-where `PctEL` is the percentage of English learners in the district and `Expn` is the total annual expenditures per pupil in the district in thousands of dollars. We estimate the model by assuming both homoskedastic and heteroskedastic error terms. As we have seen in @sec-inference1, we can obtain heteroskedasticity-robust standard errors by specifying  the `cov_type="HC1"` option in the `fit` method.
+where `PctEL` is the percentage of English learners in the district and `Expn` is the total annual expenditures per pupil in the district in thousands of dollars. 
 
 
 ```{r}
@@ -71,7 +68,7 @@ colnames(data)
 model1 <- lm(testscr ~ str + expn + el_pct, data = data)
 ```
 
-We use the `modelsummary` function to present the estimation results given in @tbl-t14-1. Note that we use the `vcov = list("classical", "HC1")` argument to provide homoskedasticity-only standard errors and heteroskedasticity-robust standard errors.
+We estimate the model by assuming both homoskedastic and heteroskedastic error terms. We use the `modelsummary` function to present the estimation results given in @tbl-t14-1. Note that we use the `vcov = list("classical", "HC1")` argument to provide homoskedasticity-only standard errors and heteroskedasticity-robust standard errors.
 
 ```{r}
 #| tbl-cap: "Estimation Results"
@@ -81,7 +78,7 @@ modelsummary(
   vcov = list("classical", "HC1"),
   fmt = 3,
   stars = TRUE,
-  gof_omit = "AIC|BIC|Log.Lik|F"
+  gof_omit = "AIC|BIC|Log.Lik"
 )
 ```
 
@@ -220,9 +217,7 @@ where $\hat{\bs{\Sigma}}$ is the estimate of heteroskedasticity-robust variance 
 To test the null hypothesis, we can follow the steps below: 
 
 * Step 1: Use R to compute the $F$-statistic.
-
 * Step 2: For a given significance level $\alpha$, use R to determine the critical value shown in @fig-fig14-1. If $F$-statistic$>$critical value, then reject the null hypothesis at the $5\%$ significance level.
-
 * Step 3: The $p$-value is $P(F_{q,\infty}>F_{calc})$, where $F_{calc}$ is the actual value computed in Step 1. If $p$-value$<0.05$, reject the null hypothesis at the $5\%$ significance level.
 
 
@@ -274,7 +269,7 @@ ggplot(df_data, aes(x = x, y = y)) +
                   ylim = c(0, max(df_data$y) * 1.1))
 ```
 
-Most statistical software, including Python, returns an **overall regression $F$-statistic** by default. This $F$-statistic is computed for the following null and alternative hypotheses:
+Most statistical software, including R, returns an **overall regression $F$-statistic** by default. This $F$-statistic is computed for the following null and alternative hypotheses:
 $$
 \begin{align*}
 &H_0: \beta_1=0, \beta_2=0,\dots,\beta_k=0,\\
@@ -373,13 +368,12 @@ H_0:\beta_1=\beta_2\quad\text{versus}\quad H_1:\beta_1\ne\beta_2
 \end{align}
 $$
 
-The null hypothesis imposes a single restriction ($q = 1$) on two parameters. Since the restriction is linear in terms of parameters, we can still use the $F$-statistic to test this null hypothesis. Thus, we can resort to the `result2.f_test` function to compute the $F$-statistic. The following code chunk illustrates the computation.
-
+The null hypothesis imposes a single restriction (q=1) on two parameters. Since the restriction is linear in terms of parameters, we can still use the $F$-statistic to test this null hypothesis. 
 ```{r}
 linearHypothesis(model1, "str = expn", white.adjust = "hc1")
 ```
 
-The heteroskedaticity-robust $F$-statistic is $8.9$ with a $p$-value of $0.003$. Thus, we reject the null $H_0:\beta_1=\beta_2$ at the $5\%$ significance level.
+The heteroskedaticity-robust $F$-statistic is 8.9 with a $p$-value of 0.003. Thus, we reject the null $H_0:\beta_1=\beta_2$ at the $5\%$ significance level.
 
 ## The Bonferroni test of a joint hypothesis
 In this section, we briefly describe the Benferroni approach for testing joint null hypotheses. In this approach, we use individual $t$-statistics along with a critical value that ensures the probability of the Type-I error does not exceed the desired significance level.

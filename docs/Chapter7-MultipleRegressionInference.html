@@ -559,10 +559,10 @@ Y_i=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\dots+\beta_kX_{ki}+u_i,
 \end{align}
 \tag{16.1}\]</span></span> for <span class="math inline">\(i=1,2,\dots,n\)</span>. We want to test <span class="math inline">\(H_0:\beta_j=\beta_{j0}\)</span> versus <span class="math inline">\(H_1:\beta_j\ne\beta_{j0}\)</span>, where <span class="math inline">\(\beta_{j0}\)</span> is the hypothesized value (known) and <span class="math inline">\(j=1,2,\dots,k\)</span>. As in <a href="Chapter5-LinearRegressionOneRegressorInference.html" class="quarto-xref"><span>Chapter 14</span></a>, we can follow the following steps to test the null hypothesis:</p>
 <ul>
-<li><p>Step 1: Use Python to compute the standard error of <span class="math inline">\(\hat{\beta}_j\)</span>, denoted as <span class="math inline">\(\text{SE}(\hat{\beta}_j)\)</span>.</p></li>
-<li><p>Step 2: Compute the <span class="math inline">\(t\)</span>-statistic under <span class="math inline">\(H_0\)</span>: <span class="math inline">\(t=\frac{\hat{\beta}_j-\beta_{j0}}{\text{SE}(\hat{\beta}_j)}\)</span>.</p></li>
-<li><p>Step 3: Compute the <span class="math inline">\(p\)</span>-value under <span class="math inline">\(H_0\)</span>: <span class="math inline">\(\text{p-value}=2\times\Phi(-|t^{act}|)\)</span>, where <span class="math inline">\(t_{calc}\)</span> is the <span class="math inline">\(t\)</span>-statistic computed in Step 2.</p></li>
-<li><p>Step 4: Reject <span class="math inline">\(H_0\)</span> at the <span class="math inline">\(5\%\)</span> significance level if <span class="math inline">\(\text{p-value}&lt;0.05\)</span>, or equivalently, if <span class="math inline">\(|t_{calc}|&gt;1.96\)</span>.</p></li>
+<li>Step 1: Use R to compute the standard error of <span class="math inline">\(\hat{\beta}_j\)</span>, denoted as <span class="math inline">\(\text{SE}(\hat{\beta}_j)\)</span>.</li>
+<li>Step 2: Compute the <span class="math inline">\(t\)</span>-statistic under <span class="math inline">\(H_0\)</span>: <span class="math inline">\(t=\frac{\hat{\beta}_j-\beta_{j0}}{\text{SE}(\hat{\beta}_j)}\)</span>.</li>
+<li>Step 3: Compute the <span class="math inline">\(p\)</span>-value under <span class="math inline">\(H_0\)</span>: <span class="math inline">\(\text{p-value}=2\times\Phi(-|t^{act}|)\)</span>, where <span class="math inline">\(t_{calc}\)</span> is the <span class="math inline">\(t\)</span>-statistic computed in Step 2.</li>
+<li>Step 4: Reject <span class="math inline">\(H_0\)</span> at the <span class="math inline">\(5\%\)</span> significance level if <span class="math inline">\(\text{p-value}&lt;0.05\)</span>, or equivalently, if <span class="math inline">\(|t_{calc}|&gt;1.96\)</span>.</li>
 </ul>
 <p>The theoretical justification for this procedure is based on the large-sample properties of the OLS estimators, as summarized in <a href="Chapter6-MultipleRegression.html#thm-thm13-1" class="quarto-xref">Theorem&nbsp;<span>15.2</span></a> of <a href="Chapter6-MultipleRegression.html" class="quarto-xref"><span>Chapter 15</span></a>. In particular, this testing approach requires a large sample size to ensure that the normal distribution provides a good approximation to the sampling distribution of the <span class="math inline">\(t\)</span>-statistic.</p>
 <p>Recall that the <span class="math inline">\(95\%\)</span> two-sided confidence interval for <span class="math inline">\(\beta_j\)</span> is an interval that contains <span class="math inline">\(\beta_j\)</span> with a <span class="math inline">\(95\%\)</span> probability. When the sample size is large, the <span class="math inline">\(95\%\)</span> two-sided confidence interval for <span class="math inline">\(\beta_j\)</span> is given by <span class="math display">\[
@@ -578,7 +578,7 @@ Y_i=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\dots+\beta_kX_{ki}+u_i,
 \text{TestScore}=\beta_0+\beta_1\times\text{STR}+\beta_2\text{Expn}+\beta_3\times\text{PctEL}+u,
 \end{align}
 \tag{16.2}\]</span></span></p>
-<p>where <code>PctEL</code> is the percentage of English learners in the district and <code>Expn</code> is the total annual expenditures per pupil in the district in thousands of dollars. We estimate the model by assuming both homoskedastic and heteroskedastic error terms. As we have seen in <a href="Chapter5-LinearRegressionOneRegressorInference.html" class="quarto-xref"><span>Chapter 14</span></a>, we can obtain heteroskedasticity-robust standard errors by specifying the <code>cov_type="HC1"</code> option in the <code>fit</code> method.</p>
+<p>where <code>PctEL</code> is the percentage of English learners in the district and <code>Expn</code> is the total annual expenditures per pupil in the district in thousands of dollars.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/caschool.xlsx"</span>)</span>
@@ -602,14 +602,14 @@ Y_i=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\dots+\beta_kX_{ki}+u_i,
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate the model</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">+</span> expn <span class="sc">+</span> el_pct, <span class="at">data =</span> data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We use the <code>modelsummary</code> function to present the estimation results given in <a href="#tbl-t14-1" class="quarto-xref">Table&nbsp;<span>16.1</span></a>. Note that we use the <code>vcov = list("classical", "HC1")</code> argument to provide homoskedasticity-only standard errors and heteroskedasticity-robust standard errors.</p>
+<p>We estimate the model by assuming both homoskedastic and heteroskedastic error terms. We use the <code>modelsummary</code> function to present the estimation results given in <a href="#tbl-t14-1" class="quarto-xref">Table&nbsp;<span>16.1</span></a>. Note that we use the <code>vcov = list("classical", "HC1")</code> argument to provide homoskedasticity-only standard errors and heteroskedasticity-robust standard errors.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="st">"Homoskedastic Model"</span> <span class="ot">=</span> model1, <span class="st">"Heteroskedastic Model"</span> <span class="ot">=</span> model1),</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="fu">list</span>(<span class="st">"classical"</span>, <span class="st">"HC1"</span>),</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span>,</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik|F"</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik"</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="tbl-t14-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -624,25 +624,25 @@ Table&nbsp;16.1: Estimation Results
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_rh7peq77by6stg7hoc9q = TinyTable.createTableFunctions("tinytable_rh7peq77by6stg7hoc9q");
+      const tableFns_idmybxet4xtmtp74gnqg = TinyTable.createTableFunctions("tinytable_idmybxet4xtmtp74gnqg");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '13', j: 2 }, { i: '13', j: 3 } ], css_id: 'tinytable_css_q4jk23cravrf6me1uovv',}, 
-          { positions: [ { i: '8', j: 2 }, { i: '8', j: 3 } ], css_id: 'tinytable_css_5lvq27uff4wd783rnzjy',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 } ], css_id: 'tinytable_css_5njs7xew0lzxqg2l961j',}, 
-          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_pyyljba0bqe8yzepjp5b',}, 
-          { positions: [ { i: '13', j: 1 } ], css_id: 'tinytable_css_sfcog0t1ugopbln2omst',}, 
-          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_4ugravlb04zaw7vs8c6p',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 } ], css_id: 'tinytable_css_j4s65wzo5bkxhxnmxbet',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_0wfrvw0mom5ipfscscxg',}, 
+          { positions: [ { i: '14', j: 2 }, { i: '14', j: 3 } ], css_id: 'tinytable_css_ead766sqa2eq5euddhc3',}, 
+          { positions: [ { i: '8', j: 2 }, { i: '8', j: 3 } ], css_id: 'tinytable_css_97n2rg2eunojwely8ekj',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 } ], css_id: 'tinytable_css_ffuvhwytcvdt01niagsf',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_0ib20tqpl420326mev8g',}, 
+          { positions: [ { i: '14', j: 1 } ], css_id: 'tinytable_css_xhwsskos804kw867b88n',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_tqsc5k3xlx92ia94b3sz',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 } ], css_id: 'tinytable_css_5ne0drs6exgd8om389bz',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_oc2aqricx5vgfwaajavb',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_rh7peq77by6stg7hoc9q.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_idmybxet4xtmtp74gnqg.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -651,17 +651,17 @@ Table&nbsp;16.1: Estimation Results
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_q4jk23cravrf6me1uovv, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_q4jk23cravrf6me1uovv {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_5lvq27uff4wd783rnzjy, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_5lvq27uff4wd783rnzjy {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_5njs7xew0lzxqg2l961j, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_5njs7xew0lzxqg2l961j { text-align: center }
-    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_pyyljba0bqe8yzepjp5b, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_pyyljba0bqe8yzepjp5b {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_sfcog0t1ugopbln2omst, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_sfcog0t1ugopbln2omst {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_4ugravlb04zaw7vs8c6p, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_4ugravlb04zaw7vs8c6p {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_j4s65wzo5bkxhxnmxbet, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_j4s65wzo5bkxhxnmxbet { text-align: left }
-    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_0wfrvw0mom5ipfscscxg, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_0wfrvw0mom5ipfscscxg {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_idmybxet4xtmtp74gnqg td.tinytable_css_ead766sqa2eq5euddhc3, #tinytable_idmybxet4xtmtp74gnqg th.tinytable_css_ead766sqa2eq5euddhc3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_idmybxet4xtmtp74gnqg td.tinytable_css_97n2rg2eunojwely8ekj, #tinytable_idmybxet4xtmtp74gnqg th.tinytable_css_97n2rg2eunojwely8ekj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_idmybxet4xtmtp74gnqg td.tinytable_css_ffuvhwytcvdt01niagsf, #tinytable_idmybxet4xtmtp74gnqg th.tinytable_css_ffuvhwytcvdt01niagsf { text-align: center }
+    #tinytable_idmybxet4xtmtp74gnqg td.tinytable_css_0ib20tqpl420326mev8g, #tinytable_idmybxet4xtmtp74gnqg th.tinytable_css_0ib20tqpl420326mev8g {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_idmybxet4xtmtp74gnqg td.tinytable_css_xhwsskos804kw867b88n, #tinytable_idmybxet4xtmtp74gnqg th.tinytable_css_xhwsskos804kw867b88n {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_idmybxet4xtmtp74gnqg td.tinytable_css_tqsc5k3xlx92ia94b3sz, #tinytable_idmybxet4xtmtp74gnqg th.tinytable_css_tqsc5k3xlx92ia94b3sz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_idmybxet4xtmtp74gnqg td.tinytable_css_5ne0drs6exgd8om389bz, #tinytable_idmybxet4xtmtp74gnqg th.tinytable_css_5ne0drs6exgd8om389bz { text-align: left }
+    #tinytable_idmybxet4xtmtp74gnqg td.tinytable_css_oc2aqricx5vgfwaajavb, #tinytable_idmybxet4xtmtp74gnqg th.tinytable_css_oc2aqricx5vgfwaajavb {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_rh7peq77by6stg7hoc9q" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_idmybxet4xtmtp74gnqg" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -728,14 +728,19 @@ Table&nbsp;16.1: Estimation Results
                   <td data-row="11" data-col="3">0.433</td>
                 </tr>
                 <tr>
-                  <td data-row="12" data-col="1">RMSE</td>
-                  <td data-row="12" data-col="2">14.28</td>
-                  <td data-row="12" data-col="3">14.28</td>
+                  <td data-row="12" data-col="1">F</td>
+                  <td data-row="12" data-col="2">107.455</td>
+                  <td data-row="12" data-col="3">147.204</td>
                 </tr>
                 <tr>
-                  <td data-row="13" data-col="1">Std.Errors</td>
-                  <td data-row="13" data-col="2">IID</td>
-                  <td data-row="13" data-col="3">HC1</td>
+                  <td data-row="13" data-col="1">RMSE</td>
+                  <td data-row="13" data-col="2">14.28</td>
+                  <td data-row="13" data-col="3">14.28</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1">Std.Errors</td>
+                  <td data-row="14" data-col="2">IID</td>
+                  <td data-row="14" data-col="3">HC1</td>
                 </tr>
         </tbody>
       </table>
@@ -864,9 +869,9 @@ F=\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(\bs{R}\hat{\bs{\Sigma}}\bs
 \]</span> where <span class="math inline">\(\hat{\bs{\Sigma}}\)</span> is the estimate of heteroskedasticity-robust variance of <span class="math inline">\(\hat{\bs{\beta}}\)</span>. When the sample size is large, the distribution of <span class="math inline">\(F\)</span>-statistic is approximated by <span class="math inline">\(\chi^2_q/q\equiv F_{q,\infty}\)</span>. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 28</span></a>, we prove that the sampling distribution of the <span class="math inline">\(F\)</span>-statistic is approximated by <span class="math inline">\(F_{q,\infty}\)</span> under the null hypothesis.</p>
 <p>To test the null hypothesis, we can follow the steps below:</p>
 <ul>
-<li><p>Step 1: Use R to compute the <span class="math inline">\(F\)</span>-statistic.</p></li>
-<li><p>Step 2: For a given significance level <span class="math inline">\(\alpha\)</span>, use R to determine the critical value shown in <a href="#fig-fig14-1" class="quarto-xref">Figure&nbsp;<span>16.1</span></a>. If <span class="math inline">\(F\)</span>-statistic<span class="math inline">\(&gt;\)</span>critical value, then reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</p></li>
-<li><p>Step 3: The <span class="math inline">\(p\)</span>-value is <span class="math inline">\(P(F_{q,\infty}&gt;F_{calc})\)</span>, where <span class="math inline">\(F_{calc}\)</span> is the actual value computed in Step 1. If <span class="math inline">\(p\)</span>-value<span class="math inline">\(&lt;0.05\)</span>, reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</p></li>
+<li>Step 1: Use R to compute the <span class="math inline">\(F\)</span>-statistic.</li>
+<li>Step 2: For a given significance level <span class="math inline">\(\alpha\)</span>, use R to determine the critical value shown in <a href="#fig-fig14-1" class="quarto-xref">Figure&nbsp;<span>16.1</span></a>. If <span class="math inline">\(F\)</span>-statistic<span class="math inline">\(&gt;\)</span>critical value, then reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</li>
+<li>Step 3: The <span class="math inline">\(p\)</span>-value is <span class="math inline">\(P(F_{q,\infty}&gt;F_{calc})\)</span>, where <span class="math inline">\(F_{calc}\)</span> is the actual value computed in Step 1. If <span class="math inline">\(p\)</span>-value<span class="math inline">\(&lt;0.05\)</span>, reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</li>
 </ul>
 <div class="cell" data-fig-hight="4">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
@@ -923,7 +928,7 @@ Figure&nbsp;16.1: The critical value from the F-distribution
 </div>
 </div>
 </div>
-<p>Most statistical software, including Python, returns an <strong>overall regression <span class="math inline">\(F\)</span>-statistic</strong> by default. This <span class="math inline">\(F\)</span>-statistic is computed for the following null and alternative hypotheses: <span class="math display">\[
+<p>Most statistical software, including R, returns an <strong>overall regression <span class="math inline">\(F\)</span>-statistic</strong> by default. This <span class="math inline">\(F\)</span>-statistic is computed for the following null and alternative hypotheses: <span class="math display">\[
 \begin{align*}
 &amp;H_0: \beta_1=0, \beta_2=0,\dots,\beta_k=0,\\
 &amp;H_1: \text{At least one restriction is false}.
@@ -1038,7 +1043,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 H_0:\beta_1=\beta_2\quad\text{versus}\quad H_1:\beta_1\ne\beta_2
 \end{align}
 \]</span></p>
-<p>The null hypothesis imposes a single restriction (<span class="math inline">\(q = 1\)</span>) on two parameters. Since the restriction is linear in terms of parameters, we can still use the <span class="math inline">\(F\)</span>-statistic to test this null hypothesis. Thus, we can resort to the <code>result2.f_test</code> function to compute the <span class="math inline">\(F\)</span>-statistic. The following code chunk illustrates the computation.</p>
+<p>The null hypothesis imposes a single restriction (q=1) on two parameters. Since the restriction is linear in terms of parameters, we can still use the <span class="math inline">\(F\)</span>-statistic to test this null hypothesis.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(model1, <span class="st">"str = expn"</span>, <span class="at">white.adjust =</span> <span class="st">"hc1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1058,7 +1063,7 @@ Note: Coefficient covariance matrix supplied.
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>The heteroskedaticity-robust <span class="math inline">\(F\)</span>-statistic is <span class="math inline">\(8.9\)</span> with a <span class="math inline">\(p\)</span>-value of <span class="math inline">\(0.003\)</span>. Thus, we reject the null <span class="math inline">\(H_0:\beta_1=\beta_2\)</span> at the <span class="math inline">\(5\%\)</span> significance level.</p>
+<p>The heteroskedaticity-robust <span class="math inline">\(F\)</span>-statistic is 8.9 with a <span class="math inline">\(p\)</span>-value of 0.003. Thus, we reject the null <span class="math inline">\(H_0:\beta_1=\beta_2\)</span> at the <span class="math inline">\(5\%\)</span> significance level.</p>
 </section>
 </section>
 <section id="the-bonferroni-test-of-a-joint-hypothesis" class="level2" data-number="16.3">
@@ -1390,25 +1395,25 @@ Table&nbsp;16.3: OLS Estimation Results
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_1lyu74sv3wcbuaedrk5u = TinyTable.createTableFunctions("tinytable_1lyu74sv3wcbuaedrk5u");
+      const tableFns_2qtbi45lmikkz8fj8yd6 = TinyTable.createTableFunctions("tinytable_2qtbi45lmikkz8fj8yd6");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '15', j: 2 }, { i: '15', j: 3 }, { i: '15', j: 4 }, { i: '15', j: 5 }, { i: '15', j: 6 } ], css_id: 'tinytable_css_yrfdw8gi0rxtmql50e8m',}, 
-          { positions: [ { i: '10', j: 2 }, { i: '10', j: 3 }, { i: '10', j: 4 }, { i: '10', j: 5 }, { i: '10', j: 6 } ], css_id: 'tinytable_css_yg2qcg7psuokk5u2xg0g',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '3', j: 6 }, { i: '4', j: 6 }, { i: '5', j: 6 }, { i: '6', j: 6 }, { i: '7', j: 6 }, { i: '8', j: 6 }, { i: '9', j: 6 }, { i: '11', j: 6 }, { i: '12', j: 6 }, { i: '13', j: 6 }, { i: '14', j: 6 } ], css_id: 'tinytable_css_mwlf8opx782syk0cp0m7',}, 
-          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 } ], css_id: 'tinytable_css_ds9l69pu341gbfsdquu3',}, 
-          { positions: [ { i: '15', j: 1 } ], css_id: 'tinytable_css_1hrayn8sz9qmu55vnge0',}, 
-          { positions: [ { i: '10', j: 1 } ], css_id: 'tinytable_css_3kk8yl577ly5acz2i4go',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 } ], css_id: 'tinytable_css_9zykxicuxct686c4ehf9',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_2jxx0azhm7r71yqtfqvi',}, 
+          { positions: [ { i: '15', j: 2 }, { i: '15', j: 3 }, { i: '15', j: 4 }, { i: '15', j: 5 }, { i: '15', j: 6 } ], css_id: 'tinytable_css_8bt6src88g7f33phqkde',}, 
+          { positions: [ { i: '10', j: 2 }, { i: '10', j: 3 }, { i: '10', j: 4 }, { i: '10', j: 5 }, { i: '10', j: 6 } ], css_id: 'tinytable_css_pwvfod2jfll6768on7sr',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '3', j: 6 }, { i: '4', j: 6 }, { i: '5', j: 6 }, { i: '6', j: 6 }, { i: '7', j: 6 }, { i: '8', j: 6 }, { i: '9', j: 6 }, { i: '11', j: 6 }, { i: '12', j: 6 }, { i: '13', j: 6 }, { i: '14', j: 6 } ], css_id: 'tinytable_css_n5nh9d57auvt2m7p3n9v',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 } ], css_id: 'tinytable_css_vhn20ckrzcqnjj3orzkl',}, 
+          { positions: [ { i: '15', j: 1 } ], css_id: 'tinytable_css_8eogz2rqiyvafnn23515',}, 
+          { positions: [ { i: '10', j: 1 } ], css_id: 'tinytable_css_od1cd5k3d0sq9m5uf8hm',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 } ], css_id: 'tinytable_css_08mnro8425lhkhlnxu3g',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_pkthdu32kf4nb0azhocz',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_1lyu74sv3wcbuaedrk5u.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_2qtbi45lmikkz8fj8yd6.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1417,17 +1422,17 @@ Table&nbsp;16.3: OLS Estimation Results
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_yrfdw8gi0rxtmql50e8m, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_yrfdw8gi0rxtmql50e8m {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_yg2qcg7psuokk5u2xg0g, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_yg2qcg7psuokk5u2xg0g {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_mwlf8opx782syk0cp0m7, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_mwlf8opx782syk0cp0m7 { text-align: center }
-    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_ds9l69pu341gbfsdquu3, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_ds9l69pu341gbfsdquu3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_1hrayn8sz9qmu55vnge0, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_1hrayn8sz9qmu55vnge0 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_3kk8yl577ly5acz2i4go, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_3kk8yl577ly5acz2i4go {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_9zykxicuxct686c4ehf9, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_9zykxicuxct686c4ehf9 { text-align: left }
-    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_2jxx0azhm7r71yqtfqvi, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_2jxx0azhm7r71yqtfqvi {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_2qtbi45lmikkz8fj8yd6 td.tinytable_css_8bt6src88g7f33phqkde, #tinytable_2qtbi45lmikkz8fj8yd6 th.tinytable_css_8bt6src88g7f33phqkde {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_2qtbi45lmikkz8fj8yd6 td.tinytable_css_pwvfod2jfll6768on7sr, #tinytable_2qtbi45lmikkz8fj8yd6 th.tinytable_css_pwvfod2jfll6768on7sr {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_2qtbi45lmikkz8fj8yd6 td.tinytable_css_n5nh9d57auvt2m7p3n9v, #tinytable_2qtbi45lmikkz8fj8yd6 th.tinytable_css_n5nh9d57auvt2m7p3n9v { text-align: center }
+    #tinytable_2qtbi45lmikkz8fj8yd6 td.tinytable_css_vhn20ckrzcqnjj3orzkl, #tinytable_2qtbi45lmikkz8fj8yd6 th.tinytable_css_vhn20ckrzcqnjj3orzkl {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_2qtbi45lmikkz8fj8yd6 td.tinytable_css_8eogz2rqiyvafnn23515, #tinytable_2qtbi45lmikkz8fj8yd6 th.tinytable_css_8eogz2rqiyvafnn23515 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_2qtbi45lmikkz8fj8yd6 td.tinytable_css_od1cd5k3d0sq9m5uf8hm, #tinytable_2qtbi45lmikkz8fj8yd6 th.tinytable_css_od1cd5k3d0sq9m5uf8hm {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_2qtbi45lmikkz8fj8yd6 td.tinytable_css_08mnro8425lhkhlnxu3g, #tinytable_2qtbi45lmikkz8fj8yd6 th.tinytable_css_08mnro8425lhkhlnxu3g { text-align: left }
+    #tinytable_2qtbi45lmikkz8fj8yd6 td.tinytable_css_pkthdu32kf4nb0azhocz, #tinytable_2qtbi45lmikkz8fj8yd6 th.tinytable_css_pkthdu32kf4nb0azhocz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_1lyu74sv3wcbuaedrk5u" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_2qtbi45lmikkz8fj8yd6" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
