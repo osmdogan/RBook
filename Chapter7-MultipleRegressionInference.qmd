@@ -1,14 +1,17 @@
 # Hypothesis Tests and Confidence Intervals in Multiple Regression {#sec-inference2}
 
-```{python}
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-from statsmodels.iolib.summary2 import summary_col
-import scipy.stats as stats
+```{r}
+#| warning: false
+#| message: false
+# Load necessary libraries
+library(tidyverse)
+library(gridExtra)
+library(modelsummary)
+library(sandwich)
+library(lmtest)
+library(knitr)
+library(readxl)
+library(car) 
 ```
 
 ## Hypothesis tests and confidence intervals for a single coefficient
@@ -48,54 +51,59 @@ $$
 \end{align}
 $${#eq-eq14-2}
 
-where `PctEL` is the percentage of English learners in the district and `Expn` is the total annual expenditures per pupil in the district in thousands of dollars. We estimate the model by assuming both homoskedastic and heteroskedastic error terms. As we have seen in @sec-inference1, we can obtain heteroskedasticity-robust standard errors by specifying  the `cov_type="HC1"` option in the `fit` method. 
+where `PctEL` is the percentage of English learners in the district and `Expn` is the total annual expenditures per pupil in the district in thousands of dollars. We estimate the model by assuming both homoskedastic and heteroskedastic error terms. As we have seen in @sec-inference1, we can obtain heteroskedasticity-robust standard errors by specifying  the `cov_type="HC1"` option in the `fit` method.
 
-```{python}
-#| warning: false
-#| message: false
-# Load the dataset
-data = pd.read_excel("data/caschool.xlsx", sheet_name="caschool", header=0)
+
+```{r}
+# Import data
+data <- read_excel("data/caschool.xlsx")
+
 # Scale expenditure to thousands of dollars
-data[["expn"]] = data[["expn_stu"]]/1000
+data$expn <- data$expn_stu / 1000
+
 # Display column names
-data.columns
+colnames(data)
 ```
 
-```{python}
-# OLS estimation with homoskedastic standard errors
-model1=smf.ols(formula='testscr ~ str + expn + el_pct',data=data)
-result1=model1.fit()
-# OLS estimation with heteroskedasticity-robust standard errors (HC1)
-model2=smf.ols(formula='testscr ~ str + expn + el_pct',data=data)
-result2=model2.fit(cov_type="HC1")
+
+```{r}
+# Estimate the model
+model1 <- lm(testscr ~ str + expn + el_pct, data = data)
 ```
 
-We use the `summary_col` function to present the estimation results contained in `result1` and `result2` in @tbl-t14-1.  
+We use the `modelsummary` function to present the estimation results given in @tbl-t14-1. Note that we use the `vcov = list("classical", "HC1")` argument to provide homoskedasticity-only standard errors and heteroskedasticity-robust standard errors.
 
-:::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: "Estimation Results"
 #| label: tbl-t14-1
-# Print results in table form
-models=['Homoskedastic Model', 'Heteroskedastic Model']
-results_table=summary_col(results=[result1,result2],
-                          float_format='%0.3f', 
-                          stars=True,
-                          model_names=models)
-results_table
+modelsummary(
+  list("Homoskedastic Model" = model1, "Heteroskedastic Model" = model1),
+  vcov = list("classical", "HC1"),
+  fmt = 3,
+  stars = TRUE,
+  gof_omit = "AIC|BIC|Log.Lik|F"
+)
 ```
-:::
 
 We consider testing $H_0:\beta_1=0$ versus $H_1:\beta_1\ne0$. Using heteroskedasticity-robust standard errors, we can compute the $t$-statistic as $t=\frac{\hat{\beta}_1-0}{\text{SE}(\hat{\beta}_1)}=-0.29/0.48=-0.60$. Since $|t|=0.60<1.96$, we fail to reject $H_0$. 
 
 The p-value is $2\Phi(-|t_{calc}|)=2\Phi(-0.60)$. Using the following code chunk, we find that $p$-value$=0.552>0.05$, and thus, we fail to reject $H_0$ at the $5\%$ significance level. Both the $t$-statistic and the $p$-value suggest that the student-teacher ratio does not have a statistically significant effect on the test scores at the $5\%$ significance level.
 
-```{python}
-# p-value
-t=result2.tvalues["str"]
-# t=result1.tvalues.iloc[1]
-p_value = 2 * stats.norm.cdf(-np.abs(t), loc=0, scale=1)
-p_value.round(3)
+```{r}
+# Heteroskedasticity-robust covariance matrix
+vcov_robust <- vcovHC(model1, type = "HC1")
+
+# Robust coefficient test
+robust_test <- coeftest(model1, vcov. = vcov_robust)
+
+# Extract robust t-value for 'str'
+t <- robust_test["str", "t value"]
+
+# Two-sided p-value using standard normal distribution
+p_value <- 2 * pnorm(-abs(t))
+
+# Round to 3 decimals
+round(p_value, 3)
 ```
 
 Using the heteroskedasticity-robust standard error reported in @tbl-t14-1, the $95\%$ two-sided confidence interval for $\beta_1$ is
@@ -103,11 +111,30 @@ $$
 \left[\hat{\beta}_1-1.96\times\text{SE}(\hat{\beta}_1),\,\hat{\beta}_1+1.96\times\text{SE}(\hat{\beta}_1)\right]=[-1.23,\,0.65].
 $$
 
-Since the confidence interval includes the hypothesized value $0$, it favors $H_0$, i.e., we fail to reject $H_0$ at the $5\%$ significance level. Alternatively, the `result2.conf_int` function can be used to get the confidence intervals as shown below.
+Since the confidence interval includes the hypothesized value $0$, it favors $H_0$, i.e., we fail to reject $H_0$ at the $5\%$ significance level. Alternatively, we can compute the $95\%$ two-sided confidence interval for $\beta_1$ in the following way:
+ 
+```{r}
+# Heteroskedasticity-robust covariance matrix
+vcov_robust <- vcovHC(model1, type = "HC1")
 
-```{python}
-# 95% two-sided confidence interval
-result2.conf_int(alpha=0.05).round(2) 
+# Robust coefficient test
+robust_test <- coeftest(model1, vcov. = vcov_robust)
+
+# The estimate of beta1
+beta1_hat <- robust_test["str", "Estimate"]
+
+# Robust standard error
+se_robust <- robust_test["str", "Std. Error"]
+
+# The critical value
+z <- qnorm(0.975)
+
+# The confidence interval bounds
+ci_lower <- beta1_hat - z * se_robust
+ci_upper <- beta1_hat + z * se_robust
+
+# Combine into a matrix and round
+round(c(ci_lower, ci_upper),3)
 ```
 
 
@@ -192,48 +219,59 @@ where $\hat{\bs{\Sigma}}$ is the estimate of heteroskedasticity-robust variance 
 
 To test the null hypothesis, we can follow the steps below: 
 
-* Step 1: Use Python to compute the $F$-statistic.
+* Step 1: Use R to compute the $F$-statistic.
 
-* Step 2: For a given significance level $\alpha$, use Python to determine the critical value shown in @fig-fig14-1. If $F$-statistic$>$critical value, then reject the null hypothesis at the $5\%$ significance level.
+* Step 2: For a given significance level $\alpha$, use R to determine the critical value shown in @fig-fig14-1. If $F$-statistic$>$critical value, then reject the null hypothesis at the $5\%$ significance level.
 
 * Step 3: The $p$-value is $P(F_{q,\infty}>F_{calc})$, where $F_{calc}$ is the actual value computed in Step 1. If $p$-value$<0.05$, reject the null hypothesis at the $5\%$ significance level.
 
-```{python}
+
+```{r}
 #| fig-cap: The critical value from the F-distribution
 #| label: fig-fig14-1
-# F-distribution and the critical value
-# Set parameters for the F-distribution
-d1 = 5  # degrees of freedom numerator
-d2 = 10  # degrees of freedom denominator
-alpha = 0.05  # significance level
+#| fig-width: 5
+#| fig-hight: 4
+# Parameters
+d1 <- 5
+d2 <- 10
+alpha <- 0.05
 
-# Generate x values for the density plot
-x = np.linspace(0, 5, 1000)
-y = stats.f.pdf(x, d1, d2)
+# Data for the F distribution
+x <- seq(0, 5, length.out = 1000)
+df_data <- data.frame(
+  x = x,
+  y = df(x, df1 = d1, df2 = d2)
+)
 
-# Calculate the critical value for the specified significance level
-critical_value = stats.f.ppf(1 - alpha, d1, d2)
+# Critical value
+critical_value <- qf(1 - alpha, df1 = d1, df2 = d2)
 
-# Create the density plot
-sns.set_style('darkgrid')
-plt.figure(figsize=(5, 4))
-plt.plot(x, y, label='F-distribution', color='steelblue')
-#plt.axvline(critical_value, color='red', linestyle='--', label='Critical value')
-plt.fill_between(x, y, where=(x > critical_value), color='steelblue', alpha=0.5, label='Area= Significance level')
-
-# Annotate the critical value on the x-axis
-plt.annotate('Critical value', 
-             xy=(critical_value, 0), 
-             xytext=(critical_value + 0.5, 0.2), 
-             arrowprops=dict(edgecolor='black', arrowstyle='->',lw=1),
-             fontsize=10)
-
-plt.xlabel('F-statistic values')
-plt.ylabel('Density')
-plt.legend(frameon=False)
-plt.xlim(0, 5)
-plt.ylim(0, max(y) * 1.1)
-plt.show()
+# ggplot
+ggplot(df_data, aes(x = x, y = y)) +
+  geom_line(linewidth = 1) +
+  geom_area(
+    data = subset(df_data, x > critical_value),
+    aes(x = x, y = y),
+    alpha = 0.5
+  ) +
+  annotate(
+    "segment",
+    x = critical_value + 0.5, y = 0.2,
+    xend = critical_value, yend = 0,
+    linewidth = 0.8
+  ) +
+  annotate(
+    "text",
+    x = critical_value + 0.5, y = 0.22,
+    label = "Critical value",
+    size = 3.5
+  ) +
+  labs(
+    x = "F-statistic values",
+    y = "Density"
+  ) +
+  coord_cartesian(xlim = c(0, 5),
+                  ylim = c(0, max(df_data$y) * 1.1))
 ```
 
 Most statistical software, including Python, returns an **overall regression $F$-statistic** by default. This $F$-statistic is computed for the following null and alternative hypotheses:
@@ -286,52 +324,46 @@ $$
 \end{align*}
 $$
 
-We can use the `result2.f_test` function to compute the heteroskedasticity-robust $F$-statistic. In the following code chunk, the null hypothesis is specified through `hypothesis="str=0, expn=0"`. 
+In R, we can use the `linearHypothesis` function from the `car` package to compute the F-statistic. This function returns the homoskedasticity-only F-statistic by default. To get the heteroskedasticity-robust F-statistic, we need to supply the `white.adjust = "hc1` argument.
 
-```{python}
-# Define the joint null hypothesis
-hypothesis = "str=0, expn=0"
-# Perform the F-test
-f_test_result = result2.f_test(hypothesis)
-print(f_test_result)
+```{r}
+# Heteroskedasticity-robust F-statistics
+linearHypothesis(model1, c("str = 0", "expn = 0"), white.adjust = "hc1")
 ```
 
-The heteroskedasticity-robust $F$-statistic is $5.43$ with a $p$-value of $0.0047$. Since the $p$-value is less than $0.05$, we reject the null hypothesis at the $5\%$ significance level. 
+The heteroskedasticity-robust $F$-statistic is 5.43 with a $p$-value of 0.0047. Since the $p$-value is less than 0.05, we reject the null hypothesis at the $5\%$ significance level. 
 
 Since  the $F$-statistic has $F_{2,\infty}=\chi^2_2/2$ under the null distribution, we have 
 $$
-P(F_{q,\infty}>F_{calc})=P(\chi^2_2/2>F_{calc})=P(\chi^2_2>2\times F_{calc}),
+p-\text{value}=P(F_{q,\infty}>F_{calc})=P(\chi^2_2/2>F_{calc})=P(\chi^2_2>2\times F_{calc}),
 $$
 
 where $F_{calc}=5.43$. Thus, we can alternatively compute the $p$-value in the following way:
 
-```{python}
-# P-value of the F-statistic
-1-stats.chi2.cdf(2*5.43,df=2)
+```{r}
+# P-value of the F-statistic (chi-square approximation)
+pchisq(2 * 5.43, df = 2, lower.tail = FALSE)
+```
+
+Note that the above $p$-value is slightly different from the one provided by the `linearHypothesis` function. This function uses $F_{q,n-k_u-1}$ as the null-distribution of the F-statistic. Thus, to get the same result, we need to resort to $F_{q,n-k_u-1}=F_{2,416}$: 
+
+```{r}
+# P-value of the F-statistic (F-distribution)
+pf(5.43,df1=2, df2=416, lower.tail = FALSE)
 ```
 
 We know that the $F$-statistic has $F_{2,\infty}=\chi^2_2/2$ under the null distribution. Thus, the critical value at the the $5\%$ significance level is approximately $3$, as shown below. Since $F$-statistic$=5.43>3$, the $F$-statistic also suggests rejection of the null hypothesis at the $5\%$ significance level. 
 
-```{python}
+
+```{r}
 # Critical value
-stats.chi2.ppf(1-0.05,df=2)/2
+qchisq(1 - 0.05, df = 2) / 2
 ```
 
+The overall regression $F$-statistic given in @tbl-t14-1 is for testing  $H_0:\beta_1=0,\beta_2=0, \beta_3=0$ versus $H_1:\text{At least one coefficient is not zero}$. We can get the result in the second column by using the following code chunk:
 
-The overall regression $F$-statistic given in the output returned by `result2.summary()` is for testing  $H_0:\beta_1=0,\beta_2=0, \beta_3=0$ versus $H_1:\text{At least one coefficient is not zero}$. We can get the same result by using the following code chunk:
-
-```{python}
-print(result2.fvalue)
-print(result2.f_pvalue)
-```
-
-Alternatively, we can compute the overall regression $F$-statistic in the following way:
-
-```{python}
-# Define the joint null hypothesis
-hypothesis="str=0, expn=0, el_pct=0"
-# Perform the F-test
-print(result2.f_test(hypothesis))
+```{r}
+linearHypothesis(model1, c("str=0", "expn=0", "el_pct=0"), white.adjust = "hc1")
 ```
 
 Finally, we consider the null and alternative hypothesis of the following form:
@@ -343,11 +375,8 @@ $$
 
 The null hypothesis imposes a single restriction ($q = 1$) on two parameters. Since the restriction is linear in terms of parameters, we can still use the $F$-statistic to test this null hypothesis. Thus, we can resort to the `result2.f_test` function to compute the $F$-statistic. The following code chunk illustrates the computation.
 
-```{python}
-# Define the joint null hypothesis
-hypothesis="str=expn"
-# Perform F-statistic
-print(result2.f_test(hypothesis))
+```{r}
+linearHypothesis(model1, "str = expn", white.adjust = "hc1")
 ```
 
 The heteroskedaticity-robust $F$-statistic is $8.9$ with a $p$-value of $0.003$. Thus, we reject the null $H_0:\beta_1=\beta_2$ at the $5\%$ significance level.
@@ -376,27 +405,24 @@ where the inequality follows from the fact that $P(A\cup B)\leq P(A)+P(B)$ and t
 
 We use the following code chunk to determine the critical values at the $10\%$, $5\%$, and $1\%$ significance levels for $q=2$, $q=3$, and $q=4$. The critical values are presented in @tbl-t14-2. For example, when the joint null hypothesis involves two restrictions, the critical value at the $5\%$ significance level is $2.241$, which is the $1.25$th percentail of $Z$.
 
-```{python}
+
+```{r}
 #| tbl-cap: Bonferroni critical values for the one-at-a-time test
 #| label: tbl-t14-2
-# Bonferroni critical values
-# Significance levels to test
-alphas = [0.10, 0.05, 0.01]
-# Number of restrictions
-restrictions = [2, 3, 4]
+# Significance levels and number of restrictions
+alphas <- c(0.10, 0.05, 0.01)
+q <- c(2, 3, 4)
 
-# Compute Bonferroni critical values for each alpha and restriction
-critical_values = {
-    alpha: {q: stats.norm.ppf(1 - alpha / (2 * q)) for q in restrictions} for alpha in alphas
-}
-
-# Convert to a DataFrame 
-critical_values_df = pd.DataFrame(critical_values, index=restrictions)
-critical_values_df.columns = [f"alpha = {alpha}" for alpha in alphas]
-critical_values_df.index.name = "Number of Restrictions (q)"
+# Compute Bonferroni critical values
+critical_values_df <- data.frame(
+  `Number of Restrictions (q)` = q,
+  `alpha = 0.10` = qnorm(1 - 0.10 / (2 * q)),
+  `alpha = 0.05` = qnorm(1 - 0.05 / (2 * q)),
+  `alpha = 0.01` = qnorm(1 - 0.01 / (2 * q))
+)
 
 # Print the table
-critical_values_df
+kable(round(critical_values_df, 3), align = "c")
 ```
 
 :::{#exm-exm14.2}
@@ -407,52 +433,78 @@ We consider testing $H_0:\beta_1=0$ and $\beta_2=0$ in @eq-eq14-2 using the the 
 ## Confidence sets for multiple coefficients
 In this section we show how to formulate confidence sets for two or more coefficients in a multiple regression model. A $95\%$ confidence set for two or more coefficients is a set that contains the true values of the coefficients in $95\%$ of randomly chosen samples. We can determine this set by collecting the coefficient values that cannot be rejected by the heteroskedasticity-robust $F$-statistic at the $5%$ significance level. Consider the joint null hypothesis $H_0:\beta_1=\beta_{10}$ and $\beta_2=\beta_{20}$, where $\beta_{10}$ and $\beta_{20}$ are the hypothesized values. Then, the $95\%$ confidence set for $(\beta_1,\beta_2)$ consists of the pairs $(\beta_{10},\beta_{20})$ that are not rejected by the $F$-statistic at the $5\%$ significance level.
 
-In the following code chunk, we consider the model in @eq-eq14-2 and construct the $95\%$ confidence set for $(\beta_1,\beta_2)$. We first generate a grid of values around the estimated values and store these values in the `str_vals` and `expn_vals` arrays. We then compute the heteroskedasticity-robust $F$-statistic for each pair of values in the grid and store the resulting $F$-statistic values in the `f_values` array. The ellipse shown in @fig-fig14-2 includes the pairs of values that are not rejected by the $F$-statistic at the $5\%$ significance level. This ellipse represents the $95\%$ confidence set for $(\beta_1,\beta_2)$. Note that since the ellipse does not include $(0,0)$, we reject the joint null hypothesis $H_0:\beta_1=0$ and $\beta_2=0$ at the $5\%$ significance level. Also, since the estimated correlation between the OLS estimators $\hat{\beta}_1$ and $\hat{\beta}_2$ is positive, the ellipse is positively oriented, as shown in the figure.  
+In the following code chunk, we consider the model in @eq-eq14-2 and construct the $95\%$ confidence set for $(\beta_1,\beta_2)$. We first generate a grid of values around the estimated values and store these values in the `str_vals` and `expn_vals` sequences. We then compute the heteroskedasticity-robust $F$-statistic for each pair of values in the grid and store the resulting $F$-statistic values in the `f_values` matrix. The ellipse shown in @fig-fig14-2 includes the pairs of values that are not rejected by the $F$-statistic at the $5\%$ significance level. This ellipse represents the $95\%$ confidence set for $(\beta_1,\beta_2)$. Note that since the ellipse does not include $(0,0)$, we reject the joint null hypothesis $H_0:\beta_1=0$ and $\beta_2=0$ at the $5\%$ significance level. Also, since the estimated correlation between the OLS estimators $\hat{\beta}_1$ and $\hat{\beta}_2$ is positive, the ellipse is positively oriented, as shown in the figure. 
 
-```{python}
-# Step 1: Define the F-critical value for 5% significance
-alpha = 0.05
-f_critical = stats.chi2.ppf(1-alpha, df=2) / 2
 
-# Step 2: Get estimated coefficients
-coef_estimates = result2.params[['str', 'expn']]
+```{r}
+# Define the critical value
+alpha <- 0.05
+f_critical <- qchisq(1 - alpha, df = 2) / 2
 
-# Step 3: Define an expanded grid of values around the estimated coefficients
-str_vals = np.linspace(coef_estimates['str'] - 2.0, coef_estimates['str'] + 2.0, 30)
-expn_vals = np.linspace(coef_estimates['expn'] - 5, coef_estimates['expn'] + 5, 30)
-str_grid, expn_grid = np.meshgrid(str_vals, expn_vals)
+# Extract coefficient estimates
+coef_estimates <- coef(model1)[c("str", "expn")]
 
-# Step 4: Compute F-statistic for each pair in the grid
-f_values = np.zeros_like(str_grid)
-for i in range(str_grid.shape[0]):
-    for j in range(str_grid.shape[1]):
-        # Define the hypothesis for the given str and expn values
-        hypothesis = f"str = {str_grid[i, j]}, expn = {expn_grid[i, j]}"
-        
-        # Perform the F-test for this hypothesis
-        f_test = result2.f_test(hypothesis)
-        # Check if the result is scalar or an array and handle accordingly
-        f_values[i, j] = f_test.fvalue 
+# Create the grid around the estimates
+str_vals  <- seq(coef_estimates["str"]  - 2.0,
+                 coef_estimates["str"]  + 2.0,
+                 length.out = 30)
+
+expn_vals <- seq(coef_estimates["expn"] - 5.0,
+                 coef_estimates["expn"] + 5.0,
+                 length.out = 30)
+
+grid <- expand.grid(str = str_vals, expn = expn_vals)
+
+# Compute the F-statistic over the grid
+
+f_values <- matrix(NA, nrow = length(expn_vals), ncol = length(str_vals))
+
+for (i in seq_along(expn_vals)) {
+  for (j in seq_along(str_vals)) {
+    
+    hypothesis <- c(
+      paste0("str  = ", str_vals[j]),
+      paste0("expn = ", expn_vals[i])
+    )
+    
+    f_test <- linearHypothesis(model1, hypothesis, 
+    test = "F",  white.adjust = "hc1")
+    f_values[i, j] <- f_test$F[2]
+  }
+}
 ```
 
-```{python}
+```{r}
 #| fig-cap: The 95% confidence set for coefficients of str and expn
 #| label: fig-fig14-2
-# Plot the confidence region
-plt.figure(figsize=(6, 4.5))
-# Plot the contour where F-values reach the critical value
-contour = plt.contour(str_grid, expn_grid, f_values, levels=[f_critical], colors='steelblue')
-plt.scatter(coef_estimates['str'], coef_estimates['expn'], color='black', marker='o', label='Estimated coefficients')
-plt.axhline(0, color='gray', linestyle='-')
-plt.axvline(0, color='gray', linestyle='-')
+#| fig-width: 5
+#| fig-hight: 4
+# Plot the 95% confidence set
+# Convert grid + F-values into a data frame
+plot_df <- expand.grid(
+  str  = str_vals,
+  expn = expn_vals
+)
+plot_df$f_value <- as.vector(f_values)
 
-# Labels and title
-plt.xlabel(r'$\beta_1$')
-plt.ylabel(r'$\beta_2$')
-plt.legend()
-plt.show()
+ggplot(plot_df, aes(x = str, y = expn, z = f_value)) +
+  geom_contour(
+    breaks = f_critical,
+    color = "steelblue",
+    linewidth = 1
+  ) +
+  geom_point(
+    aes(x = coef_estimates["str"], y = coef_estimates["expn"]),
+    color = "black",
+    size = 2
+  ) +
+  geom_hline(yintercept = 0, color = "gray") +
+  geom_vline(xintercept = 0, color = "gray") +
+  labs(
+    x = expression(beta[1]),
+    y = expression(beta[2])
+  )
 ```
-
 
 ## Model specification for multiple regression
 In @sec-multiple, we use control variables to account for factors that can lead to omitted variable bias. Using control variables, we aim to ensure the conditional mean independence assumption for the variables of interest. However, in practice, we do not always know the right set of control variables for our application. @Stock2020 suggest a two-step approach for selecting the appropriate control variables. 
@@ -492,41 +544,60 @@ Besides our variable of interest `str`, there many other factors that affect the
 
 @fig-fig14-3 shows the scatterplots between these variables and the test scores. We observe that each variable is negatively correlated with the test scores.
 
-```{python}
+
+```{r}
 #| fig-cap: Scatterplots of test scores vs. three student characteristics
 #| label: fig-fig14-3
 # Scatterplots of Test Scores vs. Three Student Characteristics
-# Set up the arrangement of plots (2 rows, 2 columns)
-fig, axs = plt.subplots(2, 2, figsize=(8, 6))
-plt.subplots_adjust(hspace=0.4, wspace=0.4)  # Adjust space between plots
+# Common theme elements
+base_theme <- theme(
+    plot.title = element_text(size = 10)#,
+    #plot.margin = margin(5, 5, 5, 5)
+  )
 
-# Scatterplot for English
-sns.scatterplot(x='el_pct', y='testscr', data=data, color='steelblue', ax=axs[0, 0])
-axs[0, 0].set_xlim(0, 100)
-axs[0, 0].set_title("Percentage of english language learners", fontsize=10)
-axs[0, 0].set_xlabel("Percent")
-axs[0, 0].set_ylabel("Test Scores")
+# 1. English learners
+p1 <- ggplot(data, aes(x = el_pct, y = testscr)) +
+  geom_point(color = "steelblue", alpha = 0.8) +
+  scale_x_continuous(limits = c(0, 100)) +
+  labs(
+    title = "Percentage of english language learners",
+    x = "Percent",
+    y = "Test Scores"
+  ) +
+  base_theme
 
-# Scatterplot for Lunch
-sns.scatterplot(x='meal_pct', y='testscr', data=data, color='steelblue', ax=axs[0, 1])
-axs[0, 1].set_title("Percentage qualifying for reduced price lunch", fontsize=10)
-axs[0, 1].set_xlabel("Percent")
-axs[0, 1].set_ylabel("Test Scores")
+# 2. Reduced lunch
+p2 <- ggplot(data, aes(x = meal_pct, y = testscr)) +
+  geom_point(color = "steelblue", alpha = 0.8) +
+  labs(
+    title = "Percentage qualifying for reduced price lunch",
+    x = "Percent",
+    y = "Test Scores"
+  ) +
+  base_theme
 
-# Scatterplot for CalWorks
-sns.scatterplot(x='calw_pct', y='testscr', data=data, color='steelblue', ax=axs[1, 0])
-axs[1, 0].set_xlim(0, 100)
-axs[1, 0].set_title("Percentage qualifying for income assistance", fontsize=10)
-axs[1, 0].set_xlabel("Percent")
-axs[1, 0].set_ylabel("Test Scores")
+# 3. Income assistance
+p3 <- ggplot(data, aes(x = calw_pct, y = testscr)) +
+  geom_point(color = "steelblue", alpha = 0.8) +
+  scale_x_continuous(limits = c(0, 100)) +
+  labs(
+    title = "Percentage qualifying for income assistance",
+    x = "Percent",
+    y = "Test Scores"
+  ) +
+  base_theme
 
-# Hide the last subplot (bottom right)
-axs[1, 1].axis('off')
+# Empty plot (bottom-right)
+p_empty <- grid::nullGrob()
 
-# Show the plots
-plt.tight_layout()
-plt.show()
+# Arrange in 2x2 layout
+grid.arrange(
+  p1, p2,
+  p3, p_empty,
+  nrow = 2, ncol = 2
+)
 ```
+
 
 We consider the following five specifications. We use the second model as our base specification and the others as alternative specifications. 
 $$
@@ -541,47 +612,46 @@ $$
 
 The following code chunk can be used to estimate each model.
 
-```{python}
-# Estimation
+
+```{r}
 # Model 1
-model1 = smf.ols(formula="testscr ~ str", data=data).fit(cov_type="HC1")
+model1 <- lm(testscr ~ str, data = data)
+
 # Model 2
-model2 = smf.ols(formula="testscr ~ str + el_pct", data=data).fit(cov_type="HC1")
+model2 <- lm(testscr ~ str + el_pct, data = data)
+
 # Model 3
-model3 = smf.ols(formula="testscr ~ str + el_pct + meal_pct", data=data).fit(
-    cov_type="HC1"
-)
+model3 <- lm(testscr ~ str + el_pct + meal_pct, data = data)
+
 # Model 4
-model4 = smf.ols(formula="testscr ~ str + el_pct + calw_pct", data=data).fit(
-    cov_type="HC1"
-)
+model4 <- lm(testscr ~ str + el_pct + calw_pct, data = data)
+
 # Model 5
-model5 = smf.ols(
-    formula="testscr ~ str + el_pct + meal_pct + calw_pct", data=data
-).fit(cov_type="HC1")
+model5 <- lm(testscr ~ str + el_pct + meal_pct + calw_pct, data = data)
 ```
 
-We use the `summary_col()` function to present the estimation results, as shown in @tbl-t14-3.
-
-:::{layout-ncol=1}
-```{python}
+ We use the `modelsummary` function to present the estimation results. 
+```{r}
 #| tbl-cap: "OLS Estimation Results"
 #| label: tbl-t14-3
 # Print results in table form
-ModelsNames = ['Model 1', 'Model 2', "Model 3", "Model 4", "Model 5"]
-models = [model1, model2, model3, model4, model5]
-results_table=summary_col(results=models,
-                          float_format='%0.3f', 
-                          stars=True,
-                          model_names=ModelsNames,
-                          info_dict={'n':lambda x: f"{int(x.nobs)}",
-                                     'SER':lambda x: f"{np.sqrt(x.ssr/x.df_resid):.3f}"})
-results_table
+modelsummary(
+  list(
+    "Model 1" = model1,
+    "Model 2" = model2,
+    "Model 3" = model3,
+    "Model 4" = model4,
+    "Model 5" = model5
+  ),
+  vcov = "HC1",
+  fmt = 3,
+  stars = TRUE,
+  gof_omit = "AIC|BIC|Log.Lik|F"
+)
 ```
-:::
 
 The conventional way to present estimation results is to display each estimated regression side by side, as shown in @tbl-t14-3. We draw three main conclusions from these results:
 
-* When comparing the estimation results in the first column with those in the other columns, we observe that the estimated coefficient on `str` is halved after controlling for student characteristics. In all cases, the estimated coefficient on `str` is statistically significant at the $5\%$ level. In our base specification (column 2), the estimated coefficient is approximately $-1.1$ and remains similar in columns 3 through 5.
+* When comparing the estimation results in the first column with those in the other columns, we observe that the estimated coefficient on `str` is halved after controlling for student characteristics. In all cases, the estimated coefficient on `str` is statistically significant at the $5\%$ level. In our base specification (column 2), the estimated coefficient is approximately -1.1 and remains similar in columns 3 through 5.
 * Comparing the estimation results in column 1 with those in the other columns shows that including student characteristics increases the adjusted $R^2$ substantially.
 * The results in the fifth column indicate that `calw_pct` becomes redundant once we control for `meal_pct` and `el_pct`. 

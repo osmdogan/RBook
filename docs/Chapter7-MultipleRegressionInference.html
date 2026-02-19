@@ -77,7 +77,7 @@ div.csl-indent {
 }</style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -122,9 +122,6 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 <script>
 window.MathJax = {
   tex: {
@@ -543,15 +540,16 @@ window.Quarto = {
 </header>
 
 
-<div id="202af9ae" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.iolib.summary2 <span class="im">import</span> summary_col</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="hypothesis-tests-and-confidence-intervals-for-a-single-coefficient" class="level2" data-number="16.1">
 <h2 data-number="16.1" class="anchored" data-anchor-id="hypothesis-tests-and-confidence-intervals-for-a-single-coefficient"><span class="header-section-number">16.1</span> Hypothesis tests and confidence intervals for a single coefficient</h2>
@@ -581,172 +579,222 @@ Y_i=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\dots+\beta_kX_{ki}+u_i,
 \end{align}
 \tag{16.2}\]</span></span></p>
 <p>where <code>PctEL</code> is the percentage of English learners in the district and <code>Expn</code> is the total annual expenditures per pupil in the district in thousands of dollars. We estimate the model by assuming both homoskedastic and heteroskedastic error terms. As we have seen in <a href="Chapter5-LinearRegressionOneRegressorInference.html" class="quarto-xref"><span>Chapter 14</span></a>, we can obtain heteroskedasticity-robust standard errors by specifying the <code>cov_type="HC1"</code> option in the <code>fit</code> method.</p>
-<div id="e169d9a0" class="cell" data-message="false" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dataset</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_excel(<span class="st">"data/caschool.xlsx"</span>, sheet_name<span class="op">=</span><span class="st">"caschool"</span>, header<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale expenditure to thousands of dollars</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data[[<span class="st">"expn"</span>]] <span class="op">=</span> data[[<span class="st">"expn_stu"</span>]]<span class="op">/</span><span class="dv">1000</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Display column names</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>data.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<pre><code>Index(['Observation Number', 'dist_cod', 'county', 'district', 'gr_span',
-       'enrl_tot', 'teachers', 'calw_pct', 'meal_pct', 'computer', 'testscr',
-       'comp_stu', 'expn_stu', 'str', 'avginc', 'el_pct', 'read_scr',
-       'math_scr', 'expn'],
-      dtype='object')</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/caschool.xlsx"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale expenditure to thousands of dollars</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>expn <span class="ot">&lt;-</span> data<span class="sc">$</span>expn_stu <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Display column names</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Observation Number" "dist_cod"           "county"            
+ [4] "district"           "gr_span"            "enrl_tot"          
+ [7] "teachers"           "calw_pct"           "meal_pct"          
+[10] "computer"           "testscr"            "comp_stu"          
+[13] "expn_stu"           "str"                "avginc"            
+[16] "el_pct"             "read_scr"           "math_scr"          
+[19] "expn"              </code></pre>
 </div>
 </div>
-<div id="8c04a2b0" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># OLS estimation with homoskedastic standard errors</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model1<span class="op">=</span>smf.ols(formula<span class="op">=</span><span class="st">'testscr ~ str + expn + el_pct'</span>,data<span class="op">=</span>data)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>result1<span class="op">=</span>model1.fit()</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># OLS estimation with heteroskedasticity-robust standard errors (HC1)</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>model2<span class="op">=</span>smf.ols(formula<span class="op">=</span><span class="st">'testscr ~ str + expn + el_pct'</span>,data<span class="op">=</span>data)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>result2<span class="op">=</span>model2.fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate the model</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">+</span> expn <span class="sc">+</span> el_pct, <span class="at">data =</span> data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We use the <code>summary_col</code> function to present the estimation results contained in <code>result1</code> and <code>result2</code> in <a href="#tbl-t14-1" class="quarto-xref">Table&nbsp;<span>16.1</span></a>.</p>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>models<span class="op">=</span>[<span class="st">'Homoskedastic Model'</span>, <span class="st">'Heteroskedastic Model'</span>]</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>results_table<span class="op">=</span>summary_col(results<span class="op">=</span>[result1,result2],</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                          float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>, </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                          stars<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                          model_names<span class="op">=</span>models)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>results_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" data-execution_count="4" style="flex-basis: 100.0%;justify-content: center;">
-<div id="tbl-t14-1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
+<p>We use the <code>modelsummary</code> function to present the estimation results given in <a href="#tbl-t14-1" class="quarto-xref">Table&nbsp;<span>16.1</span></a>. Note that we use the <code>vcov = list("classical", "HC1")</code> argument to provide homoskedasticity-only standard errors and heteroskedasticity-robust standard errors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="st">"Homoskedastic Model"</span> <span class="ot">=</span> model1, <span class="st">"Heteroskedastic Model"</span> <span class="ot">=</span> model1),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="fu">list</span>(<span class="st">"classical"</span>, <span class="st">"HC1"</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik|F"</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t14-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t14-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;16.1: Estimation Results
 </figcaption>
 <div aria-describedby="tbl-t14-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="4">
-<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Homoskedastic Model</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Heteroskedastic Model</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
-<td style="text-align: left;">649.578***</td>
-<td style="text-align: left;">649.578***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(15.206)</td>
-<td style="text-align: left;">(15.458)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">str</td>
-<td style="text-align: left;">-0.286</td>
-<td style="text-align: left;">-0.286</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(0.481)</td>
-<td style="text-align: left;">(0.482)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">expn</td>
-<td style="text-align: left;">3.868***</td>
-<td style="text-align: left;">3.868**</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(1.412)</td>
-<td style="text-align: left;">(1.581)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">el_pct</td>
-<td style="text-align: left;">-0.656***</td>
-<td style="text-align: left;">-0.656***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(0.039)</td>
-<td style="text-align: left;">(0.032)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
-<td style="text-align: left;">0.437</td>
-<td style="text-align: left;">0.437</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
-<td style="text-align: left;">0.433</td>
-<td style="text-align: left;">0.433</td>
-</tr>
-</tbody>
-</table>
-<br>
-Standard errors in parentheses.<br>
-* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_rh7peq77by6stg7hoc9q = TinyTable.createTableFunctions("tinytable_rh7peq77by6stg7hoc9q");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '13', j: 2 }, { i: '13', j: 3 } ], css_id: 'tinytable_css_q4jk23cravrf6me1uovv',}, 
+          { positions: [ { i: '8', j: 2 }, { i: '8', j: 3 } ], css_id: 'tinytable_css_5lvq27uff4wd783rnzjy',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 } ], css_id: 'tinytable_css_5njs7xew0lzxqg2l961j',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_pyyljba0bqe8yzepjp5b',}, 
+          { positions: [ { i: '13', j: 1 } ], css_id: 'tinytable_css_sfcog0t1ugopbln2omst',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_4ugravlb04zaw7vs8c6p',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 } ], css_id: 'tinytable_css_j4s65wzo5bkxhxnmxbet',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_0wfrvw0mom5ipfscscxg',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_rh7peq77by6stg7hoc9q.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_q4jk23cravrf6me1uovv, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_q4jk23cravrf6me1uovv {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_5lvq27uff4wd783rnzjy, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_5lvq27uff4wd783rnzjy {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_5njs7xew0lzxqg2l961j, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_5njs7xew0lzxqg2l961j { text-align: center }
+    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_pyyljba0bqe8yzepjp5b, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_pyyljba0bqe8yzepjp5b {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_sfcog0t1ugopbln2omst, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_sfcog0t1ugopbln2omst {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_4ugravlb04zaw7vs8c6p, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_4ugravlb04zaw7vs8c6p {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_j4s65wzo5bkxhxnmxbet, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_j4s65wzo5bkxhxnmxbet { text-align: left }
+    #tinytable_rh7peq77by6stg7hoc9q td.tinytable_css_0wfrvw0mom5ipfscscxg, #tinytable_rh7peq77by6stg7hoc9q th.tinytable_css_0wfrvw0mom5ipfscscxg {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_rh7peq77by6stg7hoc9q" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">Homoskedastic Model</th>
+                <th scope="col" data-row="0" data-col="3">Heteroskedastic Model</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="3">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">649.578***</td>
+                  <td data-row="1" data-col="3">649.578***</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(15.206)</td>
+                  <td data-row="2" data-col="3">(15.458)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">str</td>
+                  <td data-row="3" data-col="2">-0.286</td>
+                  <td data-row="3" data-col="3">-0.286</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.481)</td>
+                  <td data-row="4" data-col="3">(0.482)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">expn</td>
+                  <td data-row="5" data-col="2">3.868**</td>
+                  <td data-row="5" data-col="3">3.868*</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(1.412)</td>
+                  <td data-row="6" data-col="3">(1.581)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">el_pct</td>
+                  <td data-row="7" data-col="2">-0.656***</td>
+                  <td data-row="7" data-col="3">-0.656***</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2">(0.039)</td>
+                  <td data-row="8" data-col="3">(0.032)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">Num.Obs.</td>
+                  <td data-row="9" data-col="2">420</td>
+                  <td data-row="9" data-col="3">420</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">R2</td>
+                  <td data-row="10" data-col="2">0.437</td>
+                  <td data-row="10" data-col="3">0.437</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">R2 Adj.</td>
+                  <td data-row="11" data-col="2">0.433</td>
+                  <td data-row="11" data-col="3">0.433</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">RMSE</td>
+                  <td data-row="12" data-col="2">14.28</td>
+                  <td data-row="12" data-col="3">14.28</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">Std.Errors</td>
+                  <td data-row="13" data-col="2">IID</td>
+                  <td data-row="13" data-col="3">HC1</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 </figure>
 </div>
 </div>
-</div>
-</div>
 <p>We consider testing <span class="math inline">\(H_0:\beta_1=0\)</span> versus <span class="math inline">\(H_1:\beta_1\ne0\)</span>. Using heteroskedasticity-robust standard errors, we can compute the <span class="math inline">\(t\)</span>-statistic as <span class="math inline">\(t=\frac{\hat{\beta}_1-0}{\text{SE}(\hat{\beta}_1)}=-0.29/0.48=-0.60\)</span>. Since <span class="math inline">\(|t|=0.60&lt;1.96\)</span>, we fail to reject <span class="math inline">\(H_0\)</span>.</p>
 <p>The p-value is <span class="math inline">\(2\Phi(-|t_{calc}|)=2\Phi(-0.60)\)</span>. Using the following code chunk, we find that <span class="math inline">\(p\)</span>-value<span class="math inline">\(=0.552&gt;0.05\)</span>, and thus, we fail to reject <span class="math inline">\(H_0\)</span> at the <span class="math inline">\(5\%\)</span> significance level. Both the <span class="math inline">\(t\)</span>-statistic and the <span class="math inline">\(p\)</span>-value suggest that the student-teacher ratio does not have a statistically significant effect on the test scores at the <span class="math inline">\(5\%\)</span> significance level.</p>
-<div id="73e8abdd" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p-value</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>t<span class="op">=</span>result2.tvalues[<span class="st">"str"</span>]</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># t=result1.tvalues.iloc[1]</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>p_value <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> stats.norm.cdf(<span class="op">-</span>np.<span class="bu">abs</span>(t), loc<span class="op">=</span><span class="dv">0</span>, scale<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>p_value.<span class="bu">round</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>0.552</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Heteroskedasticity-robust covariance matrix</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>vcov_robust <span class="ot">&lt;-</span> <span class="fu">vcovHC</span>(model1, <span class="at">type =</span> <span class="st">"HC1"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Robust coefficient test</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>robust_test <span class="ot">&lt;-</span> <span class="fu">coeftest</span>(model1, <span class="at">vcov. =</span> vcov_robust)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract robust t-value for 'str'</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> robust_test[<span class="st">"str"</span>, <span class="st">"t value"</span>]</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Two-sided p-value using standard normal distribution</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">abs</span>(t))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Round to 3 decimals</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(p_value, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.552</code></pre>
 </div>
 </div>
 <p>Using the heteroskedasticity-robust standard error reported in <a href="#tbl-t14-1" class="quarto-xref">Table&nbsp;<span>16.1</span></a>, the <span class="math inline">\(95\%\)</span> two-sided confidence interval for <span class="math inline">\(\beta_1\)</span> is <span class="math display">\[
 \left[\hat{\beta}_1-1.96\times\text{SE}(\hat{\beta}_1),\,\hat{\beta}_1+1.96\times\text{SE}(\hat{\beta}_1)\right]=[-1.23,\,0.65].
 \]</span></p>
-<p>Since the confidence interval includes the hypothesized value <span class="math inline">\(0\)</span>, it favors <span class="math inline">\(H_0\)</span>, i.e., we fail to reject <span class="math inline">\(H_0\)</span> at the <span class="math inline">\(5\%\)</span> significance level. Alternatively, the <code>result2.conf_int</code> function can be used to get the confidence intervals as shown below.</p>
-<div id="fe9200fc" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 95% two-sided confidence interval</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>result2.conf_int(alpha<span class="op">=</span><span class="fl">0.05</span>).<span class="bu">round</span>(<span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">0</th>
-<th data-quarto-table-cell-role="th">1</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Intercept</td>
-<td>619.28</td>
-<td>679.88</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">str</td>
-<td>-1.23</td>
-<td>0.66</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">expn</td>
-<td>0.77</td>
-<td>6.97</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">el_pct</td>
-<td>-0.72</td>
-<td>-0.59</td>
-</tr>
-</tbody>
-</table>
-
-</div>
+<p>Since the confidence interval includes the hypothesized value <span class="math inline">\(0\)</span>, it favors <span class="math inline">\(H_0\)</span>, i.e., we fail to reject <span class="math inline">\(H_0\)</span> at the <span class="math inline">\(5\%\)</span> significance level. Alternatively, we can compute the <span class="math inline">\(95\%\)</span> two-sided confidence interval for <span class="math inline">\(\beta_1\)</span> in the following way:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Heteroskedasticity-robust covariance matrix</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>vcov_robust <span class="ot">&lt;-</span> <span class="fu">vcovHC</span>(model1, <span class="at">type =</span> <span class="st">"HC1"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Robust coefficient test</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>robust_test <span class="ot">&lt;-</span> <span class="fu">coeftest</span>(model1, <span class="at">vcov. =</span> vcov_robust)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># The estimate of beta1</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>beta1_hat <span class="ot">&lt;-</span> robust_test[<span class="st">"str"</span>, <span class="st">"Estimate"</span>]</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Robust standard error</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>se_robust <span class="ot">&lt;-</span> robust_test[<span class="st">"str"</span>, <span class="st">"Std. Error"</span>]</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># The critical value</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># The confidence interval bounds</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>ci_lower <span class="ot">&lt;-</span> beta1_hat <span class="sc">-</span> z <span class="sc">*</span> se_robust</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>ci_upper <span class="ot">&lt;-</span> beta1_hat <span class="sc">+</span> z <span class="sc">*</span> se_robust</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine into a matrix and round</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(ci_lower, ci_upper),<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1.231  0.658</code></pre>
 </div>
 </div>
 </section>
@@ -813,52 +861,60 @@ H_0:\bs{R}\bs{\beta}=\bs{r},
 \begin{align}
 F=\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)^{'}\left(\bs{R}\hat{\bs{\Sigma}}\bs{R}^{'}\right)^{-1}\left(\bs{R}\hat{\bs{\beta}}-\bs{r}\right)/q,
 \end{align}
-\]</span> where <span class="math inline">\(\hat{\bs{\Sigma}}\)</span> is the estimate of heteroskedasticity-robust variance of <span class="math inline">\(\hat{\bs{\beta}}\)</span>. When the sample size is large, the distribution of <span class="math inline">\(F\)</span>-statistic is approximated by <span class="math inline">\(\chi^2_q/q\equiv F_{q,\infty}\)</span>. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 29</span></a>, we prove that the sampling distribution of the <span class="math inline">\(F\)</span>-statistic is approximated by <span class="math inline">\(F_{q,\infty}\)</span> under the null hypothesis.</p>
+\]</span> where <span class="math inline">\(\hat{\bs{\Sigma}}\)</span> is the estimate of heteroskedasticity-robust variance of <span class="math inline">\(\hat{\bs{\beta}}\)</span>. When the sample size is large, the distribution of <span class="math inline">\(F\)</span>-statistic is approximated by <span class="math inline">\(\chi^2_q/q\equiv F_{q,\infty}\)</span>. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 28</span></a>, we prove that the sampling distribution of the <span class="math inline">\(F\)</span>-statistic is approximated by <span class="math inline">\(F_{q,\infty}\)</span> under the null hypothesis.</p>
 <p>To test the null hypothesis, we can follow the steps below:</p>
 <ul>
-<li><p>Step 1: Use Python to compute the <span class="math inline">\(F\)</span>-statistic.</p></li>
-<li><p>Step 2: For a given significance level <span class="math inline">\(\alpha\)</span>, use Python to determine the critical value shown in <a href="#fig-fig14-1" class="quarto-xref">Figure&nbsp;<span>16.1</span></a>. If <span class="math inline">\(F\)</span>-statistic<span class="math inline">\(&gt;\)</span>critical value, then reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</p></li>
+<li><p>Step 1: Use R to compute the <span class="math inline">\(F\)</span>-statistic.</p></li>
+<li><p>Step 2: For a given significance level <span class="math inline">\(\alpha\)</span>, use R to determine the critical value shown in <a href="#fig-fig14-1" class="quarto-xref">Figure&nbsp;<span>16.1</span></a>. If <span class="math inline">\(F\)</span>-statistic<span class="math inline">\(&gt;\)</span>critical value, then reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</p></li>
 <li><p>Step 3: The <span class="math inline">\(p\)</span>-value is <span class="math inline">\(P(F_{q,\infty}&gt;F_{calc})\)</span>, where <span class="math inline">\(F_{calc}\)</span> is the actual value computed in Step 1. If <span class="math inline">\(p\)</span>-value<span class="math inline">\(&lt;0.05\)</span>, reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</p></li>
 </ul>
-<div id="cell-fig-fig14-1" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># F-distribution and the critical value</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Set parameters for the F-distribution</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>d1 <span class="op">=</span> <span class="dv">5</span>  <span class="co"># degrees of freedom numerator</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>d2 <span class="op">=</span> <span class="dv">10</span>  <span class="co"># degrees of freedom denominator</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> <span class="fl">0.05</span>  <span class="co"># significance level</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate x values for the density plot</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">1000</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> stats.f.pdf(x, d1, d2)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the critical value for the specified significance level</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>critical_value <span class="op">=</span> stats.f.ppf(<span class="dv">1</span> <span class="op">-</span> alpha, d1, d2)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the density plot</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">'darkgrid'</span>)</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">4</span>))</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, label<span class="op">=</span><span class="st">'F-distribution'</span>, color<span class="op">=</span><span class="st">'steelblue'</span>)</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.axvline(critical_value, color='red', linestyle='--', label='Critical value')</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>plt.fill_between(x, y, where<span class="op">=</span>(x <span class="op">&gt;</span> critical_value), color<span class="op">=</span><span class="st">'steelblue'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'Area= Significance level'</span>)</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotate the critical value on the x-axis</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>plt.annotate(<span class="st">'Critical value'</span>, </span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>             xy<span class="op">=</span>(critical_value, <span class="dv">0</span>), </span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>             xytext<span class="op">=</span>(critical_value <span class="op">+</span> <span class="fl">0.5</span>, <span class="fl">0.2</span>), </span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>             arrowprops<span class="op">=</span><span class="bu">dict</span>(edgecolor<span class="op">=</span><span class="st">'black'</span>, arrowstyle<span class="op">=</span><span class="st">'-&gt;'</span>,lw<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>             fontsize<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'F-statistic values'</span>)</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Density'</span>)</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>plt.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>plt.xlim(<span class="dv">0</span>, <span class="dv">5</span>)</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="dv">0</span>, <span class="bu">max</span>(y) <span class="op">*</span> <span class="fl">1.1</span>)</span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell" data-fig-hight="4">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Data for the F distribution</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">1000</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>df_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">df</span>(x, <span class="at">df1 =</span> d1, <span class="at">df2 =</span> d2)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Critical value</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>critical_value <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, <span class="at">df1 =</span> d1, <span class="at">df2 =</span> d2)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">subset</span>(df_data, x <span class="sc">&gt;</span> critical_value),</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y),</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.5</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"segment"</span>,</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> critical_value <span class="sc">+</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.2</span>,</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">xend =</span> critical_value, <span class="at">yend =</span> <span class="dv">0</span>,</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> critical_value <span class="sc">+</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.22</span>,</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Critical value"</span>,</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.5</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"F-statistic values"</span>,</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>),</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(df_data<span class="sc">$</span>y) <span class="sc">*</span> <span class="fl">1.1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-fig14-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-fig14-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter7-MultipleRegressionInference_files/figure-html/fig-fig14-1-output-1.png" width="440" height="354" class="figure-img">
+<img src="Chapter7-MultipleRegressionInference_files/figure-html/fig-fig14-1-1.png" class="img-fluid figure-img" width="480">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig14-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;16.1: The critical value from the F-distribution
@@ -905,54 +961,76 @@ F&amp;=\frac{(SSR_r-SSR_u)/q}{SSR_u/(n-k_u-1)}=\frac{(R^2_u-R^2_r)/q}{(1-R^2_u)/
 &amp;H_1:\text{At least one coefficient is not zero}.
 \end{align*}
 \]</span></p>
-<p>We can use the <code>result2.f_test</code> function to compute the heteroskedasticity-robust <span class="math inline">\(F\)</span>-statistic. In the following code chunk, the null hypothesis is specified through <code>hypothesis="str=0,expn_stu=0"</code>.</p>
-<div id="bf84e687" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the joint null hypothesis</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>hypothesis <span class="op">=</span> <span class="st">"str=0, expn=0"</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform the F-test</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>f_test_result <span class="op">=</span> result2.f_test(hypothesis)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f_test_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In R, we can use the <code>linearHypothesis</code> function from the <code>car</code> package to compute the F-statistic. This function returns the homoskedasticity-only F-statistic by default. To get the heteroskedasticity-robust F-statistic, we need to supply the <code>white.adjust = "hc1</code> argument.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Heteroskedasticity-robust F-statistics</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(model1, <span class="fu">c</span>(<span class="st">"str = 0"</span>, <span class="st">"expn = 0"</span>), <span class="at">white.adjust =</span> <span class="st">"hc1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;F test: F=5.433727045028506, p=0.004682304362882446, df_denom=416, df_num=2&gt;</code></pre>
+<pre><code>
+Linear hypothesis test:
+str = 0
+expn = 0
+
+Model 1: restricted model
+Model 2: testscr ~ str + expn + el_pct
+
+Note: Coefficient covariance matrix supplied.
+
+  Res.Df Df      F   Pr(&gt;F)   
+1    418                      
+2    416  2 5.4337 0.004682 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>The heteroskedasticity-robust <span class="math inline">\(F\)</span>-statistic is <span class="math inline">\(5.43\)</span> with a <span class="math inline">\(p\)</span>-value of <span class="math inline">\(0.0047\)</span>. Since the <span class="math inline">\(p\)</span>-value is less than <span class="math inline">\(0.05\)</span>, we reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</p>
+<p>The heteroskedasticity-robust <span class="math inline">\(F\)</span>-statistic is 5.43 with a <span class="math inline">\(p\)</span>-value of 0.0047. Since the <span class="math inline">\(p\)</span>-value is less than 0.05, we reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</p>
 <p>Since the <span class="math inline">\(F\)</span>-statistic has <span class="math inline">\(F_{2,\infty}=\chi^2_2/2\)</span> under the null distribution, we have <span class="math display">\[
-P(F_{q,\infty}&gt;F_{calc})=P(\chi^2_2/2&gt;F_{calc})=P(\chi^2_2&gt;2\times F_{calc}),
+p-\text{value}=P(F_{q,\infty}&gt;F_{calc})=P(\chi^2_2/2&gt;F_{calc})=P(\chi^2_2&gt;2\times F_{calc}),
 \]</span></p>
 <p>where <span class="math inline">\(F_{calc}=5.43\)</span>. Thus, we can alternatively compute the <span class="math inline">\(p\)</span>-value in the following way:</p>
-<div id="bb041955" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># P-value of the F-statistic</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="op">-</span>stats.chi2.cdf(<span class="dv">2</span><span class="op">*</span><span class="fl">5.43</span>,df<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<pre><code>0.004383095802668824</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># P-value of the F-statistic (chi-square approximation)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pchisq</span>(<span class="dv">2</span> <span class="sc">*</span> <span class="fl">5.43</span>, <span class="at">df =</span> <span class="dv">2</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.004383096</code></pre>
+</div>
+</div>
+<p>Note that the above <span class="math inline">\(p\)</span>-value is slightly different from the one provided by the <code>linearHypothesis</code> function. This function uses <span class="math inline">\(F_{q,n-k_u-1}\)</span> as the null-distribution of the F-statistic. Thus, to get the same result, we need to resort to <span class="math inline">\(F_{q,n-k_u-1}=F_{2,416}\)</span>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># P-value of the F-statistic (F-distribution)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(<span class="fl">5.43</span>,<span class="at">df1=</span><span class="dv">2</span>, <span class="at">df2=</span><span class="dv">416</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.004699342</code></pre>
 </div>
 </div>
 <p>We know that the <span class="math inline">\(F\)</span>-statistic has <span class="math inline">\(F_{2,\infty}=\chi^2_2/2\)</span> under the null distribution. Thus, the critical value at the the <span class="math inline">\(5\%\)</span> significance level is approximately <span class="math inline">\(3\)</span>, as shown below. Since <span class="math inline">\(F\)</span>-statistic<span class="math inline">\(=5.43&gt;3\)</span>, the <span class="math inline">\(F\)</span>-statistic also suggests rejection of the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</p>
-<div id="728500f2" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Critical value</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>stats.chi2.ppf(<span class="dv">1</span><span class="op">-</span><span class="fl">0.05</span>,df<span class="op">=</span><span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>2.9957322735539895</code></pre>
-</div>
-</div>
-<p>The overall regression <span class="math inline">\(F\)</span>-statistic given in the output returned by <code>result2.summary()</code> is for testing <span class="math inline">\(H_0:\beta_1=0,\beta_2=0, \beta_3=0\)</span> versus <span class="math inline">\(H_1:\text{At least one coefficient is not zero}\)</span>. We can get the same result by using the following code chunk:</p>
-<div id="276843c3" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result2.fvalue)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result2.f_pvalue)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Critical value</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qchisq</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span>, <span class="at">df =</span> <span class="dv">2</span>) <span class="sc">/</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>147.20371132005906
-5.2014696511471755e-65</code></pre>
+<pre><code>[1] 2.995732</code></pre>
 </div>
 </div>
-<p>Alternatively, we can compute the overall regression <span class="math inline">\(F\)</span>-statistic in the following way:</p>
-<div id="8148c03b" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the joint null hypothesis</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>hypothesis<span class="op">=</span><span class="st">"str=0, expn=0, el_pct=0"</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform the F-test</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result2.f_test(hypothesis))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The overall regression <span class="math inline">\(F\)</span>-statistic given in <a href="#tbl-t14-1" class="quarto-xref">Table&nbsp;<span>16.1</span></a> is for testing <span class="math inline">\(H_0:\beta_1=0,\beta_2=0, \beta_3=0\)</span> versus <span class="math inline">\(H_1:\text{At least one coefficient is not zero}\)</span>. We can get the result in the second column by using the following code chunk:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(model1, <span class="fu">c</span>(<span class="st">"str=0"</span>, <span class="st">"expn=0"</span>, <span class="st">"el_pct=0"</span>), <span class="at">white.adjust =</span> <span class="st">"hc1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;F test: F=147.20371132005906, p=5.2014696511471755e-65, df_denom=416, df_num=3&gt;</code></pre>
+<pre><code>
+Linear hypothesis test:
+str = 0
+expn = 0
+el_pct = 0
+
+Model 1: restricted model
+Model 2: testscr ~ str + expn + el_pct
+
+Note: Coefficient covariance matrix supplied.
+
+  Res.Df Df     F    Pr(&gt;F)    
+1    419                       
+2    416  3 147.2 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>Finally, we consider the null and alternative hypothesis of the following form: <span class="math display">\[
@@ -961,13 +1039,23 @@ H_0:\beta_1=\beta_2\quad\text{versus}\quad H_1:\beta_1\ne\beta_2
 \end{align}
 \]</span></p>
 <p>The null hypothesis imposes a single restriction (<span class="math inline">\(q = 1\)</span>) on two parameters. Since the restriction is linear in terms of parameters, we can still use the <span class="math inline">\(F\)</span>-statistic to test this null hypothesis. Thus, we can resort to the <code>result2.f_test</code> function to compute the <span class="math inline">\(F\)</span>-statistic. The following code chunk illustrates the computation.</p>
-<div id="da0120b1" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the joint null hypothesis</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>hypothesis<span class="op">=</span><span class="st">"str=expn"</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform F-statistic</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result2.f_test(hypothesis))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(model1, <span class="st">"str = expn"</span>, <span class="at">white.adjust =</span> <span class="st">"hc1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;F test: F=8.940298092227344, p=0.0029551123559730655, df_denom=416, df_num=1&gt;</code></pre>
+<pre><code>
+Linear hypothesis test:
+str - expn = 0
+
+Model 1: restricted model
+Model 2: testscr ~ str + expn + el_pct
+
+Note: Coefficient covariance matrix supplied.
+
+  Res.Df Df      F   Pr(&gt;F)   
+1    417                      
+2    416  1 8.9403 0.002955 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>The heteroskedaticity-robust <span class="math inline">\(F\)</span>-statistic is <span class="math inline">\(8.9\)</span> with a <span class="math inline">\(p\)</span>-value of <span class="math inline">\(0.003\)</span>. Thus, we reject the null <span class="math inline">\(H_0:\beta_1=\beta_2\)</span> at the <span class="math inline">\(5\%\)</span> significance level.</p>
@@ -992,73 +1080,64 @@ P_{H_0}(\text{$|t_1|&gt; c$ or $|t_2|&gt; c$ or both})\\
 \]</span></p>
 <p>where the inequality follows from the fact that <span class="math inline">\(P(A\cup B)\leq P(A)+P(B)\)</span> and the last approximation follows from the fact that the sampling distributions of <span class="math inline">\(t_1\)</span> and <span class="math inline">\(t_2\)</span> can be well approximated by the standard normal distribution when the sample size is sufficiently large. Moreover, when the joint null hypothesis involves <span class="math inline">\(q\)</span> restrictions, the above result suggests that the upper bound for the probability of the Type-I error is <span class="math inline">\(q\times P(|Z|&gt;c)\)</span>. We can use this result to determine the critical value corresponding to a desired significance level. For example, if we want to ensure that the probability of the Type-I error does not exceed <span class="math inline">\(5\%\)</span>, then we can determine <span class="math inline">\(c\)</span> from <span class="math inline">\(q\times P(|Z|&gt;c)=0.025\)</span>.</p>
 <p>We use the following code chunk to determine the critical values at the <span class="math inline">\(10\%\)</span>, <span class="math inline">\(5\%\)</span>, and <span class="math inline">\(1\%\)</span> significance levels for <span class="math inline">\(q=2\)</span>, <span class="math inline">\(q=3\)</span>, and <span class="math inline">\(q=4\)</span>. The critical values are presented in <a href="#tbl-t14-2" class="quarto-xref">Table&nbsp;<span>16.2</span></a>. For example, when the joint null hypothesis involves two restrictions, the critical value at the <span class="math inline">\(5\%\)</span> significance level is <span class="math inline">\(2.241\)</span>, which is the <span class="math inline">\(1.25\)</span>th percentail of <span class="math inline">\(Z\)</span>.</p>
-<div class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bonferroni critical values</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Significance levels to test</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>alphas <span class="op">=</span> [<span class="fl">0.10</span>, <span class="fl">0.05</span>, <span class="fl">0.01</span>]</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of restrictions</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>restrictions <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute Bonferroni critical values for each alpha and restriction</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>critical_values <span class="op">=</span> {</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    alpha: {q: stats.norm.ppf(<span class="dv">1</span> <span class="op">-</span> alpha <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> q)) <span class="cf">for</span> q <span class="kw">in</span> restrictions} <span class="cf">for</span> alpha <span class="kw">in</span> alphas</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to a DataFrame </span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>critical_values_df <span class="op">=</span> pd.DataFrame(critical_values, index<span class="op">=</span>restrictions)</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>critical_values_df.columns <span class="op">=</span> [<span class="ss">f"alpha = </span><span class="sc">{</span>alpha<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> alpha <span class="kw">in</span> alphas]</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>critical_values_df.index.name <span class="op">=</span> <span class="st">"Number of Restrictions (q)"</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the table</span></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>critical_values_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t14-2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="14">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Significance levels and number of restrictions</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>alphas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.10</span>, <span class="fl">0.05</span>, <span class="fl">0.01</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute Bonferroni critical values</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>critical_values_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Number of Restrictions (q)</span><span class="st">`</span> <span class="ot">=</span> q,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">alpha = 0.10</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.10</span> <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> q)),</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">alpha = 0.05</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span> <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> q)),</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">alpha = 0.01</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">qnorm</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.01</span> <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> q))</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the table</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">round</span>(critical_values_df, <span class="dv">3</span>), <span class="at">align =</span> <span class="st">"c"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t14-2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t14-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;16.2: Bonferroni critical values for the one-at-a-time test
 </figcaption>
 <div aria-describedby="tbl-t14-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="14">
-<div>
-
-
-<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
 <thead>
 <tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">alpha = 0.1</th>
-<th data-quarto-table-cell-role="th">alpha = 0.05</th>
-<th data-quarto-table-cell-role="th">alpha = 0.01</th>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">Number of Restrictions (q)</th>
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
+<th style="text-align: center;">Number.of.Restrictions..q.</th>
+<th style="text-align: center;">alpha…0.10</th>
+<th style="text-align: center;">alpha…0.05</th>
+<th style="text-align: center;">alpha…0.01</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>1.959964</td>
-<td>2.241403</td>
-<td>2.807034</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1.960</td>
+<td style="text-align: center;">2.241</td>
+<td style="text-align: center;">2.807</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>2.128045</td>
-<td>2.393980</td>
-<td>2.935199</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">2.128</td>
+<td style="text-align: center;">2.394</td>
+<td style="text-align: center;">2.935</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>2.241403</td>
-<td>2.497705</td>
-<td>3.023341</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2.241</td>
+<td style="text-align: center;">2.498</td>
+<td style="text-align: center;">3.023</td>
 </tr>
 </tbody>
 </table>
-
-</div>
 </div>
 </div>
 </figure>
@@ -1071,51 +1150,75 @@ Table&nbsp;16.2: Bonferroni critical values for the one-at-a-time test
 <section id="confidence-sets-for-multiple-coefficients" class="level2" data-number="16.4">
 <h2 data-number="16.4" class="anchored" data-anchor-id="confidence-sets-for-multiple-coefficients"><span class="header-section-number">16.4</span> Confidence sets for multiple coefficients</h2>
 <p>In this section we show how to formulate confidence sets for two or more coefficients in a multiple regression model. A <span class="math inline">\(95\%\)</span> confidence set for two or more coefficients is a set that contains the true values of the coefficients in <span class="math inline">\(95\%\)</span> of randomly chosen samples. We can determine this set by collecting the coefficient values that cannot be rejected by the heteroskedasticity-robust <span class="math inline">\(F\)</span>-statistic at the <span class="math inline">\(5%\)</span> significance level. Consider the joint null hypothesis <span class="math inline">\(H_0:\beta_1=\beta_{10}\)</span> and <span class="math inline">\(\beta_2=\beta_{20}\)</span>, where <span class="math inline">\(\beta_{10}\)</span> and <span class="math inline">\(\beta_{20}\)</span> are the hypothesized values. Then, the <span class="math inline">\(95\%\)</span> confidence set for <span class="math inline">\((\beta_1,\beta_2)\)</span> consists of the pairs <span class="math inline">\((\beta_{10},\beta_{20})\)</span> that are not rejected by the <span class="math inline">\(F\)</span>-statistic at the <span class="math inline">\(5\%\)</span> significance level.</p>
-<p>In the following code chunk, we consider the model in <a href="#eq-eq14-2" class="quarto-xref">Equation&nbsp;<span>16.2</span></a> and construct the <span class="math inline">\(95\%\)</span> confidence set for <span class="math inline">\((\beta_1,\beta_2)\)</span>. We first generate a grid of values around the estimated values and store these values in the <code>str_vals</code> and <code>expn_vals</code> arrays. We then compute the heteroskedasticity-robust <span class="math inline">\(F\)</span>-statistic for each pair of values in the grid and store the resulting <span class="math inline">\(F\)</span>-statistic values in the <code>f_values</code> array. The ellipse shown in <a href="#fig-fig14-2" class="quarto-xref">Figure&nbsp;<span>16.2</span></a> includes the pairs of values that are not rejected by the <span class="math inline">\(F\)</span>-statistic at the <span class="math inline">\(5\%\)</span> significance level. This ellipse represents the <span class="math inline">\(95\%\)</span> confidence set for <span class="math inline">\((\beta_1,\beta_2)\)</span>. Note that since the ellipse does not include <span class="math inline">\((0,0)\)</span>, we reject the joint null hypothesis <span class="math inline">\(H_0:\beta_1=0\)</span> and <span class="math inline">\(\beta_2=0\)</span> at the <span class="math inline">\(5\%\)</span> significance level. Also, since the estimated correlation between the OLS estimators <span class="math inline">\(\hat{\beta}_1\)</span> and <span class="math inline">\(\hat{\beta}_2\)</span> is positive, the ellipse is positively oriented, as shown in the figure.</p>
-<div id="a2ae9863" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Define the F-critical value for 5% significance</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> <span class="fl">0.05</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>f_critical <span class="op">=</span> stats.chi2.ppf(<span class="dv">1</span><span class="op">-</span>alpha, df<span class="op">=</span><span class="dv">2</span>) <span class="op">/</span> <span class="dv">2</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Get estimated coefficients</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>coef_estimates <span class="op">=</span> result2.params[[<span class="st">'str'</span>, <span class="st">'expn'</span>]]</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Define an expanded grid of values around the estimated coefficients</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>str_vals <span class="op">=</span> np.linspace(coef_estimates[<span class="st">'str'</span>] <span class="op">-</span> <span class="fl">2.0</span>, coef_estimates[<span class="st">'str'</span>] <span class="op">+</span> <span class="fl">2.0</span>, <span class="dv">30</span>)</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>expn_vals <span class="op">=</span> np.linspace(coef_estimates[<span class="st">'expn'</span>] <span class="op">-</span> <span class="dv">5</span>, coef_estimates[<span class="st">'expn'</span>] <span class="op">+</span> <span class="dv">5</span>, <span class="dv">30</span>)</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>str_grid, expn_grid <span class="op">=</span> np.meshgrid(str_vals, expn_vals)</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Compute F-statistic for each pair in the grid</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>f_values <span class="op">=</span> np.zeros_like(str_grid)</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(str_grid.shape[<span class="dv">0</span>]):</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(str_grid.shape[<span class="dv">1</span>]):</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Define the hypothesis for the given str and expn values</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>        hypothesis <span class="op">=</span> <span class="ss">f"str = </span><span class="sc">{</span>str_grid[i, j]<span class="sc">}</span><span class="ss">, expn = </span><span class="sc">{</span>expn_grid[i, j]<span class="sc">}</span><span class="ss">"</span></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Perform the F-test for this hypothesis</span></span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>        f_test <span class="op">=</span> result2.f_test(hypothesis)</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Check if the result is scalar or an array and handle accordingly</span></span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>        f_values[i, j] <span class="op">=</span> f_test.fvalue </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In the following code chunk, we consider the model in <a href="#eq-eq14-2" class="quarto-xref">Equation&nbsp;<span>16.2</span></a> and construct the <span class="math inline">\(95\%\)</span> confidence set for <span class="math inline">\((\beta_1,\beta_2)\)</span>. We first generate a grid of values around the estimated values and store these values in the <code>str_vals</code> and <code>expn_vals</code> sequences. We then compute the heteroskedasticity-robust <span class="math inline">\(F\)</span>-statistic for each pair of values in the grid and store the resulting <span class="math inline">\(F\)</span>-statistic values in the <code>f_values</code> matrix. The ellipse shown in <a href="#fig-fig14-2" class="quarto-xref">Figure&nbsp;<span>16.2</span></a> includes the pairs of values that are not rejected by the <span class="math inline">\(F\)</span>-statistic at the <span class="math inline">\(5\%\)</span> significance level. This ellipse represents the <span class="math inline">\(95\%\)</span> confidence set for <span class="math inline">\((\beta_1,\beta_2)\)</span>. Note that since the ellipse does not include <span class="math inline">\((0,0)\)</span>, we reject the joint null hypothesis <span class="math inline">\(H_0:\beta_1=0\)</span> and <span class="math inline">\(\beta_2=0\)</span> at the <span class="math inline">\(5\%\)</span> significance level. Also, since the estimated correlation between the OLS estimators <span class="math inline">\(\hat{\beta}_1\)</span> and <span class="math inline">\(\hat{\beta}_2\)</span> is positive, the ellipse is positively oriented, as shown in the figure.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the critical value</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>f_critical <span class="ot">&lt;-</span> <span class="fu">qchisq</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, <span class="at">df =</span> <span class="dv">2</span>) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract coefficient estimates</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>coef_estimates <span class="ot">&lt;-</span> <span class="fu">coef</span>(model1)[<span class="fu">c</span>(<span class="st">"str"</span>, <span class="st">"expn"</span>)]</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the grid around the estimates</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>str_vals  <span class="ot">&lt;-</span> <span class="fu">seq</span>(coef_estimates[<span class="st">"str"</span>]  <span class="sc">-</span> <span class="fl">2.0</span>,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>                 coef_estimates[<span class="st">"str"</span>]  <span class="sc">+</span> <span class="fl">2.0</span>,</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">length.out =</span> <span class="dv">30</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>expn_vals <span class="ot">&lt;-</span> <span class="fu">seq</span>(coef_estimates[<span class="st">"expn"</span>] <span class="sc">-</span> <span class="fl">5.0</span>,</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>                 coef_estimates[<span class="st">"expn"</span>] <span class="sc">+</span> <span class="fl">5.0</span>,</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>                 <span class="at">length.out =</span> <span class="dv">30</span>)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">str =</span> str_vals, <span class="at">expn =</span> expn_vals)</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the F-statistic over the grid</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>f_values <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> <span class="fu">length</span>(expn_vals), <span class="at">ncol =</span> <span class="fu">length</span>(str_vals))</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(expn_vals)) {</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(str_vals)) {</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>    hypothesis <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste0</span>(<span class="st">"str  = "</span>, str_vals[j]),</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste0</span>(<span class="st">"expn = "</span>, expn_vals[i])</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>    f_test <span class="ot">&lt;-</span> <span class="fu">linearHypothesis</span>(model1, hypothesis, </span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">test =</span> <span class="st">"F"</span>,  <span class="at">white.adjust =</span> <span class="st">"hc1"</span>)</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>    f_values[i, j] <span class="ot">&lt;-</span> f_test<span class="sc">$</span>F[<span class="dv">2</span>]</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-fig-fig14-2" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the confidence region</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">4.5</span>))</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the contour where F-values reach the critical value</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>contour <span class="op">=</span> plt.contour(str_grid, expn_grid, f_values, levels<span class="op">=</span>[f_critical], colors<span class="op">=</span><span class="st">'steelblue'</span>)</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>plt.scatter(coef_estimates[<span class="st">'str'</span>], coef_estimates[<span class="st">'expn'</span>], color<span class="op">=</span><span class="st">'black'</span>, marker<span class="op">=</span><span class="st">'o'</span>, label<span class="op">=</span><span class="st">'Estimated coefficients'</span>)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>plt.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>)</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>plt.axvline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels and title</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r'$\beta_1$'</span>)</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r'$\beta_2$'</span>)</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell" data-fig-hight="4">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the 95% confidence set</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert grid + F-values into a data frame</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>plot_df <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">str  =</span> str_vals,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">expn =</span> expn_vals</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>plot_df<span class="sc">$</span>f_value <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(f_values)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_df, <span class="fu">aes</span>(<span class="at">x =</span> str, <span class="at">y =</span> expn, <span class="at">z =</span> f_value)) <span class="sc">+</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_contour</span>(</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> f_critical,</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> coef_estimates[<span class="st">"str"</span>], <span class="at">y =</span> coef_estimates[<span class="st">"expn"</span>]),</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">2</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(beta[<span class="dv">1</span>]),</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(beta[<span class="dv">2</span>])</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-fig14-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-fig14-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter7-MultipleRegressionInference_files/figure-html/fig-fig14-2-output-1.png" width="503" height="394" class="figure-img">
+<img src="Chapter7-MultipleRegressionInference_files/figure-html/fig-fig14-2-1.png" class="img-fluid figure-img" width="480">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig14-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;16.2: The 95% confidence set for coefficients of str and expn
@@ -1170,43 +1273,60 @@ Key Concept 14.1: <span class="math inline">\(R^2\)</span> and <span class="math
 <li><code>calw_pct</code>: the percentage of students that qualify for the CalWorks income assistance program.</li>
 </ul>
 <p><a href="#fig-fig14-3" class="quarto-xref">Figure&nbsp;<span>16.3</span></a> shows the scatterplots between these variables and the test scores. We observe that each variable is negatively correlated with the test scores.</p>
-<div id="cell-fig-fig14-3" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplots of Test Scores vs. Three Student Characteristics</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the arrangement of plots (2 rows, 2 columns)</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(hspace<span class="op">=</span><span class="fl">0.4</span>, wspace<span class="op">=</span><span class="fl">0.4</span>)  <span class="co"># Adjust space between plots</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplot for English</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span><span class="st">'el_pct'</span>, y<span class="op">=</span><span class="st">'testscr'</span>, data<span class="op">=</span>data, color<span class="op">=</span><span class="st">'steelblue'</span>, ax<span class="op">=</span>axs[<span class="dv">0</span>, <span class="dv">0</span>])</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>, <span class="dv">0</span>].set_xlim(<span class="dv">0</span>, <span class="dv">100</span>)</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>, <span class="dv">0</span>].set_title(<span class="st">"Percentage of english language learners"</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>, <span class="dv">0</span>].set_xlabel(<span class="st">"Percent"</span>)</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>, <span class="dv">0</span>].set_ylabel(<span class="st">"Test Scores"</span>)</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplot for Lunch</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span><span class="st">'meal_pct'</span>, y<span class="op">=</span><span class="st">'testscr'</span>, data<span class="op">=</span>data, color<span class="op">=</span><span class="st">'steelblue'</span>, ax<span class="op">=</span>axs[<span class="dv">0</span>, <span class="dv">1</span>])</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>, <span class="dv">1</span>].set_title(<span class="st">"Percentage qualifying for reduced price lunch"</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>, <span class="dv">1</span>].set_xlabel(<span class="st">"Percent"</span>)</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>, <span class="dv">1</span>].set_ylabel(<span class="st">"Test Scores"</span>)</span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplot for CalWorks</span></span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span><span class="st">'calw_pct'</span>, y<span class="op">=</span><span class="st">'testscr'</span>, data<span class="op">=</span>data, color<span class="op">=</span><span class="st">'steelblue'</span>, ax<span class="op">=</span>axs[<span class="dv">1</span>, <span class="dv">0</span>])</span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>, <span class="dv">0</span>].set_xlim(<span class="dv">0</span>, <span class="dv">100</span>)</span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>, <span class="dv">0</span>].set_title(<span class="st">"Percentage qualifying for income assistance"</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>, <span class="dv">0</span>].set_xlabel(<span class="st">"Percent"</span>)</span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>, <span class="dv">0</span>].set_ylabel(<span class="st">"Test Scores"</span>)</span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Hide the last subplot (bottom right)</span></span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>, <span class="dv">1</span>].axis(<span class="st">'off'</span>)</span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plots</span></span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplots of Test Scores vs. Three Student Characteristics</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Common theme elements</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>base_theme <span class="ot">&lt;-</span> <span class="fu">theme</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>)<span class="co">#,</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#plot.margin = margin(5, 5, 5, 5)</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. English learners</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> el_pct, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Percentage of english language learners"</span>,</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Percent"</span>,</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Scores"</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  base_theme</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Reduced lunch</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> meal_pct, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Percentage qualifying for reduced price lunch"</span>,</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Percent"</span>,</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Scores"</span></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>  base_theme</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Income assistance</span></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> calw_pct, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Percentage qualifying for income assistance"</span>,</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Percent"</span>,</span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Scores"</span></span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>  base_theme</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Empty plot (bottom-right)</span></span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>p_empty <span class="ot">&lt;-</span> grid<span class="sc">::</span><span class="fu">nullGrob</span>()</span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange in 2x2 layout</span></span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>  p1, p2,</span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>  p3, p_empty,</span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span></span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-fig14-3" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-fig14-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter7-MultipleRegressionInference_files/figure-html/fig-fig14-3-output-1.png" width="758" height="567" class="figure-img">
+<img src="Chapter7-MultipleRegressionInference_files/figure-html/fig-fig14-3-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig14-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;16.3: Scatterplots of test scores vs.&nbsp;three student characteristics
@@ -1225,183 +1345,234 @@ Figure&nbsp;16.3: Scatterplots of test scores vs.&nbsp;three student characteris
 \end{align*}
 \]</span></p>
 <p>The following code chunk can be used to estimate each model.</p>
-<div id="3af12ad2" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>model1 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"testscr ~ str"</span>, data<span class="op">=</span>data).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"testscr ~ str + el_pct"</span>, data<span class="op">=</span>data).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 3</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>model3 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"testscr ~ str + el_pct + meal_pct"</span>, data<span class="op">=</span>data).fit(</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    cov_type<span class="op">=</span><span class="st">"HC1"</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 4</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>model4 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"testscr ~ str + el_pct + calw_pct"</span>, data<span class="op">=</span>data).fit(</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    cov_type<span class="op">=</span><span class="st">"HC1"</span></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 5</span></span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>model5 <span class="op">=</span> smf.ols(</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    formula<span class="op">=</span><span class="st">"testscr ~ str + el_pct + meal_pct + calw_pct"</span>, data<span class="op">=</span>data</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str, <span class="at">data =</span> data)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">+</span> el_pct, <span class="at">data =</span> data)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 3</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">+</span> el_pct <span class="sc">+</span> meal_pct, <span class="at">data =</span> data)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 4</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">+</span> el_pct <span class="sc">+</span> calw_pct, <span class="at">data =</span> data)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 5</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>model5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">+</span> el_pct <span class="sc">+</span> meal_pct <span class="sc">+</span> calw_pct, <span class="at">data =</span> data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We use the <code>summary_col()</code> function to present the estimation results, as shown in <a href="#tbl-t14-3" class="quarto-xref">Table&nbsp;<span>16.3</span></a>.</p>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>ModelsNames <span class="op">=</span> [<span class="st">'Model 1'</span>, <span class="st">'Model 2'</span>, <span class="st">"Model 3"</span>, <span class="st">"Model 4"</span>, <span class="st">"Model 5"</span>]</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> [model1, model2, model3, model4, model5]</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>results_table<span class="op">=</span>summary_col(results<span class="op">=</span>models,</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                          float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>, </span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>                          stars<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>                          model_names<span class="op">=</span>ModelsNames,</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>                          info_dict<span class="op">=</span>{<span class="st">'n'</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span><span class="bu">int</span>(x.nobs)<span class="sc">}</span><span class="ss">"</span>,</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">'SER'</span>:<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>np<span class="sc">.</span>sqrt(x.ssr<span class="op">/</span>x.df_resid)<span class="sc">:.3f}</span><span class="ss">"</span>})</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>results_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" data-execution_count="19" style="flex-basis: 100.0%;justify-content: center;">
-<div id="tbl-t14-3" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="19">
+<p>We use the <code>modelsummary</code> function to present the estimation results.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model 1"</span> <span class="ot">=</span> model1,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model 2"</span> <span class="ot">=</span> model2,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model 3"</span> <span class="ot">=</span> model3,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model 4"</span> <span class="ot">=</span> model4,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model 5"</span> <span class="ot">=</span> model5</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="st">"HC1"</span>,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span>,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik|F"</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t14-3" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t14-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;16.3: OLS Estimation Results
 </figcaption>
 <div aria-describedby="tbl-t14-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="19">
-<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Model 1</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Model 2</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Model 3</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Model 4</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Model 5</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
-<td style="text-align: left;">698.933***</td>
-<td style="text-align: left;">686.032***</td>
-<td style="text-align: left;">700.150***</td>
-<td style="text-align: left;">697.999***</td>
-<td style="text-align: left;">700.392***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(10.364)</td>
-<td style="text-align: left;">(8.728)</td>
-<td style="text-align: left;">(5.568)</td>
-<td style="text-align: left;">(6.920)</td>
-<td style="text-align: left;">(5.537)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">str</td>
-<td style="text-align: left;">-2.280***</td>
-<td style="text-align: left;">-1.101**</td>
-<td style="text-align: left;">-0.998***</td>
-<td style="text-align: left;">-1.308***</td>
-<td style="text-align: left;">-1.014***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(0.519)</td>
-<td style="text-align: left;">(0.433)</td>
-<td style="text-align: left;">(0.270)</td>
-<td style="text-align: left;">(0.339)</td>
-<td style="text-align: left;">(0.269)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">el_pct</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">-0.650***</td>
-<td style="text-align: left;">-0.122***</td>
-<td style="text-align: left;">-0.488***</td>
-<td style="text-align: left;">-0.130***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.031)</td>
-<td style="text-align: left;">(0.033)</td>
-<td style="text-align: left;">(0.030)</td>
-<td style="text-align: left;">(0.036)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">meal_pct</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">-0.547***</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">-0.529***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.024)</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.038)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">calw_pct</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">-0.790***</td>
-<td style="text-align: left;">-0.048</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.068)</td>
-<td style="text-align: left;">(0.059)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
-<td style="text-align: left;">0.051</td>
-<td style="text-align: left;">0.426</td>
-<td style="text-align: left;">0.775</td>
-<td style="text-align: left;">0.629</td>
-<td style="text-align: left;">0.775</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
-<td style="text-align: left;">0.049</td>
-<td style="text-align: left;">0.424</td>
-<td style="text-align: left;">0.773</td>
-<td style="text-align: left;">0.626</td>
-<td style="text-align: left;">0.773</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">SER</td>
-<td style="text-align: left;">18.581</td>
-<td style="text-align: left;">14.464</td>
-<td style="text-align: left;">9.080</td>
-<td style="text-align: left;">11.654</td>
-<td style="text-align: left;">9.084</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th">n</td>
-<td style="text-align: left;">420</td>
-<td style="text-align: left;">420</td>
-<td style="text-align: left;">420</td>
-<td style="text-align: left;">420</td>
-<td style="text-align: left;">420</td>
-</tr>
-</tbody>
-</table>
-<br>
-Standard errors in parentheses.<br>
-* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_1lyu74sv3wcbuaedrk5u = TinyTable.createTableFunctions("tinytable_1lyu74sv3wcbuaedrk5u");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '15', j: 2 }, { i: '15', j: 3 }, { i: '15', j: 4 }, { i: '15', j: 5 }, { i: '15', j: 6 } ], css_id: 'tinytable_css_yrfdw8gi0rxtmql50e8m',}, 
+          { positions: [ { i: '10', j: 2 }, { i: '10', j: 3 }, { i: '10', j: 4 }, { i: '10', j: 5 }, { i: '10', j: 6 } ], css_id: 'tinytable_css_yg2qcg7psuokk5u2xg0g',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '3', j: 6 }, { i: '4', j: 6 }, { i: '5', j: 6 }, { i: '6', j: 6 }, { i: '7', j: 6 }, { i: '8', j: 6 }, { i: '9', j: 6 }, { i: '11', j: 6 }, { i: '12', j: 6 }, { i: '13', j: 6 }, { i: '14', j: 6 } ], css_id: 'tinytable_css_mwlf8opx782syk0cp0m7',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 } ], css_id: 'tinytable_css_ds9l69pu341gbfsdquu3',}, 
+          { positions: [ { i: '15', j: 1 } ], css_id: 'tinytable_css_1hrayn8sz9qmu55vnge0',}, 
+          { positions: [ { i: '10', j: 1 } ], css_id: 'tinytable_css_3kk8yl577ly5acz2i4go',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 } ], css_id: 'tinytable_css_9zykxicuxct686c4ehf9',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_2jxx0azhm7r71yqtfqvi',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_1lyu74sv3wcbuaedrk5u.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_yrfdw8gi0rxtmql50e8m, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_yrfdw8gi0rxtmql50e8m {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_yg2qcg7psuokk5u2xg0g, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_yg2qcg7psuokk5u2xg0g {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_mwlf8opx782syk0cp0m7, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_mwlf8opx782syk0cp0m7 { text-align: center }
+    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_ds9l69pu341gbfsdquu3, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_ds9l69pu341gbfsdquu3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_1hrayn8sz9qmu55vnge0, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_1hrayn8sz9qmu55vnge0 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_3kk8yl577ly5acz2i4go, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_3kk8yl577ly5acz2i4go {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_9zykxicuxct686c4ehf9, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_9zykxicuxct686c4ehf9 { text-align: left }
+    #tinytable_1lyu74sv3wcbuaedrk5u td.tinytable_css_2jxx0azhm7r71yqtfqvi, #tinytable_1lyu74sv3wcbuaedrk5u th.tinytable_css_2jxx0azhm7r71yqtfqvi {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_1lyu74sv3wcbuaedrk5u" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">Model 1</th>
+                <th scope="col" data-row="0" data-col="3">Model 2</th>
+                <th scope="col" data-row="0" data-col="4">Model 3</th>
+                <th scope="col" data-row="0" data-col="5">Model 4</th>
+                <th scope="col" data-row="0" data-col="6">Model 5</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="6">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">698.933***</td>
+                  <td data-row="1" data-col="3">686.032***</td>
+                  <td data-row="1" data-col="4">700.150***</td>
+                  <td data-row="1" data-col="5">697.999***</td>
+                  <td data-row="1" data-col="6">700.392***</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(10.364)</td>
+                  <td data-row="2" data-col="3">(8.728)</td>
+                  <td data-row="2" data-col="4">(5.568)</td>
+                  <td data-row="2" data-col="5">(6.920)</td>
+                  <td data-row="2" data-col="6">(5.537)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">str</td>
+                  <td data-row="3" data-col="2">-2.280***</td>
+                  <td data-row="3" data-col="3">-1.101*</td>
+                  <td data-row="3" data-col="4">-0.998***</td>
+                  <td data-row="3" data-col="5">-1.308***</td>
+                  <td data-row="3" data-col="6">-1.014***</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.519)</td>
+                  <td data-row="4" data-col="3">(0.433)</td>
+                  <td data-row="4" data-col="4">(0.270)</td>
+                  <td data-row="4" data-col="5">(0.339)</td>
+                  <td data-row="4" data-col="6">(0.269)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">el_pct</td>
+                  <td data-row="5" data-col="2"></td>
+                  <td data-row="5" data-col="3">-0.650***</td>
+                  <td data-row="5" data-col="4">-0.122***</td>
+                  <td data-row="5" data-col="5">-0.488***</td>
+                  <td data-row="5" data-col="6">-0.130***</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2"></td>
+                  <td data-row="6" data-col="3">(0.031)</td>
+                  <td data-row="6" data-col="4">(0.033)</td>
+                  <td data-row="6" data-col="5">(0.030)</td>
+                  <td data-row="6" data-col="6">(0.036)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">meal_pct</td>
+                  <td data-row="7" data-col="2"></td>
+                  <td data-row="7" data-col="3"></td>
+                  <td data-row="7" data-col="4">-0.547***</td>
+                  <td data-row="7" data-col="5"></td>
+                  <td data-row="7" data-col="6">-0.529***</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2"></td>
+                  <td data-row="8" data-col="3"></td>
+                  <td data-row="8" data-col="4">(0.024)</td>
+                  <td data-row="8" data-col="5"></td>
+                  <td data-row="8" data-col="6">(0.038)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">calw_pct</td>
+                  <td data-row="9" data-col="2"></td>
+                  <td data-row="9" data-col="3"></td>
+                  <td data-row="9" data-col="4"></td>
+                  <td data-row="9" data-col="5">-0.790***</td>
+                  <td data-row="9" data-col="6">-0.048</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1"></td>
+                  <td data-row="10" data-col="2"></td>
+                  <td data-row="10" data-col="3"></td>
+                  <td data-row="10" data-col="4"></td>
+                  <td data-row="10" data-col="5">(0.068)</td>
+                  <td data-row="10" data-col="6">(0.059)</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">Num.Obs.</td>
+                  <td data-row="11" data-col="2">420</td>
+                  <td data-row="11" data-col="3">420</td>
+                  <td data-row="11" data-col="4">420</td>
+                  <td data-row="11" data-col="5">420</td>
+                  <td data-row="11" data-col="6">420</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">R2</td>
+                  <td data-row="12" data-col="2">0.051</td>
+                  <td data-row="12" data-col="3">0.426</td>
+                  <td data-row="12" data-col="4">0.775</td>
+                  <td data-row="12" data-col="5">0.629</td>
+                  <td data-row="12" data-col="6">0.775</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">R2 Adj.</td>
+                  <td data-row="13" data-col="2">0.049</td>
+                  <td data-row="13" data-col="3">0.424</td>
+                  <td data-row="13" data-col="4">0.773</td>
+                  <td data-row="13" data-col="5">0.626</td>
+                  <td data-row="13" data-col="6">0.773</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1">RMSE</td>
+                  <td data-row="14" data-col="2">18.54</td>
+                  <td data-row="14" data-col="3">14.41</td>
+                  <td data-row="14" data-col="4">9.04</td>
+                  <td data-row="14" data-col="5">11.60</td>
+                  <td data-row="14" data-col="6">9.03</td>
+                </tr>
+                <tr>
+                  <td data-row="15" data-col="1">Std.Errors</td>
+                  <td data-row="15" data-col="2">HC1</td>
+                  <td data-row="15" data-col="3">HC1</td>
+                  <td data-row="15" data-col="4">HC1</td>
+                  <td data-row="15" data-col="5">HC1</td>
+                  <td data-row="15" data-col="6">HC1</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 </figure>
 </div>
 </div>
-</div>
-</div>
 <p>The conventional way to present estimation results is to display each estimated regression side by side, as shown in <a href="#tbl-t14-3" class="quarto-xref">Table&nbsp;<span>16.3</span></a>. We draw three main conclusions from these results:</p>
 <ul>
-<li>When comparing the estimation results in the first column with those in the other columns, we observe that the estimated coefficient on <code>str</code> is halved after controlling for student characteristics. In all cases, the estimated coefficient on <code>str</code> is statistically significant at the <span class="math inline">\(5\%\)</span> level. In our base specification (column 2), the estimated coefficient is approximately <span class="math inline">\(-1.1\)</span> and remains similar in columns 3 through 5.</li>
+<li>When comparing the estimation results in the first column with those in the other columns, we observe that the estimated coefficient on <code>str</code> is halved after controlling for student characteristics. In all cases, the estimated coefficient on <code>str</code> is statistically significant at the <span class="math inline">\(5\%\)</span> level. In our base specification (column 2), the estimated coefficient is approximately -1.1 and remains similar in columns 3 through 5.</li>
 <li>Comparing the estimation results in column 1 with those in the other columns shows that including student characteristics increases the adjusted <span class="math inline">\(R^2\)</span> substantially.</li>
 <li>The results in the fifth column indicate that <code>calw_pct</code> becomes redundant once we control for <code>meal_pct</code> and <code>el_pct</code>.</li>
 </ul>
@@ -1507,7 +1678,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/RBook\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -1851,7 +2022,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+<p>Introduction to Econometrics with R was written by Osman Doğan and Süleyman Taşpınar.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;
