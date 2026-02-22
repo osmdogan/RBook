@@ -1,57 +1,81 @@
 # Nonlinear Regression Functions {#sec-nonlinear}
 
-```{python}
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-from statsmodels.iolib.summary2 import summary_col
-import scipy.stats as stats
-sns.set_style('darkgrid')
+```{r}
+#| warning: false
+#| message: false
+# Load necessary libraries
+library(tidyverse)
+library(gridExtra)
+library(modelsummary)
+library(sandwich)
+library(lmtest)
+library(knitr)
+library(readxl)
+library(car) 
 ```
 
 ## Introduction
 We start our regression analysis in @sec-lrmone by assuming a linear population function $\E(Y|X_1)=\beta_0+\beta_1X_1$. However, in many cases, the relationship between $Y$ and $X_1$ is nonlinear. In this case, the effect of a change in $X_1$ on $Y$ is not constant. In @fig-f15-1, we illustrate population regression functions that have different slopes. In the linear case, as shown in the first plot of @fig-f15-1, the slope of the population regression function is constant. However, in the second plot, the slope of the population regression function depends on the value of another variable $X_2$. In the third plot, the slope of the population regression function depends on the value of $X_1$. In this chapter, we consider how to model nonlinear regression functions.
 
-```{python}
+```{r}
 #| label: fig-f15-1
 #| fig-cap: "Population regression functions with different slopes"
+#| fig-height: 4
 # Generate data
-x = np.linspace(1, 10, 50)
-y1 = 3.5+2 * x # Constant slope
-x2 = np.ones_like(x)
-y2_1 = 1 + 0.5 * x 
-y2_2 = 1 + 0.5 * x + 0.5*x*x2
-y3 = 0.5*x**2
+x <- seq(1, 10, length.out = 50)
 
-# Create the figure and subplots
-fig, axs = plt.subplots(1, 3, figsize=(7.5, 3))
+df1 <- data.frame(x = x, y = 3.5 + 2 * x)
 
-# Plot 1: Constant slope
-axs[0].plot(x, y1, color='steelblue')
-axs[0].set_title('Constant slope', fontsize=10)
-axs[0].set_xlabel(r'$X_1$', fontsize=9)
-axs[0].set_ylabel(r'$Y$', fontsize=9)
+df2 <- data.frame(
+  x = rep(x, 2),
+  y = c(1 + 0.5 * x,
+        1 + 0.5 * x + 0.5 * x),
+  X2 = factor(rep(c("When X2 = 0", "When X2 = 1"), each = length(x)))
+)
 
-# Plot 2: Slope depends on the value of X2 
-axs[1].plot(x, y2_1, label='When $X_2=0$', color='steelblue')
-axs[1].plot(x, y2_2, label='When $X_2=1$', color='black')
-axs[1].set_title('Slopes depends on the value of $X_2$', fontsize=10)
-axs[1].set_xlabel(r'$X_1$', fontsize=9)
-axs[1].set_ylabel(r'$Y$', fontsize=9)
-axs[1].legend(frameon=False)
+df3 <- data.frame(x = x, y = 0.5 * x^2)
 
-# Plot 3: Slope depends on the value of X1
-axs[2].plot(x, y3, color='steelblue')
-axs[2].set_title('Slope depends on the value of $X_1$', fontsize=10)
-axs[2].set_xlabel(r'$X_1$', fontsize=9)
-axs[2].set_ylabel(r'$Y$', fontsize=9)
+p1 <- ggplot(df1, aes(x, y)) +
+  geom_line(color = "steelblue", linewidth = 0.8) +
+  labs(title = "Constant slope", x = expression(X[1]), y = "Y")
 
-# Adjust layout
-plt.tight_layout()
-plt.show()
+p2 <- ggplot(df2, aes(x = x, y = y, color = X2)) +
+  geom_line(linewidth = 0.8) +
+  labs(
+    title = expression("Slope depends on " * X[2]),
+    x = expression(X[1]),
+    y = "Y"
+  ) +
+  scale_color_manual(values = c("steelblue", "black")) +
+  theme(legend.position = "none") +
+  annotate(
+    "text",
+    x = 5.5,
+    y = 4.5,
+    label = "X[2] == 0",
+    parse = TRUE,
+    color = "steelblue",
+    size = 3
+  ) +
+  annotate(
+    "text",
+    x = 5.5,
+    y = 8,
+    label = "X[2] == 1",
+    parse = TRUE,
+    color = "black",
+    size = 3
+  )
+
+p3 <- ggplot(df3, aes(x, y)) +
+  geom_line(color = "steelblue", linewidth = 0.8) +
+  labs(
+    title = expression("Slope depends on " * X[1]),
+    x = expression(X[1]),
+    y = "Y"
+  )
+
+grid.arrange(p1, p2, p3, nrow = 1)
 ```
 
 ## A general strategy for modeling nonlinear regression functions
@@ -110,7 +134,7 @@ Y_i=\beta_0+\beta_1X_{i}+\beta_2X_{i}^2+\cdots+\beta_mX_{i}^m+u_i,\quad i=1,2,\d
 \end{align}
 $$
 
-The linear model is a special case of the polynomial model with $m=1$. This model reduces to the linear model if we fail to reject the joint null hypothesis $H_0:\beta_2=\beta_3=\cdots=\beta_m=0$ against the alternative hypothesis $H_1:$ At least one of the coefficients is not zero. When $m=2$, the polynomial model is called a quadratic model, and when $m=3$, the polynomial model is called a cubic model. As with the linear model, the quadratic and cubic models can be tested against the polynomial regression model of degree $m$ by adjusting the null and alternative hypotheses accordingly. These joint null hypotheses can be tested using the F-statistic introduced in @sec-inference2. 
+In terms of the notation introduced in the previous section, we have $f(X_i)=\beta_0+\beta_1X_{i}+\beta_2X_{i}^2+\cdots+\beta_mX_{i}^m$. The linear model is a special case of the polynomial model with $m=1$. This model reduces to the linear model if we fail to reject the joint null hypothesis $H_0:\beta_2=\beta_3=\cdots=\beta_m=0$ against the alternative hypothesis $H_1:$ At least one of the coefficients is not zero. When $m=2$, the polynomial model is called a quadratic model, and when $m=3$, the polynomial model is called a cubic model. As with the linear model, the quadratic and cubic models can be tested against the polynomial regression model of degree $m$ by adjusting the null and alternative hypotheses accordingly. These joint null hypotheses can be tested using the F-statistic introduced in @sec-inference2. 
 
 Note that since the polynomial model is linear in the parameters, we can use the OLS estimator to estimate the model. The degree of the model can be selected using a sequential hypothesis testing approach based on the individual $t$-statistic. This approach consists of the following steps:
 
@@ -122,57 +146,59 @@ The final model obtained through this sequential testing approach is the polynom
 
 As an example, we consider the test scores data available in the `caschool.xlsx` file. The following code chunk imports the data and displays the column names.
 
-```{python}
-#| warning: false
-#| message: false
+```{r}
 # Import data
-mydata = pd.read_excel("data/caschool.xlsx", sheet_name="caschool", header=0)
-# Column names
-mydata.columns
+mydata <- read_excel("data/caschool.xlsx")
+colnames(mydata)
 ```
 
 We consider the relationship between the test scores (`testscr`) and two other variables: the student-teacher ratio (`str`), and the average district income (`avginc`). The average district income is measured in thousands of 1998 dollars (i.e., one unit increase in `avginc` means 1000 dollars increase). In @fig-f15-2, we present scatter plots of test scores against the student-teacher ratio and average district income. The scatter plot of test scores against the student-teacher ratio suggests a linear relationship, whereas the scatter plot of test scores against average district income suggests a nonlinear relationship.
 
-```{python}
+
+```{r}
 #| label: fig-f15-2
 #| fig-cap: "Scatter plots"
 #| fig-subcap: 
 #|   - "Scatterplot of TestScore and STR"
 #|   - "Scatterplot of Test Score and Income"
 #| layout-ncol: 2
-# Scatterplots
-# Regression of Test Score on STR
-X = mydata['str']
-y = mydata['testscr']
-X = sm.add_constant(X)
-model1 = sm.OLS(y, X).fit(cov_type="HC1")
-plt.figure(figsize=(6, 4))
-plt.scatter(mydata['str'], mydata['testscr'], color='steelblue', s=15, 
-  label='Data points')
-plt.xlabel('STR (X)')
-plt.ylabel('Test Score (Y)')
-plt.plot(mydata['str'], model1.predict(X), color='black', 
-  linewidth=1, label='Regression line')
-plt.legend()
-plt.show()
+#| fig-width: 6
+#| fig-height: 6
+# Test Score and STR
+p1 <- ggplot(mydata, aes(x = str, y = testscr)) +
+  geom_point(color = "steelblue", size = 1.8) +
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE,
+    color = "black",
+    linewidth = 0.8
+  ) +
+  labs(
+    x = "STR (X)",
+    y = "Test Score (Y)"
+  )
 
-# Scatterplot of Test Score and Income
-X = mydata['avginc']
-y = mydata['testscr']
-X = sm.add_constant(X)
-model1 = sm.OLS(y, X).fit(cov_type="HC1")
-plt.figure(figsize=(6, 4))
-plt.scatter(mydata['avginc'], mydata['testscr'], color='steelblue', s=15, 
-  label='Data points')
-plt.xlabel('Income (X)')
-plt.ylabel('Test Score (Y)')
-plt.plot(mydata['avginc'], model1.predict(X), color='black', 
-  linewidth=1, label='Regression line')
-plt.legend()
-plt.show()
+# Test Score and Income
+p2 <- ggplot(mydata, aes(x = avginc, y = testscr)) +
+  geom_point(color = "steelblue", size = 1.8) +
+  geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    se = FALSE,
+    color = "black",
+    linewidth = 0.8
+  ) +
+  labs(
+    x = "Income (X)",
+    y = "Test Score (Y)"
+  )
+
+p1
+p2
 ```
 
-We consider the following polynomial regression models of the test scores and district income:
+We consider the following polynomial regression models between the test scores and district income:
 
 $$
 \begin{align}
@@ -184,74 +210,76 @@ $$
 
 We estimate these models using the OLS estimator. In the following code chunk, we use the `I()` function to create the quadratic and cubic terms directly within the regression formula. Otherwise, we would need to create these variables manually and add them to the data frame `mydata`. The estimation results are presented in @tbl-t15-1.
 
-```{python}
+```{r}
 # Linear model
-model1 = smf.ols(formula='testscr ~ avginc',data=mydata).fit(cov_type="HC1")
+model1 <- lm(testscr ~ avginc, data = mydata)
 
 # Quadratic model
-model2 = smf.ols(formula='testscr ~ avginc + I(avginc**2)',
-  data=mydata).fit(cov_type="HC1")
+model2 <- lm(testscr ~ avginc + I(avginc^2), data = mydata)
 
-# Cubic specification
-model3 = smf.ols(formula='testscr ~ avginc + I(avginc**2) + I(avginc**3)',
-  data=mydata).fit(cov_type="HC1")
+# Cubic model
+model3 <- lm(testscr ~ avginc + I(avginc^2) + I(avginc^3), data = mydata)
 ```
 
 :::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: "Polynomial regressions"
 #| label: tbl-t15-1
 # Print results in table form
-models=['Linear', 'Quadratic', "Cubic"]
-results_table=summary_col(results=[model1,model2,model3],
-                          float_format='%0.3f', 
-                          stars=True,
-                          model_names=models)
-results_table
+modelsummary(
+  list("Linear" = model1, "Quadratic" = model2, "Cubic" = model3),
+  vcov = "HC1",
+  fmt = 3,
+  stars = TRUE,
+  gof_omit = "AIC|BIC|Log.Lik"
+)
 ```
 :::
 
 The estimated regression functions are plotted in @fig-f15-3, superimposed on the scatterplot of the data. As shown, the quadratic and cubic functions capture the curvature in the scatterplot, exhibiting steep slopes at low values of district income that gradually flatten as district income increases.
 
-```{python}
+
+```{r}
 #| label: fig-f15-3
 #| fig-cap: "Scatter plot and polynomial regression functions"
+#| fig-height: 5
+#| fig-width: 6
 # Polynomial regression models
-# Sorting index for plotting
-index = np.argsort(mydata['avginc'])
+# Prepare data 
+ord <- order(mydata$avginc)
 
-# Plotting the data points
-plt.figure(figsize=(6, 5))
-plt.scatter(mydata['avginc'], mydata['testscr'], color='black', 
-  s=15)
-plt.xlabel('District Income (X)')
-plt.ylabel('Test Score (Y)')
-#plt.title('Scatter plot of District Income vs. Test Score')
+df_plot <- data.frame(
+  avginc  = mydata$avginc[ord],
+  testscr = mydata$testscr[ord],
+  fit_lin = fitted(model1)[ord],
+  fit_quad = fitted(model2)[ord],
+  fit_cubic = fitted(model3)[ord]
+)
 
-# Plotting the fitted lines
-plt.plot(mydata['avginc'][index], model1.fittedvalues[index], 
-    color='steelblue', linewidth=1, label='Linear model')
-plt.plot(mydata['avginc'][index], model2.fittedvalues[index], 
-    color='red', linewidth=1, label='Quadratic model')
-plt.plot(mydata['avginc'][index], model3.fittedvalues[index], 
-    color='green', linewidth=1, label='Cubic model')
-plt.legend(frameon=False)
+# Plot: scatter + polynomial regression functions
+ggplot(df_plot, aes(x = avginc, y = testscr)) +
+  geom_point(color = "black", size = 1.5) +
+  geom_line(aes(y = fit_lin, color = "Linear model"), linewidth = 0.9) +
+  geom_line(aes(y = fit_quad, color = "Quadratic model"), linewidth = 0.9) +
+  geom_line(aes(y = fit_cubic, color = "Cubic model"), linewidth = 0.9) +
+  scale_color_manual(
+    values = c(
+      "Linear model" = "steelblue",
+      "Quadratic model" = "red",
+      "Cubic model" = "green"
+    )
+  ) +
+  labs(
+    x = "District Income (X)",
+    y = "Test Score (Y)"
+  ) +
+  theme(
+    legend.position = "bottom"
+  )
 ```
 
-The estimation results in @tbl-t15-1 show that the coefficients of the quadratic and cubic terms are statistically significant. The estimation results of the quadratic model are presented in @tbl-t15-2, where we report the estimated coefficients, standard errors, $t$-statistics, $p$-values and 95% two-sided confidence intervals. The table shows that the $t$-statistics for the quadratic and cubic terms are around `-3.3` and `1.97`, respectively, with corresponding $p$-values of `0.001` and `0.048`. Thus, both estimated coefficients are statistically significant at the $5\%$ significance level. 
 
-:::{layout-ncol=1}
-```{python}
-#| warning: false
-#| message: false
-#| label: tbl-t15-2
-#| tbl-cap: "Cubic polynomial regression model"
-# Print the estimation results of the cubic model
-model3.summary().tables[1]
-```
-:::
-
-For testing the null hypothesis of linearity, against the alternative that the population regression is quadratic and/or cubic, we consider the following joint null and alternative hypotheses.
+The estimation results in @tbl-t15-1 show that the coefficients of the quadratic and cubic terms are statistically significant. For testing the null hypothesis of linearity, against the alternative that the population regression is quadratic and/or cubic, we consider the following joint null and alternative hypotheses.
 $$
 \begin{align*}
 &H_0:\beta_2=0,\,\beta_3=0,\\
@@ -259,14 +287,15 @@ $$
 \end{align*}
 $$
 
-The F-statistic for this null hypothesis can be computed by using the `model3.f_test()` function. The following code chunk computes the F-statistic and the associated $p$-value.
+To test $H_0$, we use the `linearHypothesis` from the `car` package. The $F$-statistic is around 37.7 with a $p$-value of `9.043e-16`. Thus, we can reject the null hypothesis at the $5\%$ significance level.
 
-```{python}
-hypothesis="I(avginc ** 2)=0, I(avginc ** 3)=0"
-print(model3.f_test(hypothesis))
+```{r}
+linearHypothesis(
+  model3,
+  c("I(avginc^2) = 0", "I(avginc^3) = 0"),
+  white.adjust = "hc1"
+)
 ```
-
-The $F$-statistic is around 37.7 with a $p$-value of `9.043e-16`. Thus, we can reject the null hypothesis at the $5\%$ significance level.
 
 ### Logarithmic regression models
 In logarithmic regression models, we specify specify a nonlinear relationship between $Y$ and $X$ using the natural logarithm of $Y$ and/or $X$. The logarithmic transformations allow us to model relationships in percentage terms (such as elasticities), rather than linearly. Before introducing logarithmic regression models, we need to recall some properties of exponential and logarithmic functions. The exponential function is $e^x$, where $e$ is the base of the natural logarithm. The natural logarithm function is denoted by $\ln(x)$, where $x>0$. The natural logarithm function has the following properties:
@@ -277,40 +306,65 @@ In logarithmic regression models, we specify specify a nonlinear relationship be
 
 In @fig-f15-2, we plot the exponential function $y=e^x$ and the natural logarithm function $y=\ln(x)$. The exponential function is increasing and convex, while the natural logarithm function is increasing and concave. 
 
-```{python}
+
+```{r}
 #| label: fig-f15-4
 #| fig-cap: Exponential and logarithm functions
 # Exponential and logarithm functions
-# Generate values for x
-x_exp = np.linspace(-2, 2, 50)
-x_log = np.linspace(0.01, 4, 50) 
+# Generate values
+x_exp <- seq(-2, 2, length.out = 50)
+x_log <- seq(0.01, 4, length.out = 50)
 
-# Compute the function values
-y_exp = np.exp(x_exp)
-y_log = np.log(x_log)
+df_exp <- data.frame(x = x_exp, y = exp(x_exp))
+df_log <- data.frame(x = x_log, y = log(x_log))
 
-# Plot the functions
-plt.figure(figsize=(6, 4))
-
-# Plot y = e^x
-plt.plot(x_exp, y_exp, label=r'$y = e^x$', color="steelblue")
-
-# Plot y = ln(x)
-plt.plot(x_log, y_log, label=r'$y = \ln(x)$', color="steelblue", linestyle='--')
-
-# Add x=0 and y=0 lines
-plt.axvline(0, color='black',linewidth=1, linestyle='-') 
-plt.axhline(0, color='black',linewidth=1, linestyle='-') 
-
-# Set labels and title
-plt.xlabel(r'$x$')
-plt.ylabel(r'$y$')
-# plt.title('Exponential and logarithm functions')
-# Add legend and grid
-plt.legend(frameon=False)
-# Show plot
-plt.show()
+# Plot with direct annotations
+ggplot() +
+  # Exponential curve
+  geom_line(
+    data = df_exp,
+    aes(x = x, y = y),
+    color = "steelblue",
+    linewidth = 0.9
+  ) +
+  # Logarithmic curve
+  geom_line(
+    data = df_log,
+    aes(x = x, y = y),
+    color = "steelblue",
+    linewidth = 0.9,
+    linetype = "dashed"
+  ) +
+  # Axes at zero
+  geom_vline(xintercept = 0, color = "black", linewidth = 0.8) +
+  geom_hline(yintercept = 0, color = "black", linewidth = 0.8) +
+  # Direct annotations
+  annotate(
+    "text",
+    x = 1.4,
+    y = 2.7,
+    label = "y == e^x",
+    parse = TRUE,
+    color = "steelblue",
+    hjust = 0,
+    size = 4
+  ) +
+  annotate(
+    "text",
+    x = 2.4,
+    y = 1.5,
+    label = "y == ln(x)",
+    parse = TRUE,
+    color = "steelblue",
+    hjust = 0,
+    size = 4
+  ) +
+  labs(
+    x = expression(x),
+    y = expression(y)
+  )
 ```
+
 
 ::: {#exm-exm15-1}
 ## Maclaurin series expansions
@@ -400,7 +454,7 @@ Thus, in the log-log model, if $X$ changes by $1\%$, i.e., $100\times\Delta X/X=
 3. The log-log model is $\ln(Y_i)=\beta_0+\beta_1\ln(X_i)+u_i$. In this model, the effect of a $1\%$ change in $X$ on $Y$ is $\beta_1$ percent.
 :::
 
-For our test score example, we consider the following regression models:
+For our test scores example, we consider the following regression models:
 
 1. The linear model: $\text{TestScore}=\beta_0+\beta_1\text{Income}+u$,
 2. The quadratic model: $\text{TestScore}=\beta_0+\beta_1\text{Income}+\beta_2\text{Income}^2+u$,
@@ -408,36 +462,41 @@ For our test score example, we consider the following regression models:
 4. The log-linear model: $\ln(\text{TestScore})=\beta_0+\beta_1\text{Income}+u$,
 5. The log-log model: $\ln(\text{TestScore})=\beta_0+\beta_1\ln(\text{Income})+u$.
 
-```{python}
+
+```{r}
 # Linear model
-r1 = smf.ols(formula='testscr ~ avginc',data=mydata).fit(cov_type="HC1")
+r1 <- lm(testscr ~ avginc, data = mydata)
 
 # Quadratic model
-r2 = smf.ols(formula='testscr ~ avginc + I(avginc**2)',
-  data=mydata).fit(cov_type="HC1")
+r2 <- lm(testscr ~ avginc + I(avginc^2), data = mydata)
 
-# Linear-log model
-r3 = smf.ols(formula='testscr~np.log(avginc)',
-  data=mydata).fit(cov_type="HC1")
-# Log-linear model
-r4 = smf.ols(formula="np.log(testscr) ~ avginc",
-         data = mydata).fit(cov_type="HC1")
-# Log-log model
-r5 = smf.ols(formula="np.log(testscr) ~ np.log(avginc)",
-         data = mydata).fit(cov_type="HC1")
+# Linear–log model
+r3 <- lm(testscr ~ log(avginc), data = mydata)
+
+# Log–linear model
+r4 <- lm(log(testscr) ~ avginc, data = mydata)
+
+# Log–log model
+r5 <- lm(log(testscr) ~ log(avginc), data = mydata)
 ```
 
 :::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: "Logarithmic regression models"
 #| label: tbl-t15-3
 # Print results in table form
-models=['Linear', 'Quadratic', "Linear-log", "Log-linear", "Log-log"]
-results_table=summary_col(results=[r1,r2,r3,r4,r5],
-                          float_format='%0.3f', 
-                          stars=True,
-                          model_names=models)
-results_table
+modelsummary(
+  list(
+    "Linear"       = r1,
+    "Quadratic"    = r2,
+    "Linear–log"   = r3,
+    "Log–linear"   = r4,
+    "Log–log"      = r5
+  ),
+  vcov = "HC1",
+  gof_omit = "AIC|BIC|Log.Lik",
+  stars = TRUE
+)
 ```
 :::
 
@@ -463,59 +522,99 @@ The results in @tbl-t15-3 indicates that the estimated coefficient of `avginc` i
 
 We plot the estimated regression functions in @fig-f15-5 and @fig-f15-6. In @fig-f15-5, the quadratic model appears to provide a better fit for the data, while in @fig-f15-6, the log-log model seems to fit the data more closely.
 
-```{python}
+
+```{r}
 #| label: fig-f15-5
 #| fig-cap: "Linear, quadratic and linear-log models"
+#| fig-height: 5
+#| fig-width: 6
 # Linear, quadratic and linear-log models
-# Sorting index for plotting
-index = np.argsort(mydata['avginc'])
+# Sort data for smooth fitted curves
+mydata_sorted <- mydata[order(mydata$avginc), ]
 
-# Plotting the data points
-plt.figure(figsize=(6, 4))
-plt.scatter(mydata['avginc'], mydata['testscr'], color='black', 
-  s=15)
-plt.xlabel('District Income (X)')
-plt.ylabel('Test Score (Y)')
-#plt.title('Scatter plot of District Income vs. Test Score')
+# Add fitted values
+mydata_sorted$fit_linear     <- fitted(r1)[order(mydata$avginc)]
+mydata_sorted$fit_quadratic  <- fitted(r2)[order(mydata$avginc)]
+mydata_sorted$fit_linlog     <- fitted(r3)[order(mydata$avginc)]
 
-# Plotting the fitted lines
-plt.plot(mydata['avginc'][index], r1.fittedvalues[index], 
-    color='steelblue', linewidth=1, label='Linear model')
-plt.plot(mydata['avginc'][index], r2.fittedvalues[index], 
-    color='red', linewidth=1, label='Quadratic model')
-plt.plot(mydata['avginc'][index], r3.fittedvalues[index], 
-    color='green', linewidth=1, label='Linear-log model')
-plt.legend(frameon=False)
+# Plot
+ggplot(mydata, aes(x = avginc, y = testscr)) +
+  geom_point(color = "black", size = 1.5) +
+  geom_line(
+    data = mydata_sorted,
+    aes(y = fit_linear, color = "Linear model"),
+    linewidth = 1
+  ) +
+  geom_line(
+    data = mydata_sorted,
+    aes(y = fit_quadratic, color = "Quadratic model"),
+    linewidth = 1
+  ) +
+  geom_line(
+    data = mydata_sorted,
+    aes(y = fit_linlog, color = "Linear-log model"),
+    linewidth = 1
+  ) +
+  scale_color_manual(
+    values = c(
+      "Linear model" = "steelblue",
+      "Quadratic model" = "red",
+      "Linear-log model" = "green"
+    )
+  ) +
+  
+  labs(
+    x = "District Income (X)",
+    y = "Test Score (Y)"
+  ) +
+  theme(legend.position = "bottom")
 ```
 
 
-```{python}
+
+```{r}
 #| label: fig-f15-6
 #| fig-cap: "Log-linear and log-log models"
+#| fig-height: 5
+#| fig-width: 6
 # Log-linear and log-log models
-# Sorting index for plotting
-index = np.argsort(mydata['avginc'])
+# Sort data for smooth fitted curves
+ord <- order(mydata$avginc)
+mydata_sorted <- mydata[ord, ]
 
-# Plotting the data points
-plt.figure(figsize=(6, 4))
-plt.scatter(mydata['avginc'], np.log(mydata['testscr']), color='black', 
-  s=15)
-plt.xlabel('District Income (X)')
-plt.ylabel('log(Test Score (Y))')
-#plt.title('Scatter plot of District Income vs. Test Score')
+# Add fitted values
+mydata_sorted$fit_loglin <- fitted(r4)[ord]
+mydata_sorted$fit_loglog <- fitted(r5)[ord]
 
-# Plotting the fitted lines
-plt.plot(mydata['avginc'][index], r4.fittedvalues[index], 
-    color='steelblue', linewidth=1, label='Log-linear model')
-plt.plot(mydata['avginc'][index], r5.fittedvalues[index], 
-    color='red', linewidth=1, label='Log-log model')
-plt.legend(frameon=False)
+# Plot
+ggplot(mydata, aes(x = avginc, y = log(testscr))) +
+  geom_point(color = "black", size = 1.5) +
+  geom_line(
+    data = mydata_sorted,
+    aes(y = fit_loglin, color = "Log-linear model"),
+    linewidth = 1
+  ) +
+  geom_line(
+    data = mydata_sorted,
+    aes(y = fit_loglog, color = "Log-log model"),
+    linewidth = 1
+  ) +
+  scale_color_manual(
+    values = c(
+      "Log-linear model" = "steelblue",
+      "Log-log model"    = "red"
+    )
+  ) +
+  labs(
+    x = "District Income (X)",
+    y = "log(Test Score (Y))"
+  ) +
+  theme(legend.position = "bottom")
 ```
 
 Finally, we can use the adjusted $R^2$ to determine which model best fits the data. However, caution is needed when using the adjusted $R^2$ to compare models with different dependent variables, as it should only be used for models with the same dependent variable. The adjusted $R^2$ values for the linear, quadratic, and linear-log models are approximately 0.506, 0.554, and 0.561, respectively. Therefore, the linear-log model has the highest adjusted $R^2$ and is the best fit for the data. For the log-linear and log-log models, the adjusted $R^2$ values are about 0.497 and 0.557, respectively; hence, the log-log model provides relatively better fit.
 
 Since the dependent variables differ between the linear-log and log-log models, we cannot directly compare their adjusted $R^2$ values. @Stock2020 suggest using economic theory or expert judgment to decide whether to specify the model with $Y$ or $\ln(Y)$ as the dependent variable. They write, "In modeling test scores, it seems natural (to us, anyway) to discuss test results in terms of points on the test rather than percentage increases in the test scores, so we focus on models in which the dependent variable is the test score rather than its logarithm."
-
 
 ## Interactions between independent variables
 In this section, we consider the interaction terms formed by the product of two independent variables. In models with interaction terms, the effect of an independent variable on $Y$ depends also on the variable with which it is interacted.
@@ -575,28 +674,29 @@ $$
 
 Here, $\text{HiSTR}_i$ is a binary variable equal to 1 if the student-teacher ratio is 20 or more, and 0 otherwise; $\text{HiEL}_i$ is another binary variable equal to 1 if the percentage of English learners is 10% or more, and 0 otherwise. We use the following code chunk to estimate the model and present the results in @tbl-t15-4.
 
-```{python}
+
+```{r}
 # Generate dummy variables
-mydata["histr"] = mydata["str"] >= 20
-mydata["hiel"] = mydata["el_pct"] >= 10
+mydata$histr = as.integer(mydata$str >= 20)
+mydata$hiel  = as.integer(mydata$el_pct >= 10)
+
 # Estimation
-r1 = smf.ols(formula='testscr ~ histr + hiel + histr*hiel',
-    data=mydata).fit(cov_type="HC1")
+r1 <- lm(testscr ~ histr + hiel + histr:hiel, data = mydata)
 ```
 
-:::{layout-ncol=1}
-```{python}
+
+```{r}
 #| tbl-cap: "Interaction Between to Binary Variables"
 #| label: tbl-t15-4
 # Print results in a table form
-models = ['Model']
-results_table = summary_col(results=[r1],
-                            float_format='%0.3f', 
-                            stars=True,
-                            model_names=models)
-results_table
+modelsummary(
+  list("Model" = r1),
+  vcov = "HC1",
+  stars = TRUE,
+  fmt = 3,
+  gof_omit = "AIC|BIC|Log.Lik"
+)
 ```
-:::
 
 According to the estimation results in @tbl-t15-4, the estimated model is
 $$
@@ -632,62 +732,103 @@ Y_i=\beta_0+\beta_1X_{i}+\beta_2\left(D_i\times X_i\right)+u_i,\quad i=1,2,\cdot
 $$
 This case is illustrated in the third plot of @fig-f15-7. 
 
-```{python}
+
+
+```{r}
 #| label: fig-f15-7
 #| fig-cap: "Regression functions using binary and continuous variables"
-# Define the parameters
-beta_0 = 1
-beta_1 = 2
-beta_2 = 3
-beta_3 = 0.5
+#| fig-height: 10
+#| fig-width: 6
+# Parameters
+beta_0 <- 1
+beta_1 <- 2
+beta_2 <- 3
+beta_3 <- 0.5
 
-# Generate data
-x = np.linspace(0, 10, 100)
+x <- seq(0, 10, length.out = 100)
 
-# Define the functions
-y1_1 = (beta_0 + beta_2) + beta_1 * x
-y1_2 = beta_0 + beta_1 * x
+# Data for each panel
 
-y2_1 = (beta_0 + beta_2) + (beta_1 + beta_3) * x
-y2_2 = beta_0 + beta_1 * x
+# Panel 1: Different intercepts, same slopes
+df1 <- data.frame(
+  x = rep(x, 2),
+  y = c((beta_0 + beta_2) + beta_1 * x,
+        beta_0 + beta_1 * x),
+  group = rep(c("g1", "g2"), each = length(x))
+)
 
-y3_1 = beta_0 + (beta_1 + beta_2) * x
-y3_2 = beta_0 + beta_1 * x
+# Panel 2: Different intercepts and slopes
+df2 <- data.frame(
+  x = rep(x, 2),
+  y = c((beta_0 + beta_2) + (beta_1 + beta_3) * x,
+        beta_0 + beta_1 * x),
+  group = rep(c("g1", "g2"), each = length(x))
+)
 
-# Create the figure and subplots in a 2x2 grid layout
-fig, axs = plt.subplots(2, 2, figsize=(7, 6))
+# Panel 3: Same intercept, different slopes
+df3 <- data.frame(
+  x = rep(x, 2),
+  y = c(beta_0 + (beta_1 + beta_2) * x,
+        beta_0 + beta_1 * x),
+  group = rep(c("g1", "g2"), each = length(x))
+)
 
-# Plot 1: Different intercepts, same slopes
-axs[0, 0].plot(x, y1_1, label=r'$Y=(\beta_0+\beta_2)+\beta_1X$', color='steelblue')
-axs[0, 0].plot(x, y1_2, label=r'$Y=\beta_0+\beta_1X$', color='black')
-axs[0, 0].set_title('Different intercepts and same slopes', fontsize=10)
-axs[0, 0].set_xlabel(r'$X$', fontsize=10)
-axs[0, 0].set_ylabel(r'$Y$', fontsize=10)
-axs[0, 0].legend(frameon=False, fontsize=9)
+# Plot 1
+p1 <- ggplot(df1, aes(x = x, y = y, color = group)) +
+  geom_line(linewidth = 0.7) +
+  labs(
+    title = "Different intercepts and same slopes",
+    x = expression(X),
+    y = expression(Y)
+  ) +
+  scale_color_manual(
+    values = c("steelblue", "black"),
+    labels = c(
+      expression(Y == (beta[0]+beta[2]) + beta[1]*X),
+      expression(Y == beta[0] + beta[1]*X)
+    )
+  ) +
+  theme(legend.title = element_blank())
 
-# Plot 2: Different intercepts and slopes
-axs[0, 1].plot(x, y2_1, label=r'$Y=(\beta_0+\beta_2)+(\beta_1+\beta_3)X$', color='steelblue')
-axs[0, 1].plot(x, y2_2, label=r'$Y=\beta_0+\beta_1X$', color='black')
-axs[0, 1].set_title('Different intercepts and slopes', fontsize=10)
-axs[0, 1].set_xlabel(r'$X$', fontsize=10)
-axs[0, 1].set_ylabel(r'$Y$', fontsize=10)
-axs[0, 1].legend(frameon=False, fontsize=9)
+# Plot 2
+p2 <- ggplot(df2, aes(x = x, y = y, color = group)) +
+  geom_line(linewidth = 0.7) +
+  labs(
+    title = "Different intercepts and slopes",
+    x = expression(X),
+    y = expression(Y)
+  ) +
+  scale_color_manual(
+    values = c("steelblue", "black"),
+    labels = c(
+      expression(Y == (beta[0]+beta[2]) + (beta[1]+beta[3])*X),
+      expression(Y == beta[0] + beta[1]*X)
+    )
+  ) +
+  theme(legend.title = element_blank())
 
-# Plot 3: Same intercept, different slopes
-axs[1, 0].plot(x, y3_1, label=r'$Y=\beta_0+(\beta_1+\beta_2)X$', color='steelblue')
-axs[1, 0].plot(x, y3_2, label=r'$Y=\beta_0+\beta_1X$', color='black')
-axs[1, 0].set_title('Same intercept and different slopes', fontsize=10)
-axs[1, 0].set_xlabel(r'$X$', fontsize=10)
-axs[1, 0].set_ylabel(r'$Y$', fontsize=10)
-axs[1, 0].legend(frameon=False, fontsize=9)
+# Plot 3
+p3 <- ggplot(df3, aes(x = x, y = y, color = group)) +
+  geom_line(linewidth = 0.7) +
+  labs(
+    title = "Same intercept and different slopes",
+    x = expression(X),
+    y = expression(Y)
+  ) +
+  scale_color_manual(
+    values = c("steelblue", "black"),
+    labels = c(
+      expression(Y == beta[0] + (beta[1]+beta[2])*X),
+      expression(Y == beta[0] + beta[1]*X)
+    )
+  ) +
+  theme(legend.title = element_blank())
 
-# Remove the empty subplot (bottom-right cell)
-fig.delaxes(axs[1, 1])
+# Arrange 2×2 layout (bottom-right empty)
+grid.arrange(grobs = list(p1, p2, p3), ncol = 1)
 
-# Adjust layout
-plt.tight_layout()
-plt.show()
 ```
+
 
 In the test scores example, we consider the following regression model:
 $$
@@ -697,24 +838,23 @@ $$
 $$
 where $\text{HiEL}_i$ is a binary variable that equals $1$ if the percentage of English learners is 10\% or more and 0 otherwise. The estimation results are presented in @tbl-t15-5.
 
-```{python}
-r2 = smf.ols(formula="testscr ~ str + hiel + str*hiel",
-         data = mydata).fit(cov_type="HC1")
+```{r}
+# Estimation
+r2 <- lm(testscr ~ str * hiel, data = mydata)
 ```
 
-:::{layout-ncol=1}
-```{python}
-#| tbl-cap: "Interaction between a continuous and a binary variable"
+```{r}
 #| label: tbl-t15-5
-# Print results in table form
-models = ['Model']
-results_table = summary_col(results=[r2],
-                            float_format='%0.3f', 
-                            stars=True,
-                            model_names=models)
-results_table
+#| tbl-cap: "Interaction between a continuous and a binary variable"
+# Table output (HC1 robust SEs)
+modelsummary(
+  list("Model" = r2),
+  vcov = "HC1",
+  gof_omit = "AIC|BIC|Log.Lik",
+  stars = TRUE,
+  fmt = 3
+)
 ```
-:::
 
 According to the estimation results presented in @tbl-t15-5, the estimated model is
 $$
@@ -725,30 +865,46 @@ $$
 
 Thus, for districts with a low percentage of English learners ($\text{HiEL}_i=0$), the estimated regression line is $\widehat{\text{TestScore}}_i=682.2-0.97\text{STR}_i$. In contrast, for districts with a high percentage of English learners ($\text{HiEL}_i=1$), the estimated regression line becomes $\widehat{\text{TestScore}}_i=682.2+5.6-0.97\text{STR}_i-1.28\text{STR}_i=687.8-2.25\text{STR}_i$. These two regression lines are plotted in @fig-f15-8. According to these estimates, when STR increases by $1$, the test score declines on average by $0.97$ points in districts with low percentage of English learners. On the other hand, when STR increases by $1$ student, the test score declines on average by $2.25$ points in districts with high percentage of English learners.
 
-```{python} 
+
+```{r}
 #| label: fig-f15-8
 #| fig-cap: "Regression lines using continuous and binary variables"
-# Define the parameters
-beta_0 = 682.2
-beta_1 = -0.97
-beta_2 = 5.6
-beta_3 = -1.28
 
-# Generate data
-x = mydata['str']
+# Parameters
+beta_0 <- 682.2
+beta_1 <- -0.97
+beta_2 <- 5.6
+beta_3 <- -1.28
 
-# Define the functions
-y1 = beta_0 + beta_1 * x
-y2 = (beta_0 + beta_2) + (beta_1 + beta_3) * x
+# Data
+x <- mydata$str
 
-# Create the figure and plot
-plt.figure(figsize=(5, 3))
-plt.plot(x, y1, label=r'$\widehat{TestScore}=682.2-0.97\text{STR}$', color='steelblue')
-plt.plot(x, y2, label=r'$\widehat{TestScore}=687.8-2.25\text{STR}$', color='black')
-plt.xlabel('Student-teacher ratio', fontsize=10)
-plt.ylabel('Predicted test score', fontsize=10)
-plt.legend(frameon=False, fontsize=9)
-plt.show()
+df <- data.frame(
+  str = rep(x, 2),
+  y = c(
+    beta_0 + beta_1 * x,
+    (beta_0 + beta_2) + (beta_1 + beta_3) * x
+  ),
+  model = rep(c("m1", "m2"), each = length(x))
+)
+
+# Plot
+ggplot(df, aes(x = str, y = y, color = model)) +
+  geom_line(linewidth = 0.8) +
+  labs(
+    x = "Student-teacher ratio",
+    y = "Predicted test score"
+  ) +
+  scale_color_manual(
+    values = c("steelblue", "black"),
+    labels = c(
+      expression(widehat(TestScore) == 682.2 - 0.97*STR),
+      expression(widehat(TestScore) == 687.8 - 2.25*STR)
+    )
+  ) +
+  theme(
+    legend.title = element_blank()
+  )
 ```
 
 Finally, we consider the following joint null and alternative hypotheses:
@@ -760,9 +916,14 @@ $$
 
 We use the heteroskedasticity-robust $F$-statistic to test this hypothesis. The $F$-statistic is around 89.9 with a $p$-value less than 0.05. Thus, we reject the null hypothesis.
 
-```{python}
-hypothesis = "hiel[T.True]=0, str:hiel[T.True]=0"
-r2.f_test(hypothesis)
+
+```{r}
+linearHypothesis(
+  r2,
+  c("hiel = 0", "str:hiel = 0"),
+  vcov = vcovHC(r2, type = "HC1"),
+  test = "F"
+)
 ```
 
 ### Interactions between two continuous variables
@@ -798,23 +959,25 @@ $$
 
 We use the following code chunk to estimate the model and present the results in @tbl-t15-6.
 
-```{python}
-r3 = smf.ols(formula="testscr ~ str + el_pct + str*el_pct",
-         data = mydata).fit(cov_type="HC1")
+
+```{r}
+# Estimation
+r3 <- lm(testscr ~ str * el_pct, data = mydata)
 ```
 
-:::{layout-ncol=1}
-```{python}
-#| tbl-cap: "Interaction between two continuous variables"
+
+```{r}
 #| label: tbl-t15-6
-models = ["Model"]
-r3_table = summary_col(results=r3, 
-                      float_format="%0.4f", 
-                      stars=True, 
-                      model_names=models)
-r3_table
+#| tbl-cap: "Interaction between two continuous variables"
+# Table output with HC1 robust SEs
+modelsummary(
+  list("Model" = r3),
+  vcov = vcovHC(r3, type = "HC1"),
+  gof_omit = "AIC|BIC|Log.Lik",
+  stars = TRUE,
+  fmt = 3
+)
 ```
-:::
 
 The estimated model is
 $$
@@ -846,7 +1009,7 @@ To answer these questions, we also consider the following variables on the econo
 
 - `el_pct`: the percentage of English learning students.
 
-- `HiEL`: a binary variable that equals $1$ if the percentage of English learners is $10\%$ or more, and 0 otherwise.
+- `HiEL`: a binary variable that equals 1 if the percentage of English learners is 10\% or more, and 0 otherwise.
 
 - `meal_pct`: the share of students that qualify for a subsidized or a free lunch at school.
 
@@ -869,159 +1032,227 @@ $$
 
 The following code chunks can be used to produce the estimation results given in @tbl-t15-7.
 
-```{python}
+
+
+```{r}
 # Model 1
-r1 = smf.ols(formula="testscr ~ str + el_pct + meal_pct",
-         data = mydata).fit(cov_type="HC1")
+r1 <- lm(testscr ~ str + el_pct + meal_pct, data = mydata)
+
 # Model 2
-r2 = smf.ols(formula="testscr ~ str + el_pct + meal_pct + np.log(avginc)",
-         data = mydata).fit(cov_type="HC1")
+r2 <- lm(testscr ~ str + el_pct + meal_pct + log(avginc), data = mydata)
+
 # Model 3
-r3 = smf.ols(formula="testscr ~ str + hiel + hiel*str",
-         data = mydata).fit(cov_type="HC1")
+r3 <- lm(testscr ~ str * hiel, data = mydata)
+
 # Model 4
-r4 = smf.ols(formula="testscr ~ str + hiel + hiel*str + meal_pct + np.log(avginc)",
-         data = mydata).fit(cov_type="HC1")
-# Model 5
-r5 = smf.ols(formula="testscr ~ str + I(str**2) + I(str**3) + hiel + meal_pct + np.log(avginc)", data = mydata).fit(cov_type="HC3")
+r4 <- lm(testscr ~ str * hiel + meal_pct + log(avginc), data = mydata)
+
+# Model 5  (HC3 robust SEs in Python)
+r5 <- lm(testscr ~ str + I(str^2) + I(str^3) +
+           hiel + meal_pct + log(avginc),
+         data = mydata)
+
 # Model 6
-r6 = smf.ols(formula="testscr ~ str + I(str**2) + I(str**3) + hiel + hiel*str + hiel*I(str**2) + hiel * I(str**3) + meal_pct + np.log(avginc)",
-data = mydata).fit(cov_type="HC1")
+r6 <- lm(testscr ~ (str + I(str^2) + I(str^3)) * hiel +
+           meal_pct + log(avginc),
+         data = mydata)
+
 # Model 7
-r7 = smf.ols(formula="testscr ~ str + I(str**2) + I(str**3) + el_pct + meal_pct + np.log(avginc)", data = mydata).fit(cov_type="HC1")
+r7 <- lm(testscr ~ str + I(str^2) + I(str^3) +
+           el_pct + meal_pct + log(avginc),
+         data = mydata)
 ```
 
-:::{layout-ncol=1}
-```{python}
+
+::: {style="font-size: 80%"}
+```{r}
 #| tbl-cap: "Estimation results for empirical application"
 #| label: tbl-t15-7
-models = ["Model 1","Model 2", "Model 3", "Model 4", "Model 5", "Model 6", "Model 7"]
-application_table = summary_col(results=[r1,r2,r3,r4,r5,r6,r7], 
-                      float_format="%0.3f", 
-                      stars=True, 
-                      model_names=models)
-application_table
+modelsummary(
+  list(
+    "Model 1" = r1,
+    "Model 2" = r2,
+    "Model 3" = r3,
+    "Model 4" = r4,
+    "Model 5" = r5,
+    "Model 6" = r6,
+    "Model 7" = r7
+  ),
+  vcov = "HC1",
+  gof_omit = "AIC|BIC|Log.Lik",
+  stars = TRUE,
+  fmt = 3
+)
 ```
 :::
-
 
 Starting with the results for Model 1, we see that the estimated coefficient on `STR` is statistically significant. The results for Model 2 show that adding `ln(avginc)` reduces the estimated coefficient on `STR` to `-0.734`, though this estimate remains statistically significant. In Models 3 and 4, we aim to assess the effect of allowing for an interaction term, `STR × HiEL`, both without and with economic control variables. In both models, we observe that the coefficient on the interaction term and the coefficient on `HiEL` are not statistically significant. Thus, even with economic controls, we cannot reject the null hypothesis that the effect of the student-teacher ratio on test scores is the same for districts with high and low shares of English learners.
 
 Model 5 includes a cubic term for the student-teacher ratio and omits the interaction `STR × HiEL`. The results indicate that there is a nonlinear effect of `STR` on test scores. We can verify this non-linear relationship by testing the joint null hypothesis: $H_0:\beta_2=0,\beta_3=0$. The F-statistic is around 5 with a $p$-value less than 0.05. Thus, we reject the null hypothesis at the $5\%$ significance level. 
 
-```{python}
-hypothesis = "I(str ** 2)=0, I(str ** 3)=0"
-print(r5.f_test(hypothesis))
+
+```{r}
+linearHypothesis(
+  r5,
+  c("I(str^2) = 0", "I(str^3) = 0"),
+  vcov = vcovHC(r5, type = "HC3"),
+  test = "F"
+)
 ```
 
-Model 6 further examines whether the effect of `STR` depends not just on its value but also on the fraction of English learners. All individual t-statistics indicate that the estimated coefficients on `HiEL` and its interaction terms are statistically significant. We can further check this by using a robust $F$-test for the joint null hypothesis: $H_0:\beta_5=0,\beta_6=0,\beta_7=0$. The F-statistic is around 2.19 with a $p$-value less than 0.10. Thus, we only reject the null hypothesis at the $10\%$ significance level.
+Model 6 further examines whether the effect of `STR` depends not just on its value but also on the fraction of English learners. All individual t-statistics indicate that the estimated coefficients on `HiEL` and its interaction terms are statistically significant. We can further check this by using a robust $F$-test for the joint null hypothesis: $H_0:\beta_5=0,\beta_6=0,\beta_7=0$. The F-statistic is around 2.69 with a $p$-value around 0.046. We reject the null hypothesis at the 5\% significance level.
 
-```{python}
-hypothesis="hiel[T.True]:str=0, hiel[T.True]:I(str ** 2)=0, hiel[T.True]:I(str ** 3)=0"
-print(r6.f_test(hypothesis))
+
+```{r}
+linearHypothesis(
+  r6,
+  c(
+    "str:hiel = 0",
+    "I(str^2):hiel = 0",
+    "I(str^3):hiel = 0"
+  ),
+  vcov = vcovHC(r6, type = "HC1"),
+  test = "F"
+)
 ```
 
 Model 7 is a modification of Model 5, in which the continuous variable `PctEL` is used instead of the binary variable `HiEL` to control for the effect of the percentage of English learners. The coefficients on the other regressors do not change substantially when this modification is made, indicating that the results in Model 5 are not sensitive to whether we use `PctEL` or `HiEL`.
 
 The nonlinear specifications in @tbl-t15-7 are most easily interpreted graphically. In @fig-f15-9, we present plots of the estimated regression functions for Models 2, 5, and 7, along with a scatterplot of `testscr` and `str`. For each curve, we compute predicted values by setting each independent variable, other than `str`, to its sample average. These estimated regression functions show the predicted test scores as a function of `str`, with other independent variables fixed at their sample averages. The figure illustrates that the estimated regression functions are all quite similar to one another.
 
-```{python}
-# Plotting the estimated regression functions for Models 2, 5, and 7
-# Creating new data for predictions
-mydata["hiel"]=mydata["hiel"].astype(int) # Convert hiel to 0s and 1s
-# Model 5
-r5 = smf.ols(formula=
-"testscr ~ str + I(str**2) + I(str**3)+ hiel + meal_pct + np.log(avginc)", 
-data = mydata).fit(cov_type="HC3")
-# Creating new data for predictions
-new_data = pd.DataFrame({
-    'str': np.arange(14, 26.01, 0.01),
-    'el_pct': [mydata['el_pct'].mean()] * len(np.arange(14, 26.01, 0.01)),
-    'meal_pct': [mydata['meal_pct'].mean()] * len(np.arange(14, 26.01, 0.01)),
-    'avginc': [mydata['avginc'].mean()] * len(np.arange(14, 26.01, 0.01)),
-    'hiel': [mydata['hiel'].mean()] * len(np.arange(14, 26.01, 0.01))
-})
-new_data['log_avginc'] = np.log(new_data['avginc'])
 
-# Predicting with models
-r2_fitted = r2.predict(new_data)
-r5_fitted = r5.predict(new_data)
-r7_fitted = r7.predict(new_data)
-```
-
-```{python}
-#| fig-cap: "Estimated regression functions for Models 2, 5 and 7"
+```{r}
 #| label: fig-f15-9
-# Plotting
-plt.figure(figsize=(6, 5))
-plt.scatter(mydata['str'], mydata['testscr'], color='steelblue', 
-      s=15)
-plt.xlim(13, 27)
-plt.ylim(600, 725)
-plt.xlabel('STR (X)')
-plt.ylabel('Test Score (Y)')
-plt.grid(True, linestyle='--', linewidth=0.5)
+#| fig-cap: "Estimated regression functions for Models 2, 5 and 7"
+#| fig-height: 6
 
-# Plotting the fitted lines
-plt.plot(new_data['str'], r2_fitted, color='blue', linewidth=2, label='Model 2')
-plt.plot(new_data['str'], r5_fitted, color='red', linewidth=2, label='Model 5')
-plt.plot(new_data['str'], r7_fitted, color='black', linewidth=2, label='Model 7')
+mydata$hiel <- as.integer(mydata$hiel)
 
-# Adding the legend
-plt.legend(loc='upper right', frameon=False)
-plt.show()
+# New data for prediction
+str_grid <- seq(14, 26, by = 0.01)
+
+new_data <- data.frame(
+  str = str_grid,
+  el_pct = mean(mydata$el_pct),
+  meal_pct = mean(mydata$meal_pct),
+  avginc = mean(mydata$avginc),
+  hiel = mean(mydata$hiel)
+)
+
+# Predictions
+new_data$r2_fitted <- predict(r2, newdata = new_data)
+new_data$r5_fitted <- predict(r5, newdata = new_data)
+new_data$r7_fitted <- predict(r7, newdata = new_data)
+
+# Plot
+ggplot() +
+  geom_point(
+    data = mydata,
+    aes(x = str, y = testscr),
+    color = "steelblue",
+    size = 1.5
+  ) +
+  geom_line(
+    data = new_data,
+    aes(x = str, y = r2_fitted, color = "Model 2"),
+    linewidth = 1.1
+  ) +
+  geom_line(
+    data = new_data,
+    aes(x = str, y = r5_fitted, color = "Model 5"),
+    linewidth = 1.1
+  ) +
+  geom_line(
+    data = new_data,
+    aes(x = str, y = r7_fitted, color = "Model 7"),
+    linewidth = 1.1
+  ) +
+  scale_color_manual(
+    values = c(
+      "Model 2" = "blue",
+      "Model 5" = "red",
+      "Model 7" = "black"
+    )
+  ) +
+  coord_cartesian(xlim = c(13, 27), ylim = c(600, 725)) +
+  labs(
+    x = "STR (X)",
+    y = "Test Score (Y)"
+  ) +
+  theme(
+    legend.position = "top"
+  )
 ```
 
 In @fig-f15-10, we present the estimated regression functions for Model 6 when `HiEL = 0` and `HiEL = 1`. Although the two regression functions appear different, the slopes are nearly identical when `str` take values between 17 and 23. Since this range encompasses nearly all observations, we can reasonably conclude that nonlinear interactions between the fraction of English learners and the student-teacher ratio can be disregarded.
 
-```{python}
-# Plotting the estimated regression functions for Model 6
-# Creating new data for predictions
-new_data = pd.DataFrame({
-    'str': np.arange(14, 26.01, 0.01),
-    'el_pct': [mydata['el_pct'].mean()] * len(np.arange(14, 26.01, 0.01)),
-    'meal_pct': [mydata['meal_pct'].mean()] * len(np.arange(14, 26.01, 0.01)),
-    'avginc': [mydata['avginc'].mean()] * len(np.arange(14, 26.01, 0.01)),
-    'hiel': [0] * len(np.arange(14, 26.01, 0.01))
-})
 
-# Predicting with HiEL = 0
-r6_fitted_hiel_0 = r6.predict(new_data)
-
-# Update new_data for HiEL = 1
-new_data['hiel'] = 1
-r6_fitted_hiel_1 = r6.predict(new_data)
-```
-
-```{python}
+```{r}
 #| label: fig-f15-10
 #| fig-cap: "Estimated regression functions for Model 6"
-# Plotting
-plt.figure(figsize=(6, 5))
-# Points where hiel == 0
-plt.scatter(mydata['str'][mydata['hiel'] == 0], 
-            mydata['testscr'][mydata['hiel'] == 0], 
-            color='steelblue', s=15, label='HiEL = 0')
+#| fig-height: 6
 
-# Points where hiel == 1
-plt.scatter(mydata['str'][mydata['hiel'] == 1], 
-            mydata['testscr'][mydata['hiel'] == 1],
-            color='black', s=15, label='HiEL = 1')
+# Sequence of STR values
+str_grid <- seq(14, 26, by = 0.01)
 
-# Plotting the fitted lines
-plt.plot(new_data['str'], r6_fitted_hiel_0, color='blue', 
-    linewidth=2, label='Model 6 with HiEL = 0')
-plt.plot(new_data['str'], r6_fitted_hiel_1, color='red', 
-    linewidth=2, label='Model 6 with HiEL = 1')
+# New data for predictions
+new_data_hiel_0 <- data.frame(
+  str = str_grid,
+  el_pct = mean(mydata$el_pct),
+  meal_pct = mean(mydata$meal_pct),
+  avginc = mean(mydata$avginc),
+  hiel = 0
+)
 
-# Adding plot details
-plt.xlim(13, 27)
-plt.ylim(600, 725)
-plt.xlabel('STR (X)')
-plt.ylabel('Test Score (Y)')
-plt.legend(loc='upper right', frameon=False)
+new_data_hiel_1 <- new_data_hiel_0
+new_data_hiel_1$hiel <- 1
 
-plt.show()
+# Predictions
+r6_fitted_hiel_0 <- predict(r6, newdata = new_data_hiel_0)
+r6_fitted_hiel_1 <- predict(r6, newdata = new_data_hiel_1)
+
+# Combine predictions with new_data for plotting
+new_data_hiel_0$pred <- r6_fitted_hiel_0
+new_data_hiel_1$pred <- r6_fitted_hiel_1
+
+# Plot
+ggplot() +
+  # Scatter points
+  geom_point(
+    data = subset(mydata, hiel == 0),
+    aes(x = str, y = testscr),
+    color = "steelblue",
+    size = 1.5
+  ) +
+  geom_point(
+    data = subset(mydata, hiel == 1),
+    aes(x = str, y = testscr),
+    color = "black",
+    size = 1.5
+  ) +
+  # Fitted lines
+  geom_line(
+    data = new_data_hiel_0,
+    aes(x = str, y = pred, color = "HiEL = 0"),
+    linewidth = 1
+  ) +
+  geom_line(
+    data = new_data_hiel_1,
+    aes(x = str, y = pred, color = "HiEL = 1"),
+    linewidth = 1
+  ) +
+  # Colors and labels
+  scale_color_manual(
+    values = c("HiEL = 0" = "blue", "HiEL = 1" = "red")
+  ) +
+  coord_cartesian(xlim = c(13, 27), ylim = c(600, 725)) +
+  labs(
+    x = "STR (X)",
+    y = "Test Score (Y)"
+  ) +
+  theme(
+    legend.position = "top"
+  )
 ```
 
 Finally, following @Stock2020, we can summarize the main findings of the empirical application as follows:
