@@ -77,7 +77,7 @@ div.csl-indent {
 }</style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -122,11 +122,9 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 
-
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
 <script>
 window.MathJax = {
@@ -554,16 +552,17 @@ window.Quarto = {
 </header>
 
 
-<div id="8b7f82a7" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.iolib.summary2 <span class="im">import</span> summary_col</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">'darkgrid'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="internal-and-external-validity" class="level2" data-number="18.1">
 <h2 data-number="18.1" class="anchored" data-anchor-id="internal-and-external-validity"><span class="header-section-number">18.1</span> Internal and external validity</h2>
@@ -601,36 +600,55 @@ window.Quarto = {
 <h3 data-number="18.2.2" class="anchored" data-anchor-id="functional-form-misspecification"><span class="header-section-number">18.2.2</span> Functional form misspecification</h3>
 <p>This type of misspecification arises when the estimated regression model does not match the population regression function. Assume that the true relationship (i.e., the population regression function) between the dependent variable and the variable of interest is nonlinear. If we specify a linear relationship between the variable of interest and the dependent variable, then we are committing a functional form misspecification. Such misspecification can lead to biased and inconsistent estimators.</p>
 <p>In the following example, we illustrate the effect of functional form misspecification on the OLS estimator. We simulate data from the following quadratic model: <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+\beta_2X^2_i+u_i\)</span>, where <span class="math inline">\(X_i\sim\text{Uniform}(0,10)\)</span>, <span class="math inline">\((\beta_0,\beta_1,\beta_2)^{'}=(3,2,1.5)^{'}\)</span>, and <span class="math inline">\(u_i\sim N(0,4)\)</span>. We then estimate two models: the misspecified linear model <span class="math inline">\(Y_i=\beta_0+\beta_1X_{i}+u_i\)</span> and the correctly specified quadratic model <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+\beta_2X^2_i+u_i\)</span>.</p>
-<div id="1726d569" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">300</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">10</span>, n)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> X <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> X<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> np.random.normal(<span class="dv">0</span>, <span class="dv">2</span>, n)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame({<span class="st">'X'</span>: X, <span class="st">'Y'</span>: Y})</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate linear model</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>linear_model <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"Y ~ X"</span>, data<span class="op">=</span>data).fit()</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate quadratic model</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>nonlinear_model <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"Y ~ X + I(X**2)"</span>, data<span class="op">=</span>data).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">300</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">10</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> X <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> X<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">X =</span> X, <span class="at">Y =</span> Y)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate linear model</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> X, <span class="at">data =</span> data)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate quadratic (nonlinear) model</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>nonlinear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> X <span class="sc">+</span> <span class="fu">I</span>(X<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><a href="#fig-t16.1" class="quarto-xref">Figure&nbsp;<span>18.1</span></a> shows the scatterplot of data along with the line plots of predicted values. The figure shows that the nonlinear model accurately captures the quadratic relationship between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span>. The estimation results in the first column of <a href="#tbl-t16.1" class="quarto-xref">Table&nbsp;<span>18.1</span></a> indicate that the OLS estimator reports a large bias for the coefficient of <span class="math inline">\(X\)</span> under the linear specification. In contrast, the OLS estimator reports almost no bias under the quadratic specification, as shown in the second column of <a href="#tbl-t16.1" class="quarto-xref">Table&nbsp;<span>18.1</span></a>.</p>
-<div id="cell-fig-t16.1" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot results</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(X, Y, color<span class="op">=</span><span class="st">"steelblue"</span>, s<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>plt.plot(np.sort(X), np.sort(linear_model.predict()), label<span class="op">=</span><span class="st">"Linear model"</span>, color<span class="op">=</span><span class="st">"red"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>plt.plot(np.sort(X), np.sort(nonlinear_model.predict()), label<span class="op">=</span><span class="st">"Nonlinear model"</span>, color<span class="op">=</span><span class="st">"black"</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"$X$"</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"$Y$"</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>plt.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data for fitted lines</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">X =</span> X,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y =</span> Y,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">linear_fit =</span> <span class="fu">fitted</span>(linear_model),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">nonlinear_fit =</span> <span class="fu">fitted</span>(nonlinear_model)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> X, <span class="at">y =</span> Y)) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> linear_fit),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"red"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> nonlinear_fit),</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(X),</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(Y)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-t16.1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-t16.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter9-AssessingStudies_files/figure-html/fig-t16.1-output-1.png" width="515" height="354" class="figure-img">
+<img src="Chapter9-AssessingStudies_files/figure-html/fig-t16.1-1.png" class="img-fluid figure-img" width="480">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t16.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;18.1: Effect of Functional Form Misspecification
@@ -639,79 +657,140 @@ Figure&nbsp;18.1: Effect of Functional Form Misspecification
 </div>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Present linear_model and nonlinear_model results in a table</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>results_table <span class="op">=</span> summary_col(results<span class="op">=</span>[linear_model, nonlinear_model],</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                                     float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                                     stars<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                                     model_names<span class="op">=</span>[<span class="st">"Linear Model"</span>, <span class="st">"Nonlinear Model"</span>])</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>results_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" data-execution_count="4" style="flex-basis: 100.0%;justify-content: center;">
-<div id="tbl-t16.1" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Present linear_model and nonlinear_model results in a table</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Linear Model"</span>    <span class="ot">=</span> linear_model,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Nonlinear Model"</span> <span class="ot">=</span> nonlinear_model</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik"</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t16.1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t16.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;18.1: Regression Results
 </figcaption>
 <div aria-describedby="tbl-t16.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="4">
-<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Linear Model</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Nonlinear Model</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
-<td style="text-align: left;">-22.615***</td>
-<td style="text-align: left;">2.945***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(1.350)</td>
-<td style="text-align: left;">(0.347)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">X</td>
-<td style="text-align: left;">16.989***</td>
-<td style="text-align: left;">1.951***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(0.236)</td>
-<td style="text-align: left;">(0.157)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">I(X ** 2)</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">1.506***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.015)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
-<td style="text-align: left;">0.946</td>
-<td style="text-align: left;">0.998</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
-<td style="text-align: left;">0.946</td>
-<td style="text-align: left;">0.998</td>
-</tr>
-</tbody>
-</table>
-<br>
-Standard errors in parentheses.<br>
-* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_v6gjw991emy158moel7s = TinyTable.createTableFunctions("tinytable_v6gjw991emy158moel7s");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '11', j: 2 }, { i: '11', j: 3 } ], css_id: 'tinytable_css_zorsckosjsccy4cmr7nf',}, 
+          { positions: [ { i: '6', j: 2 }, { i: '6', j: 3 } ], css_id: 'tinytable_css_gjydnt7j9lg8ykfpyypc',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 } ], css_id: 'tinytable_css_smemnws5opnv7fv0to2l',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_eg6t708yo1a3jahd2r2r',}, 
+          { positions: [ { i: '11', j: 1 } ], css_id: 'tinytable_css_li7w14kuzqm2e6xuhhy8',}, 
+          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_8uihrkszjm41hbch98ys',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 } ], css_id: 'tinytable_css_gvd6c7ag6iedpqgwhjq9',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_k8xa36awak92yxrc715m',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_v6gjw991emy158moel7s.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_v6gjw991emy158moel7s td.tinytable_css_zorsckosjsccy4cmr7nf, #tinytable_v6gjw991emy158moel7s th.tinytable_css_zorsckosjsccy4cmr7nf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_v6gjw991emy158moel7s td.tinytable_css_gjydnt7j9lg8ykfpyypc, #tinytable_v6gjw991emy158moel7s th.tinytable_css_gjydnt7j9lg8ykfpyypc {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_v6gjw991emy158moel7s td.tinytable_css_smemnws5opnv7fv0to2l, #tinytable_v6gjw991emy158moel7s th.tinytable_css_smemnws5opnv7fv0to2l { text-align: center }
+    #tinytable_v6gjw991emy158moel7s td.tinytable_css_eg6t708yo1a3jahd2r2r, #tinytable_v6gjw991emy158moel7s th.tinytable_css_eg6t708yo1a3jahd2r2r {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_v6gjw991emy158moel7s td.tinytable_css_li7w14kuzqm2e6xuhhy8, #tinytable_v6gjw991emy158moel7s th.tinytable_css_li7w14kuzqm2e6xuhhy8 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_v6gjw991emy158moel7s td.tinytable_css_8uihrkszjm41hbch98ys, #tinytable_v6gjw991emy158moel7s th.tinytable_css_8uihrkszjm41hbch98ys {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_v6gjw991emy158moel7s td.tinytable_css_gvd6c7ag6iedpqgwhjq9, #tinytable_v6gjw991emy158moel7s th.tinytable_css_gvd6c7ag6iedpqgwhjq9 { text-align: left }
+    #tinytable_v6gjw991emy158moel7s td.tinytable_css_k8xa36awak92yxrc715m, #tinytable_v6gjw991emy158moel7s th.tinytable_css_k8xa36awak92yxrc715m {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_v6gjw991emy158moel7s" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">Linear Model</th>
+                <th scope="col" data-row="0" data-col="3">Nonlinear Model</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="3">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">-23.940***</td>
+                  <td data-row="1" data-col="3">3.454***</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(1.307)</td>
+                  <td data-row="2" data-col="3">(0.371)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">X</td>
+                  <td data-row="3" data-col="2">17.252***</td>
+                  <td data-row="3" data-col="3">1.817***</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.228)</td>
+                  <td data-row="4" data-col="3">(0.167)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">I(X^2)</td>
+                  <td data-row="5" data-col="2"></td>
+                  <td data-row="5" data-col="3">1.515***</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2"></td>
+                  <td data-row="6" data-col="3">(0.016)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">Num.Obs.</td>
+                  <td data-row="7" data-col="2">300</td>
+                  <td data-row="7" data-col="3">300</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1">R2</td>
+                  <td data-row="8" data-col="2">0.950</td>
+                  <td data-row="8" data-col="3">0.998</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">R2 Adj.</td>
+                  <td data-row="9" data-col="2">0.950</td>
+                  <td data-row="9" data-col="3">0.998</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">F</td>
+                  <td data-row="10" data-col="2">5716.370</td>
+                  <td data-row="10" data-col="3">94011.145</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">RMSE</td>
+                  <td data-row="11" data-col="2">11.04</td>
+                  <td data-row="11" data-col="3">1.97</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 </figure>
-</div>
-</div>
 </div>
 </div>
 <p><strong>Solution to Functional Form Misspecification</strong>: When the dependent variable is continuous, functional form misspecification can be addressed using polynomial and logarithmic transformations, as discussed in <a href="Chapter8-NonlinearRegressions.html" class="quarto-xref"><span>Chapter 17</span></a>. When the dependent variable is binary, we can instead use nonlinear models such as the probit and logit models discussed in <a href="Chapter11-BinaryDependentVariable.html" class="quarto-xref"><span>Chapter 20</span></a>.</p>
@@ -758,114 +837,201 @@ Y_i = \beta_0+\beta_1\tilde{X}_i+\tilde{u}_i.
 \tag{18.3}\]</span></span></p>
 <p>Since <span class="math inline">\(\left(\frac{\sigma^2_X}{\sigma^2_X+\sigma^2_v}\right)&lt;1\)</span>, the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> is biased towards zero even when the sample size is large. In extreme case, where <span class="math inline">\(\sigma^2_v\rightarrow\infty\)</span>, the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> converges to zero. Also note when <span class="math inline">\(\sigma^2_v=0\)</span>, the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> is unbiased and consistent.</p>
 <p>In the following code chunk, we use the simulated data to illustrate the classical measurement error model. We assume that <span class="math inline">\(\tilde{X}_i=X_i+v_i\)</span>, where <span class="math inline">\(X_i\sim\text{Uniform}(0,10)\)</span> and <span class="math inline">\(v_i\sim N(0,4)\)</span>. We generate <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span>, where <span class="math inline">\(\beta_0=3\)</span>, <span class="math inline">\(\beta_1=2\)</span>, and <span class="math inline">\(u_i\sim N(0,4)\)</span>. Then, we estimate the error model <span class="math inline">\(Y_i=\beta_0+\beta_1\tilde{X}_i+\tilde{u}_i\)</span> and the true model <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span>.</p>
-<div id="664c6baf" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate data</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">300</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">10</span>, n)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> np.random.normal(<span class="dv">0</span>, <span class="dv">2</span>, n)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>X_tilde <span class="op">=</span> X <span class="op">+</span> v</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> X <span class="op">+</span> np.random.normal(<span class="dv">0</span>, <span class="dv">2</span>, n)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame({<span class="st">'X'</span>: X, <span class="st">'X_tilde'</span>: X_tilde, <span class="st">'Y'</span>: Y})</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate OLS model</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>error_model <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"Y ~ X_tilde"</span>, data<span class="op">=</span>data).fit()</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate true model</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>true_model <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"Y ~ X"</span>, data<span class="op">=</span>data).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate data</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">300</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">10</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>X_tilde <span class="ot">&lt;-</span> X <span class="sc">+</span> v</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> X <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">X =</span> X,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">X_tilde =</span> X_tilde,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y =</span> Y</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate OLS model with measurement error</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>error_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> X_tilde, <span class="at">data =</span> data)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate true model</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>true_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> X, <span class="at">data =</span> data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Present ols_model and true_model results in a table</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>results_table <span class="op">=</span> summary_col(results<span class="op">=</span>[error_model, true_model],</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                                     float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                                     stars<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                                     model_names<span class="op">=</span>[<span class="st">"Error model"</span>, <span class="st">"True model"</span>])</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>results_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" data-execution_count="6" style="flex-basis: 100.0%;justify-content: center;">
-<div id="tbl-t16.2" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Present ols_model and true_model results in a table</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Error model"</span> <span class="ot">=</span> error_model,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"True model"</span>  <span class="ot">=</span> true_model</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik"</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t16.2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t16.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;18.2: Regression Results
 </figcaption>
 <div aria-describedby="tbl-t16.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="6">
-<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Error model</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">True model</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
-<td style="text-align: left;">6.306***</td>
-<td style="text-align: left;">2.799***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(0.387)</td>
-<td style="text-align: left;">(0.240)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">X_tilde</td>
-<td style="text-align: left;">1.358***</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(0.065)</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">X</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">2.037***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.042)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
-<td style="text-align: left;">0.598</td>
-<td style="text-align: left;">0.888</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
-<td style="text-align: left;">0.597</td>
-<td style="text-align: left;">0.887</td>
-</tr>
-</tbody>
-</table>
-<br>
-Standard errors in parentheses.<br>
-* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_ssb0t649z7u4lb9st0d6 = TinyTable.createTableFunctions("tinytable_ssb0t649z7u4lb9st0d6");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '11', j: 2 }, { i: '11', j: 3 } ], css_id: 'tinytable_css_bywa7g3bdqasik54nf8d',}, 
+          { positions: [ { i: '6', j: 2 }, { i: '6', j: 3 } ], css_id: 'tinytable_css_j2ok44it6gsxgadwx9xc',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 } ], css_id: 'tinytable_css_8uv1uqywm9ifvi3yxscz',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_f2uykxrzp0pkkytbwcwn',}, 
+          { positions: [ { i: '11', j: 1 } ], css_id: 'tinytable_css_bi6ae8niaw8mg97hno6b',}, 
+          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_zlaq15zrs34u8ireasgo',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 } ], css_id: 'tinytable_css_s8ljtdsajgnocb52raia',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_x9eihlh2h0e5w9xph4y5',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_ssb0t649z7u4lb9st0d6.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_ssb0t649z7u4lb9st0d6 td.tinytable_css_bywa7g3bdqasik54nf8d, #tinytable_ssb0t649z7u4lb9st0d6 th.tinytable_css_bywa7g3bdqasik54nf8d {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ssb0t649z7u4lb9st0d6 td.tinytable_css_j2ok44it6gsxgadwx9xc, #tinytable_ssb0t649z7u4lb9st0d6 th.tinytable_css_j2ok44it6gsxgadwx9xc {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ssb0t649z7u4lb9st0d6 td.tinytable_css_8uv1uqywm9ifvi3yxscz, #tinytable_ssb0t649z7u4lb9st0d6 th.tinytable_css_8uv1uqywm9ifvi3yxscz { text-align: center }
+    #tinytable_ssb0t649z7u4lb9st0d6 td.tinytable_css_f2uykxrzp0pkkytbwcwn, #tinytable_ssb0t649z7u4lb9st0d6 th.tinytable_css_f2uykxrzp0pkkytbwcwn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ssb0t649z7u4lb9st0d6 td.tinytable_css_bi6ae8niaw8mg97hno6b, #tinytable_ssb0t649z7u4lb9st0d6 th.tinytable_css_bi6ae8niaw8mg97hno6b {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_ssb0t649z7u4lb9st0d6 td.tinytable_css_zlaq15zrs34u8ireasgo, #tinytable_ssb0t649z7u4lb9st0d6 th.tinytable_css_zlaq15zrs34u8ireasgo {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_ssb0t649z7u4lb9st0d6 td.tinytable_css_s8ljtdsajgnocb52raia, #tinytable_ssb0t649z7u4lb9st0d6 th.tinytable_css_s8ljtdsajgnocb52raia { text-align: left }
+    #tinytable_ssb0t649z7u4lb9st0d6 td.tinytable_css_x9eihlh2h0e5w9xph4y5, #tinytable_ssb0t649z7u4lb9st0d6 th.tinytable_css_x9eihlh2h0e5w9xph4y5 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_ssb0t649z7u4lb9st0d6" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">Error model</th>
+                <th scope="col" data-row="0" data-col="3">True model</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="3">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">6.078***</td>
+                  <td data-row="1" data-col="3">2.680***</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(0.418)</td>
+                  <td data-row="2" data-col="3">(0.235)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">X_tilde</td>
+                  <td data-row="3" data-col="2">1.378***</td>
+                  <td data-row="3" data-col="3"></td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.069)</td>
+                  <td data-row="4" data-col="3"></td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">X</td>
+                  <td data-row="5" data-col="2"></td>
+                  <td data-row="5" data-col="3">2.071***</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2"></td>
+                  <td data-row="6" data-col="3">(0.041)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">Num.Obs.</td>
+                  <td data-row="7" data-col="2">300</td>
+                  <td data-row="7" data-col="3">300</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1">R2</td>
+                  <td data-row="8" data-col="2">0.573</td>
+                  <td data-row="8" data-col="3">0.895</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">R2 Adj.</td>
+                  <td data-row="9" data-col="2">0.571</td>
+                  <td data-row="9" data-col="3">0.895</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">F</td>
+                  <td data-row="10" data-col="2">399.354</td>
+                  <td data-row="10" data-col="3">2542.577</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">RMSE</td>
+                  <td data-row="11" data-col="2">4.01</td>
+                  <td data-row="11" data-col="3">1.99</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 </figure>
 </div>
 </div>
-</div>
-</div>
 <p>The estimation results are presented in <a href="#tbl-t16.2" class="quarto-xref">Table&nbsp;<span>18.2</span></a>. The results in the first column indicate that the OLS estimator introduces a significant bias in <span class="math inline">\(\beta_1\)</span>. In contrast, the OLS estimator reports only a small bias in the second column. In <a href="#fig-t16.2" class="quarto-xref">Figure&nbsp;<span>18.2</span></a>, we plot the predicted values as line plots alongside the scatterplot of the data. The red line represents the fitted line based on the error model, while the black line represents the fitted line based on the true model. The figure shows that the predicted values based on the error model differ significantly from those based on the true model.</p>
-<div id="cell-fig-t16.2" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot results</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(X, Y, color<span class="op">=</span><span class="st">"steelblue"</span>, s<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>error_coef <span class="op">=</span> [<span class="fl">6.306</span>, <span class="fl">1.358</span>]</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.plot(X, error_coef[<span class="dv">0</span>] <span class="op">+</span> error_coef[<span class="dv">1</span>] <span class="op">*</span> data[<span class="st">"X"</span>], label<span class="op">=</span><span class="st">"Error model"</span>, color<span class="op">=</span><span class="st">"red"</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.plot(X, true_model.predict(), label<span class="op">=</span><span class="st">"True model"</span>, color<span class="op">=</span><span class="st">"black"</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"$X$"</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"$Y$"</span>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create plotting data</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">X =</span> X,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Y =</span> Y</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Manually specified error-model coefficients</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>error_intercept <span class="ot">&lt;-</span> <span class="fl">6.306</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>error_slope     <span class="ot">&lt;-</span> <span class="fl">1.358</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># True model fitted values</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plot_data<span class="sc">$</span>true_fit  <span class="ot">&lt;-</span> <span class="fu">fitted</span>(true_model)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Error model fitted line evaluated at X</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>plot_data<span class="sc">$</span>error_fit <span class="ot">&lt;-</span> error_intercept <span class="sc">+</span> error_slope <span class="sc">*</span> plot_data<span class="sc">$</span>X</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> X, <span class="at">y =</span> Y)) <span class="sc">+</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> error_fit, <span class="at">color =</span> <span class="st">"Error model"</span>),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> true_fit, <span class="at">color =</span> <span class="st">"True model"</span>),</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>            <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Error model"</span> <span class="ot">=</span> <span class="st">"red"</span>,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"True model"</span>  <span class="ot">=</span> <span class="st">"black"</span>)) <span class="sc">+</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(X),</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(Y),</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="cn">NULL</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-t16.2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-t16.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter9-AssessingStudies_files/figure-html/fig-t16.2-output-1.png" width="507" height="354" class="figure-img">
+<img src="Chapter9-AssessingStudies_files/figure-html/fig-t16.2-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t16.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;18.2: The effect of measurement error on the OLS estimator
@@ -971,7 +1137,7 @@ Key Concept 16.1: Threats to the internal validity of a multiple regression stud
 <h2 data-number="18.5" class="anchored" data-anchor-id="example-test-scores-and-class-size"><span class="header-section-number">18.5</span> Example: Test Scores and Class Size</h2>
 <section id="data" class="level3" data-number="18.5.1">
 <h3 data-number="18.5.1" class="anchored" data-anchor-id="data"><span class="header-section-number">18.5.1</span> Data</h3>
-<p>In this empirical application, we use the Massachusetts dataset, which contains district-level averages for public elementary school districts in 1998. The test scores are derived from the Massachusetts Comprehensive Assessment System (MCAS), administered to all fourth graders in Massachusetts public schools in the spring of 1998. We use the student–teacher ratio (<code>tchratio</code>), the percentage of students receiving a subsidized lunch (<code>lnch_pct</code>), the percentage of students still learning English (<code>pctel</code>), and the average district income (<code>percap</code>) as our main variables. The first three variables represent averages for each elementary school district over the 1997–1998 school year. For the average district income, the 1990 U.S. Census data is used. Below, we provide list some selected variables from the dataset:</p>
+<p>In this empirical application, we use the Massachusetts dataset, which contains district-level averages for public elementary school districts in 1998. The test scores are derived from the Massachusetts Comprehensive Assessment System (MCAS), administered to all fourth graders in Massachusetts public schools in the spring of 1998. We use the student–teacher ratio (<code>tchratio</code>), the percentage of students receiving a subsidized lunch (<code>lnch_pct</code>), the percentage of students still learning English (<code>pctel</code>), and the average district income (<code>percap</code>) as our main variables. The first three variables represent averages for each elementary school district over the 1997–1998 school year. For the average district income, the 1990 U.S. Census data is used. Below, we list some selected variables from the dataset:</p>
 <ul>
 <li><code>code</code>: District code (numerical)</li>
 <li><code>municipa</code>: Municipality (name)</li>
@@ -983,237 +1149,257 @@ Key Concept 16.1: Threats to the internal validity of a multiple regression stud
 <li><code>pctel</code>: Percentage of students still learning English</li>
 </ul>
 <p>The following code chunk imports the data and displays the column names.</p>
-<div id="1e086263" class="cell" data-message="false" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mcas <span class="op">=</span> pd.read_excel(<span class="st">"data/mcas.xlsx"</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Column names</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>mcas.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>Index(['code', 'municipa', 'district', 'regday', 'specneed', 'bilingua',
-       'occupday', 'tot_day', 's_p_c', 'spec_ed', 'lnch_pct', 'tchratio',
-       'percap', 'totsc4', 'totsc8', 'avgsalry', 'pctel'],
-      dtype='object')</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mcas <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/mcas.xlsx"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Column names</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mcas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "code"     "municipa" "district" "regday"   "specneed" "bilingua"
+ [7] "occupday" "tot_day"  "s_p_c"    "spec_ed"  "lnch_pct" "tchratio"
+[13] "percap"   "totsc4"   "totsc8"   "avgsalry" "pctel"   </code></pre>
 </div>
 </div>
 <p>Previously, we used data from California school districts to study the relationship between test scores and class size. It will be useful to compare the Massachusetts dataset with the California dataset. In <a href="#tbl-t16.3" class="quarto-xref">Table&nbsp;<span>18.3</span></a>, we present descriptive statistics for selected variables from the Massachusetts and California datasets. For Massachusetts, the average test score is 709.83, the average student–teacher ratio is 17.34, the average percentage of English learners is <span class="math inline">\(1.12\%\)</span>, the average percentage of students receiving subsidized lunch is <span class="math inline">\(15.32\%\)</span>, and the average per-capita income is $18,750. For California, the corresponding averages are 654.16 for test scores, 19.64 for student–teacher ratio, <span class="math inline">\(15.77\%\)</span> for English learners, <span class="math inline">\(45.71\%\)</span> for subsidized lunch recipients, and $15,320 for per-capita income.</p>
 <p>While Massachusetts has a higher average test score, we cannot make a direct comparison because different tests are administered in both states. Massachusetts also has lower averages for the student–teacher ratio, the percentage of subsidized lunch recipients, and the percentage of English learners. Its average per-capita income is larger than that of California.</p>
-<div id="04f036cd" class="cell" data-message="false" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics for Massachusetts and California</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mcas_vars <span class="op">=</span> [<span class="st">"totsc4"</span>, <span class="st">"tchratio"</span>, <span class="st">"pctel"</span>, <span class="st">"lnch_pct"</span>, <span class="st">"percap"</span>]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mcas_stats <span class="op">=</span> mcas[mcas_vars].describe().<span class="bu">round</span>(<span class="dv">2</span>).T</span>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mcas <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/mcas.xlsx"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>caschool <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/caschool.xlsx"</span>)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics for California</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>caschool <span class="op">=</span> pd.read_excel(<span class="st">"data/caschool.xlsx"</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>caschool_vars <span class="op">=</span> [<span class="st">"testscr"</span>, <span class="st">"str"</span>, <span class="st">"el_pct"</span>, <span class="st">"meal_pct"</span>, <span class="st">"avginc"</span>]</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>caschool_stats <span class="op">=</span> caschool[caschool_vars].describe().<span class="bu">round</span>(<span class="dv">2</span>).T</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename index</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>caschool_stats.index <span class="op">=</span> [<span class="st">"Test Score"</span>, <span class="st">"Student-Teacher Ratio"</span>, <span class="st">"English Learners (%)"</span>, <span class="st">"Free/Reduced Lunch (%)"</span>, <span class="st">"Average Income"</span>]</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>mcas_stats.index <span class="op">=</span> [<span class="st">"Test Score"</span>, <span class="st">"Student-Teacher Ratio"</span>, <span class="st">"English Learners (%)"</span>, <span class="st">"Free/Reduced Lunch (%)"</span>, <span class="st">"Per Capita Income"</span>]</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine statistics</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>combined_stats <span class="op">=</span> pd.concat([mcas_stats, caschool_stats], keys<span class="op">=</span>[<span class="st">"Massachusetts"</span>, <span class="st">"California"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Variables</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>mcas_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"totsc4"</span>, <span class="st">"tchratio"</span>, <span class="st">"pctel"</span>, <span class="st">"lnch_pct"</span>, <span class="st">"percap"</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>caschool_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"testscr"</span>, <span class="st">"str"</span>, <span class="st">"el_pct"</span>, <span class="st">"meal_pct"</span>, <span class="st">"avginc"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Variable labels</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>mcas_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">totsc4   =</span> <span class="st">"Test Score"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">tchratio =</span> <span class="st">"Student-Teacher Ratio"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">pctel    =</span> <span class="st">"English Learners (%)"</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">lnch_pct =</span> <span class="st">"Free/Reduced Lunch (%)"</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">percap   =</span> <span class="st">"Average Income"</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>caschool_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">testscr  =</span> <span class="st">"Test Score"</span>,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">str      =</span> <span class="st">"Student-Teacher Ratio"</span>,</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">el_pct   =</span> <span class="st">"English Learners (%)"</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">meal_pct =</span> <span class="st">"Free/Reduced Lunch (%)"</span>,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">avginc   =</span> <span class="st">"Average Income"</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics (replicates pandas describe)</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>mcas_stats <span class="ot">&lt;-</span> <span class="fu">datasummary</span>(</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  totsc4 <span class="sc">+</span> tchratio <span class="sc">+</span> pctel <span class="sc">+</span> lnch_pct <span class="sc">+</span> percap <span class="sc">~</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    Mean <span class="sc">+</span> SD <span class="sc">+</span> Min  <span class="sc">+</span> Max,</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mcas,</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="st">"%.2f"</span>,</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">"data.frame"</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Variable =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Variable =</span> mcas_labels[Variable],</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>         <span class="at">State =</span> <span class="st">"Massachusetts"</span>)</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>caschool_stats <span class="ot">&lt;-</span> <span class="fu">datasummary</span>(</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  testscr <span class="sc">+</span> str <span class="sc">+</span> el_pct <span class="sc">+</span> meal_pct <span class="sc">+</span> avginc <span class="sc">~</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    Mean <span class="sc">+</span> SD <span class="sc">+</span> Min  <span class="sc">+</span> Max,</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> caschool,</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="st">"%.2f"</span>,</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">"data.frame"</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Variable =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Variable =</span> caschool_labels[Variable],</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>         <span class="at">State =</span> <span class="st">"California"</span>)</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine statistics</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>combined_stats <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(mcas_stats, caschool_stats)</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove State column</span></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>df_tab <span class="ot">&lt;-</span> combined_stats <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>State)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>combined_stats</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" data-execution_count="10" style="flex-basis: 100.0%;justify-content: center;">
-<div id="tbl-t16.3" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="10">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  df_tab,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"html"</span>,      <span class="co"># or "html"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">booktabs =</span> <span class="cn">TRUE</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pack_rows</span>(</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Panel A: California"</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_row =</span> <span class="dv">1</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_row   =</span> <span class="dv">5</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pack_rows</span>(</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Panel B: Massachusetts"</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">start_row =</span> <span class="dv">6</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_row   =</span> <span class="dv">10</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t16.3" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t16.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;18.3: Descriptive statistics for Massachusetts and California test score datasets
 </figcaption>
 <div aria-describedby="tbl-t16.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="10">
-<div>
-
-
-<table class="dataframe do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">count</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">mean</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">std</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">min</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">25%</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">50%</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">75%</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">max</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Mean</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">SD</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Min</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Max</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td rowspan="5" style="text-align: left;" data-quarto-table-cell-role="th" data-valign="top">Massachusetts</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Test Score</td>
-<td style="text-align: left;">220.0</td>
+<tr class="odd" data-grouplength="5">
+<td colspan="5" style="border-bottom: 1px solid"><strong>Panel A: California</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Test Score</td>
 <td style="text-align: left;">709.83</td>
 <td style="text-align: left;">15.13</td>
 <td style="text-align: left;">658.00</td>
-<td style="text-align: left;">701.00</td>
-<td style="text-align: left;">711.00</td>
-<td style="text-align: left;">720.00</td>
 <td style="text-align: left;">740.00</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">Student-Teacher Ratio</td>
-<td style="text-align: left;">220.0</td>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Student-Teacher Ratio</td>
 <td style="text-align: left;">17.34</td>
 <td style="text-align: left;">2.28</td>
 <td style="text-align: left;">11.40</td>
-<td style="text-align: left;">15.80</td>
-<td style="text-align: left;">17.10</td>
-<td style="text-align: left;">19.03</td>
 <td style="text-align: left;">27.00</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th">English Learners (%)</td>
-<td style="text-align: left;">220.0</td>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">English Learners (%)</td>
 <td style="text-align: left;">1.12</td>
 <td style="text-align: left;">2.90</td>
 <td style="text-align: left;">0.00</td>
-<td style="text-align: left;">0.00</td>
-<td style="text-align: left;">0.00</td>
-<td style="text-align: left;">0.89</td>
 <td style="text-align: left;">24.49</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">Free/Reduced Lunch (%)</td>
-<td style="text-align: left;">220.0</td>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Free/Reduced Lunch (%)</td>
 <td style="text-align: left;">15.32</td>
 <td style="text-align: left;">15.06</td>
 <td style="text-align: left;">0.40</td>
-<td style="text-align: left;">5.30</td>
-<td style="text-align: left;">10.55</td>
-<td style="text-align: left;">20.02</td>
 <td style="text-align: left;">76.20</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th">Per Capita Income</td>
-<td style="text-align: left;">220.0</td>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Average Income</td>
 <td style="text-align: left;">18.75</td>
 <td style="text-align: left;">5.81</td>
 <td style="text-align: left;">9.69</td>
-<td style="text-align: left;">15.22</td>
-<td style="text-align: left;">17.13</td>
-<td style="text-align: left;">20.38</td>
-<td style="text-align: left;">46.86</td>
+<td style="text-align: left;">46.85</td>
+</tr>
+<tr class="odd" data-grouplength="5">
+<td colspan="5" style="border-bottom: 1px solid"><strong>Panel B: Massachusetts</strong></td>
 </tr>
 <tr class="even">
-<td rowspan="5" style="text-align: left;" data-quarto-table-cell-role="th" data-valign="top">California</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Test Score</td>
-<td style="text-align: left;">420.0</td>
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Test Score</td>
 <td style="text-align: left;">654.16</td>
 <td style="text-align: left;">19.05</td>
 <td style="text-align: left;">605.55</td>
-<td style="text-align: left;">640.05</td>
-<td style="text-align: left;">654.45</td>
-<td style="text-align: left;">666.66</td>
 <td style="text-align: left;">706.75</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th">Student-Teacher Ratio</td>
-<td style="text-align: left;">420.0</td>
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Student-Teacher Ratio</td>
 <td style="text-align: left;">19.64</td>
 <td style="text-align: left;">1.89</td>
 <td style="text-align: left;">14.00</td>
-<td style="text-align: left;">18.58</td>
-<td style="text-align: left;">19.72</td>
-<td style="text-align: left;">20.87</td>
 <td style="text-align: left;">25.80</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">English Learners (%)</td>
-<td style="text-align: left;">420.0</td>
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">English Learners (%)</td>
 <td style="text-align: left;">15.77</td>
 <td style="text-align: left;">18.29</td>
 <td style="text-align: left;">0.00</td>
-<td style="text-align: left;">1.94</td>
-<td style="text-align: left;">8.78</td>
-<td style="text-align: left;">22.97</td>
 <td style="text-align: left;">85.54</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th">Free/Reduced Lunch (%)</td>
-<td style="text-align: left;">420.0</td>
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Free/Reduced Lunch (%)</td>
 <td style="text-align: left;">44.71</td>
 <td style="text-align: left;">27.12</td>
 <td style="text-align: left;">0.00</td>
-<td style="text-align: left;">23.28</td>
-<td style="text-align: left;">41.75</td>
-<td style="text-align: left;">66.86</td>
 <td style="text-align: left;">100.00</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">Average Income</td>
-<td style="text-align: left;">420.0</td>
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Average Income</td>
 <td style="text-align: left;">15.32</td>
 <td style="text-align: left;">7.23</td>
 <td style="text-align: left;">5.34</td>
-<td style="text-align: left;">10.64</td>
-<td style="text-align: left;">13.73</td>
-<td style="text-align: left;">17.63</td>
 <td style="text-align: left;">55.33</td>
 </tr>
 </tbody>
 </table>
 
-</div>
+
 </div>
 </div>
 </figure>
 </div>
 </div>
-</div>
-</div>
 <p>In <a href="#fig-t16.3" class="quarto-xref">Figure&nbsp;<span>18.3</span></a>, we examine the relationship between test scores and average district income based on the Massachusetts dataset. The scatter plot shows a positive relationship, with the slope being steeper for lower income values and flatter for higher income values. To model the relationship between test scores and average district income, we consider three regression models: (i) the linear regression model, (ii) the cubic regression model, and (iii) the linear-log regression model. The fitted regression functions in <a href="#fig-t16.3" class="quarto-xref">Figure&nbsp;<span>18.3</span></a> indicate that the cubic regression provides a better fit compared to the linear and linear-log regressions.</p>
-<div id="cell-fig-t16.3" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define dependent and independent variables</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> mcas[<span class="st">'percap'</span>]</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> mcas[<span class="st">'totsc4'</span>]</span>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define dependent and independent variables</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> mcas<span class="sc">$</span>percap</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> mcas<span class="sc">$</span>totsc4</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear regression</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>X_linear <span class="op">=</span> sm.add_constant(x)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>model_linear <span class="op">=</span> sm.OLS(y, X_linear).fit()</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Cubic regression</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>X_cubic <span class="op">=</span> sm.add_constant(np.column_stack([x, x<span class="op">**</span><span class="dv">2</span>, x<span class="op">**</span><span class="dv">3</span>]))</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>model_cubic <span class="op">=</span> sm.OLS(y, X_cubic).fit()</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear-log regression</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>X_log <span class="op">=</span> sm.add_constant(np.log(x))</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>model_log <span class="op">=</span> sm.OLS(y, X_log).fit()</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate fitted values for plotting</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>x_range <span class="op">=</span> np.linspace(x.<span class="bu">min</span>(), x.<span class="bu">max</span>(), <span class="dv">500</span>)</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>linear_fit <span class="op">=</span> model_linear.predict(sm.add_constant(x_range))</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>cubic_fit <span class="op">=</span> model_cubic.predict(sm.add_constant(np.column_stack([x_range, x_range<span class="op">**</span><span class="dv">2</span>, x_range<span class="op">**</span><span class="dv">3</span>])))</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>log_fit <span class="op">=</span> model_log.predict(sm.add_constant(np.log(x_range)))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>model_linear <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Cubic regression</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>model_cubic <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">3</span>))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear-log regression</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>model_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">log</span>(x))</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate grid for fitted values</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>x_range <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>               <span class="fu">max</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>               <span class="at">length.out =</span> <span class="dv">500</span>)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitted values</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>linear_fit <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_linear,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>                      <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x_range))</span>
 <span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot and fitted lines</span></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">'darkgrid'</span>)</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatter plot of data</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>plt.scatter(x, y, color<span class="op">=</span><span class="st">'steelblue'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitted lines</span></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>plt.plot(x_range, linear_fit, label<span class="op">=</span><span class="st">'Linear regression'</span>, color<span class="op">=</span><span class="st">'black'</span>)</span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>plt.plot(x_range, cubic_fit, label<span class="op">=</span><span class="st">'Cubic regression'</span>, color<span class="op">=</span><span class="st">'green'</span>)</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>plt.plot(x_range, log_fit, label<span class="op">=</span><span class="st">'Linear-log regression'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot formatting</span></span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'District income'</span>)</span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Test score'</span>)</span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>plt.legend(frameon<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>cubic_fit <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_cubic,</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>                     <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x_range))</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>log_fit <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_log,</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>                   <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x_range))</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data for plotting</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> x_range,</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">linear =</span> linear_fit,</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">cubic  =</span> cubic_fit,</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">log    =</span> log_fit</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mcas, <span class="fu">aes</span>(<span class="at">x =</span> percap, <span class="at">y =</span> totsc4)) <span class="sc">+</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> linear, <span class="at">color =</span> <span class="st">"Linear regression"</span>),</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>            <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> cubic, <span class="at">color =</span> <span class="st">"Cubic regression"</span>),</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>            <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> plot_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> log, <span class="at">color =</span> <span class="st">"Linear-log regression"</span>),</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>            <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Linear regression"</span>     <span class="ot">=</span> <span class="st">"black"</span>,</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Cubic regression"</span>      <span class="ot">=</span> <span class="st">"green"</span>,</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Linear-log regression"</span> <span class="ot">=</span> <span class="st">"red"</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"District income"</span>,</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test score"</span>,</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="cn">NULL</span></span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-t16.3" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-t16.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter9-AssessingStudies_files/figure-html/fig-t16.3-output-1.png" width="515" height="357" class="figure-img">
+<img src="Chapter9-AssessingStudies_files/figure-html/fig-t16.3-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-t16.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;18.3: The relationship between test scores and district income for the Massachusetts dataset
@@ -1249,348 +1435,502 @@ Figure&nbsp;18.3: The relationship between test scores and district income for t
 \end{cases}
 \end{align}
 \]</span></p>
-<div id="f9f7a62a" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mydata <span class="op">=</span> mcas.copy()</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create hiel</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>mydata[<span class="st">"hiel"</span>] <span class="op">=</span> mydata[<span class="st">"pctel"</span>] <span class="op">&gt;</span> np.median(mydata[<span class="st">"pctel"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> mcas</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create hiel indicator</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>hiel <span class="ot">&lt;-</span> mydata<span class="sc">$</span>pctel <span class="sc">&gt;</span> <span class="fu">median</span>(mydata<span class="sc">$</span>pctel, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="estimation-results" class="level3" data-number="18.5.3">
 <h3 data-number="18.5.3" class="anchored" data-anchor-id="estimation-results"><span class="header-section-number">18.5.3</span> Estimation results</h3>
 <p>We use the following code chunk can to estimate all models. Note that we use heteroskedasticity-robust standard errors in all models.</p>
-<div id="6063c03b" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>r1 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio"</span>,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>            data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio+pctel+lnch_pct+np.log(percap)"</span>,</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>             data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 3</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>r3 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio+pctel+lnch_pct+percap+I(percap**2)+I(percap**3)"</span>,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>             data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>) </span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 4</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>r4 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio+I(tchratio**2)+I(tchratio**3)+pctel+lnch_pct+percap+I(percap**2)+I(percap**3)"</span>,</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>             data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>r1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(totsc4 <span class="sc">~</span> tchratio, <span class="at">data =</span> mydata)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>r2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  totsc4 <span class="sc">~</span> tchratio <span class="sc">+</span> pctel <span class="sc">+</span> lnch_pct <span class="sc">+</span> <span class="fu">log</span>(percap),</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mydata</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 3</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>r3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  totsc4 <span class="sc">~</span> tchratio <span class="sc">+</span> pctel <span class="sc">+</span> lnch_pct <span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    percap <span class="sc">+</span> <span class="fu">I</span>(percap<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(percap<span class="sc">^</span><span class="dv">3</span>),</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mydata</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 5</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>r5 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio+hiel+hiel*tchratio +lnch_pct+percap+I(percap**2)+I(percap**3)"</span>,</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>             data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 6</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>r6 <span class="op">=</span> smf.ols(formula<span class="op">=</span><span class="st">"totsc4~tchratio+lnch_pct+percap+I(percap**2)+I(percap**3)"</span>,</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>             data<span class="op">=</span>mydata).fit(cov_type<span class="op">=</span><span class="st">"HC1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 4</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>r4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  totsc4 <span class="sc">~</span> tchratio <span class="sc">+</span> <span class="fu">I</span>(tchratio<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(tchratio<span class="sc">^</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    pctel <span class="sc">+</span> lnch_pct <span class="sc">+</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    percap <span class="sc">+</span> <span class="fu">I</span>(percap<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(percap<span class="sc">^</span><span class="dv">3</span>),</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mydata</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 5</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>r5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  totsc4 <span class="sc">~</span> tchratio <span class="sc">+</span> hiel <span class="sc">+</span> hiel<span class="sc">:</span>tchratio <span class="sc">+</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    lnch_pct <span class="sc">+</span> percap <span class="sc">+</span> <span class="fu">I</span>(percap<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(percap<span class="sc">^</span><span class="dv">3</span>),</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mydata</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 6</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>r6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>  totsc4 <span class="sc">~</span> tchratio <span class="sc">+</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    lnch_pct <span class="sc">+</span> percap <span class="sc">+</span> <span class="fu">I</span>(percap<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(percap<span class="sc">^</span><span class="dv">3</span>),</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> mydata</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>models<span class="op">=</span>[<span class="st">"Model 1"</span>,<span class="st">"Model 2"</span>, <span class="st">"Model 3"</span>,<span class="st">"Model 4"</span>,<span class="st">"Model 5"</span>,<span class="st">"Model 6"</span>]</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>results_table<span class="op">=</span>summary_col(results<span class="op">=</span>[r1,r2,r3,r4,r5,r6],</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                          float_format<span class="op">=</span><span class="st">'</span><span class="sc">%0.3f</span><span class="st">'</span>, </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                          stars<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                          model_names<span class="op">=</span>models)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>results_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="quarto-layout-panel" data-layout-ncol="1">
-<div class="quarto-layout-row">
-<div class="cell quarto-layout-cell" data-execution_count="14" style="flex-basis: 100.0%;justify-content: center;">
-<div id="tbl-t16.4" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="14">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 1"</span> <span class="ot">=</span> r1,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 2"</span> <span class="ot">=</span> r2,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 3"</span> <span class="ot">=</span> r3,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 4"</span> <span class="ot">=</span> r4,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 5"</span> <span class="ot">=</span> r5,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Model 6"</span> <span class="ot">=</span> r6</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  models,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="st">"HC1"</span>,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik"</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-t16.4" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t16.4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;18.4: Estimation Results for Models 1-6
 </figcaption>
 <div aria-describedby="tbl-t16.4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="14">
-<table class="simpletable do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Model 1</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Model 2</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Model 3</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Model 4</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Model 5</td>
-<td style="text-align: left;" data-quarto-table-cell-role="th">Model 6</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">Intercept</td>
-<td style="text-align: left;">739.621***</td>
-<td style="text-align: left;">682.432***</td>
-<td style="text-align: left;">744.025***</td>
-<td style="text-align: left;">665.496***</td>
-<td style="text-align: left;">759.914***</td>
-<td style="text-align: left;">747.364***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(8.607)</td>
-<td style="text-align: left;">(11.497)</td>
-<td style="text-align: left;">(21.318)</td>
-<td style="text-align: left;">(81.332)</td>
-<td style="text-align: left;">(23.233)</td>
-<td style="text-align: left;">(20.278)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">tchratio</td>
-<td style="text-align: left;">-1.718***</td>
-<td style="text-align: left;">-0.689**</td>
-<td style="text-align: left;">-0.641**</td>
-<td style="text-align: left;">12.426</td>
-<td style="text-align: left;">-1.018***</td>
-<td style="text-align: left;">-0.672**</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;">(0.499)</td>
-<td style="text-align: left;">(0.270)</td>
-<td style="text-align: left;">(0.268)</td>
-<td style="text-align: left;">(14.010)</td>
-<td style="text-align: left;">(0.370)</td>
-<td style="text-align: left;">(0.271)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">pctel</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">-0.411</td>
-<td style="text-align: left;">-0.437</td>
-<td style="text-align: left;">-0.434</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.306)</td>
-<td style="text-align: left;">(0.303)</td>
-<td style="text-align: left;">(0.300)</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">lnch_pct</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">-0.521***</td>
-<td style="text-align: left;">-0.582***</td>
-<td style="text-align: left;">-0.587***</td>
-<td style="text-align: left;">-0.709***</td>
-<td style="text-align: left;">-0.653***</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.078)</td>
-<td style="text-align: left;">(0.097)</td>
-<td style="text-align: left;">(0.104)</td>
-<td style="text-align: left;">(0.091)</td>
-<td style="text-align: left;">(0.073)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">np.log(percap)</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">16.529***</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(3.146)</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">percap</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">-3.067</td>
-<td style="text-align: left;">-3.382</td>
-<td style="text-align: left;">-3.867</td>
-<td style="text-align: left;">-3.218</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(2.353)</td>
-<td style="text-align: left;">(2.491)</td>
-<td style="text-align: left;">(2.488)</td>
-<td style="text-align: left;">(2.306)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">I(percap ** 2)</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">0.164*</td>
-<td style="text-align: left;">0.174*</td>
-<td style="text-align: left;">0.184**</td>
-<td style="text-align: left;">0.165*</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.085)</td>
-<td style="text-align: left;">(0.089)</td>
-<td style="text-align: left;">(0.090)</td>
-<td style="text-align: left;">(0.085)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">I(percap ** 3)</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">-0.002**</td>
-<td style="text-align: left;">-0.002**</td>
-<td style="text-align: left;">-0.002**</td>
-<td style="text-align: left;">-0.002**</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.001)</td>
-<td style="text-align: left;">(0.001)</td>
-<td style="text-align: left;">(0.001)</td>
-<td style="text-align: left;">(0.001)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">I(tchratio ** 2)</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">-0.680</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.737)</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">I(tchratio ** 3)</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">0.011</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.013)</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">hiel[T.True]</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">-12.561</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(9.793)</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">hiel[T.True]:tchratio</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">0.799</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">(0.555)</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared</td>
-<td style="text-align: left;">0.067</td>
-<td style="text-align: left;">0.676</td>
-<td style="text-align: left;">0.685</td>
-<td style="text-align: left;">0.687</td>
-<td style="text-align: left;">0.686</td>
-<td style="text-align: left;">0.681</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;" data-quarto-table-cell-role="th">R-squared Adj.</td>
-<td style="text-align: left;">0.063</td>
-<td style="text-align: left;">0.670</td>
-<td style="text-align: left;">0.676</td>
-<td style="text-align: left;">0.675</td>
-<td style="text-align: left;">0.675</td>
-<td style="text-align: left;">0.674</td>
-</tr>
-</tbody>
-</table>
-<br>
-Standard errors in parentheses.<br>
-* p&lt;.1, ** p&lt;.05, ***p&lt;.01
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_p33p0ogkzg4s8u5uy8yh = TinyTable.createTableFunctions("tinytable_p33p0ogkzg4s8u5uy8yh");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '30', j: 2 }, { i: '30', j: 3 }, { i: '30', j: 4 }, { i: '30', j: 5 }, { i: '30', j: 6 }, { i: '30', j: 7 } ], css_id: 'tinytable_css_u27qqorrceucalnbpjzr',}, 
+          { positions: [ { i: '24', j: 2 }, { i: '24', j: 3 }, { i: '24', j: 4 }, { i: '24', j: 5 }, { i: '24', j: 6 }, { i: '24', j: 7 } ], css_id: 'tinytable_css_z4aquarwvmkvev6do2ma',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '17', j: 2 }, { i: '18', j: 2 }, { i: '19', j: 2 }, { i: '20', j: 2 }, { i: '21', j: 2 }, { i: '22', j: 2 }, { i: '23', j: 2 }, { i: '25', j: 2 }, { i: '26', j: 2 }, { i: '27', j: 2 }, { i: '28', j: 2 }, { i: '29', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '15', j: 3 }, { i: '16', j: 3 }, { i: '17', j: 3 }, { i: '18', j: 3 }, { i: '19', j: 3 }, { i: '20', j: 3 }, { i: '21', j: 3 }, { i: '22', j: 3 }, { i: '23', j: 3 }, { i: '25', j: 3 }, { i: '26', j: 3 }, { i: '27', j: 3 }, { i: '28', j: 3 }, { i: '29', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '16', j: 4 }, { i: '17', j: 4 }, { i: '18', j: 4 }, { i: '19', j: 4 }, { i: '20', j: 4 }, { i: '21', j: 4 }, { i: '22', j: 4 }, { i: '23', j: 4 }, { i: '25', j: 4 }, { i: '26', j: 4 }, { i: '27', j: 4 }, { i: '28', j: 4 }, { i: '29', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '10', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '15', j: 5 }, { i: '16', j: 5 }, { i: '17', j: 5 }, { i: '18', j: 5 }, { i: '19', j: 5 }, { i: '20', j: 5 }, { i: '21', j: 5 }, { i: '22', j: 5 }, { i: '23', j: 5 }, { i: '25', j: 5 }, { i: '26', j: 5 }, { i: '27', j: 5 }, { i: '28', j: 5 }, { i: '29', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '3', j: 6 }, { i: '4', j: 6 }, { i: '5', j: 6 }, { i: '6', j: 6 }, { i: '7', j: 6 }, { i: '8', j: 6 }, { i: '9', j: 6 }, { i: '10', j: 6 }, { i: '11', j: 6 }, { i: '12', j: 6 }, { i: '13', j: 6 }, { i: '14', j: 6 }, { i: '15', j: 6 }, { i: '16', j: 6 }, { i: '17', j: 6 }, { i: '18', j: 6 }, { i: '19', j: 6 }, { i: '20', j: 6 }, { i: '21', j: 6 }, { i: '22', j: 6 }, { i: '23', j: 6 }, { i: '25', j: 6 }, { i: '26', j: 6 }, { i: '27', j: 6 }, { i: '28', j: 6 }, { i: '29', j: 6 }, { i: '1', j: 7 }, { i: '2', j: 7 }, { i: '3', j: 7 }, { i: '4', j: 7 }, { i: '5', j: 7 }, { i: '6', j: 7 }, { i: '7', j: 7 }, { i: '8', j: 7 }, { i: '9', j: 7 }, { i: '10', j: 7 }, { i: '11', j: 7 }, { i: '12', j: 7 }, { i: '13', j: 7 }, { i: '14', j: 7 }, { i: '15', j: 7 }, { i: '16', j: 7 }, { i: '17', j: 7 }, { i: '18', j: 7 }, { i: '19', j: 7 }, { i: '20', j: 7 }, { i: '21', j: 7 }, { i: '22', j: 7 }, { i: '23', j: 7 }, { i: '25', j: 7 }, { i: '26', j: 7 }, { i: '27', j: 7 }, { i: '28', j: 7 }, { i: '29', j: 7 } ], css_id: 'tinytable_css_1qagyctuxg88lv10h6q6',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 } ], css_id: 'tinytable_css_ahb62h5t5zssv0xe944g',}, 
+          { positions: [ { i: '30', j: 1 } ], css_id: 'tinytable_css_8fkw8a0xaodudjns96lv',}, 
+          { positions: [ { i: '24', j: 1 } ], css_id: 'tinytable_css_2wneqnmqb7wlx4ciupjs',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '16', j: 1 }, { i: '17', j: 1 }, { i: '18', j: 1 }, { i: '19', j: 1 }, { i: '20', j: 1 }, { i: '21', j: 1 }, { i: '22', j: 1 }, { i: '23', j: 1 }, { i: '25', j: 1 }, { i: '26', j: 1 }, { i: '27', j: 1 }, { i: '28', j: 1 }, { i: '29', j: 1 } ], css_id: 'tinytable_css_hlmot3g5pvqakw7gtdn6',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_gcsfweql705l54p8u2vm',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_p33p0ogkzg4s8u5uy8yh.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_p33p0ogkzg4s8u5uy8yh td.tinytable_css_u27qqorrceucalnbpjzr, #tinytable_p33p0ogkzg4s8u5uy8yh th.tinytable_css_u27qqorrceucalnbpjzr {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_p33p0ogkzg4s8u5uy8yh td.tinytable_css_z4aquarwvmkvev6do2ma, #tinytable_p33p0ogkzg4s8u5uy8yh th.tinytable_css_z4aquarwvmkvev6do2ma {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_p33p0ogkzg4s8u5uy8yh td.tinytable_css_1qagyctuxg88lv10h6q6, #tinytable_p33p0ogkzg4s8u5uy8yh th.tinytable_css_1qagyctuxg88lv10h6q6 { text-align: center }
+    #tinytable_p33p0ogkzg4s8u5uy8yh td.tinytable_css_ahb62h5t5zssv0xe944g, #tinytable_p33p0ogkzg4s8u5uy8yh th.tinytable_css_ahb62h5t5zssv0xe944g {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_p33p0ogkzg4s8u5uy8yh td.tinytable_css_8fkw8a0xaodudjns96lv, #tinytable_p33p0ogkzg4s8u5uy8yh th.tinytable_css_8fkw8a0xaodudjns96lv {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_p33p0ogkzg4s8u5uy8yh td.tinytable_css_2wneqnmqb7wlx4ciupjs, #tinytable_p33p0ogkzg4s8u5uy8yh th.tinytable_css_2wneqnmqb7wlx4ciupjs {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_p33p0ogkzg4s8u5uy8yh td.tinytable_css_hlmot3g5pvqakw7gtdn6, #tinytable_p33p0ogkzg4s8u5uy8yh th.tinytable_css_hlmot3g5pvqakw7gtdn6 { text-align: left }
+    #tinytable_p33p0ogkzg4s8u5uy8yh td.tinytable_css_gcsfweql705l54p8u2vm, #tinytable_p33p0ogkzg4s8u5uy8yh th.tinytable_css_gcsfweql705l54p8u2vm {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_p33p0ogkzg4s8u5uy8yh" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">Model 1</th>
+                <th scope="col" data-row="0" data-col="3">Model 2</th>
+                <th scope="col" data-row="0" data-col="4">Model 3</th>
+                <th scope="col" data-row="0" data-col="5">Model 4</th>
+                <th scope="col" data-row="0" data-col="6">Model 5</th>
+                <th scope="col" data-row="0" data-col="7">Model 6</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="7">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">739.621***</td>
+                  <td data-row="1" data-col="3">682.432***</td>
+                  <td data-row="1" data-col="4">744.025***</td>
+                  <td data-row="1" data-col="5">665.496***</td>
+                  <td data-row="1" data-col="6">759.914***</td>
+                  <td data-row="1" data-col="7">747.364***</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(8.607)</td>
+                  <td data-row="2" data-col="3">(11.497)</td>
+                  <td data-row="2" data-col="4">(21.318)</td>
+                  <td data-row="2" data-col="5">(81.332)</td>
+                  <td data-row="2" data-col="6">(23.233)</td>
+                  <td data-row="2" data-col="7">(20.278)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">tchratio</td>
+                  <td data-row="3" data-col="2">-1.718***</td>
+                  <td data-row="3" data-col="3">-0.689*</td>
+                  <td data-row="3" data-col="4">-0.641*</td>
+                  <td data-row="3" data-col="5">12.426</td>
+                  <td data-row="3" data-col="6">-1.018**</td>
+                  <td data-row="3" data-col="7">-0.672*</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.499)</td>
+                  <td data-row="4" data-col="3">(0.270)</td>
+                  <td data-row="4" data-col="4">(0.268)</td>
+                  <td data-row="4" data-col="5">(14.010)</td>
+                  <td data-row="4" data-col="6">(0.370)</td>
+                  <td data-row="4" data-col="7">(0.271)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">pctel</td>
+                  <td data-row="5" data-col="2"></td>
+                  <td data-row="5" data-col="3">-0.411</td>
+                  <td data-row="5" data-col="4">-0.437</td>
+                  <td data-row="5" data-col="5">-0.434</td>
+                  <td data-row="5" data-col="6"></td>
+                  <td data-row="5" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2"></td>
+                  <td data-row="6" data-col="3">(0.306)</td>
+                  <td data-row="6" data-col="4">(0.303)</td>
+                  <td data-row="6" data-col="5">(0.300)</td>
+                  <td data-row="6" data-col="6"></td>
+                  <td data-row="6" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">lnch_pct</td>
+                  <td data-row="7" data-col="2"></td>
+                  <td data-row="7" data-col="3">-0.521***</td>
+                  <td data-row="7" data-col="4">-0.582***</td>
+                  <td data-row="7" data-col="5">-0.587***</td>
+                  <td data-row="7" data-col="6">-0.709***</td>
+                  <td data-row="7" data-col="7">-0.653***</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2"></td>
+                  <td data-row="8" data-col="3">(0.078)</td>
+                  <td data-row="8" data-col="4">(0.097)</td>
+                  <td data-row="8" data-col="5">(0.104)</td>
+                  <td data-row="8" data-col="6">(0.091)</td>
+                  <td data-row="8" data-col="7">(0.073)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">log(percap)</td>
+                  <td data-row="9" data-col="2"></td>
+                  <td data-row="9" data-col="3">16.529***</td>
+                  <td data-row="9" data-col="4"></td>
+                  <td data-row="9" data-col="5"></td>
+                  <td data-row="9" data-col="6"></td>
+                  <td data-row="9" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1"></td>
+                  <td data-row="10" data-col="2"></td>
+                  <td data-row="10" data-col="3">(3.146)</td>
+                  <td data-row="10" data-col="4"></td>
+                  <td data-row="10" data-col="5"></td>
+                  <td data-row="10" data-col="6"></td>
+                  <td data-row="10" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">percap</td>
+                  <td data-row="11" data-col="2"></td>
+                  <td data-row="11" data-col="3"></td>
+                  <td data-row="11" data-col="4">-3.067</td>
+                  <td data-row="11" data-col="5">-3.382</td>
+                  <td data-row="11" data-col="6">-3.867</td>
+                  <td data-row="11" data-col="7">-3.218</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1"></td>
+                  <td data-row="12" data-col="2"></td>
+                  <td data-row="12" data-col="3"></td>
+                  <td data-row="12" data-col="4">(2.353)</td>
+                  <td data-row="12" data-col="5">(2.491)</td>
+                  <td data-row="12" data-col="6">(2.488)</td>
+                  <td data-row="12" data-col="7">(2.306)</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">I(percap^2)</td>
+                  <td data-row="13" data-col="2"></td>
+                  <td data-row="13" data-col="3"></td>
+                  <td data-row="13" data-col="4">0.164+</td>
+                  <td data-row="13" data-col="5">0.174+</td>
+                  <td data-row="13" data-col="6">0.184*</td>
+                  <td data-row="13" data-col="7">0.165+</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1"></td>
+                  <td data-row="14" data-col="2"></td>
+                  <td data-row="14" data-col="3"></td>
+                  <td data-row="14" data-col="4">(0.085)</td>
+                  <td data-row="14" data-col="5">(0.089)</td>
+                  <td data-row="14" data-col="6">(0.090)</td>
+                  <td data-row="14" data-col="7">(0.085)</td>
+                </tr>
+                <tr>
+                  <td data-row="15" data-col="1">I(percap^3)</td>
+                  <td data-row="15" data-col="2"></td>
+                  <td data-row="15" data-col="3"></td>
+                  <td data-row="15" data-col="4">-0.002*</td>
+                  <td data-row="15" data-col="5">-0.002*</td>
+                  <td data-row="15" data-col="6">-0.002*</td>
+                  <td data-row="15" data-col="7">-0.002*</td>
+                </tr>
+                <tr>
+                  <td data-row="16" data-col="1"></td>
+                  <td data-row="16" data-col="2"></td>
+                  <td data-row="16" data-col="3"></td>
+                  <td data-row="16" data-col="4">(0.001)</td>
+                  <td data-row="16" data-col="5">(0.001)</td>
+                  <td data-row="16" data-col="6">(0.001)</td>
+                  <td data-row="16" data-col="7">(0.001)</td>
+                </tr>
+                <tr>
+                  <td data-row="17" data-col="1">I(tchratio^2)</td>
+                  <td data-row="17" data-col="2"></td>
+                  <td data-row="17" data-col="3"></td>
+                  <td data-row="17" data-col="4"></td>
+                  <td data-row="17" data-col="5">-0.680</td>
+                  <td data-row="17" data-col="6"></td>
+                  <td data-row="17" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="18" data-col="1"></td>
+                  <td data-row="18" data-col="2"></td>
+                  <td data-row="18" data-col="3"></td>
+                  <td data-row="18" data-col="4"></td>
+                  <td data-row="18" data-col="5">(0.737)</td>
+                  <td data-row="18" data-col="6"></td>
+                  <td data-row="18" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="19" data-col="1">I(tchratio^3)</td>
+                  <td data-row="19" data-col="2"></td>
+                  <td data-row="19" data-col="3"></td>
+                  <td data-row="19" data-col="4"></td>
+                  <td data-row="19" data-col="5">0.011</td>
+                  <td data-row="19" data-col="6"></td>
+                  <td data-row="19" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="20" data-col="1"></td>
+                  <td data-row="20" data-col="2"></td>
+                  <td data-row="20" data-col="3"></td>
+                  <td data-row="20" data-col="4"></td>
+                  <td data-row="20" data-col="5">(0.013)</td>
+                  <td data-row="20" data-col="6"></td>
+                  <td data-row="20" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="21" data-col="1">hielTRUE</td>
+                  <td data-row="21" data-col="2"></td>
+                  <td data-row="21" data-col="3"></td>
+                  <td data-row="21" data-col="4"></td>
+                  <td data-row="21" data-col="5"></td>
+                  <td data-row="21" data-col="6">-12.561</td>
+                  <td data-row="21" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="22" data-col="1"></td>
+                  <td data-row="22" data-col="2"></td>
+                  <td data-row="22" data-col="3"></td>
+                  <td data-row="22" data-col="4"></td>
+                  <td data-row="22" data-col="5"></td>
+                  <td data-row="22" data-col="6">(9.793)</td>
+                  <td data-row="22" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="23" data-col="1">tchratio × hielTRUE</td>
+                  <td data-row="23" data-col="2"></td>
+                  <td data-row="23" data-col="3"></td>
+                  <td data-row="23" data-col="4"></td>
+                  <td data-row="23" data-col="5"></td>
+                  <td data-row="23" data-col="6">0.799</td>
+                  <td data-row="23" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="24" data-col="1"></td>
+                  <td data-row="24" data-col="2"></td>
+                  <td data-row="24" data-col="3"></td>
+                  <td data-row="24" data-col="4"></td>
+                  <td data-row="24" data-col="5"></td>
+                  <td data-row="24" data-col="6">(0.555)</td>
+                  <td data-row="24" data-col="7"></td>
+                </tr>
+                <tr>
+                  <td data-row="25" data-col="1">Num.Obs.</td>
+                  <td data-row="25" data-col="2">220</td>
+                  <td data-row="25" data-col="3">220</td>
+                  <td data-row="25" data-col="4">220</td>
+                  <td data-row="25" data-col="5">220</td>
+                  <td data-row="25" data-col="6">220</td>
+                  <td data-row="25" data-col="7">220</td>
+                </tr>
+                <tr>
+                  <td data-row="26" data-col="1">R2</td>
+                  <td data-row="26" data-col="2">0.067</td>
+                  <td data-row="26" data-col="3">0.676</td>
+                  <td data-row="26" data-col="4">0.685</td>
+                  <td data-row="26" data-col="5">0.687</td>
+                  <td data-row="26" data-col="6">0.686</td>
+                  <td data-row="26" data-col="7">0.681</td>
+                </tr>
+                <tr>
+                  <td data-row="27" data-col="1">R2 Adj.</td>
+                  <td data-row="27" data-col="2">0.063</td>
+                  <td data-row="27" data-col="3">0.670</td>
+                  <td data-row="27" data-col="4">0.676</td>
+                  <td data-row="27" data-col="5">0.675</td>
+                  <td data-row="27" data-col="6">0.675</td>
+                  <td data-row="27" data-col="7">0.674</td>
+                </tr>
+                <tr>
+                  <td data-row="28" data-col="1">F</td>
+                  <td data-row="28" data-col="2">11.848</td>
+                  <td data-row="28" data-col="3">144.364</td>
+                  <td data-row="28" data-col="4">110.221</td>
+                  <td data-row="28" data-col="5">105.725</td>
+                  <td data-row="28" data-col="6">73.020</td>
+                  <td data-row="28" data-col="7">109.053</td>
+                </tr>
+                <tr>
+                  <td data-row="29" data-col="1">RMSE</td>
+                  <td data-row="29" data-col="2">14.58</td>
+                  <td data-row="29" data-col="3">8.59</td>
+                  <td data-row="29" data-col="4">8.47</td>
+                  <td data-row="29" data-col="5">8.45</td>
+                  <td data-row="29" data-col="6">8.46</td>
+                  <td data-row="29" data-col="7">8.52</td>
+                </tr>
+                <tr>
+                  <td data-row="30" data-col="1">Std.Errors</td>
+                  <td data-row="30" data-col="2">HC1</td>
+                  <td data-row="30" data-col="3">HC1</td>
+                  <td data-row="30" data-col="4">HC1</td>
+                  <td data-row="30" data-col="5">HC1</td>
+                  <td data-row="30" data-col="6">HC1</td>
+                  <td data-row="30" data-col="7">HC1</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 </figure>
 </div>
 </div>
-</div>
-</div>
-<p>The estimation results for Models 1–6 are presented in <a href="#tbl-t16.4" class="quarto-xref">Table&nbsp;<span>18.4</span></a>. We list our key results below:</p>
+<p>The estimation results for Models 1–6 are presented in <a href="#tbl-t16.4" class="quarto-xref">Table&nbsp;<span>18.4</span></a>. We list our key findings below:</p>
 <ul>
-<li><p>The results in the first three columns show that the estimated coefficient on <code>tchratio</code> decreases from <span class="math inline">\(-1.72\)</span> to <span class="math inline">\(-0.64\)</span> in the second column and <span class="math inline">\(-0.641\)</span> in the third column when we control for student and district characteristics. This suggests that the first model suffers from omitted variable bias.</p></li>
+<li><p>The results in the first three columns show that the estimated coefficient on <code>tchratio</code> decreases from -1.72 to -0.64 in the second column and -0.641 in the third column when we control for student and district characteristics. This suggests that the first model suffers from omitted variable bias.</p></li>
 <li><p>The results in the second and third columns indicate that the class size effect is statistically significant at the 5% level after controlling for student and district characteristics. Comparing <span class="math inline">\(\bar{R}^2\)</span> values in Models 2 and 3, the cubic specification provides a better fit than the logarithmic specification.</p></li>
-<li><p>In Model 3, we can use the <span class="math inline">\(F\)</span>-statistic to test <span class="math inline">\(H_0:\beta_5=\beta_6=0\)</span> versus <span class="math inline">\(H_1\)</span>: At least one coefficient is non zero. The <span class="math inline">\(F\)</span>-statistic given below is <span class="math inline">\(7.74\)</span> with a p-value of <span class="math inline">\(0.0006\)</span>. Thus, we reject the null hyptohesis.</p></li>
+<li><p>In Model 3, we can use the <span class="math inline">\(F\)</span>-statistic to test <span class="math inline">\(H_0:\beta_5=\beta_6=0\)</span> versus <span class="math inline">\(H_1\)</span>: At least one coefficient is non zero. The <span class="math inline">\(F\)</span>-statistic given below is 7.74 with a p-value of 0.0006. Thus, we reject the null hypothesis.</p></li>
 </ul>
-<div id="0274e31d" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Testing H_0: beta_5=beta_6=0 in Model 3</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>hypothesis <span class="op">=</span> <span class="st">"I(percap ** 2)=0, I(percap ** 3)=0"</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r3.f_test(hypothesis))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test H0: beta_percap^2 = beta_percap^3 = 0 (Model 3)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  r3,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"I(percap^2) = 0"</span>, <span class="st">"I(percap^3) = 0"</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="fu">vcovHC</span>(r3, <span class="at">type =</span> <span class="st">"HC1"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;F test: F=7.744799216984443, p=0.0005664381585529111, df_denom=213, df_num=2&gt;</code></pre>
+<pre><code>
+Linear hypothesis test:
+I(percap^2) = 0
+I(percap^3) = 0
+
+Model 1: restricted model
+Model 2: totsc4 ~ tchratio + pctel + lnch_pct + percap + I(percap^2) + 
+    I(percap^3)
+
+Note: Coefficient covariance matrix supplied.
+
+  Res.Df Df      F    Pr(&gt;F)    
+1    215                        
+2    213  2 7.7448 0.0005664 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <ul>
-<li>The results for Model 4 show that there is no statistically significant evidence of a nonlinear relationship between test scores and the student–teacher ratio. The <span class="math inline">\(F\)</span>-statistic for <span class="math inline">\(H_0:\beta_2=\beta_3=0\)</span> can be obtained using the code chunk given below. The <span class="math inline">\(F\)</span>-statistic is <span class="math inline">\(0.45\)</span> with a <span class="math inline">\(p\)</span>-value of <span class="math inline">\(0.640\)</span>. Thus, we fail to reject the null hypothesis.</li>
+<li>The results for Model 4 show that there is no statistically significant evidence of a nonlinear relationship between test scores and the student–teacher ratio. The <span class="math inline">\(F\)</span>-statistic for <span class="math inline">\(H_0:\beta_2=\beta_3=0\)</span> can be obtained using the code chunk given below. The <span class="math inline">\(F\)</span>-statistic is 0.45 with a <span class="math inline">\(p\)</span>-value of 0.640. Thus, we fail to reject the null hypothesis.</li>
 </ul>
-<div id="e6d30477" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Testing H_0: beta_2=beta_3=0 in Model 4</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>hypothesis <span class="op">=</span> <span class="st">"I(tchratio ** 2)=0, I(tchratio ** 3)=0"</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r4.f_test(hypothesis))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test H0: beta_tchratio^2 = beta_tchratio^3 = 0 (Model 4)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  r4,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"I(tchratio^2) = 0"</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"I(tchratio^3) = 0"</span>),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="fu">vcovHC</span>(r4, <span class="at">type =</span> <span class="st">"HC1"</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;F test: F=0.44627810224037257, p=0.6406084508437917, df_denom=211, df_num=2&gt;</code></pre>
+<pre><code>
+Linear hypothesis test:
+I(tchratio^2) = 0
+I(tchratio^3) = 0
+
+Model 1: restricted model
+Model 2: totsc4 ~ tchratio + I(tchratio^2) + I(tchratio^3) + pctel + lnch_pct + 
+    percap + I(percap^2) + I(percap^3)
+
+Note: Coefficient covariance matrix supplied.
+
+  Res.Df Df      F Pr(&gt;F)
+1    213                 
+2    211  2 0.4463 0.6406</code></pre>
 </div>
 </div>
 <ul>
-<li>The results for Model 5 show that the estimated coefficents for both <code>HiEL</code> and <code>HiELxtchratio</code> are statistically insignifcant at the 5% significance level. The <span class="math inline">\(F\)</span>-statistic for <span class="math inline">\(H_0:\beta_5=\beta_6=0\)</span> can be obtained using the following code chunk. The <span class="math inline">\(F\)</span>-statistic is <span class="math inline">\(1.58\)</span> with a <span class="math inline">\(p\)</span>-value of <span class="math inline">\(0.207\)</span>. Thus, we fail to reject the null hypothesis and conclude that the percentage of English learners does not have a statistically significant effect on test scores after controlling for the student–teacher ratio and other variables.</li>
+<li>The results for Model 5 show that the estimated coefficents for both <code>HiEL</code> and <code>HiELxtchratio</code> are statistically insignifcant at the 5% significance level. The <span class="math inline">\(F\)</span>-statistic for <span class="math inline">\(H_0:\beta_5=\beta_6=0\)</span> can be obtained using the following code chunk. The <span class="math inline">\(F\)</span>-statistic is 1.58 with a <span class="math inline">\(p\)</span>-value of 0.207. Thus, we fail to reject the null hypothesis and conclude that the percentage of English learners does not have a statistically significant effect on test scores after controlling for the student–teacher ratio and other variables.</li>
 </ul>
-<div id="d7592aaf" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Testing H_0: beta_5=beta_6=0 in Model 5</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>hypothesis <span class="op">=</span> <span class="st">"hiel[T.True]=0, hiel[T.True]:tchratio=0"</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(r5.f_test(hypothesis))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test H0: beta_hiel = beta_hiel:tchratio = 0  (Model 5)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  r5,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"hielTRUE = 0"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tchratio:hielTRUE = 0"</span>),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="fu">vcovHC</span>(r5, <span class="at">type =</span> <span class="st">"HC1"</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;F test: F=1.5834729215634233, p=0.2076789066396875, df_denom=212, df_num=2&gt;</code></pre>
+<pre><code>
+Linear hypothesis test:
+hielTRUE = 0
+tchratio:hielTRUE = 0
+
+Model 1: restricted model
+Model 2: totsc4 ~ tchratio + hiel + hiel:tchratio + lnch_pct + percap + 
+    I(percap^2) + I(percap^3)
+
+Note: Coefficient covariance matrix supplied.
+
+  Res.Df Df      F Pr(&gt;F)
+1    214                 
+2    212  2 1.5835 0.2077</code></pre>
 </div>
 </div>
 <ul>
@@ -1719,7 +2059,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/RBook\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -2063,7 +2403,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+<p>Introduction to Econometrics with R was written by Osman Doğan and Süleyman Taşpınar.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

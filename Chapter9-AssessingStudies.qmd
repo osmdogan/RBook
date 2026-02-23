@@ -1,15 +1,18 @@
 # Assessing Studies Based on Multiple Regression {#sec-assess}
 
-```{python}
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-from statsmodels.iolib.summary2 import summary_col
-import scipy.stats as stats
-sns.set_style('darkgrid')
+```{r}
+#| warning: false
+#| message: false
+# Load necessary libraries
+library(tidyverse)
+library(gridExtra)
+library(modelsummary)
+library(sandwich)
+library(lmtest)
+library(knitr)
+library(kableExtra)
+library(readxl)
+library(car) 
 ```
 
 ## Internal and external validity
@@ -55,49 +58,75 @@ This type of misspecification arises when the estimated regression model does no
 
 In the following example, we illustrate the effect of functional form misspecification on the OLS estimator. We simulate data from the following quadratic model: $Y_i=\beta_0+\beta_1X_i+\beta_2X^2_i+u_i$, where $X_i\sim\text{Uniform}(0,10)$, $(\beta_0,\beta_1,\beta_2)^{'}=(3,2,1.5)^{'}$, and $u_i\sim N(0,4)$. We then estimate two models:  the misspecified linear model $Y_i=\beta_0+\beta_1X_{i}+u_i$ and the correctly specified quadratic model $Y_i=\beta_0+\beta_1X_i+\beta_2X^2_i+u_i$.
 
-```{python}
+
+```{r}
 # Simulate data
-np.random.seed(123)
-n = 300
-X = np.random.uniform(0, 10, n)
-Y = 3 + 2 * X + 1.5 * X**2 + np.random.normal(0, 2, n)
-data = pd.DataFrame({'X': X, 'Y': Y})
+set.seed(123)
+n <- 300
+X <- runif(n, min = 0, max = 10)
+Y <- 3 + 2 * X + 1.5 * X^2 + rnorm(n, mean = 0, sd = 2)
+
+data <- data.frame(X = X, Y = Y)
 
 # Estimate linear model
-linear_model = smf.ols(formula="Y ~ X", data=data).fit()
+linear_model <- lm(Y ~ X, data = data)
 
-# Estimate quadratic model
-nonlinear_model = smf.ols(formula="Y ~ X + I(X**2)", data=data).fit()
-```	
+# Estimate quadratic (nonlinear) model
+nonlinear_model <- lm(Y ~ X + I(X^2), data = data)
+```
 
 @fig-t16.1 shows the scatterplot of data along with the line plots of predicted values. The figure shows that the nonlinear model accurately captures the quadratic relationship between $Y$ and $X$. The estimation results in the first column of @tbl-t16.1 indicate that the OLS estimator reports a large bias for the coefficient of $X$ under the linear specification. In contrast, the OLS estimator reports almost no bias under the quadratic specification, as shown in the second column of @tbl-t16.1. 
 
-```{python}
+
+```{r}
 #| fig-cap: "Effect of Functional Form Misspecification"
 #| label: fig-t16.1
-# Plot results
-plt.figure(figsize=(6, 4))
-plt.scatter(X, Y, color="steelblue", s=10)
-plt.plot(np.sort(X), np.sort(linear_model.predict()), label="Linear model", color="red")
-plt.plot(np.sort(X), np.sort(nonlinear_model.predict()), label="Nonlinear model", color="black")
-plt.xlabel(r"$X$")
-plt.ylabel(r"$Y$")
-plt.legend(frameon=False)
-plt.show()
+#| fig-width: 5
+#| fig-height: 4
+# Prepare data for fitted lines
+plot_data <- data.frame(
+  X = X,
+  Y = Y,
+  linear_fit = fitted(linear_model),
+  nonlinear_fit = fitted(nonlinear_model)
+)
+
+ggplot(plot_data, aes(x = X, y = Y)) +
+  geom_point(color = "steelblue", size = 1.5) +
+  geom_line(
+    aes(y = linear_fit),
+    color = "red",
+    linewidth = 1
+  ) +
+  geom_line(
+    aes(y = nonlinear_fit),
+    color = "black",
+    linewidth = 1
+  ) +
+  labs(
+    x = expression(X),
+    y = expression(Y)
+  ) +
+  theme(
+    legend.position = "none"
+  )
 ```
 
-:::{layout-ncol=1}
-```{python}
+
+```{r}
 #| tbl-cap: "Regression Results"
 #| label: tbl-t16.1
 # Present linear_model and nonlinear_model results in a table
-results_table = summary_col(results=[linear_model, nonlinear_model],
-                                     float_format='%0.3f',
-                                     stars=True,
-                                     model_names=["Linear Model", "Nonlinear Model"])
-results_table
+modelsummary(
+  list(
+    "Linear Model"    = linear_model,
+    "Nonlinear Model" = nonlinear_model
+  ),
+  stars = TRUE,
+  fmt = 3,
+  gof_omit = "AIC|BIC|Log.Lik"
+)
 ```
-:::
 
 **Solution to Functional Form Misspecification**: When the dependent variable is continuous, functional form misspecification can be addressed using polynomial and logarithmic transformations, as discussed in @sec-nonlinear. When the dependent variable is binary, we can instead use nonlinear models such as the probit and logit models discussed in @sec-chapter18.
 
@@ -158,51 +187,80 @@ Since $\left(\frac{\sigma^2_X}{\sigma^2_X+\sigma^2_v}\right)<1$, the OLS estimat
 
 In the following code chunk, we use the simulated data to illustrate the classical measurement error model. We assume that $\tilde{X}_i=X_i+v_i$, where $X_i\sim\text{Uniform}(0,10)$ and $v_i\sim N(0,4)$. We generate $Y_i=\beta_0+\beta_1X_i+u_i$, where $\beta_0=3$, $\beta_1=2$, and $u_i\sim N(0,4)$. Then,  we estimate the error model $Y_i=\beta_0+\beta_1\tilde{X}_i+\tilde{u}_i$ and the true model $Y_i=\beta_0+\beta_1X_i+u_i$.
 
-```{python}
-# Simulate data
-np.random.seed(123)
-n = 300
-X = np.random.uniform(0, 10, n)
-v = np.random.normal(0, 2, n)
-X_tilde = X + v
-Y = 3 + 2 * X + np.random.normal(0, 2, n)
-data = pd.DataFrame({'X': X, 'X_tilde': X_tilde, 'Y': Y})
 
-# Estimate OLS model
-error_model = smf.ols(formula="Y ~ X_tilde", data=data).fit()
+```{r}
+# Simulate data
+set.seed(123)
+n <- 300
+
+X <- runif(n, min = 0, max = 10)
+v <- rnorm(n, mean = 0, sd = 2)
+X_tilde <- X + v
+
+Y <- 3 + 2 * X + rnorm(n, mean = 0, sd = 2)
+
+data <- data.frame(
+  X = X,
+  X_tilde = X_tilde,
+  Y = Y
+)
+
+# Estimate OLS model with measurement error
+error_model <- lm(Y ~ X_tilde, data = data)
 
 # Estimate true model
-true_model = smf.ols(formula="Y ~ X", data=data).fit()
+true_model <- lm(Y ~ X, data = data)
 ```
 
-:::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: "Regression Results"
 #| label: tbl-t16.2
 # Present ols_model and true_model results in a table
-results_table = summary_col(results=[error_model, true_model],
-                                     float_format='%0.3f',
-                                     stars=True,
-                                     model_names=["Error model", "True model"])
-results_table
+modelsummary(
+  list(
+    "Error model" = error_model,
+    "True model"  = true_model
+  ),
+  stars = TRUE,
+  fmt = 3,
+  gof_omit = "AIC|BIC|Log.Lik"
+)
 ```
-:::
 
 The estimation results are presented in @tbl-t16.2. The results in the first column indicate that the OLS estimator introduces a significant bias in $\beta_1$. In contrast, the OLS estimator reports only a small bias in the second column. In @fig-t16.2, we plot the predicted values as line plots alongside the scatterplot of the data. The red line represents the fitted line based on the error model, while the black line represents the fitted line based on the true model. The figure shows that the predicted values based on the error model differ significantly from those based on the true model.
 
-```{python}
+```{r}
 #| fig-cap: "The effect of measurement error on the OLS estimator"
 #| label: fig-t16.2
-# Plot results
-plt.figure(figsize=(6, 4))
-plt.scatter(X, Y, color="steelblue", s=10)
-error_coef = [6.306, 1.358]
-plt.plot(X, error_coef[0] + error_coef[1] * data["X"], label="Error model", color="red")
-plt.plot(X, true_model.predict(), label="True model", color="black")
-plt.xlabel(r"$X$")
-plt.ylabel(r"$Y$")
-plt.legend(frameon=False)
-plt.show()
+# Create plotting data
+plot_data <- data.frame(
+  X = X,
+  Y = Y
+)
+
+# Manually specified error-model coefficients
+error_intercept <- 6.306
+error_slope     <- 1.358
+
+# True model fitted values
+plot_data$true_fit  <- fitted(true_model)
+
+# Error model fitted line evaluated at X
+plot_data$error_fit <- error_intercept + error_slope * plot_data$X
+
+ggplot(plot_data, aes(x = X, y = Y)) +
+  geom_point(color = "steelblue", size = 1.5) +
+  geom_line(aes(y = error_fit, color = "Error model"),
+            linewidth = 1) +
+  geom_line(aes(y = true_fit, color = "True model"),
+            linewidth = 1) +
+  scale_color_manual(values = c("Error model" = "red",
+                                "True model"  = "black")) +
+  labs(
+    x = expression(X),
+    y = expression(Y),
+    color = NULL
+  )
 ```
 
 Note that we can use $\hat{\beta}_1\xrightarrow{p}\left(\frac{\sigma^2_X}{\sigma^2_X+\sigma^2_v}\right)\beta_1$ to construct a bias corrected estimator of $\beta_1$, which is given by $\hat{\beta}^{bc}_1=\hat{\beta}_1\left(\sigma^2_X+\sigma^2_v\right)/\sigma^2_X$. Using our simulated data and the estimation result in the first column of @tbl-t16.2, we can get an estimate of $\hat{\beta}^{bc}_1$ as 
@@ -306,7 +364,7 @@ For prediction exercises, external validity is more important than internal vali
 ## Example: Test Scores and Class Size
 
 ### Data
-In this empirical application, we use the Massachusetts dataset, which contains district-level averages for public elementary school districts in 1998. The test scores are derived from the Massachusetts Comprehensive Assessment System (MCAS), administered to all fourth graders in Massachusetts public schools in the spring of 1998. We use the student–teacher ratio (`tchratio`), the percentage of students receiving a subsidized lunch (`lnch_pct`), the percentage of students still learning English (`pctel`), and the average district income (`percap`) as our main variables. The first three variables represent averages for each elementary school district over the 1997–1998 school year. For the average district income, the 1990 U.S. Census data is used. Below, we provide list some selected variables from the dataset:
+In this empirical application, we use the Massachusetts dataset, which contains district-level averages for public elementary school districts in 1998. The test scores are derived from the Massachusetts Comprehensive Assessment System (MCAS), administered to all fourth graders in Massachusetts public schools in the spring of 1998. We use the student–teacher ratio (`tchratio`), the percentage of students receiving a subsidized lunch (`lnch_pct`), the percentage of students still learning English (`pctel`), and the average district income (`percap`) as our main variables. The first three variables represent averages for each elementary school district over the 1997–1998 school year. For the average district income, the 1990 U.S. Census data is used. Below, we list some selected variables from the dataset:
 
 - `code`: District code (numerical)
 - `municipa`: Municipality (name)
@@ -318,92 +376,163 @@ In this empirical application, we use the Massachusetts dataset, which contains 
 - `pctel`: Percentage of students still learning English
 
 The following code chunk imports the data and displays the column names. 
-```{python}
+
+```{r}
 #| warning: false
 #| message: false
 # Import data
-mcas = pd.read_excel("data/mcas.xlsx")
+mcas <- read_excel("data/mcas.xlsx")
+
 # Column names
-mcas.columns
+colnames(mcas)
 ```
 
 Previously, we used data from California school districts to study the relationship between test scores and class size. It will be useful to compare the Massachusetts dataset with the California dataset. In @tbl-t16.3, we present descriptive statistics for selected variables from the Massachusetts and California datasets. For Massachusetts, the average test score is 709.83, the average student–teacher ratio is 17.34, the average percentage of English learners is $1.12\%$, the average percentage of students receiving subsidized lunch is $15.32\%$, and the average per-capita income is $18,750. For California, the corresponding averages are 654.16 for test scores, 19.64 for student–teacher ratio, $15.77\%$ for English learners, $45.71\%$ for subsidized lunch recipients, and $15,320 for per-capita income.
 
 While Massachusetts has a higher average test score, we cannot make a direct comparison because different tests are administered in both states. Massachusetts also has lower averages for the student–teacher ratio, the percentage of subsidized lunch recipients, and the percentage of English learners. Its average per-capita income is larger than that of California.
 
-```{python}
+
+```{r}
 #| warning: false
 #| message: false
-# Summary statistics for Massachusetts and California
-mcas_vars = ["totsc4", "tchratio", "pctel", "lnch_pct", "percap"]
-mcas_stats = mcas[mcas_vars].describe().round(2).T
+# Import data
+mcas <- read_excel("data/mcas.xlsx")
+caschool <- read_excel("data/caschool.xlsx")
 
-# Summary statistics for California
-caschool = pd.read_excel("data/caschool.xlsx")
-caschool_vars = ["testscr", "str", "el_pct", "meal_pct", "avginc"]
-caschool_stats = caschool[caschool_vars].describe().round(2).T
+# Variables
+mcas_vars <- c("totsc4", "tchratio", "pctel", "lnch_pct", "percap")
+caschool_vars <- c("testscr", "str", "el_pct", "meal_pct", "avginc")
 
-# Rename index
-caschool_stats.index = ["Test Score", "Student-Teacher Ratio", "English Learners (%)", "Free/Reduced Lunch (%)", "Average Income"]
-mcas_stats.index = ["Test Score", "Student-Teacher Ratio", "English Learners (%)", "Free/Reduced Lunch (%)", "Per Capita Income"]
+# Variable labels
+mcas_labels <- c(
+  totsc4   = "Test Score",
+  tchratio = "Student-Teacher Ratio",
+  pctel    = "English Learners (%)",
+  lnch_pct = "Free/Reduced Lunch (%)",
+  percap   = "Average Income"
+)
+
+caschool_labels <- c(
+  testscr  = "Test Score",
+  str      = "Student-Teacher Ratio",
+  el_pct   = "English Learners (%)",
+  meal_pct = "Free/Reduced Lunch (%)",
+  avginc   = "Average Income"
+)
+
+# Summary statistics (replicates pandas describe)
+mcas_stats <- datasummary(
+  totsc4 + tchratio + pctel + lnch_pct + percap ~
+    Mean + SD + Min  + Max,
+  data = mcas,
+  fmt = "%.2f",
+  output = "data.frame"
+) |>
+  rename(Variable = 1) |>
+  mutate(Variable = mcas_labels[Variable],
+         State = "Massachusetts")
+
+caschool_stats <- datasummary(
+  testscr + str + el_pct + meal_pct + avginc ~
+    Mean + SD + Min  + Max,
+  data = caschool,
+  fmt = "%.2f",
+  output = "data.frame"
+) |>
+  rename(Variable = 1) |>
+  mutate(Variable = caschool_labels[Variable],
+         State = "California")
 
 # Combine statistics
-combined_stats = pd.concat([mcas_stats, caschool_stats], keys=["Massachusetts", "California"])
+combined_stats <- bind_rows(mcas_stats, caschool_stats)
+
+# Remove State column
+df_tab <- combined_stats %>% select(-State)
 ```
 
-:::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: "Descriptive statistics for Massachusetts and California test score datasets"
 #| label: tbl-t16.3
 # Summary statistics
-combined_stats
+kable(
+  df_tab,
+  format = "html",      # or "html"
+  booktabs = TRUE
+) %>%
+  pack_rows(
+    "Panel A: California",
+    start_row = 1,
+    end_row   = 5
+  ) %>%
+  pack_rows(
+    "Panel B: Massachusetts",
+    start_row = 6,
+    end_row   = 10
+  )
 ```
-:::
 
 In @fig-t16.3, we examine the relationship between test scores and average district income based on the Massachusetts dataset. The scatter plot shows a positive relationship, with the slope being steeper for lower income values and flatter for higher income values. To model the relationship between test scores and average district income, we consider three regression models: (i) the linear regression model, (ii) the cubic regression model, and (iii) the linear-log regression model. The fitted regression functions in @fig-t16.3 indicate that the cubic regression provides a better fit compared to the linear and linear-log regressions.
 
-```{python}
+```{r}
 #| fig-cap: "The relationship between test scores and district income for the Massachusetts dataset"
 #| label: fig-t16.3
+#| warning: false
+#| message: false
 # Define dependent and independent variables
-x = mcas['percap']
-y = mcas['totsc4']
+x <- mcas$percap
+y <- mcas$totsc4
 
 # Linear regression
-X_linear = sm.add_constant(x)
-model_linear = sm.OLS(y, X_linear).fit()
+model_linear <- lm(y ~ x)
 
 # Cubic regression
-X_cubic = sm.add_constant(np.column_stack([x, x**2, x**3]))
-model_cubic = sm.OLS(y, X_cubic).fit()
+model_cubic <- lm(y ~ x + I(x^2) + I(x^3))
 
 # Linear-log regression
-X_log = sm.add_constant(np.log(x))
-model_log = sm.OLS(y, X_log).fit()
+model_log <- lm(y ~ log(x))
 
-# Generate fitted values for plotting
-x_range = np.linspace(x.min(), x.max(), 500)
-linear_fit = model_linear.predict(sm.add_constant(x_range))
-cubic_fit = model_cubic.predict(sm.add_constant(np.column_stack([x_range, x_range**2, x_range**3])))
-log_fit = model_log.predict(sm.add_constant(np.log(x_range)))
+# Generate grid for fitted values
+x_range <- seq(min(x, na.rm = TRUE),
+               max(x, na.rm = TRUE),
+               length.out = 500)
 
-# Scatter plot and fitted lines
-sns.set_style('darkgrid')
-plt.figure(figsize=(6, 4))
+# Fitted values
+linear_fit <- predict(model_linear,
+                      newdata = data.frame(x = x_range))
 
-# Scatter plot of data
-plt.scatter(x, y, color='steelblue', alpha=0.7)
+cubic_fit <- predict(model_cubic,
+                     newdata = data.frame(x = x_range))
 
-# Fitted lines
-plt.plot(x_range, linear_fit, label='Linear regression', color='black')
-plt.plot(x_range, cubic_fit, label='Cubic regression', color='green')
-plt.plot(x_range, log_fit, label='Linear-log regression', color='red')
+log_fit <- predict(model_log,
+                   newdata = data.frame(x = x_range))
 
-# Plot formatting
-plt.xlabel('District income')
-plt.ylabel('Test score')
-plt.legend(frameon=False)
-plt.show()
+# Combine data for plotting
+plot_data <- data.frame(
+  x = x_range,
+  linear = linear_fit,
+  cubic  = cubic_fit,
+  log    = log_fit
+)
+
+# Plot
+ggplot(mcas, aes(x = percap, y = totsc4)) +
+  geom_point(color = "steelblue", alpha = 0.7) +
+  geom_line(data = plot_data, aes(x = x, y = linear, color = "Linear regression"),
+            linewidth = 1) +
+  geom_line(data = plot_data, aes(x = x, y = cubic, color = "Cubic regression"),
+            linewidth = 1) +
+  geom_line(data = plot_data, aes(x = x, y = log, color = "Linear-log regression"),
+            linewidth = 1) +
+  scale_color_manual(values = c(
+    "Linear regression"     = "black",
+    "Cubic regression"      = "green",
+    "Linear-log regression" = "red"
+  )) +
+  labs(
+    x = "District income",
+    y = "Test score",
+    color = NULL
+  )
 ```
 
 ### Models
@@ -436,82 +565,121 @@ $$
 \end{align}
 $$
 
-```{python}
-mydata = mcas.copy()
-# Create hiel
-mydata["hiel"] = mydata["pctel"] > np.median(mydata["pctel"])
+
+```{r}
+mydata <- mcas
+# Create hiel indicator
+mydata$hiel <- mydata$pctel > median(mydata$pctel, na.rm = TRUE)
 ```
 
 ### Estimation results
 We use the following code chunk can to estimate all models. Note that we use heteroskedasticity-robust standard errors in all models.
-```{python}
+
+
+```{r}
 # Model 1
-r1 = smf.ols(formula="totsc4~tchratio",
-            data=mydata).fit(cov_type="HC1")
+r1 <- lm(totsc4 ~ tchratio, data = mydata)
 
 # Model 2
-r2 = smf.ols(formula="totsc4~tchratio+pctel+lnch_pct+np.log(percap)",
-             data=mydata).fit(cov_type="HC1")
+r2 <- lm(
+  totsc4 ~ tchratio + pctel + lnch_pct + log(percap),
+  data = mydata
+)
 
 # Model 3
-r3 = smf.ols(formula="totsc4~tchratio+pctel+lnch_pct+percap+I(percap**2)+I(percap**3)",
-             data=mydata).fit(cov_type="HC1") 
+r3 <- lm(
+  totsc4 ~ tchratio + pctel + lnch_pct +
+    percap + I(percap^2) + I(percap^3),
+  data = mydata
+)
 
 # Model 4
-r4 = smf.ols(formula="totsc4~tchratio+I(tchratio**2)+I(tchratio**3)+pctel+lnch_pct+percap+I(percap**2)+I(percap**3)",
-             data=mydata).fit(cov_type="HC1")
+r4 <- lm(
+  totsc4 ~ tchratio + I(tchratio^2) + I(tchratio^3) +
+    pctel + lnch_pct +
+    percap + I(percap^2) + I(percap^3),
+  data = mydata
+)
 
 # Model 5
-r5 = smf.ols(formula="totsc4~tchratio+hiel+hiel*tchratio +lnch_pct+percap+I(percap**2)+I(percap**3)",
-             data=mydata).fit(cov_type="HC1")
+r5 <- lm(
+  totsc4 ~ tchratio + hiel + hiel:tchratio +
+    lnch_pct + percap + I(percap^2) + I(percap^3),
+  data = mydata
+)
 
 # Model 6
-r6 = smf.ols(formula="totsc4~tchratio+lnch_pct+percap+I(percap**2)+I(percap**3)",
-             data=mydata).fit(cov_type="HC1")
+r6 <- lm(
+  totsc4 ~ tchratio +
+    lnch_pct + percap + I(percap^2) + I(percap^3),
+  data = mydata
+)
 ```
 
-:::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: "Estimation Results for Models 1-6"
 #| label: tbl-t16.4
 # Print results in table form
-models=["Model 1","Model 2", "Model 3","Model 4","Model 5","Model 6"]
-results_table=summary_col(results=[r1,r2,r3,r4,r5,r6],
-                          float_format='%0.3f', 
-                          stars=True,
-                          model_names=models)
-results_table
+models <- list(
+  "Model 1" = r1,
+  "Model 2" = r2,
+  "Model 3" = r3,
+  "Model 4" = r4,
+  "Model 5" = r5,
+  "Model 6" = r6
+)
+
+modelsummary(
+  models,
+  vcov = "HC1",
+  stars = TRUE,
+  fmt = 3,
+  gof_omit = "AIC|BIC|Log.Lik"
+)
 ```
-:::
 
-The estimation results for Models 1–6 are presented in @tbl-t16.4. We list our key results below:
+The estimation results for Models 1–6 are presented in @tbl-t16.4. We list our key findings below:
 
-- The results in the first three columns show that the estimated coefficient on `tchratio` decreases from $-1.72$ to $-0.64$ in the second column and $-0.641$ in the third column when we control for student and district characteristics. This suggests that the first model suffers from omitted variable bias.
+- The results in the first three columns show that the estimated coefficient on `tchratio` decreases from -1.72 to -0.64 in the second column and -0.641 in the third column when we control for student and district characteristics. This suggests that the first model suffers from omitted variable bias.
 
 - The results in the second and third columns indicate that the class size effect is statistically significant at the 5% level after controlling for student and district characteristics. Comparing $\bar{R}^2$ values in Models 2 and 3, the cubic specification provides a better fit than the logarithmic specification.
 
-- In Model 3, we can use the $F$-statistic to test $H_0:\beta_5=\beta_6=0$ versus $H_1$: At least one coefficient is non zero.  The $F$-statistic given below is $7.74$ with a p-value of $0.0006$. Thus, we reject the null hyptohesis.
+- In Model 3, we can use the $F$-statistic to test $H_0:\beta_5=\beta_6=0$ versus $H_1$: At least one coefficient is non zero.  The $F$-statistic given below is 7.74 with a p-value of 0.0006. Thus, we reject the null hypothesis.
 
-```{python}
-# Testing H_0: beta_5=beta_6=0 in Model 3
-hypothesis = "I(percap ** 2)=0, I(percap ** 3)=0"
-print(r3.f_test(hypothesis))
+
+```{r}
+# Test H0: beta_percap^2 = beta_percap^3 = 0 (Model 3)
+linearHypothesis(
+  r3,
+  c("I(percap^2) = 0", "I(percap^3) = 0"),
+  vcov = vcovHC(r3, type = "HC1")
+)
 ```
 
-- The results for Model 4 show that there is no statistically significant evidence of a nonlinear relationship between test scores and the student–teacher ratio. The $F$-statistic for $H_0:\beta_2=\beta_3=0$ can be obtained using the code chunk given below. The $F$-statistic is $0.45$ with a $p$-value of $0.640$. Thus, we fail to reject the null hypothesis. 
+- The results for Model 4 show that there is no statistically significant evidence of a nonlinear relationship between test scores and the student–teacher ratio. The $F$-statistic for $H_0:\beta_2=\beta_3=0$ can be obtained using the code chunk given below. The $F$-statistic is 0.45 with a $p$-value of 0.640. Thus, we fail to reject the null hypothesis. 
 
-```{python}
-# Testing H_0: beta_2=beta_3=0 in Model 4
-hypothesis = "I(tchratio ** 2)=0, I(tchratio ** 3)=0"
-print(r4.f_test(hypothesis))
+
+```{r}
+# Test H0: beta_tchratio^2 = beta_tchratio^3 = 0 (Model 4)
+linearHypothesis(
+  r4,
+  c("I(tchratio^2) = 0",
+    "I(tchratio^3) = 0"),
+  vcov = vcovHC(r4, type = "HC1")
+)
 ```
 
-- The results for Model 5 show that the estimated coefficents for both `HiEL` and `HiELxtchratio` are statistically insignifcant at the 5% significance level. The $F$-statistic for $H_0:\beta_5=\beta_6=0$ can be obtained using the following code chunk. The $F$-statistic is $1.58$ with a $p$-value of $0.207$. Thus, we fail to reject the null hypothesis and conclude that the percentage of English learners does not have a statistically significant effect on test scores after controlling for the student–teacher ratio and other variables.
+- The results for Model 5 show that the estimated coefficents for both `HiEL` and `HiELxtchratio` are statistically insignifcant at the 5% significance level. The $F$-statistic for $H_0:\beta_5=\beta_6=0$ can be obtained using the following code chunk. The $F$-statistic is 1.58 with a $p$-value of 0.207. Thus, we fail to reject the null hypothesis and conclude that the percentage of English learners does not have a statistically significant effect on test scores after controlling for the student–teacher ratio and other variables.
 
-```{python}
-# Testing H_0: beta_5=beta_6=0 in Model 5
-hypothesis = "hiel[T.True]=0, hiel[T.True]:tchratio=0"
-print(r5.f_test(hypothesis))
+
+```{r}
+# Test H0: beta_hiel = beta_hiel:tchratio = 0  (Model 5)
+linearHypothesis(
+  r5,
+  c("hielTRUE = 0",
+    "tchratio:hielTRUE = 0"),
+  vcov = vcovHC(r5, type = "HC1")
+)
 ```
 
 - The results for Model 6 indicate that the percentage of English learners can be omitted as a regressor.
@@ -533,4 +701,3 @@ print(r5.f_test(hypothesis))
 
 ### External validity assessment
 Our results, presented in @tbl-t16.4, suggest conclusions similar to those obtained in @sec-nonlinear based on the California dataset. Based on this observation, @Stock2020 conclude that the multiple linear regression models are externally valid and therefore the results can be generalized to other elementary school districts in the United States.
-
