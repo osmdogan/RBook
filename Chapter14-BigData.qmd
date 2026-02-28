@@ -904,7 +904,6 @@ The principal components analysis can be performed using the `pcr` function from
 
 
 ```{r}
-#| eval: false
 set.seed(1234)
 InData <- data[data$insample, grep('_dm|sS_x', names(data))]
 large_pc_mod <- pcr(testscore_dm ~ .,
@@ -912,15 +911,15 @@ large_pc_mod <- pcr(testscore_dm ~ .,
                     scale = FALSE, 
                     validation = "CV")
 # Save results              
-saveRDS(large_pc_mod, file = 'large_pc_mod.rds')
+# saveRDS(large_pc_mod, file = 'large_pc_mod.rds')
 ```
 
 The plot of m-fold cross-validation MSPE against number of components is given in @fig-chapter23-f8. We can use the `MSEP(pc_mod)` to obtain the 10-fold cross-validation MSPE values.
 
 ```{r}
 # Load data
-filename <- 'large_pc_mod.rds'
-large_pc_mod <- readRDS(filename)
+# filename <- 'large_pc_mod.rds'
+# large_pc_mod <- readRDS(filename)
 ```
 
 ```{r}
@@ -1358,7 +1357,6 @@ kable(results_vlarge)
 The following code gives the principal component regression estimates for different numbers of components. 
 
 ```{r}
-#| eval: false
 set.seed(1234)
 InData <- data[data$insample, grep('_dm|sS_x', names(data))]
 vlarge_pc_mod <- pcr(testscore_dm ~ .,
@@ -1367,15 +1365,15 @@ vlarge_pc_mod <- pcr(testscore_dm ~ .,
               validation = "CV")
 
 # Save results              
-saveRDS(vlarge_pc_mod, file = 'vlarge_pc_mod.rds')
+# saveRDS(vlarge_pc_mod, file = 'vlarge_pc_mod.rds')
 ```
 
 We can use the `MSEP(pc_mod)` to obtain the 10-fold cross-validation MSPE values. @fig-chapter23-f14 plots the estimated MSEPs as functions of the number of components. 
 
 ```{r}
 # Load vlarge_pc_mod
-filename <- 'vlarge_pc_mod.rds'
-vlarge_pc_mod <- readRDS(filename)
+# filename <- 'vlarge_pc_mod.rds'
+# vlarge_pc_mod <- readRDS(filename)
 ```
 
 ```{r}
