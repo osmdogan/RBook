@@ -1,5 +1,23 @@
 # Prediction with Many Regressors and Big Data {#sec-chapter21}
 
+```{r}
+#| warning: false
+#| message: false
+# Load necessary libraries
+library(stargazer)
+library(readxl)
+library(MASS)
+library(glmnet)
+library(pls)
+library(haven)
+library(tidyverse)
+library(caret)
+library(modelsummary)
+library(knitr)
+```
+
+
+
 ## Introduction
 A prediction exercise involves calculation of the values of an outcome variable using a prediction rule and data on the regressors (predictors). For the prediction rule, machine learning provides several competing methods.
 
@@ -35,67 +53,33 @@ In this chapter, we will see that when the prediction problem is high-dimensiona
 
 Some examples of dimension reduction methods include Lasso, elastic net, ridge regression, and principal components regression. In high-dimensional prediction exercises, there can be many variables that do not significantly contribute to the predictive performance of the model. A model that includes many irrelevant variables is often referred to as a **sparse model**. 
 
-In this chapter, we cover machine learning methods, including ridge, Lasso, elastic net, and principal components analysis, that can handle high-dimensional data. In this chapter, we will use the `sklearn` module to implement the machine learning methods.
+In this chapter, we study the ridge, Lasso, elastic net, and principal components regressions for handling high-dimensional data. There are many other machine learning methods that can be used for prediction exercises, such as random forests, support vector machines, and neural networks. For these methods, see, for example, @james2021introduction and @Victor2024.
 
-```{python}
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-plt.style.use('seaborn-v0_8-darkgrid')
-import scipy.stats as stats
-
-from scipy.optimize import root_scalar
-from sklearn.model_selection import cross_val_predict, KFold, cross_val_score
-from sklearn.linear_model import RidgeCV, LassoCV, LinearRegression
-from sklearn.linear_model import Lasso, Ridge
-from sklearn.metrics import make_scorer, mean_squared_error
-from sklearn.decomposition import PCA
-import statsmodels.api as sm
-
-from sklearn.pipeline import Pipeline
-from sklearn.model_selection import GridSearchCV
-
-import time
-import pickle
-import random
-random.seed(13)
-from warnings import simplefilter
-simplefilter(action="ignore")
-```
-
-```{python}
-#| echo: false
-from IPython.core.interactiveshell import InteractiveShell
-InteractiveShell.ast_node_interactivity = "last_expr"
-```
-
-There are several other machine learning methods that we will not cover in this chapter. These include, among others, regression trees, random forests, boosted trees, and neural networks. For more information, we recommend Chapter 29 of @Hansen2022 and Chapters 3 and 9 of @Victor2024.
-
-## Prediction Problem
+## Prediction problem
 
 To evaluate the predictive performance of competing estimators (predictors), we resort to the mean squared prediction error (MSPE) or simply the mean squared error (MSE). Let $m(X)$ be a predictor for the random variable $Y$ based on $X$. Then, the MSPE is given by
 $$
 \begin{align*}
-\text{MSPE} = \E{\left(Y - m(X)\right)^2}.
+\text{MSPE} = \E[\left(Y - m(X)\right)^2].
 \end{align*}
 $$
 
-The best predictor can be found by minimizing $\text{MSPE}$ with respect to $m(X)\equiv m$, i.e., 
+We want to show that $\text{MSPE}$ is minimized when $m(X) = \E(Y|X)$. Let us first express $\text{MSPE}$ as
+
 $$
 \begin{align*}
-\min_{m} \E{\left(Y - m\right)^2}&= \min_{m} \E\left(\E\left(Y - m\right)^2|X\right)\\
-&= \E\left(\min_{m}\E\left(Y - m\right)^2|X\right).
-\end{align*}
+\text{MSPE} &= \E[\left(Y - \E(Y|X) + \E(Y|X) - m(X)\right)^2]\\
+&= \E[\left(Y - \E(Y|X)\right)^2] + \E[\left(\E(Y|X) - m(X)\right)^2] \\
+&+ 2\E[\left(Y - \E(Y|X)\right)\left(\E(Y|X) - m(X)\right)].
+\end{align*}    
 $$
-
-Then, from the first-order condition for the minimization problem (assuming interchange of integration and differentiation is allowed), we obtain
+The last term is zero by the law of iterated expectations. Therefore, we have
 $$
-\E(Y|X) - m = 0. 
+\text{MSPE} = \E[\left(Y - \E(Y|X)\right)^2] + \E[\left(\E(Y|X) - m(X)\right)^2],
 $$
+which is minimized when $m(X) = \E(Y|X)$. Therefore, the best predictor (the oracle predictor) is the conditional mean of $Y$ given $X$, i.e., $\E(Y|X)$.
 
-Therefore, the best predictor (the oracle predictor) is the conditional mean of $Y$ given $X$, i.e., $\E(Y|X)$.
-
-Often, the prediction we will be made for observations in the out-of-sample (or validation sample). Suppose there are $k$ predictors and let us denote the observations in the out-of-sample by $(X_{1i}^{oos},...,X_{ki}^{oos},Y_i^{oos})$. We assume the following assumption for the out-of-sample observations.
+Often, the prediction we will be made for observations in the out-of-sample. Suppose there are $k$ predictors and let us denote the observations in the out-of-sample by $(X_{1i}^{oos},...,X_{ki}^{oos},Y_i^{oos})$. We assume the following assumption for the out-of-sample observations.
 
 ::: {.callout-important icon=false}
 ## The first least squares assumption for prediction
@@ -175,9 +159,9 @@ $$
 
 The first term represents the the prediction error made using the true (unknown) conditional mean, i.e., it arises from $\E\left(Y_i^{oos}-\E(Y_i^{oos}|\bs{X}_i^{oos})\right)^2=\text{var}(u_i^{oos})=\sigma^2_u$.  The second term is the contribution to the prediction error arising from the estimated regression coefficients. This expression suggests that we should choose an estimator that minimizes the second term. Since the second term is the sum of the squared bias and the variance of the estimator, its minimization entails a trade-off between bias and variance.
 
-We know from the Gauss-Markov theorem that within the class of linear unbiased estimators the OLS estimator has the smallest variance under homoskedasticity. Therefore, in this class, the OLS estimator yields the smallest value for the second term in the MSPE. But note that there may be biased estimators that can yield smaller values for the second term in the MSPE. If the gain from reducing variance outweighs the loss from squared bias, these estimators may perform better in terms of MSPE.
+We know from the Gauss-Markov theorem that within the class of linear unbiased estimators, the OLS estimator has the smallest variance under homoskedasticity. Therefore, in this class, the OLS estimator yields the smallest value for the second term in the MSPE. But note that there may be biased estimators that can yield smaller values for the second term in the MSPE. If the gain from reducing variance outweighs the loss from squared bias, these estimators may perform better in terms of MSPE.
 
-In the special case where the regression error is homoskedastic, it can be shown that the MSPE of the OLS estimator is $\text{MSPE}_{\text{OLS}}\approx\sigma_{u}^2(1+\frac{k}{n})$. We provide the proof of this result in @sec-OLS_MSPE. In the empirical illustration in the next section, we will consider a regression with $n=1966$ and $k=38$. Then, $k/n = 38/1966 = 0.02$, so using the OLS method entails only a $2\%$ loss in MSPE relative to the oracle prediction. 
+In the special case where the regression error is homoskedastic, it can be shown that the MSPE of the OLS estimator is $\text{MSPE}_{\text{OLS}}\approx\sigma_{u}^2(1+\frac{k}{n})$. We provide the proof of this result in @sec-OLS_MSPE. In the empirical application in this chapter, we will consider a regression with $n=1966$ and $k=38$. Then, $k/n = 38/1966 = 0.02$, so using the OLS method entails only a $2\%$ loss in MSPE relative to the oracle prediction. 
 
 Now, suppose we include these regressors as polynomials up to third order, along with their interactions, so that $k=817$. Then, $k/n=817/1966 \approx 0.40$, meaning a $40\%$ deterioration in MSPE, which is large enough to warrant investigating estimators with lower MSPE than the OLS estimator. 
 
@@ -189,9 +173,10 @@ A **shrinkage estimator** is a biased estimator that shrinks the OLS estimator t
 :::
 
 
+
 ## Estimation of the MSPE
 
-The MSPE is an unknown constant, so we need to estimate it in order to assess the predictive performance of competing estimators. One way to estimate MSPE is by splitting the dataset into two parts: training and validation (or testing) subsamples. Using the training subsample, we can obtain the estimates of the model coefficients. Then, using the validation subsample, we can estimate the prediction errors. Then, the **split-sample estimator of MSPE** is given by
+The MSPE is an unknown constant, so we need to estimate it in order to assess the predictive performance of competing estimators. One way to estimate MSPE is by splitting the dataset into two parts: training and testing subsamples. Using the training subsample, we can obtain the estimates of the model coefficients. Then, using the testing subsample, we can estimate the prediction errors. Then, the **split-sample estimator of MSPE** is given by
 $$
 \widehat{\text{MSPE}}_{\text{split-sample}}=\frac{1}{n_{valid}}\sum_{i=1}^{n_{valid}}(Y_i^{oos}-\widehat{Y}_i^{oos})^2,
 $$
@@ -248,74 +233,9 @@ $$
 $$
 where $\lambda_R$ is the Lagrangian multiplier. 
 
-The difference between @eq-eq21-1 and @eq-eq21-2 is that in the first problem we need to specify the shrinkage parameter, while in the second problem we need to specify the constraint parameter. The representation of the ridge minimization problem in @eq-eq21-2 is useful to produce a graphical representation for further insight. Following @Hansen2022, we use the following code chunk to illustrate the ridge minimization problem when there are two regressors so that the constraint set is $\{(b_1,b_2): b^2_1+b^2_2<\kappa\}$.  In @fig-f21-1, the constraint set $\{(b_1,b_2): b^2_1+b^2_2<\kappa\}$ is represented by the ball around the origin, and the contour sets of $SSR(b)$  are depicted as ellipses. In this illustration, the OLS estimates correspond to the point at the center of the ellipses, whereas the ridge estimates are represented by the point on the circle where the outer-contour is tangent. This demonstrates that the ridge estimator effectively shrinks the OLS estimates toward zero. 
+The difference between @eq-eq21-1 and @eq-eq21-2 is that in the first problem we need to specify the shrinkage parameter, while in the second problem we need to specify the constraint parameter. The representation of the ridge minimization problem in @eq-eq21-2 is useful to produce a graphical representation for further insight. Following @Hansen2022, we illustrate the ridge minimization problem when there are two regressors so that the constraint set is $\{(b_1,b_2): b^2_1+b^2_2<\kappa\}$.  In @fig-f23-1, the constraint set $\{(b_1,b_2): b^2_1+b^2_2<\kappa\}$ is represented by the ball around the origin, and the contour sets of $SSR(b)$  are depicted as ellipses. In this illustration, the OLS estimates correspond to the point at the center of the ellipses, whereas the ridge estimates are represented by the point on the circle where the outer-contour is tangent. This illustration shows that the ridge estimator effectively shrinks the OLS estimate $b_1$ toward zero. 
 
-```{python}
-#| warning: false
-#| message: false
-#| fig-cap: The ridge regression constrained minimization problem
-#| label: fig-f21-1
-# The ridge regression constrained minimization problem
-# Parameters for plotting
-x = np.arange(-1, 1.001, 0.001)
-y = np.sqrt(1 - x**2)  # Circle boundary for Lasso constraint
-beta_ols = np.array([3/2, 3/4])  # OLS estimates
-phi = -np.pi / 8  # Rotation angle for ellipses
-a = 1.44  # Semi-major axis length for ellipses
-b = a / 4  # Semi-minor axis length for ellipses
-
-# Create the figure
-plt.figure(figsize=(6, 5))
-plt.fill_between(x, y, -y, color='gray', alpha=0.5, label="Lasso Constraint Region")  # Lasso constraint area
-plt.axis('off')  # Turn off axis labels and ticks for clean visualization
-
-# Axes arrows
-plt.arrow(-2, 0, 5.75, 0, head_width=0.1, head_length=0.2, fc='grey', ec='grey')  # X-axis
-plt.arrow(0, -1.25, 0, 3.75, head_width=0.1, head_length=0.2, fc='grey', ec='grey')  # Y-axis
-
-# Labels for axes
-plt.text(3.7, -0.25, r'$b_1$', fontsize=12)  # X-axis label
-plt.text(0.1, 2.3, r'$b_2$', fontsize=12)  # Y-axis label
-
-# Scatter plot for OLS estimate and annotation
-plt.scatter(beta_ols[0], beta_ols[1], color='black', s=10, label="OLS Estimate")
-plt.text(1.62, 0.6, "OLS", fontsize=10)
-
-# Function to generate ellipse points
-def ellipse(a, b, center, phi, n=1024):
-    t = np.linspace(0, 2 * np.pi, n)
-    x = center[0] + a * np.cos(t) * np.cos(phi) - b * np.sin(t) * np.sin(phi)
-    y = center[1] + a * np.cos(t) * np.sin(phi) + b * np.sin(t) * np.cos(phi)
-    return x, y
-
-# Plot ellipses around OLS estimate at different scales
-for scale in [1, 0.5, 0.75]:
-    a_scaled = a * scale
-    b_scaled = b * scale
-    x_ellipse, y_ellipse = ellipse(a_scaled, b_scaled, beta_ols, phi)
-    plt.plot(x_ellipse, y_ellipse, color='steelblue')
-
-# Ridge estimates and annotations
-ridge_estimate = np.array([0.5, 0.85])  
-plt.scatter(ridge_estimate[0], ridge_estimate[1], color='black', s=10)
-plt.text(0.2, 0.1, "Ridge Estimates", fontsize=10)
-plt.arrow(0.45, 0.3, 0.055, 0.37, head_width=0.05, head_length=0.1)
-
-# Annotation for constraint region
-plt.text(1.15, -1, r'$b_1^2 + b_2^2 \leq \kappa$', fontsize=10)  
-plt.arrow(1, -1, -0.25, 0.25, head_width=0.05, head_length=0.1) 
-
-# OLS estimates and annotation
-plt.text(1.3, 1.7, "OLS Estimates", fontsize=10)
-plt.arrow(1.85, 1.55, -0.25, -0.7, head_width=0.05, head_length=0.1)
-
-# Scatter the origin to mark (0,0) point
-plt.scatter(0, 0, color='black', s=10)
-
-# Show the plot
-plt.show()
-
-```
+![The ridge regression constrained minimization problem](figures/ridge_estimator.png){#fig-f23-1 width=500px}
 
 We can use calculus to get a closed-form expression for the ridge estimator. See @sec-RidgeOLSconnect for the derivation details. When the regressors are uncorrelated, we can derive the ridge estimator as
 $$
@@ -352,69 +272,9 @@ $$
 $$
 where $\lambda_L$ is the Lagrangian multiplier. 
 
-This representation of the Lasso minimization problem is useful to produce a graphical representation for further insight. Following @Hansen2022, we illustrate the constrained minimization problem through the following code chunk, which generates @fig-fig21-2. In this figure, the constraint set $\{(b_1,b_2):|b_1|+|b_2|<\kappa\}$ is represented by the diamond-shaped area centered on the origin, while the contour sets of $SSR(b)$  are depicted as ellipses. In this illustration, the OLS estimates correspond to the point at the center of the ellipses, whereas the Lasso estimates are represented by the point at the intersection of the constraint set and the outer-contour. This demonstrates that the Lasso estimator effectively set the estimate of $b_1$ to zero.
+This representation of the Lasso minimization problem is useful to produce a graphical representation for further insight. We illustrate the constrained minimization problem through @fig-fig23-2. In this figure, the constraint set $\{(b_1,b_2):|b_1|+|b_2|<\kappa\}$ is represented by the diamond-shaped area centered on the origin, while the contour sets of $SSR(b)$  are depicted as ellipses. In this illustration, the OLS estimates correspond to the point at the center of the ellipses, whereas the Lasso estimates are represented by the point at the intersection of the constraint set and the outer-contour. This demonstrates that the Lasso estimator effectively set the estimate of $b_1$ to zero.
 
-
-```{python}
-#| warning: false
-#| message: false
-#| fig-cap: The Lasso constrained minimization problem
-#| label: fig-fig21-2
-# The Lasso constrained minimization problem
-# Function to generate an ellipse
-def ellipse(a, b, beta, phi, num_points=1000):
-    t = np.linspace(0, 2 * np.pi, num_points)
-    x = a * np.cos(t)
-    y = b * np.sin(t)
-    # Rotation matrix for angle phi
-    R = np.array([[np.cos(phi), -np.sin(phi)], [np.sin(phi), np.cos(phi)]])
-    xy = np.dot(R, np.array([x, y]))
-    return xy[0] + beta[0], xy[1] + beta[1]
-
-# Constants
-kappa = 0.8
-x = np.arange(-kappa, kappa, 0.001)
-ay = kappa - np.abs(x)
-beta = np.array([3/2, 3/4])  # OLS estimates
-phi = -np.pi / 8  # Rotation angle for ellipses
-a = 1.44  # Semi-major axis of the ellipse
-b = a / 4  # Semi-minor axis
-
-# Plotting
-plt.figure(figsize=(6, 5))
-plt.xlim(-1, 5)
-plt.ylim(-1.8, 2.75)
-plt.fill_between(x, ay, -ay, color='lightgrey')  # Lasso constraint region
-
-# Axes arrows
-plt.arrow(-2, 0, 5.5, 0, head_width=0.1, head_length=0.1, fc='grey', ec='grey')  # x-axis
-plt.arrow(0, -1.05, 0, 3.55, head_width=0.1, head_length=0.1, fc='grey', ec='grey')  # y-axis
-
-# Labels
-plt.text(3.5, -0.2, r'$b_1$', fontsize=12)  # x-axis label
-plt.text(0.2, 2.3, r'$b_2$', fontsize=12)  # y-axis label
-plt.scatter(beta[0], beta[1], color='black', s=6)  # OLS point
-plt.text(1.6, 0.7, "OLS", fontsize=10)  # OLS label
-
-# Plot multiple ellipses
-for scale in [1, 0.6, 1.75]:  # Different scales for the ellipses
-    a_scaled = a * scale
-    b_scaled = b * scale
-    x_ellipse, y_ellipse = ellipse(a_scaled, b_scaled, beta, phi)
-    plt.plot(x_ellipse, y_ellipse, color='steelblue')
-
-# Additional annotations
-plt.text(1.05, -1, r'$|b_1| + |b_2| \leq \kappa$', fontsize=10)  # Lasso constraint label
-plt.arrow(0.9, -1, -0.4, 0.6, head_width=0.1, head_length=0.1)  # Arrow pointing to Lasso constraint
-plt.scatter(0, kappa, color='black', s=7)  # Lasso estimate point
-plt.text(-2, 0.9, "Lasso Estimates", fontsize=10)  # Lasso estimates label
-plt.arrow(-0.5, 0.9, 0.4, -0.1, head_width=0.1, head_length=0.1)  # Arrow pointing to Lasso estimates
-plt.text(1.35, 1.8, "OLS Estimates", fontsize=10)  # OLS estimates label
-plt.arrow(1.8, 1.7, -0.2, -0.8, head_width=0.1, head_length=0.1)  # Arrow pointing to OLS estimates
-
-plt.axis('off')  # Turn off the axis
-plt.show()
-```
+![The Lasso constrained minimization problem](figures/lasso_estimator.png){#fig-fig23-2 width=500px}
 
 The ridge and Lasso estimators exhibit different behaviors when the OLS estimates are large. For large coefficient values, the ridge penalty surpasses the Lasso penalty. Consequently, when the OLS estimate is large, the Lasso estimator shrinks it less than the ridge estimator. Conversely, when the OLS estimate is small, the Lasso estimator can shrink it more than the ridge estimator, and in some cases, even to 0. 
 
@@ -440,66 +300,15 @@ The general idea behind the principal components (PC) method is to reduce the hi
 - The linear combination weights for the third principal component are chosen to maximize its variance, under the constraint that it is uncorrelated with the first two principal components and that its sum of squared weights equals one.
 - The linear combination weights for the remaining principal components are chosen in the same manner.
 
-Suppose that $\bs{X} = (X_1, X_2)$, where $X_1 \sim N(0,1)$, $X_2 \sim N(0,1)$, and $\rho=\corr(X_1, X_2) = 0.7$. The first principal component is the weighted average $PC_1 = w_1X_1 + w_2X_2$, with maximum variance, where $w_1$ and $w_2$ are the principal component weights that satisfy $w_1^2 + w_2^2 = 1$. As illustrated in @fig-fig21-3, the first principal component lies along the $45^\circ$ line because the spread of both variables is largest in that direction. Thus, the weights of the first principal component are equal: $w_1 = w_2 = 1/\sqrt{2}$, and $PC_1 = (X_1 + X_2)/\sqrt{2}$.
+Suppose that $\bs{X} = (X_1, X_2)$, where $X_1 \sim N(0,1)$, $X_2 \sim N(0,1)$, and $\rho=\corr(X_1, X_2) = 0.7$. The first principal component is the weighted average $PC_1 = w_1X_1 + w_2X_2$, with maximum variance, where $w_1$ and $w_2$ are the principal component weights that satisfy $w_1^2 + w_2^2 = 1$. As illustrated in @fig-fig23-3, the first principal component lies along the $45^\circ$ line because the spread of both variables is largest in that direction. Thus, the weights of the first principal component are equal: $w_1 = w_2 = 1/\sqrt{2}$, and $PC_1 = (X_1 + X_2)/\sqrt{2}$.
 
-The weights for the second principal component are either $w_1 = 1/\sqrt{2}$ and $w_2 = -1/\sqrt{2}$ or $w_1 = -1/\sqrt{2}$ and $w_2 = 1/\sqrt{2}$. In either case, $\cov(PC_1, PC_2) = 0$. Suppose $PC_2 = (X_1 - X_2)/\sqrt{2}$ as illustrated in @fig-fig21-3.
+The weights for the second principal component are either $w_1 = 1/\sqrt{2}$ and $w_2 = -1/\sqrt{2}$ or $w_1 = -1/\sqrt{2}$ and $w_2 = 1/\sqrt{2}$. In either case, $\cov(PC_1, PC_2) = 0$. Suppose $PC_2 = (X_1 - X_2)/\sqrt{2}$ as illustrated in @fig-fig23-3.
 
 Using these weights and the fact that $\var(PC_1) = w_1^2 \var(X_1) + w_2^2 \var(X_2) + 2\rho w_1 w_2$, the variances of the two principal components are $\var(PC_1) = 1 + \rho$ and $\var(PC_2) = 1 - \rho$. Hence, we have the following equality: $\var(PC_1) + \var(PC_2) = \var(X_1) + \var(X_2)$.
 
 This provides an $R^2$ interpretation of principal components. The fraction of the total variance explained by the first principal component is $\var(PC_1)/[\var(X_1) + \var(X_2)]$, while the fraction explained by the second principal component is $\var(PC_2)/[\var(X_1) + \var(X_2)]$. Since $\rho=0.7$, the first principal component explains $(1 + \rho)/2 = 85\%$ of the variance of $\bs{X}$, while the second principal component explains the remaining $(1 - \rho)/2 = 15\%$ of the variance of $\bs{X}$. 
 
-```{python}
-#| fig-cap: Scatterplot and principal components
-#| label: fig-fig21-3
-# Scatterplot and principal components
-# Covariance and correlation parameters
-mean = [0, 0]
-cov_matrix = [[1, 0.7], [0.7, 1]]
-
-# Generate 100 observations of X1 and X2
-np.random.seed(124)
-X = np.random.multivariate_normal(mean, cov_matrix, 200)
-X1 = X[:, 0]
-X2 = X[:, 1]
-
-# Create scatter plot of X1 vs X2
-plt.style.use('seaborn-v0_8-darkgrid')
-plt.figure(figsize=(5, 5))
-plt.scatter(X1, X2, color='steelblue', s=15)
-
-# Plot the line X2 = -X1
-x_vals = np.linspace(min(X1)+1, max(X1)-1, 100)
-plt.plot(x_vals, -x_vals, color='black', linestyle='-',linewidth=1.5)
-pdf_vals = stats.norm.pdf(x_vals, scale=0.6, loc=0)  
-plt.plot(x_vals, -x_vals + pdf_vals, color='black', linewidth=2)
-
-# # Plot the line X2 = X1
-x_vals = np.linspace(min(X1)+0.8, max(X1)-0.8, 100)
-plt.plot(x_vals, x_vals, color='steelblue', linestyle='-', linewidth=1.5)
-pdf_vals = stats.norm.pdf(x_vals, scale=0.6, loc=0)  
-plt.plot(x_vals, x_vals + pdf_vals, color='steelblue', linewidth=2)
-# Plot a bell-shaped distribution along X_2 = -X_1
-
-# Add annotation for PC1
-plt.text(1.5, 2, r'$PC_1 = \frac{X_1 + X_2}{\sqrt{2}}$', fontsize=12, color='steelblue', rotation=0)
-
-# Add annotation for PC2 
-plt.text(-1.9, 0.7, r'$PC_2 = \frac{X_1 - X_2}{\sqrt{2}}$', fontsize=12, color='black', rotation=0)
-
-# Add axis lines through the origin
-plt.axhline(0, color='gray', linewidth=1)
-plt.axvline(0, color='gray', linewidth=1)
-
-# Remove default axes
-plt.axis('off')  # Turn off the axis
-# Add annotation for X_1 on the horizontal axis
-plt.text(1.9, -0.2, r'$X_1$', fontsize=12, color='black')
-plt.text(-0.2, 1.9, r'$X_2$', fontsize=12, color='black')
-# Adding labels and legend
-plt.xlim(-2, 2)
-plt.ylim(-2, 2)
-plt.show()
-```
+![Scatterplot and principal components](figures/pca23.png){#fig-fig23-3 width=500px}
 
 When $k>2$, we can resort to the linear algebra methods to derive principal components. Let $PC_j$ be the $j$th principal component and let $\bs{w}_j$ denote the corresponding $k\times 1$ vector of weights, i.e., $PC_j = \bs{X}\bs{w}_j=\sum_{i=1}^kw_iX_i$. The variance of the $j$th principal component is $PC_j^{'}PC_j=\bs{w}_j^{'}\bs{X}^{'}\bs{X}\bs{w}_j$ and the sum of the squared weights is $\bs{w}_j^{'}\bs{w}_j$. Note also that $\bs{X}$ is standardized (with mean zero), $PC_j^{'}PC_j/(n-1)$ is the sample variance of the $j$th principal component.
 
@@ -584,132 +393,151 @@ Note that we again use the in-sample means and standard deviations to standardiz
 
 In this application, we replicate the results from the empirical application in Chapter 14 of @Stock2020. We use the school-level data on California school districts, which is the disaggregated version of the school district-level data heavily used in @Stock2020. In the dataset, the total number of observations is 3932 and the unit of observation is an elementary school in California in 2013.  We use fifty percent of the observations for estimation (training) and the remaining fifty percent for prediction (testing).
 
-The outcome variable is the average fifth-grade test score at the school-level (`testscore`). There are 38 distinct predictors (features) relating to school and community characteristics. In this application, we consider three cases: (i) the small case with $k=4$, (ii) the large case with $k=817$, and (iii) the very large case with $k=2065$. For the large and very large cases, we generate additional regressors from the original variables through transformations. For example, in the large case, the 817 predictors are generated as follows: 38 from the original variables, 38 from their squares, 38 from their cubes, and 703 from interactions among the original variables.
+The outcome variable is the average fifth-grade test score at the school-level (`testscore`). There are 38 distinct predictors (features) relating to school and community characteristics. In this application, we consider three cases: (i) the small case with k=4, (ii) the large case with k=817, and (iii) the very large case with k=2065. For the large and very large cases, we generate additional regressors from the original variables through transformations. For example, in the large case, the 817 predictors are generated as follows: 38 from the original variables, 38 from their squares, 38 from their cubes, and 703 from interactions among the original variables.
 
-### The small case
+## The small case
 
 The regressors for the small case include the student-teacher ratio (`str_s`), the median income of the local population (`med_income_z`), the average years of experience of teachers (`te_avgyr_s`), and the instructional expenditures per student (`exp_1000_1999_d`). 
 
 ::: {style="font-size: 80%"}
 | **Original variables** |
 |:--------|:--------|
-|School-level data on Student–teacher ratio|Median income of the local population|
-|Teachers’ average years of experience|Instructional expenditures per student|
+|Student–teacher ratio (`str_s`)|Median income of the local population (`med_income_z`)|
+|Teachers’ average years of experience (`te_avgyr_s`)|Instructional expenditures per student (`exp_1000_1999_d`)|
 : The small case {#tbl-SmallCase .striped .hover}
 :::
 
 The in-sample (training sample) and out-of-sample (testing sample) data are contained in the files `ca_school_testscore_insample.dta` and  `ca_school_testscore_outofsample.dta`, respectively.  In the following code chunk, we import the data and then construct standardized variables. The standardized variables are stored in `pred_sx`. 
 
-```{python}
-#| warning: false
-#| message: false
 
+```{r}
 # Small case: data preparation
-insample = pd.read_stata('data/ca_school_testscore_insample.dta')
-outofsample = pd.read_stata('data/ca_school_testscore_outofsample.dta')
-data = pd.concat([insample, outofsample], ignore_index=True)
+insample <- read_dta("data/ca_school_testscore_insample.dta")
+outofsample <- read_dta("data/ca_school_testscore_outofsample.dta")
+data <- bind_rows(insample, outofsample)
 
 # In-sample and out-of-sample indicators
-data['insample'] = np.arange(len(data)) < 1966
-data['outofsample'] = np.arange(len(data)) >= 1966
+data$insample <- (1:nrow(data) <= 1966)
+data$outofsample <- (1:nrow(data) > 1966)
+
+# Convert to data frame
+data <- as.data.frame(data)
 
 # Regressors in the small case
-pred_columns = ["str_s", "med_income_z", "te_avgyr_s", "exp_1000_1999_d"]
+pred_columns <- c("str_s", "med_income_z", "te_avgyr_s", "exp_1000_1999_d")
 
-# Standardize in-sample regressors
-for i in range(len(pred_columns)):
-    mean = data.loc[data['insample'], pred_columns[i]].mean()
-    std = data.loc[data['insample'], pred_columns[i]].std()    
-    data[f's_x_{i+1}'] = (data[pred_columns[i]] - mean) / std
+# Standardize regressors using in-sample means and standard deviations
+for (i in seq_along(pred_columns)) {
+    mean_val <- mean(data[data$insample, pred_columns[i]], na.rm = TRUE)
+    std_val <- sd(data[data$insample, pred_columns[i]], na.rm = TRUE)
+    data[[paste0("s_x_", i)]] <- (data[[pred_columns[i]]] - mean_val) / std_val
+}
 
 # Demean testscore
-mean_testscore = data.loc[data['insample'], 'testscore'].mean()
-data['testscore_dm'] = data['testscore'] - mean_testscore
+mean_testscore <- mean(data[data$insample, "testscore"], na.rm = TRUE)
+data$testscore_dm <- data$testscore - mean_testscore
 
 # Prepare predictors for regression
-pred_sx = data[['s_x_1', 's_x_2', 's_x_3', 's_x_4']]
+pred_sx <- c("s_x_1", "s_x_2", "s_x_3", "s_x_4")
 
-# OLS estimation
-model_std = sm.OLS(data['testscore_dm'][data['insample']], pred_sx[data['insample']]).fit()
-print(model_std.summary())
+# OLS estimation using the in-sample data
+model_std <- lm(testscore_dm ~ .,
+    data = data[data$insample, c("testscore_dm", pred_sx)]
+)
+```
+
+In @tbl-OLSsmall, we present the OLS estimation results for the small case. 
+
+```{r}
+#| tbl-cap: "The OLS estimation results for the small case"
+#| label: tbl-OLSsmall
+# Print the OLS estimation results
+modelsummary(model_std,
+    stars = TRUE,
+    fmt = 3,
+    gof_omit = "AIC|BIC|Log.Lik"
+)
 ```
 
 In the following code chunk, we first generate the in-sample and out-of-sample predicted values and then compute the prediction errors. The in-sample and out-of-sample predictions are stored in `testscore_ols`, and the prediction errors are stored in `e_ols`. Lastly, we compute the split-sample estimate of the RMSPE (the out-of-sample RMSPE estimate).
 
-```{python}
-# Calculate out-of-sample predictions and RMSPE
-data.loc[:, 'testscore_ols'] = mean_testscore + model_std.predict(pred_sx)
-data['e_ols'] = data['testscore'] - data['testscore_ols']
-data['e_ols2'] = data['e_ols'] ** 2
-small_rmse_oos_ols = np.sqrt(data.loc[data['outofsample'], 'e_ols2'].mean())
-print(f"The out-of-sample RMSPE of the OLS estimator = {small_rmse_oos_ols:.1f}")
+
+```{r}
+# Compute the in-sample and out-of-sample predictions and RMSPEs
+data$testscore_ols <- mean_testscore + predict(model_std, newdata = data[pred_sx])
+data$e_ols <- data$testscore - data$testscore_ols
+data$e_ols2 <- (data$e_ols)^2
+small_rmse_in_ols <- sqrt(mean(data$e_ols2[data$insample]))
+small_rmse_oos_ols <- sqrt(mean(data$e_ols2[data$outofsample]))
+
+# Create a data frame to store the results
+results <- data.frame(
+  Case = "Small",
+  Model = "OLS",
+  In_sample_RMSPE = round(small_rmse_in_ols, 1),
+  Out_of_sample_RMSPE = round(small_rmse_oos_ols, 1)
+)
+
+# Column names for the results table
+colnames(results) <- c("Case", "Model", "In-sample RMSPE", "Out-of-sample RMSPE")
 ```
 
-In the following code chunk, we compute the $m$-fold cross-validation estimate of the MSPE. We use the `KFold` function from the `sklearn.model_selection` module to split the dataset into $m=10$ consecutive folds (subsets) without shuffling, by default. We then use the `kf.split` method to generate indices for the training and test sets, which are denoted as `train_index` and `val_index`, respectively. We use the `mean_squared_error` function to compute the mean squared errors from each fold and then collect these measures in the `rmse_cv` list. 
+In @tbl-OLSsmallRMSPE, we present the RMSPE results for the small case. As expected, the in-sample RMSPE is smaller than the out-of-sample RMSPE.
 
-```{python}
+```{r}
+#| tbl-cap: "The RMSPE of the OLS estimator for the small case"
+#| label: tbl-OLSsmallRMSPE
+# RMSPE results for the small case
+kable(results)
+```
+
+In the following code chunk, we compute the 10-fold cross-validation estimate of the RMSPE using the `train` function from the `caret` package, which provides a more efficient way to perform cross-validation. The `trainControl` function is used to specify the type of cross-validation and the number of folds. The `train` function then fits the model and computes the RMSPE for each fold, returning the average RMSPE across all folds.
+
+```{r}
 # Compute RMSPE by the 10-fold cross-validation
-X_train = pred_sx[data['insample']]
-y_train = data.loc[data['insample'],'testscore_dm']
-kf = KFold(n_splits=10)
-rmse_cv = []
+X_train <- data[data$insample, pred_sx]
+y_train <- data[data$insample, 'testscore_dm']
 
-for train_index, val_index in kf.split(X_train):
-    X_train_fold, X_val_fold = X_train.iloc[train_index], X_train.iloc[val_index]
-    y_train_fold, y_val_fold = y_train.iloc[train_index], y_train.iloc[val_index]
-    #
-    model_std = sm.OLS(y_train_fold, X_train_fold).fit()
-    y_pred_fold = model_std.predict(X_val_fold)
-    #
-    rmse_cv.append(np.sqrt(mean_squared_error(y_val_fold, y_pred_fold)))
+train_control <- trainControl(method = "cv", number = 10)
+model <- train(X_train, y_train, method = "lm", trControl = train_control, metric = "RMSE")
 
-small_rmse_cv_in_ols = np.mean(rmse_cv)
-print(f"The 10-fold CV estimate of RMSPE = {small_rmse_cv_in_ols:.1f}")
+small_rmse_cv_in_ols <- model$results$RMSE
+results$RMSPE_CV <- round(small_rmse_cv_in_ols, 1)
 ```
 
-In the following code chunk, we explore an alternative approach to compute the 10-fold cross-validation estimate of the RMSPE. We use the `cross_val_score()` function from the `sklearn.model_selection` module to calculate the mean squared error for each fold. To achieve this, we first define the mean squared error as the scoring metric using the `make_scorer()` function and then pass this custom scorer to the `cross_val_score()` function.
-
-```{python}
-# Define the scoring method as negative mean squared error (MSE) since cross_val_score maximizes scores
-scoring = make_scorer(mean_squared_error, greater_is_better=False)
-
-# Perform 10-fold cross-validation
-cv_scores = cross_val_score(LinearRegression(), X_train, y_train, cv=10, scoring=scoring)
-
-# Convert negative MSE scores back to positive values
-mse_cv_scores = -cv_scores
-
-# Compute root MSE (RMSE) scores for each fold
-rmse_cv_scores = mse_cv_scores ** 0.5
-
-# Print the 10-fold cross-validation estimate of the RMSPE
-print(f"The 10-fold CV estimate of RMSPE = {rmse_cv_scores.mean():.1f}")
+```{r}
+#| tbl-cap: "The RMSPE of the OLS estimator for the small case"
+#| label: tbl-OLSsmallRMSPEcv
+# RMSPE results for the small case with 10-fold cross-validation
+kable(results)
 ```
 
-Finally, instead of using the `cross_val_score()` function, we can use `cross_val_predict()` to compute the cross-validated predictions and then calculate the mean squared error using the `mean_squared_error` function, as shown in the following code chunk.
 
-```{python}
-# Perform 10-fold cross-validation and get predictions for each fold
-y_pred = cross_val_predict(LinearRegression(), X_train, y_train, cv=10)
-
-# Compute the mean squared error (MSE) between the actual and predicted values
-mse_cv = mean_squared_error(y_train, y_pred)
-
-# Compute the root mean squared error (RMSE)
-rmse_cv = mse_cv ** 0.5
-
-# Print the 10-fold cross-validation estimate of RMSPE
-print(f"The 10-fold CV estimate of RMSPE = {rmse_cv:.1f}")
-```
-
-```{python}
+```{r}
 # Remove data
-del data
+rm(data)
 ```
 
-### The large case
+## The large case
+In the large case (k=817), the main variables additionally include the following: 
 
-In the large case, the main predictors additionally include the fraction of students eligible for free or reduced-price lunch, ethnicity variables (8), the fraction of students eligible for free lunch, the number of teachers, the fraction of English learners, the fraction of first-year teachers, the fraction of second-year teachers, the part-time ratio (number of teachers divided by teacher full-time equivalents), per-student expenditure by category at the district level (7), per-student expenditure by type at the district level (5), the number of enrolled students, per-student revenues by revenue source at the district level (4), the fraction of English-language proficient students, the ethnic diversity index, and per-student revenues by revenue source at the district level (4). These variables are provided in @tbl-LargeCase. In the last panel of @tbl-LargeCase, we show how k=817 predictors are generated from the main variables. 
+* the fraction of students eligible for free or reduced-price lunch, 
+* ethnicity variables (8), 
+* the fraction of students eligible for free lunch, 
+* the number of teachers, 
+* the fraction of English learners, 
+* the fraction of first-year teachers, 
+* the fraction of second-year teachers, 
+* the part-time ratio (number of teachers divided by teacher full-time equivalents), 
+* per-student expenditure by category at the district level (7), 
+* per-student expenditure by type at the district level (5), 
+* the number of enrolled students, 
+* per-student revenues by revenue source at the district level (4), 
+* the fraction of English-language proficient students, 
+* the ethnic diversity index, and 
+* per-student revenues by revenue source at the district level (4). 
+
+These variables are provided in @tbl-LargeCase. In the last panel of @tbl-LargeCase, we show how k=817 predictors are generated from the main variables. 
 
 ::: {style="font-size: 80%"}
 | **Original variables** |
@@ -723,27 +551,28 @@ In the large case, the main predictors additionally include the fraction of stud
 |Student–teacher ratio|Per-student revenues by revenue source, district level (4)|
 |Number of enrolled students|Fraction of English-language proficient students|
 |Ethnic diversity index||
-|**Technical (constructed) regressors** |
+| <span style="color:steelblue">**Technical (constructed) regressors**</span> |
 |Squares of main variables (38)|Cubes of main variables (38) |
 |All interactions of main variables: (38*37)/2 = 703|Total number of predictors: k = 38 + 38 + 38 + 703 = 817 |
 : The large case {#tbl-LargeCase .striped .hover}
 :::
 
-In the following code chunk, the `pred_columns` list includes the names of the original variables given in @tbl-LargeCase.
+In the following code chunk, the `pred_columns` vector includes the names of the original variables given in @tbl-LargeCase.
 
-```{python}
-#| warning: false
-#| message: false
 
+```{r}
 # Large case: data preparation
-data = pd.concat([insample, outofsample], ignore_index=True)
+data <- bind_rows(insample, outofsample)
 
 # In-sample and out-of-sample indicators
-data['insample'] = np.arange(len(data)) < 1966
-data['outofsample'] = np.arange(len(data)) >= 1966
+data$insample <- (1:nrow(data) <= 1966)
+data$outofsample <- (1:nrow(data) > 1966)
+
+# Convert to data frame
+data <- as.data.frame(data)
 
 # Define predictors
-pred_columns = [
+pred_columns <- c(
     "str_s", "med_income_z", "te_avgyr_s", "exp_1000_1999_d", "frpm_frac_s", 
     "ell_frac_s", "freem_frac_s", "enrollment_s", "fep_frac_s", "edi_s", 
     "re_aian_frac_s", "re_asian_frac_s", "re_baa_frac_s", "re_fil_frac_s", 
@@ -754,438 +583,496 @@ pred_columns = [
     "expoc_2000_2999_d", "expoc_3000_3999_d", "expoc_4000_4999_d", 
     "expoc_5000_5999_d", "revoc_8010_8099_d", "revoc_8100_8299_d", 
     "revoc_8300_8599_d", "revoc_8600_8799_d"
-]
+)
 ```
 
-In addition to the 38 variables in the `pred_columns` list, we also consider their squares, cubes, and interactions, resulting in 816 distinct predictors. In the following code chunk, we generate these variables along with their standardized versions.
+In addition to the 38 variables in the `pred_columns` vector, we also consider their squares, cubes, and interactions, resulting in 816 distinct predictors. In the following code chunk, we generate these variables along with their standardized versions.
 
-```{python}
+```{r}
 # Standardize
-for i in range(len(pred_columns)):
-    mean = data.loc[data['insample'], pred_columns[i]].mean()
-    std = data.loc[data['insample'], pred_columns[i]].std()    
-    data[f'sS_x_{i+1}'] = (data[pred_columns[i]] - mean) / std
-
+for (i in seq_along(pred_columns)) {
+    mean_val <- mean(data[data$insample, pred_columns[i]], na.rm = TRUE)
+    std_val <- sd(data[data$insample, pred_columns[i]], na.rm = TRUE)
+    data[[paste0('sS_x_', i)]] <- (data[[pred_columns[i]]] - mean_val) / std_val
+}
+	
 # Create interactions and squared terms
-for i in range(len(pred_columns)):
-    for j in range(i, len(pred_columns)):
-        tmp = data.loc[:, pred_columns[i]].copy()*data.loc[:, pred_columns[j]].copy()
-        mean = tmp.loc[data['insample']].mean()
-        std = tmp.loc[data['insample']].std()
-        tmp = (tmp - mean) / std
-        data[f'sS_xx_{i+1}_{j+1}'] = tmp
+for (i in seq_along(pred_columns)) {
+    for (j in i:length(pred_columns)) {
+        tmp <- data[[pred_columns[i]]] * data[[pred_columns[j]]]
+        mean_val <- mean(tmp[data$insample], na.rm = TRUE)
+        std_val <- sd(tmp[data$insample], na.rm = TRUE)
+        data[[paste0('sS_xx_', i, '_', j)]] <- (tmp - mean_val) / std_val
+    }
+}
 
 # Create cubes
-for i in range(len(pred_columns)):
-    tmp = data.loc[:, pred_columns[i]].copy() ** 3
-    mean = tmp.loc[data['insample']].mean()
-    std = tmp.loc[data['insample']].std()
-    tmp = (tmp - mean) / std    
-    data[f'sS_xxx_{i+1}'] = tmp
-        
+for (i in seq_along(pred_columns)) {
+    tmp <- data[[pred_columns[i]]] ^ 3
+    mean_val <- mean(tmp[data$insample], na.rm = TRUE)
+    std_val <- sd(tmp[data$insample], na.rm = TRUE)
+    data[[paste0('sS_xxx_', i)]] <- (tmp - mean_val) / std_val
+}
+
 # Demeaned testscore
-mean_testscore = data.loc[data['insample'], 'testscore'].mean()
-data['testscore_dm'] = data['testscore'] - mean_testscore        
-        
+mean_testscore <- mean(data[data$insample, 'testscore'], na.rm = TRUE)
+data$testscore_dm <- data$testscore - mean_testscore
+
 # Drop collinear variables
-data.drop(columns='sS_xx_1_19', inplace=True, errors='ignore')        
-        
+data$sS_xx_1_19 <- NULL
+
 # Prepare data for regression
-X_train = data.filter(like='sS_x').loc[data['insample']]
-y_train = data['testscore_dm'].loc[data['insample']]         
+X_train <- data[data$insample, grep('sS_x', names(data))]
+y_train <- data$testscore_dm[data$insample]
 ```
 
-In the following code chunk, we perform the OLS estimation and compute the split-sample estimate of the MSPE (the out-of-sample MSPE estimate).
+### OLS regression
+In the following code chunk, we perform the OLS estimation and compute the split-sample estimate of the RMSPE (the in-sample and out-of-sample RMSPE estimates).
 
-```{python}
-# Predictive regression model: OLS estimation
-model_std = sm.OLS(y_train, X_train).fit()        
-data.loc[:, 'testscore_ols'] = mean_testscore + model_std.predict(data.filter(like='sS_x')) 
+```{r}
+# Select the in-sample data and the relevant columns for OLS estimation
+df_std <- data[data$insample, ]
+df_std <- df_std[, c("testscore_dm", grep("^sS_x", names(df_std), value = TRUE))]
 
-# Calculate out-of-sample errors and RMSPE
-data['e_ols'] = data['testscore'] - data['testscore_ols']
-data['e_ols2'] = data['e_ols'] ** 2
-large_rmse_oos_ols = np.sqrt(data.loc[data['outofsample'], 'e_ols2'].mean())
-print(f"The out-of-sample RMSPE of the OLS estimator = {large_rmse_oos_ols:.1f}")  
+model_std <- lm(testscore_dm ~ ., data = df_std)
+
+data$testscore_ols <- mean_testscore + predict(model_std, newdata = data[grep('sS_x', names(data))])
+
+# Compute the in-sample and out-of-sample errors and RMSPEs
+data$e_ols <- data$testscore - data$testscore_ols
+data$e_ols2 <- data$e_ols ^ 2
+large_rmse_in_ols <- sqrt(mean(data$e_ols2[data$insample]))
+large_rmse_oos_ols <- sqrt(mean(data$e_ols2[data$outofsample]))
 ```
 
-Next, we compute the 10-fold cross-validation estimate of the MSPE in the following code chunk. Note that our results will differ from those of @Stock2020 because we will not further standardize the regressors or demean the outcome variable at each fold of the cross-validation.
+Next, we compute the 10-fold cross-validation estimate of the RMSPE in the following code chunk.
 
-```{python}     
-#| eval: false        
-# Compute 10-fold CV estimate of the RMSPE
-kf = KFold(n_splits=10)
-rmse_cv = []
-
-for train_index, val_index in kf.split(X_train):
-    X_train_fold, X_val_fold = X_train.iloc[train_index], X_train.iloc[val_index]
-    y_train_fold, y_val_fold = y_train.iloc[train_index], y_train.iloc[val_index]
-    #
-    model_std = sm.OLS(y_train_fold, X_train_fold).fit()
-    y_pred_fold = model_std.predict(X_val_fold)
-    #
-    rmse_cv.append(np.sqrt(mean_squared_error(y_val_fold, y_pred_fold)))
-
-large_rmse_cv_in_ols = np.mean(rmse_cv)
-filename = 'OLSinMSPE_large_model.sav'
-pickle.dump(large_rmse_cv_in_ols, open(filename, 'wb'))
+```{r}
+# Compute 10-fold CV estimate of the RMSPE using caret package
+train_control <- trainControl(method = "cv", number = 10)
+model <- train(X_train, y_train, method = "lm", trControl = train_control, metric = "RMSE")
+large_rmse_cv_in_ols <- model$results$RMSE
 ```
 
-```{python}   
-filename = 'OLSinMSPE_large_model.sav'
-large_rmse_cv_in_ols = pickle.load(open(filename,"rb"))
-print(f"The 10-fold CV estimate of RMSPE in the large case = {large_rmse_cv_in_ols:.1f}")   
-```
+In @tbl-OLSlargeRMSPE, we present the RMSPE results for the large case. As expected, the in-sample RMSPE is smaller than both the out-of-sample RMSPE and the 10-fold cross-validation RMSPE. These results suggest that the OLS estimator is overfitting the in-sample data, which leads to a large out-of-sample RMSPE estimate. 
 
-In the following code chunk, similar to the small case, we can use the `cross_val_predict()` function to compute the 10-fold cross-validation estimate of the MSPE in an alternative way. 
-
-```{python}
-#| eval: false
-# Perform 10-fold cross-validation and get predictions for each fold
-y_pred = cross_val_predict(LinearRegression(), X_train, y_train, cv=10)
-
-# Compute the mean squared error (MSE) between the actual and predicted values
-mse_cv = mean_squared_error(y_train, y_pred)
-
-# Compute the root mean squared error (RMSE)
-rmse_cv = mse_cv ** 0.5
-
-# Print the 10-fold cross-validation estimate of RMSPE
-print(f"The 10-fold CV estimate of RMSPE for the large case = {rmse_cv:.1f}")
-```
-
-Next, we consider the principal component analysis for the large case. In the following, we first use the 10-fold cross-validation method to choose the number of principal components $p$. We create the workflow with `pipe = Pipeline([('pca', pca), ('linreg', linreg)])`, where principal component analysis is applied before fitting the linear regression model. We then define the grid of principal components using `p_grid = {'pca__n_components': range(1, 60)}` and pass the `pipe` and `p_grid` to the `GridSearchCV` function.  Finally, we use the `grid.fit` method for searching the number of principal components that minimizes the 10-fold cross-validation estimate of the MSPE. The 10-fold cross-validation estimate of the MSPE is minimized when $p=51$.
-
-```{python}
-#| eval: false
-# Step 1: Initialize PCA and Linear Regression
-pca = PCA()
-linreg = LinearRegression(fit_intercept=False)
-
-# Step 2: Create a pipeline combining PCA and Linear Regression
-pipeline = Pipeline([
-    ('pca', pca),
-    ('linreg', linreg)
-])
-
-# Step 3: Define the parameter grid for PCA components
-p_grid = {'pca__n_components': range(1, 60)}
-
-# Step 4: Configure GridSearchCV for hyperparameter tuning
-grid = GridSearchCV(
-    estimator=pipeline,
-    param_grid=p_grid,
-    cv=10,
-    scoring='neg_mean_squared_error',
-    verbose=1,  # Optional: Set to 1 for detailed output during fitting
-    n_jobs=-1   # Optional: Use all available cores for faster computation
+```{r}
+# Collect results in a data frame
+results_large <- data.frame(
+  Case = "Large",
+  Model = "OLS",
+  In_sample_RMSPE = round(large_rmse_in_ols, 1),
+  Out_of_sample_RMSPE = round(large_rmse_oos_ols, 1),
+  RMSPE_CV = round(large_rmse_cv_in_ols, 1)
 )
-
-# Step 5: Fit the model on the training data
-grid.fit(X_train, y_train)
-
-# Step 6: Retrieve the best number of components and score
-best_n_components = grid.best_params_['pca__n_components']
-best_score = -grid.best_score_  # Convert to positive MSE
-
-print(f"The optimal number of PCA components is: {best_n_components}")
-print(f"The best 10-fold cross-validated MSE is: {best_score:.1f}")
-
-# Save results
-filename = 'No_pc_large_model.sav'
-pickle.dump([grid, p_grid], open(filename, 'wb'))
+# Column names for the results table
+colnames(results_large) <- c("Case", "Model", "In-sample RMSPE", "Out-of-sample RMSPE", "RMSPE-CV")
 ```
 
-```{python}
-# Load results
-filename = 'No_pc_large_model.sav'
-grid = pickle.load(open(filename,"rb"))[0]
-p_grid = pickle.load(open(filename,"rb"))[1]
-
-# Retrieve the best number of components and score
-best_n_components = grid.best_params_['pca__n_components']
-best_score = np.sqrt(-grid.best_score_ ) # Convert to positive MSE
-
-print(f"The optimal number of PCA components: {best_n_components}")
-print(f"The best 10-fold cross-validated RMSPE: {best_score:.1f}")
+```{r}
+#| tbl-cap: "The RMSPE of the OLS estimator for the large case"
+#| label: tbl-OLSlargeRMSPE
+# RMSPE results for the large case
+kable(results_large)
 ```
 
-In @fig-fig21-4, we plot the 10-fold cross-validation estimate of the MSPE based on the principal component regression in @eq-eq21-pc against the number of principal components used as regressors. The figure shows a significant decline in the MSPE as the number of principal components used as predictors increases. However, after p=30 principal components, the MSPE becomes flat without any further significant decrease. 
-```{python}
-#| fig-cap: The MSPE as a function of the number of principal components p used as predictors
-#| label: fig-fig21-4
-# Plot of MSPE versus number of components
-pcr_fig , ax = plt.subplots(figsize = (6,4))
-n_comp = p_grid['pca__n_components']
-ax.plot(n_comp , -grid.cv_results_['mean_test_score'])
-ax.set_ylabel('The 10-fold cross-validation estimate of MSPE')
-ax.set_xlabel('Number of principal components (p)')
-plt.show()
+
+### Ridge regression
+
+We use the `glmnet` package for estimating the ridge and lasso regressions (see [glmnet - vignette](https://glmnet.stanford.edu/)). The main estimation function in this package is the `glmnet` function. This function has slightly different syntax from the `lm` function. In particular, we cannot use the syntax `y~x` to specify the estimation equation. Also, `y` should be a vector and `x` should be a matrix. The function has the `alpha` argument for specifying the penalty functions:
+
+  - In the `glmnet` and `cv.glmnet` functions, the penalty term is $\lambda \times \left[\alpha \left(\sum_{j=1}^k |b_j|\right) + (1-\alpha)\left(\sum_{j=1}^k b_j^2\right)\right]$
+  - For the ridge regression, we need to set `alpha=0`.
+  - For the lasso regression, we need to set `alpha=1`.
+
+The following code can be used to estimate a ridge regression for a grid of $\lambda$ values.
+
+```{r}
+large_ridge_mod <- glmnet(X_train,
+                    y_train,
+                    alpha = 0, 
+                    nlambda = 100,
+                    standardize = FALSE,
+                    intercept = FALSE)
 ```
 
-In the following code chunk, we follow @Stock2020 to further standardize the regressors and demean the outcome variable at each fold of the cross-validation. This code chunk produces $p=46$ as in @Stock2020.
+The `glmnet` function estimates the model over a sequence of $\lambda$ values. The argument `nlambda = 100` shows the length of the sequence. We can also supply a user defined sequence (grid) for $\lambda$. For example, we can set `grid = 10^seq(10, -2, length = 100)` and use the argument `lambda=grid` in the `glmnet` function. In this way, we can estimate the ridge regression over a grid of $\lambda$ values ranging from  $\lambda=10^{10}$ to $\lambda=10^{-2}$. 
 
-```{python}
+Associated with each value of $\lambda$, we have a vector of ridge regression coefficients, stored in a matrix that can be accessed by the `coef` function. In this case, it is a  $817\times100$ matrix, with $817$ rows (one for each predictor, plus an intercept) and $100$ columns (one for each value of  $\lambda$). The first $5$ coefficients corresponding to the first five $\lambda$ values can be returned in the following way.
+
+
+```{r}
+# Dimensions of the coefficient matrix
+dim(coef(large_ridge_mod))
+
+# First 5 coefficients for the first 5 lambda values
+coef(large_ridge_mod)[1:5, 1:5]
+```
+
+The `s0-s4` denotes the lambda values. We can plot the estimated coefficients by using the `plot` function. @fig-chapter23-f4 shows the estimated coefficients against the $\log(\lambda)$ values. As expected, the estimated coefficients approach zero as $\log(\lambda)$ increases. 
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| label: fig-chapter23-f4
+#| fig-cap: Estimated coefficients against logarithm of lambda
+plot(large_ridge_mod,
+     xvar = "lambda") 
+```
+
+As in the case of the `lm` function, we can use the `predict` function to get the coefficients for any given value of $\lambda$. The following code returns the first five estimated coefficients when $\lambda=50$.
+
+```{r}
+predict(large_ridge_mod, s = 50, type = "coefficients")[1:5, ]
+```
+
+
+We can determine the optimal $\lambda$ value by using the m-fold cross-validation method. We can do this using the built-in cross-validation function `cv.glmnet`. By default, the function performs 10-fold cross-validation, though this can be changed using the argument `folds`. Note that we set a random seed first so our results will be reproducible, since the choice of the cross-validation folds is random.
+
+```{r}
 #| eval: false
-# Initialize 10-fold cross-validation and other parameters
-kf = KFold(n_splits=10)
-pmin, pmax = 1, 60
-tmp = np.empty((10, len(range(pmin,pmax+1))))
-# Perform cross-validation
-for i, (train_index, val_index) in enumerate(kf.split(X_train)):
-    # Split data into training and validation sets
-    X_train_fold, X_val_fold = X_train.iloc[train_index], X_train.iloc[val_index]
-    y_train_fold, y_val_fold = y_train.iloc[train_index], y_train.iloc[val_index]
-    # Standardize the features in X_train_fold
-    for j in range(X_train_fold.shape[1]):
-        mean = X_train_fold.iloc[:, j].mean()
-        std = X_train_fold.iloc[:, j].std()
-        X_train_fold.iloc[:, j] = (X_train_fold.iloc[:, j] - mean)/std
-        X_val_fold.iloc[:, j] = (X_val_fold.iloc[:, j] - mean)/std
-    
-    # Center the target variable
-    ym = y_train_fold.mean()
-    y_train_fold = y_train_fold - ym
-    
-    # Apply PCA to the training fold     
-    pca = PCA(n_components=pmax)
-    pca.fit(X_train_fold)
-    pcs = pca.transform(X_train_fold)
-    poos = pca.transform(X_val_fold)
-    # Fit regression models with increasing number of PCs and calculate MSPE
-    for n_comp in range(pmin,pmax+1):
-        model_pc = sm.OLS(y_train_fold, pcs[:,:n_comp]).fit()  
-        ssr = np.sum((y_val_fold - (ym + model_pc.predict(poos[:,:n_comp]))) ** 2)  
-        tmp[i,n_comp-pmin] = ssr
-
-# Calculate root mean squared prediction error (RMSPE) across all folds
-tmp = np.sqrt(np.sum(tmp, axis=0)/len(y_train))
-pch = range(pmin,pmax+1)[np.argmin(tmp)]
-print(f"The optimal number of PCs using 10-fold MSPE = {pch}.")   
-
-# Plot RMSPE against number of principal components
-pcr_fig , ax = plt.subplots(figsize = (6,4))
-ax.plot(range(pmin,pmax+1), tmp)
-ax.set_ylabel('The 10-fold cross-validation estimate of RMSPE')
-ax.set_xlabel('Number of principal components')
-plt.show()
-```
-
-In the following code chunk, we assume that $p=51$ and compute the split-sample estimate of the MSPE. 
-
-```{python}
-#| eval: false
-# Initialize PCA with 51 components and fit to training data
-pca = PCA(n_components=51)
-pca.fit(X_train)
-# Save results
-filename = 'pc_large_model.sav'
-pickle.dump(pca, open(filename, 'wb'))
-```
-
-```{python}
-# Load results
-filename = 'pc_large_model.sav'
-pca = pickle.load(open(filename,"rb"))
-
-pcs = pca.transform(data.filter(like='sS_x')) #PCs for insample and OOS 
-model_pc = sm.OLS(y_train, pcs[data['insample'], :]).fit()        
-data.loc[:, 'testscore_pc'] = mean_testscore + model_pc.predict(pcs)            
-
-# Calculate out-of-sample errors and RMSPE
-data['e_pc'] = data['testscore'] - data['testscore_pc']
-data['e_pc2'] = data['e_pc'] ** 2
-large_rmse_in_pc = np.sqrt(data.loc[data['insample'], 'e_pc2'].mean())
-large_rmse_oos_pc = np.sqrt(data.loc[data['outofsample'], 'e_pc2'].mean())
-print(f"The out-of-sample RMSPE of PC regression in the large case = {large_rmse_oos_pc:.1f}")        
-```
-
-Alternatively, we can use the `Pipeline()` function to streamline the PCA transformation and regression fitting process as shown in the following code chunk.
-
-```{python}
-#| eval: false
-# Using Pipeline
-pipeline = Pipeline([
-    ('pca', PCA(n_components=51)),
-    ('regressor', LinearRegression())
-])
-
-# Fit the pipeline on the training data
-pipeline.fit(X_train, y_train)
-
-# Predicting and calculating RMSPE
-data['testscore_pc'] = mean_testscore + pipeline.predict(data.filter(like='sS_x'))
-data['e_pc'] = data['testscore'] - data['testscore_pc']
-data['e_pc2'] = data['e_pc'] ** 2
-large_rmse_oos_pc = np.sqrt(data.loc[data['outofsample'], 'e_pc2'].mean())
-print(f"The out-of-sample RMSPE of PC regression in the large case is {large_rmse_oos_pc}.")
-
-```
-
-In @fig-fig21-5, we provide the scree plot, showing the total variance of the 817 regressors explained by the indicated principal component. We see that the first principal component explains almost $18\%$ of the total variance of the 817 predictors.
-
-```{python}
-#| fig-cap: The scree plot for the large case
-#| label: fig-fig21-5
-# Scree plot
-fig, ax = plt.subplots(1, 1, figsize=(6, 4))
-ax.bar(np.arange(1, len(pca.explained_variance_ratio_)+1), pca.explained_variance_ratio_)
-ax.set_xlabel("Principal component number")
-ax.set_ylabel("Fraction of total variance of X explained")
-# ax.set_title('The large case')              
-plt.show()
-```
-
-Next, we implement the ridge regression using the `RidgeCV()` function from the `sklearn.linear_model` module. Note that the number of grid points for the ridge shrinkage parameter can be made finer by modifying `alphas` argument in `RidgeCV` at the expense of more computation time. 
-
-```{python}
-#| eval: false
-# Ridge, modify alphas in consideration of computation time
-large_ridge_model = RidgeCV(cv=10, fit_intercept=False, alphas=np.logspace(3,3.75,16)).fit(X_train, y_train)
-filename = 'large_ridge_model.sav'
-pickle.dump(large_ridge_model, open(filename, 'wb'))
-```
-
-```{python}
-# Load 
-filename = 'large_ridge_model.sav'
-large_ridge_model = pickle.load(open(filename,"rb"))
-
-print(f"Ridge shrinkage parameter chosen by CV in the large case = {np.rint(large_ridge_model.alpha_)}") 
-
-data.loc[:, 'testscore_ridge'] = mean_testscore + large_ridge_model.predict(data.filter(like='sS_x'))               
-
-# Calculate out-of-sample predictions errors and RMSPE
-data['e_ridge'] = data['testscore'] - data['testscore_ridge']
-data['e_ridge2'] = data['e_ridge'] ** 2
-large_rmse_in_ridge = np.sqrt(data.loc[data['insample'], 'e_ridge2'].mean())
-large_rmse_oos_ridge = np.sqrt(data.loc[data['outofsample'], 'e_ridge2'].mean())
-
-# Print the out-of-sample RMSPE
-print(f"The out-of-sample RMSPE of Ridge regression in the large case = {large_rmse_oos_ridge:.1f}")
-```
-
-Instead of the `RidgeCV` function, we may also use the `GridSearchCV()` function from the `sklearn.model_selection` module to select the shrinkage parameter. We present this approach in the following code chunk.
-
-```{python}
-#| eval: false
-# Define the Ridge model
-ridge_model = Ridge(fit_intercept=False)
-
-# Define the parameter grid for alpha
-param_grid = {'alpha': np.logspace(3, 3.75, 16)}
-
-# Set up GridSearchCV
-grid_search = GridSearchCV(ridge_model, param_grid, cv=10, scoring='neg_mean_squared_error')
-
-# Fit the model to the training data
-grid_search.fit(X_train, y_train)
-
-# Best model and alpha
-best_ridge_model = grid_search.best_estimator_
-best_alpha = grid_search.best_params_['alpha']
-
-# Calculate predictions
-data['testscore_ridge'] = mean_testscore + best_ridge_model.predict(data.filter(like='sS_x'))
-
-# Calculate out-of-sample predictions errors and RMSPE
-data['e_ridge'] = data['testscore'] - data['testscore_ridge']
-data['e_ridge2'] = data['e_ridge'] ** 2
-large_rmse_oos_ridge = np.sqrt(data.loc[data['outofsample'], 'e_ridge2'].mean())
-
-print(f"The out-of-sample RMSPE of Ridge regression = {large_rmse_oos_ridge:.1f}")
-```
-
-In the following code chunk, we implement the Lasso approach using the `LassoCV()` function from the `sklearn.linear_model` module. Note that `LassoCV()` uses 100 grid points for the shrinkage parameter and this can significantly increase computational burden in very high-dimensional exercises. You can specify `alphas` argument to modify the grid points for the shrinkage parameter. 
-
-```{python}
-#| eval: false
-# Fit the Lasso model using cross-validation
-large_lasso_model = LassoCV(cv=10, fit_intercept=False).fit(X_train, y_train)
+set.seed(17)
+large_cv_ridge <- cv.glmnet(as.matrix(X_train),
+                    as.matrix(y_train),
+                    alpha = 0, 
+                    nfolds = 10,
+                    type.measure = "mse")
 
 # Save the model to a file
-filename = 'large_lasso_model.sav'
-pickle.dump(large_lasso_model, open(filename, 'wb'))
+saveRDS(large_cv_ridge, file = 'large_cv_ridge.rds')
 ```
 
-```{python}
-# Load the model results
-filename = 'large_lasso_model.sav'
-large_lasso_model = pickle.load(open(filename,"rb"))    
+```{r}
+# Load the large_cv_ridge result
+filename <- 'large_cv_ridge.rds'
+large_cv_ridge <- readRDS(filename)
 
-# Print the chosen Lasso shrinkage parameter
-print(f"Lasso shrinkage parameter chosen by CV in the large case = {np.round(large_lasso_model.alpha_,2)}") 
+# Best lambda value
+best_lambda <- large_cv_ridge$lambda.min
+best_lambda
 
-# Calculate the predictions
-data.loc[:, 'testscore_lasso'] = mean_testscore + large_lasso_model.predict(data.filter(like='sS_x'))  
+# Average log(lambda)
+mean(log(large_cv_ridge$lambda))
 ```
 
-In @fig-fig21-6, we give the line plots of the 10-fold cross-validation estimates of MSPE against the shrinkage parameter values. 
 
-```{python}
-#| fig-cap: The MSPE in each fold in the large case
-#| label: fig-fig21-6
-# Plotting the Mean Squared Prediction Error (MSPE)        
-fig, ax = plt.subplots(1, 1, figsize=(6, 4))
-ax.semilogx(large_lasso_model.alphas_, large_lasso_model.mse_path_, linestyle=":")
-ax.plot(
-    large_lasso_model.alphas_ ,
-    large_lasso_model.mse_path_.mean(axis=-1),
-    color = "black",
-    label = "average across the folds",
-    linewidth = 2)
-ax.axvline(large_lasso_model.alpha_, linestyle="--", color="black", label="alpha: CV estimate")
-ax.set_xlabel(r'$\lambda$')
-ax.set_ylabel('MSPE')
-ax.axis('tight') 
-plt.show()             
+The optimal $\lambda$ value `r round(best_lambda, 3)` yields the smallest m-fold cross validation MSPE. We can also plot the m-fold cross validation MSPE as a function of $\lambda$. @fig-chapter23-f5 shows the plot of 10-fold cross validation MSPE against $log(\lambda)$. 
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| label: fig-chapter23-f5
+#| fig-cap: Plot of MSPE against logarithm of lambda
+plot(large_cv_ridge)
+abline(v = log(best_lambda),
+       col = "blue",
+       lwd = 2)
 ```
 
-In the following code chunk, we compute the out-of-sample MSPE estimate (the split-sample estimate of MSPE).
+Finally, we compute the in-sample and out-of-sample RMSPE values for the ridge regression.
 
-```{python}
-# Calculate out-of-sample predictions errors and RMSPE
-data['e_lasso'] = data['testscore'] - data['testscore_lasso']
-data['e_lasso2'] = data['e_lasso'] ** 2
-large_rmse_in_lasso = np.sqrt(data.loc[data['insample'], 'e_lasso2'].mean())
-large_rmse_oos_lasso = np.sqrt(data.loc[data['outofsample'], 'e_lasso2'].mean())
-print(f"The out-of-sample RMSPE of Lasso regression in the large case = {np.round(large_rmse_oos_lasso,1)}")
+```{r}
+# Predictions
+large_ridge_pred <-  predict(large_ridge_mod, s = best_lambda, newx = as.matrix(data[, grep('sS_x', names(data))]))
+
+# In-sample RMSPE
+large_rmse_in_ridge <- sqrt(mean((as.matrix(data[data$insample, "testscore_dm"]) - large_ridge_pred[data$insample])^2))
+
+# Out-of-sample RMSPE
+large_rmse_oos_ridge <- sqrt(mean((as.matrix(data[data$outofsample, "testscore_dm"]) - large_ridge_pred[data$outofsample])^2))
+
+# Collect results in a data frame
+results_large <- data.frame(
+  Case = "Large",
+  Model = "Ridge",
+  In_sample_RMSPE = round(large_rmse_in_ridge, 1),
+  Out_of_sample_RMSPE = round(large_rmse_oos_ridge, 1),
+  RMSPE_CV = round(sqrt(large_cv_ridge$cvm[large_cv_ridge$lambda == best_lambda]), 1)
+)
 ```
 
-Alternatively, we can compute the split-sample estimate of the MSPE using the `GridSearchCV()` function, as shown in the following code chunk.
+In @tbl-RidgelargeRMSPE, we present the RMSPE results for the ridge regression in the large case. As expected, the in-sample RMSPE is smaller than both the out-of-sample RMSPE and the 10-fold cross-validation RMSPE. The out-of-sample RMSPE is smaller than the OLS out-of-sample RMSPE, which suggests that the ridge regression has better out-of-sample prediction performance than the OLS estimator in this case.
 
-```{python}
+```{r}
+#| tbl-cap: "The RMSPE of the Ridge regression for the large case"
+#| label: tbl-RidgelargeRMSPE
+# RMSPE results for the ridge regression in the large case
+kable(results_large)
+```
+
+
+### Lasso regression
+
+To estimate the lasso regression, we need to set `alpha=1` in the `glmnet` function.
+
+```{r}
+large_lasso_mod <- glmnet(X_train,
+                    y_train,
+                    alpha = 1, 
+                    nlambda = 100, 
+                    intercept = FALSE)
+```
+
+As in the case of the ridge regression, the `glmnet` function generates estimated coefficients for 100 $\lambda$ values. The `coef` function can be used to access the estimated coefficients. Again, the estimated coefficients are stored in a $817\times100$ matrix, with $817$ rows (one for each predictor, plus an intercept) and $100$ columns (one for each value of $\lambda$). The following code returns the estimated first ten coefficients corresponding to the first ten $\lambda$ values. As can be seen, the Lasso estimator sets all of estimates to zero. 
+
+```{r}
+coef(large_lasso_mod)[1:10, 1:10]
+```
+
+The `plot` function can be used to plot all estimated coefficients against the $\log(\lambda)$ values. @fig-chapter23-f6 shows that the Lasso estimates converge to zero as $\log(\lambda)$ gets larger values. 
+
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+#| label: fig-chapter23-f6
+#| fig-cap: Plot of Estimated Coefficients against logarithm of lambda
+plot(large_lasso_mod,
+     xvar = "lambda") # each curve corresponds to a variable
+```
+
+Next, we use the `cv.glmnet` function to perform the m-fold cross-validation for obtaining the optimal $\lambda$ value.
+
+```{r}
 #| eval: false
-# Define the parameter grid
-param_grid = {'alpha': np.logspace(-3, 1, 10)}
+set.seed(17)
+large_cv_lasso <- cv.glmnet(as.matrix(X_train),
+                    as.matrix(y_train),
+                    alpha = 1, # alpha=1 is the lasso penalty, and alpha=0 is the ridge penalty
+                    nfolds = 10)
 
-# Create a Lasso model
-lasso = Lasso(fit_intercept=False)
-
-# Use GridSearchCV to find the best alpha
-grid_search = GridSearchCV(lasso, param_grid, cv=10)
-grid_search.fit(X_train, y_train)
-
-# Best model
-best_lasso_model = grid_search.best_estimator_
-
-# Predictions and RMSPE calculation
-data['testscore_lasso'] = mean_testscore + best_lasso_model.predict(data.filter(like='sS_x'))
-data['e_lasso'] = data['testscore'] - data['testscore_lasso']
-data['e_lasso2'] = data['e_lasso'] ** 2
-large_rmse_oos_lasso = np.sqrt(data.loc[data['outofsample'], 'e_lasso2'].mean())
-
-print(f"The out-of-sample RMSPE of Lasso regression in the large case = {large_rmse_oos_lasso:.1f}")
+# Save the model to a file
+saveRDS(large_cv_lasso, file = 'large_cv_lasso.rds')
 ```
 
-```{python}
+```{r}
+# Load the model results
+filename <- 'large_cv_lasso.rds'
+large_cv_lasso <- readRDS(filename)
+
+# Best lambda value
+best_lambda <- large_cv_lasso$lambda.min
+best_lambda
+```
+
+The best $\lambda$ value that yields the smallest 10-fold cross validation MSPE is `r round(best_lambda, 2)`. @fig-chapter23-f7 shows the plot of the 10-fold cross validation MSPE against $\log(\lambda)$.
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| label: fig-chapter23-f7
+#| fig-cap: Plot of MSPE against logarithm of lambda
+plot(large_cv_lasso)
+abline(v = log(best_lambda),
+       col = "blue",
+       lwd = 2)
+```
+
+Finally, we compute the in-sample and out-of-sample RMSPE values for the lasso regression.
+
+```{r}
+# Predictions
+large_lasso_pred <-  predict(large_lasso_mod, s = best_lambda, newx = as.matrix(data[, grep('sS_x', names(data))]))
+
+# In-sample RMSPE
+large_rmse_in_lasso <- sqrt(mean((as.matrix(data[data$insample, "testscore_dm"]) - large_lasso_pred[data$insample])^2))
+
+# Out-of-sample RMSPE
+large_rmse_oos_lasso <- sqrt(mean((as.matrix(data[data$outofsample, "testscore_dm"]) - large_lasso_pred[data$outofsample])^2))
+
+# Collect results in a data frame
+results_large <- data.frame(
+  Case = "Large",
+  Model = "Lasso",
+  In_sample_RMSPE = round(large_rmse_in_lasso, 1),
+  Out_of_sample_RMSPE = round(large_rmse_oos_lasso, 1),
+  RMSPE_CV = round(sqrt(large_cv_lasso$cvm[large_cv_lasso$lambda == best_lambda]), 1)
+)
+```
+
+The RMSPE results for the lasso regression in the large case are presented in @tbl-LassolargeRMSPE. The out-of-sample RMSPE is smaller than the OLS out-of-sample RMSPE, which suggests that the lasso regression has better out-of-sample prediction performance than the OLS estimator in this case. 
+
+```{r}
+#| tbl-cap: "The RMSPE of the Lasso regression for the large case"
+#| label: tbl-LassolargeRMSPE
+# RMSPE results for the lasso regression in the large case
+kable(results_large)
+```
+
+### Principal Component Analysis
+
+The principal components analysis can be performed using the `pcr` function from the `pls` package (see [vignette - pls](https://cran.r-project.org/web/packages/pls/index.html) for the details). The `pls` package has a formula interface that works like the formula interface for the standard `lm` function. The argument `scale=TRUE` has the effect of standardizing each predictor prior to generating the principal components. The argument `validation="CV"` allows for computing the 10-fold cross-validation MSPE for each possible value of `p`, the number of principal components used.
+
+
+```{r}
+#| eval: false
+set.seed(1234)
+InData <- data[data$insample, grep('_dm|sS_x', names(data))]
+large_pc_mod <- pcr(testscore_dm ~ .,
+                    data = InData,
+                    scale = FALSE, 
+                    validation = "CV")
+# Save results              
+saveRDS(large_pc_mod, file = 'large_pc_mod.rds')
+```
+
+The plot of m-fold cross-validation MSPE against number of components is given in @fig-chapter23-f8. We can use the `MSEP(pc_mod)` to obtain the 10-fold cross-validation MSPE values.
+
+```{r}
+# Load data
+filename <- 'large_pc_mod.rds'
+large_pc_mod <- readRDS(filename)
+```
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| label: fig-chapter23-f8
+#| fig-cap: The m-fold cross-validation MSPE and the number of components
+plot(MSEP(large_pc_mod),
+     legendpos = "topleft")
+```
+
+In @fig-chapter23-f8, there are two cross-validation estimates: `CV` is the ordinary CV estimate, and `adjCV` is a bias-corrected CV estimate. The `legendpos = "topleft"` argument adds a legend at the indicated position.
+
+Recall that a scree plot shows what percentage of the total sample variance of data can be explained by each principal component. The `explvar` function can be used to get these percentages. The scree plot can be obtained in the following way. 
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| label: fig-chapter23-f9
+#| fig-cap: The scree plot
+barplot(explvar(large_pc_mod)[1:50],
+        ylim = c(0, 20),
+        names.arg = 1:50,
+        col = "steelblue")
+```
+
+@fig-chapter23-f9 shows the first $50$ principal components. According to the plot, the first principal component explains $18$ percent of the total variance of the $817$ $X$'s. The flattening in figure after the first few principal components is typical of many data sets in which the variables are highly correlated, as they are in the $817$-variable school test score data set. 
+
+Next, we will consider the problem of choosing the number of components. The `pls` package provides two approaches through its `selectNcomp` function. The first is based on the so-called **one-sigma heuristic** and consists of choosing the model with fewest components that is still less than one standard error away from the overall best model. The second strategy employs a **permutation approach**, and basically tests whether adding a new component is beneficial at all.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+#| label: fig-chapter23-f10
+#| fig-cap: RMSPE versus Number of Components
+# One-sigma heuristic
+ncomp.onesigma <- selectNcomp(large_pc_mod,
+                              method = "onesigma",
+                              plot = TRUE)
+
+# Print the number of components selected by the one-sigma heuristic
+ncomp.onesigma
+```
+
+
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| label: fig-chapter23-f11
+#| fig-cap: RMSPE versus Number of Components
+# Permutation approach
+ncomp.permut <- selectNcomp(large_pc_mod,
+                            method = "randomization",
+                            plot = TRUE)
+# Print the number of components selected by the permutation approach
+ncomp.permut 
+```
+
+Finally, we compute the in-sample and out-of-sample RMSPE values for the principal component regression.
+
+```{r}
+# In-sample RMSPE
+InData <- data[data$insample, grep('_dm|sS_x', names(data))]
+pcr_pred_train <- predict(large_pc_mod,
+                          newdata = InData,
+                          ncomp = 23)
+large_rmse_in_pc <- sqrt(mean((InData[['testscore_dm']] - pcr_pred_train)^2))
+
+# Out-of-sample RMSPE
+OutData <- data[data$outofsample, grep('_dm|sS_x', names(data))]
+pcr_pred_train <- predict(large_pc_mod,
+                          newdata = OutData,
+                          ncomp = 23)
+large_rmse_oos_pc <- sqrt(mean((OutData[['testscore_dm']] - pcr_pred_train)^2))
+
+# Collect results in a data frame
+results_large <- data.frame(
+  Case = "Large",
+  Model = "PCR",
+  In_sample_RMSPE = round(large_rmse_in_pc, 1),
+  Out_of_sample_RMSPE = round(large_rmse_oos_pc, 1),
+  RMSPE_CV = round(sqrt(MSEP(large_pc_mod)$val[23]), 1)
+)
+
+```
+
+The RMSPE results for the PCR in the large case are presented in @tbl-PCRlargeRMSPE. 
+
+```{r}
+#| tbl-cap: "The RMSPE of the PCR for the large case"
+#| label: tbl-PCRlargeRMSPE
+# RMSPE results for the PCR in the large case
+kable(results_large)
+```
+
+The `summary` function provides the percentage of variance explained in the predictors and in the response variable using different numbers of components. 
+
+```{r}
+#| eval: false
+summary(large_pc_mod)
+```
+
+
+
+Consider the following standard linear regression model with $k$ predictors and the principal components regression model with $p$ principal components:
+$$
+\begin{align}\label{eq4}
+Y_i=\beta_1X_{1i}+\ldots+\beta_kX_{ki}+u_i=\sum_{l=1}^k\beta_lX_{li}+u_i.
+\end{align}
+$$
+$$
+\begin{align}\label{eq5}
+\qquad Y_i=\gamma_1PC_{1i}+\ldots+\gamma_pPC_{pi}+\nu_i=\sum_{j=1}^p\gamma_jPC_{ji}+\nu_i.
+\end{align}
+$$
+
+In Section 23.7, we showed that the OLS coefficients can be expressed in the following way:
+$$
+\begin{align}\label{eq7}
+\beta_l=\sum_{j=1}^p\gamma_jw_{lj},\quad l=1,2,\ldots,k.
+\end{align}
+$$
+We can use `coef(large_pc_mod, ncomp = 23)` to extract the estimated $\beta_l$'s. The following chunk shows the first 10 estimated coefficients.
+
+```{r}
+coef(large_pc_mod, ncomp = 23)[1:10]
+```
+
+```{r}
 # Remove data
-del data 
+rm(data)
 ```
 
-### The very large case
 
-In the very large case with k=2065, the main variables additionally include population, immigration status variables (4), age distribution variables in local population (8), charter school indicator, fraction of males in the local population, indicator for the full-year school calendar, marital status in the local population (3), unified school district indicator, educational level variables for the local population (4), indicator for the LA schools, fraction of local housing that is owner occupied, and indicator for the San Diego schools.  We use these additional variables and the variables given in @tbl-LargeCase to construct technical variables as shown in @tbl-VeryLargeCase.
+## The very large case
+The OLS approach is not feasible in this case because the number of predictors (k=2065) exceeds the number of observations (n=1966). In this case, we will only consider the ridge regression, lasso regression, and principal component regression. In the very large case (k=2065), the main variables include the following variables in addition to the 38 variables in the large case:
+
+* population, 
+* immigration status variables (4), 
+* age distribution variables in local population (8), 
+* charter school indicator, 
+* fraction of males in the local population, 
+* indicator for the full-year school calendar, 
+* marital status in the local population (3), 
+* unified school district indicator, 
+* educational level variables for the local population (4), 
+* indicator for the LA schools, 
+* fraction of local housing that is owner occupied, and 
+* indicator for the San Diego schools.  
+
+We use these additional variables and the variables given in @tbl-LargeCase to construct technical variables as shown @tbl-VeryLargeCase.
 
 ::: {style="font-size: 80%"}
 | **Original variables** |
@@ -1197,27 +1084,29 @@ In the very large case with k=2065, the main variables additionally include popu
 |School is in a unified school district (large city) (binary)|Local population educational level variables (4)|
 |School is in Los Angeles (binary)|Fraction of local housing that is owner occupied|
 |School is in San Diego (binary)||
-|**Technical (constructed) regressors** |
+| <span style="color:steelblue">**Technical (constructed) regressors**</span>|
 |Squares and cubes of the 60 nonbinary variables (60 + 60)|All interactions of the nonbinary variables (60*59/2=1770) |
 |All interactions between the binary variables and the nonbinary demographic variables (5*22=110)|Total number of variables = 65 + 60 + 60 + 1770 + 110 = 2065 |
 : The very large case {#tbl-VeryLargeCase .striped .hover}
 :::
 
-We do not consider the OLS approach for this case as it is not feasible. In the following code chunk, we create the standardized variables. 
+In the following code chunk, we create the standardized variables. 
 
-```{python}
+```{r}
 #| warning: false
 #| message: false
 # Very large case
-data = pd.concat([insample, outofsample], ignore_index=True)
-del insample, outofsample
+data <- bind_rows(insample, outofsample)
 
 # In-sample and out-of-sample indicators
-data['insample'] = np.arange(len(data)) < 1966
-data['outofsample'] = np.arange(len(data)) >= 1966
+data$insample <- (1:nrow(data) <= 1966)
+data$outofsample <- (1:nrow(data) > 1966)
+
+# Convert to data frame
+data <- as.data.frame(data)
 
 # Define predictors
-pred_columns = [
+pred_columns <- c(
     "str_s", "te_avgyr_s", "exp_1000_1999_d", "med_income_z", "frpm_frac_s",
     "ell_frac_s", "freem_frac_s", "enrollment_s", "fep_frac_s", "edi_s",
     "re_aian_frac_s", "re_asian_frac_s", "re_baa_frac_s", "re_fil_frac_s",
@@ -1236,324 +1125,404 @@ pred_columns = [
     "ed_frac_ba_z", "ed_frac_grd_z", "hs_frac_own_z", 
     "moved_frac_samecounty_z", "moved_frac_difcounty_z", 
     "moved_frac_difstate_z", "moved_frac_abroad_z"
-]
+)
 
-pred_binary = [
+pred_binary <- c(
     "charter_s", "yrcal_s", "unified_d", "la_unified_d", "sd_unified_d"
-]
+)
 
-pred_school = [
+pred_school <- c(
     "str_s", "te_avgyr_s", "exp_1000_1999_d", "frpm_frac_s", "ell_frac_s",
     "freem_frac_s", "enrollment_s", "fep_frac_s", "edi_s", 
     "re_aian_frac_s", "re_asian_frac_s", "re_baa_frac_s", "re_fil_frac_s",
     "re_hl_frac_s", "re_hpi_frac_s", "re_tom_frac_s", "re_nr_frac_s",
     "te_fte_s", "te_1yr_frac_s", "te_2yr_frac_s", "te_tot_fte_rat_s"
-]
+)
 
 # Standardize continuous variables
-for i in range(len(pred_columns)):
-    mean = data.loc[data['insample'], pred_columns[i]].mean()
-    std = data.loc[data['insample'], pred_columns[i]].std()    
-    data[f'sS_x_{i+1}'] = (data[pred_columns[i]] - mean) / std
+for (i in seq_along(pred_columns)) {
+    mean_val <- mean(data[data$insample, pred_columns[i]], na.rm = TRUE)
+    std_val <- sd(data[data$insample, pred_columns[i]], na.rm = TRUE)
+    data[[paste0('sS_x_', i)]] <- (data[[pred_columns[i]]] - mean_val) / std_val
+}
 
 # Create interactions and squared terms
-for i in range(len(pred_columns)):
-    for j in range(i, len(pred_columns)):
-        tmp = data.loc[:, pred_columns[i]].copy()*data.loc[:, pred_columns[j]].copy()
-        mean = tmp.loc[data['insample']].mean()
-        std = tmp.loc[data['insample']].std()
-        tmp = (tmp - mean) / std
-        data[f'sS_xx_{i+1}_{j+1}'] = tmp
+for (i in seq_along(pred_columns)) {
+    for (j in i:length(pred_columns)) {
+        tmp <- data[[pred_columns[i]]] * data[[pred_columns[j]]]
+        mean_val <- mean(tmp[data$insample], na.rm = TRUE)
+        std_val <- sd(tmp[data$insample], na.rm = TRUE)
+        data[[paste0('sS_xx_', i, '_', j)]] <- (tmp - mean_val) / std_val
+    }
+}
 
 # Create cubes
-for i in range(len(pred_columns)):
-    tmp = data.loc[:, pred_columns[i]].copy() ** 3
-    mean = tmp.loc[data['insample']].mean()
-    std = tmp.loc[data['insample']].std()
-    tmp = (tmp - mean) / std    
-    data[f'sS_xxx_{i+1}'] = tmp
-    
+for (i in seq_along(pred_columns)) {
+    tmp <- data[[pred_columns[i]]] ^ 3
+    mean_val <- mean(tmp[data$insample], na.rm = TRUE)
+    std_val <- sd(tmp[data$insample], na.rm = TRUE)
+    data[[paste0('sS_xxx_', i)]] <- (tmp - mean_val) / std_val
+}
+
 # Standardize binary variables
-for i in range(len(pred_binary)):
-    mean = data.loc[data['insample'], pred_binary[i]].mean()
-    std = data.loc[data['insample'], pred_binary[i]].std()    
-    data[f'sS_bx_{i+1}'] = (data[pred_binary[i]] - mean) / std    
-    
+for (i in seq_along(pred_binary)) {
+    mean_val <- mean(data[data$insample, pred_binary[i]], na.rm = TRUE)
+    std_val <- sd(data[data$insample, pred_binary[i]], na.rm = TRUE)
+    data[[paste0('sS_xb_', i)]] <- (data[[pred_binary[i]]] - mean_val) / std_val
+}
+
 # Create interactions between pred_binary and pred_school
-for i in range(len(pred_binary)):
-    for j in range(len(pred_school)):    
-        tmp = data.loc[:, pred_binary[i]].copy()*data.loc[:, pred_school[j]].copy()
-        mean = tmp.loc[data['insample']].mean()
-        std = tmp.loc[data['insample']].std()
-        tmp = (tmp - mean) / std
-        data[f'sS_bxy_{i+1}_{j+1}'] = tmp
-        
+for (i in seq_along(pred_binary)) {
+    for (j in seq_along(pred_school)) {
+        tmp <- data[[pred_binary[i]]] * data[[pred_school[j]]]
+        mean_val <- mean(tmp[data$insample], na.rm = TRUE)
+        std_val <- sd(tmp[data$insample], na.rm = TRUE)
+        data[[paste0('sS_xyb_', i, '_', j)]] <- (tmp - mean_val) / std_val
+    }
+}
+
 # Demean testscore
-mean_testscore = data.loc[data['insample'], 'testscore'].mean()
-data['testscore_dm'] = data['testscore'] - mean_testscore        
-        
+mean_testscore <- mean(data[data$insample, 'testscore'], na.rm = TRUE)
+data$testscore_dm <- data$testscore - mean_testscore
+
 # Drop collinear variables
-data.drop(columns='sS_xx_1_19', inplace=True, errors='ignore')        
-        
+data$sS_xx_1_19 <- NULL
+
 # Prepare for regression
-X_train = data.filter(like='sS_').loc[data['insample']]
-y_train = data['testscore_dm'].loc[data['insample']]                  
+X_train <- data[data$insample, grep('sS_x', names(data))]
+y_train <- data$testscore_dm[data$insample]
 ```
 
-In the following, we start with the principal component analysis. 
 
-```{python}
+
+### Ridge regression
+
+The following code gives the ridge regression estimates for a grid of $\lambda$ values.
+
+```{r}
+vlarge_ridge_mod <- glmnet(X_train,
+                    y_train,
+                    alpha = 0, # alpha=1 is the lasso penalty, and alpha=0 is the ridge penalty
+                    nlambda = 100, # the number of lambda values
+                    standardize = FALSE,
+                    intercept = FALSE)
+```
+
+
+We can determine the optimal $\lambda$ value by using the m-fold cross-validation method. 
+
+```{r}
 #| eval: false
-pca = PCA()
-linreg = LinearRegression(fit_intercept=False)
-pipe = Pipeline([('pca', pca), ('linreg', linreg)])
-p_grid = {'pca__n_components':range(1,70)}
-grid = GridSearchCV(pipe, p_grid, cv=kf, scoring='neg_mean_squared_error')
-grid.fit(X_train, y_train)
+set.seed(17)
+vlarge_cv_ridge <- cv.glmnet(as.matrix(X_train),
+                    as.matrix(y_train),
+                    alpha = 0, # alpha=1 is the lasso penalty, and alpha=0 is the ridge penalty
+                    nfolds = 10,
+                    type.measure = "mse")
 
-filename = 'No_pc_very_large_model.sav'
-pickle.dump([grid, p_grid], open(filename, 'wb'))
+# Save the model to a file
+saveRDS(vlarge_cv_ridge, file = 'vlarge_cv_ridge.rds')
 ```
 
-```{python}
-filename = 'No_pc_very_large_model.sav'
-grid = pickle.load(open(filename,"rb"))[0]
-p_grid = pickle.load(open(filename,"rb"))[1]
-print(f"The 10-fold MSPE is minimized when p is {range(1,70)[grid.best_index_]}.")  
+```{r}
+# Load the large_cv_ridge result
+filename <- 'vlarge_cv_ridge.rds'
+vlarge_cv_ridge <- readRDS(filename)
+
+# Best lambda value
+best_lambda <- vlarge_cv_ridge$lambda.min
+best_lambda
 ```
 
-In @fig-fig21-7, we plot the 10-fold cross-validation estimate of the MSPE  against the number of principal components used as regressors. The figure shows that the MSPE becomes flat after p=50.
-
-```{python}
-#| eval: true
-#| fig-cap: Plot of MSPE versus number of components
-#| label: fig-fig21-7
-# Plot of MSPE versus number of componentst
-pcr_fig , ax = plt.subplots(figsize = (6,4))
-n_comp = p_grid['pca__n_components']
-ax.plot(n_comp , -grid.cv_results_['mean_test_score'])
-ax.set_ylabel('The 10-fold cross-validation estimate of MSPE')
-ax.set_xlabel('Number principal components (p)')
-plt.show()
+The optimal $\lambda$ value `r round(best_lambda, 3)` yields the smallest m-fold cross validation MSPE. @fig-chapter23-f12 shows the plot of 10-fold cross validation MSPE against $log(\lambda)$. 
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| label: fig-chapter23-f12
+#| fig-cap: Plot of MSPE against logarithm of lambda
+plot(vlarge_cv_ridge)
+abline(v = log(best_lambda),
+       col = "blue",
+       lwd = 2)
 ```
 
+In the following code chunk, we compute the in-sample and out-of-sample RMSPE values for the ridge regression.
 
-In the following code chunk, we follow @Stock2020 to further standardize the regressors and demean the outcome variable at each fold of the cross-validation. This code chunk produces $p=69$ as in Stock and Watson (2020).
+```{r}
+# Predictions
+vlarge_ridge_pred <-  predict(vlarge_ridge_mod, s = best_lambda, newx = as.matrix(data[, grep('sS_x', names(data))]))
 
-```{python}
+# In-sample RMSPE and out-of-sample RMSPE
+vlarge_rmse_in_ridge <- sqrt(mean((as.matrix(data[data$insample, "testscore_dm"]) - vlarge_ridge_pred[data$insample])^2))
+
+vlarge_rmse_oos_ridge <- sqrt(mean((as.matrix(data[data$outofsample, "testscore_dm"]) - vlarge_ridge_pred[data$outofsample])^2))
+
+# Collect results in a data frame
+results_vlarge <- data.frame(
+  Case = "Very Large",
+  Model = "Ridge",
+  In_sample_RMSPE = round(vlarge_rmse_in_ridge, 1),
+  Out_of_sample_RMSPE = round(vlarge_rmse_oos_ridge, 1),
+  RMSPE_CV = round(sqrt(vlarge_cv_ridge$cvm[vlarge_cv_ridge$lambda == best_lambda]), 1)
+)
+```
+
+```{r}
+#| tbl-cap: "The RMSPE of the Ridge regression for the very large case"
+#| label: tbl-RidgevlargeRMSPE
+# RMSPE results for the ridge regression in the very large case
+kable(results_vlarge)
+```
+
+### Lasso regression
+
+The following code gives the lasso regression estimates for a grid of $\lambda$ values.
+
+```{r}
+vlarge_lasso_mod <- glmnet(X_train,
+                    y_train,
+                    alpha = 1, 
+                    nlambda = 100, # the number of lambda values
+                    intercept = FALSE)
+```
+
+The `coef` function can be used to access the estimated coefficients. Next, we use the `cv.glmnet` function to perform the m-fold cross-validation for obtaining the optimal $\lambda$ value.
+
+```{r}
 #| eval: false
-# Initialize 10-fold cross-validation and other parameters
-kf = KFold(n_splits=10)
-pmin, pmax = 1, 70
-tmp = np.empty((10, len(range(pmin,pmax+1))))
-# Perform cross-validation
-for i, (train_index, val_index) in enumerate(kf.split(X_train)):
-    X_train_fold, X_val_fold = X_train.iloc[train_index], X_train.iloc[val_index]
-    y_train_fold, y_val_fold = y_train.iloc[train_index], y_train.iloc[val_index]
-    for j in range(X_train_fold.shape[1]):
-        mean = X_train_fold.iloc[:, j].mean()
-        std = mean = X_train_fold.iloc[:, j].std()
-        X_train_fold.iloc[:, j] = (X_train_fold.iloc[:, j] - mean)/std
-        X_val_fold.iloc[:, j] = (X_val_fold.iloc[:, j] - mean)/std
-    
-    ym = y_train_fold.mean()
-    y_train_fold = y_train_fold - ym     
-    pca = PCA(n_components=pmax)
-    pca.fit(X_train_fold)
-    pcs = pca.transform(X_train_fold)
-    poos = pca.transform(X_val_fold)
-    for n_comp in range(pmin,pmax+1):
-        model_pc = sm.OLS(y_train_fold, pcs[:,:n_comp]).fit()  
-        ssr = np.sum((y_val_fold - (ym + model_pc.predict(poos[:,:n_comp]))) ** 2)  
-        tmp[i,n_comp-pmin] = ssr
+set.seed(17)
+vlarge_cv_lasso <- cv.glmnet(as.matrix(X_train),
+                    as.matrix(y_train),
+                    alpha = 1, 
+                    nfolds = 10)
 
-# Calculate root mean squared prediction error (RMSPE) across all folds
-tmp = np.sqrt(np.sum(tmp, axis=0)/len(y_train))
-pch = range(pmin,pmax+1)[np.argmin(tmp)]
-print(f"# of PCs using 10-fold MSPE = {pch}.")   
-
-# Plot RMSPE against number of principal components
-pcr_fig , ax = plt.subplots(figsize = (6,4))
-ax.plot(range(pmin,pmax+1), tmp)
-ax.set_ylabel('The 10-fold cross-validation estimate of MSPE')
-ax.set_xlabel('Number of principal components')
-plt.show()
+# Save the model to a file
+saveRDS(vlarge_cv_lasso, file = 'vlarge_cv_lasso.rds')
 ```
 
-The scree plot given in @fig-fig21-8 indicates that the first principal component explains around $15\%$ of the variance of 2065 predictors. 
+```{r}
+# Load the model results
+filename <- 'vlarge_cv_lasso.rds'
+vlarge_cv_lasso <- readRDS(filename)
 
-```{python}
+# Best lambda value
+best_lambda <- vlarge_cv_lasso$lambda.min
+best_lambda
+```
+
+
+The best $\lambda$ value that yields the smallest the smallest 10-fold cross validation MSPE is `r round(best_lambda, 2)`. @fig-chapter23-f13 shows the plot of the 10-fold cross validation MSPE against $\log(\lambda)$.
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| label: fig-chapter23-f13
+#| fig-cap: Plot of MSPE against logarithm of lambda
+plot(vlarge_cv_lasso)
+abline(v = log(best_lambda),
+       col = "blue",
+       lwd = 2)
+```
+
+Finally, we compute the in-sample and out-of-sample RMSPE values for the lasso regression.
+
+```{r}
+# Predictions
+vlarge_lasso_pred <-  predict(vlarge_lasso_mod, s = best_lambda, newx = as.matrix(data[, grep('sS_x', names(data))]))
+
+# In-sample RMSPE and out-of-sample RMSPE
+vlarge_rmse_in_lasso <- sqrt(mean((as.matrix(data[data$insample, "testscore_dm"]) - vlarge_lasso_pred[data$insample])^2))
+
+vlarge_rmse_oos_lasso <- sqrt(mean((as.matrix(data[data$outofsample, "testscore_dm"]) - vlarge_lasso_pred[data$outofsample])^2))
+
+# Collect results in a data frame
+results_vlarge <- data.frame(
+    Case = "Very Large",
+    Model = "Lasso",
+    In_sample_RMSPE = round(vlarge_rmse_in_lasso, 1),
+    Out_of_sample_RMSPE = round(vlarge_rmse_oos_lasso, 1),
+    RMSPE_CV = round(sqrt(vlarge_cv_lasso$cvm[vlarge_cv_lasso$lambda == best_lambda]), 1)
+    )
+```
+
+```{r}
+#| tbl-cap: "The RMSPE of the Lasso regression for the very large case"
+#| label: tbl-LassovlargeRMSPE
+# RMSPE results for the lasso regression in the very large case
+kable(results_vlarge)
+```
+
+
+### Principal Component Analysis
+
+The following code gives the principal component regression estimates for different numbers of components. 
+
+```{r}
 #| eval: false
-# PC regression
-pca = PCA(n_components=54)
-pca.fit(X_train)
-filename = 'pc_very_large_model.sav'
-pickle.dump(pca, open(filename, 'wb'))
+set.seed(1234)
+InData <- data[data$insample, grep('_dm|sS_x', names(data))]
+vlarge_pc_mod <- pcr(testscore_dm ~ .,
+              data = InData,
+              scale = FALSE,
+              validation = "CV")
+
+# Save results              
+saveRDS(vlarge_pc_mod, file = 'vlarge_pc_mod.rds')
 ```
 
-```{python}
-filename = 'pc_very_large_model.sav'
-pca = pickle.load(open(filename,"rb"))
-pcs = pca.transform(data.filter(like='sS_')) #PCs for insample and OOS
+We can use the `MSEP(pc_mod)` to obtain the 10-fold cross-validation MSPE values. @fig-chapter23-f14 plots the estimated MSEPs as functions of the number of components. 
+
+```{r}
+# Load vlarge_pc_mod
+filename <- 'vlarge_pc_mod.rds'
+vlarge_pc_mod <- readRDS(filename)
 ```
 
-```{python}
-#| fig-cap: The scree plot for the very large case
-#| label: fig-fig21-8
-# Scree plot: very large case
-fig, ax = plt.subplots(1, 1, figsize=(6, 4))
-ax.bar(np.arange(1, len(pca.explained_variance_ratio_)+1), pca.explained_variance_ratio_)
-ax.set_xlabel("Principal component number")
-ax.set_ylabel("Fraction of total variance of X explained")         
-plt.show()
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| label: fig-chapter23-f14
+#| fig-cap: The m-fold cross-validation MSPE and the number of components
+plot(MSEP(vlarge_pc_mod),
+     legendpos = "topright")
 ```
 
-```{python}
-# PC regression
-model_pc = sm.OLS(y_train, pcs[data['insample'], :]).fit()        
-data.loc[:, 'testscore_pc'] = mean_testscore + model_pc.predict(pcs)            
+In @fig-chapter23-f15, we present the scree plot for the first $50$ principal components. 
 
-# Calculate out-of-sample errors
-data['e_pc'] = data['testscore'] - data['testscore_pc']
-data['e_pc2'] = data['e_pc'] ** 2
-vlarge_rmse_in_pc = np.sqrt(data.loc[data['insample'], 'e_pc2'].mean())
-vlarge_rmse_oos_pc = np.sqrt(data.loc[data['outofsample'], 'e_pc2'].mean())
-print(f"The out-of-sample RMSPE of PC regression = {np.round(vlarge_rmse_oos_pc,1)}")        
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| label: fig-chapter23-f15
+#| fig-cap: The scree plot
+barplot(explvar(vlarge_pc_mod)[1:50],
+        ylim = c(0, 20),
+        names.arg = 1:50,
+        col = "steelblue")
 ```
 
-In the following, we estimate the ridge regression and then return the out-of-sample estimate of the MSPE. 
 
-```{python}
-#| eval: false
-# Ridge, modify alphas in consideration of computation time
-vlarge_ridge_model = RidgeCV(cv=10, fit_intercept=False, alphas=np.logspace(3,3.75,16)).fit(X_train, y_train)
-# Save model result
-filename = 'vlarge_ridge_model.sav'
-pickle.dump(vlarge_ridge_model, open(filename, 'wb'))
+Next, we use the **one-sigma heuristic** and the **permutation approach** for choosing the optimal number of components. 
+
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+#| label: fig-chapter23-f16
+#| fig-cap: RMSPE versus Number of Components
+# One-sigma heuristic
+ncomp.onesigma <- selectNcomp(vlarge_pc_mod,
+                              method = "onesigma",
+                              plot = TRUE)
+
+# Print the number of components selected by the one-sigma heuristic
+ncomp.onesigma
 ```
 
-```{python}
-# Load model result
-filename = 'vlarge_ridge_model.sav'
-vlarge_ridge_model = pickle.load(open(filename,"rb"))
 
-print(f"Ridge shrinkage parameter chosen by CV in the very large case = {vlarge_ridge_model.alpha_}")        
-data.loc[:, 'testscore_ridge'] = mean_testscore + vlarge_ridge_model.predict(data.filter(like='sS_'))               
 
-# Calculate out-of-sample errors
-data['e_ridge'] = data['testscore'] - data['testscore_ridge']
-data['e_ridge2'] = data['e_ridge'] ** 2
-vlarge_rmse_in_ridge = np.sqrt(data.loc[data['insample'], 'e_ridge2'].mean())
-vlarge_rmse_oos_ridge = np.sqrt(data.loc[data['outofsample'], 'e_ridge2'].mean())
-print(f"The out-of-sample RMSPE of Ridge regression = {np.round(vlarge_rmse_oos_ridge,1)}")   
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+#| label: fig-chapter23-f17
+#| fig-cap: RMSPE versus Number of Components
+# Permutation approach
+ncomp.permut <- selectNcomp(vlarge_pc_mod,
+                            method = "randomization",
+                            plot = TRUE)
+# Print the number of components selected by the permutation approach
+ncomp.permut 
 ```
 
-Finally, we perform the Lasso and compute the out-of-sample MSPE estimate. 
+Finally, we compute the in-sample and out-of-sample RMSPE values for the principal component regression. The RMSPE results are presented in @tbl-PCRvlargeRMSPE.
 
-```{python}
-#| eval: false
-# Lasso
-start_time = time.time()
-vlarge_lasso_model = LassoCV(cv=10, fit_intercept=False).fit(X_train, y_train)
-fit_time = time.time() - start_time
-# Save model result
-filename = 'vlarge_lasso_model.sav'
-pickle.dump(vlarge_lasso_model, open(filename, 'wb'))
+```{r}
+# In-sample RMSPE
+InData <- data[data$insample, grep('_dm|sS_x', names(data))]
+pcr_pred_train <- predict(vlarge_pc_mod,
+                          newdata = InData,
+                          ncomp = 37)
+vlarge_rmse_in_pc <- sqrt(mean((InData[['testscore_dm']] - pcr_pred_train)^2))
+
+# Out-of-sample RMSPE
+OutData <- data[data$outofsample, grep('_dm|sS_x', names(data))]
+pcr_pred_train <- predict(vlarge_pc_mod,
+                          newdata = OutData,
+                          ncomp = 37)
+vlarge_rmse_oos_pc <- sqrt(mean((OutData[['testscore_dm']] - pcr_pred_train)^2))
+
+# Collect results in a data frame
+results_vlarge <- data.frame(
+  Case = "Very Large",
+  Model = "PCR",
+  In_sample_RMSPE = round(vlarge_rmse_in_pc, 1),
+  Out_of_sample_RMSPE = round(vlarge_rmse_oos_pc, 1),
+  RMSPE_CV = round(sqrt(MSEP(vlarge_pc_mod)$val[37]), 1)
+)
 ```
 
-```{python}
-# Load model result
-filename = 'vlarge_lasso_model.sav'
-vlarge_lasso_model = pickle.load(open(filename,"rb")) 
-print(f"Lasso shrinkage parameter chosen by CV = {vlarge_lasso_model.alpha_}")        
-data.loc[:, 'testscore_lasso'] = mean_testscore + vlarge_lasso_model.predict(data.filter(like='sS_'))  
+```{r}
+#| tbl-cap: "The RMSPE of the PCR for the very large case"
+#| label: tbl-PCRvlargeRMSPE
+# RMSPE results for the PCR in the very large case
+kable(results_vlarge)
 ```
 
-In @fig-fig21-9, we give the line plots of the 10-fold cross-validation estimates of MSPE against the shrinkage parameter values.
-
-```{python} 
-#| fig-cap: The MSPE computed from each fold
-#| label: fig-fig21-9
-fig, ax = plt.subplots(1, 1, figsize=(6, 4))
-ax.semilogx(vlarge_lasso_model.alphas_, vlarge_lasso_model.mse_path_, linestyle=":")
-ax.plot(
-    vlarge_lasso_model.alphas_ ,
-    vlarge_lasso_model.mse_path_.mean(axis=-1),
-    color = "black",
-    label = "average across the folds",
-    linewidth = 2)
-ax.axvline(vlarge_lasso_model.alpha_, linestyle="--", color="black", label="alpha: CV estimate")
-ax.set_xlabel(r'$\lambda$')
-ax.set_ylabel('MSPE') 
-ax.axis('tight') 
-plt.show()
-```
-
-```{python}
-# Calculate out-of-sample errors
-data['e_lasso'] = data['testscore'] - data['testscore_lasso']
-data['e_lasso2'] = data['e_lasso'] ** 2
-vlarge_rmse_in_lasso = np.sqrt(data.loc[data['insample'], 'e_lasso2'].mean())
-vlarge_rmse_oos_lasso = np.sqrt(data.loc[data['outofsample'], 'e_lasso2'].mean())
-print(f"The out-of-sample RMSPE of Lasso regression = {vlarge_rmse_oos_lasso:.1f}") 
-```
-
-```{python}
+```{r}
 # Remove data
-del data
+rm(data)
 ```
 
-### Estimation results
-In this section, we compare the estimation results in terms of the in-sample and out-of-sample MSPE estimates. The estimation results are presented in @tbl-t21.1. Below, we list some main points from @tbl-t21.1 as follows:
 
-* The out-of-sample RMSPE of the OLS estimator increases roughly by 21% when k increases from 4 to 817.
-* In the large case with k=817, the out-of-sample RMSPE of the OLS estimator is about 35% larger relative to those reported by Ridge, Lasso, and PC regression.
-* In the large and very large cases, the Ridge, Lasso, and PC regression have similar RMSPE estimates.
-* When $k$ increases from 817 to 2065, we do not see an improvement in the out-of-sample RMSPE of the Ridge, Lasso, and PC regression. 
+## Estimation results
+In this section, we compare the estimation results in terms of the in-sample and out-of-sample MSPE estimates. The estimation results are presented in @tbl-t23-t14. All of these estimates are the split-sample estimates, and the in-sample estimates are computed from the training data, while the out-of-sample estimates are computed from the test data.
 
-```{python}
-predictor_set = [
-    'Small (k=4)', 'Estimated '+u'\u03BB'+' or p', 'In-sample RMSPE', 'Out-of-sample RMSPE', ' ',
-    'Large (k=817)', 'Estimated '+u'\u03BB'+' or p', 'In-sample RMSPE', 'Out-of-sample RMSPE', ' ',
-    'Very large (k=2065)', 'Estimated '+u'\u03BB'+' or p', 'In-sample RMSPE', 'Out-of-sample RMSPE'
-]
-colnames = ['OLS', 'Ridge', 'Lasso', 'PCs']
+* In general, the in-sample RMSPE values are smaller than the out-of-sample RMSPE values for all models (except in the small-sample case), which is consistent with the fact that the models are estimated using the training data and may not perform as well on the test data.
+* The out-of-sample RMSPE for OLS increases roughly by 21% when $k$ increases from 4 to 817.
+* The out-of-sample RMSPE for OLS is about 35% larger relative to those reported by Ridge, Lasso, and PC regression when $k = 817$.
+* The out-of-sample root MSPE for Ridge, Lasso, and PC regression is similar when $k = 817$ or $k = 2065$.
+* Ridge, Lasso, and PC regression report roughly the same out-of-sample RMSPE when $k$ increases from 817 to 2065.
+* Overall, ridge regression yields the smallest out-of-sample RMSPE in the large-sample case, indicating that it has a slight edge over the other methods.
 
-cOLS = [
-    ' ', '-', f'{small_rmse_cv_in_ols:.1f}',  f'{small_rmse_oos_ols:.1f}', ' ',
-    ' ', '-', f'{large_rmse_cv_in_ols:.1f}',  f'{large_rmse_oos_ols:.1f}', ' ',
-    ' ', '-', '-', '-'
-] 
 
-cRidge = [
-    ' ', '-', '-',  '-', ' ',
-    ' ', f'{large_ridge_model.alpha_:.0f}', f'{large_rmse_in_ridge:.1f}',  f'{large_rmse_oos_ridge:.1f}', ' ',
-    ' ', f'{vlarge_ridge_model.alpha_:.0f}', f'{vlarge_rmse_in_ridge:.1f}',  f'{vlarge_rmse_oos_ridge:.1f}'
-]
+```{r}
+# Create a data frame with the results
+results <- data.frame(
+    Predictor_Set = c(
+        'Small(k=4)', 'Estimated lambda or p', 'In-sample RMSPE', 'Out-of-sample RMSPE', ' ',
+        'Large(k=817)', 'Estimated lambda or p', 'In-sample RMSPE', 'Out-of-sample RMSPE', ' ',
+        'Very_large(k=2065)', 'Estimated lambda or p', 'In-sample RMSPE', 'Out-of-sample RMSPE'
+    ),
+    OLS = c(
+        ' ', '-', round(small_rmse_in_ols,2), round(small_rmse_oos_ols,2), ' ',
+        ' ', '-', round(large_rmse_in_ols,2), round(large_rmse_oos_ols,2), ' ',
+        ' ', '-', '-', '-'
+    ),
+    Ridge = c(
+        ' ', '-', '-', '-', ' ',
+        ' ', round(large_cv_ridge$lambda.min,2), round(large_rmse_in_ridge,2), round(large_rmse_oos_ridge,2), ' ',
+        ' ', round(vlarge_cv_ridge$lambda.min,2), round(vlarge_rmse_in_ridge,2), round(vlarge_rmse_oos_ridge,2)
+    ),
+    Lasso = c(
+        ' ', '-', '-', '-', ' ',
+        ' ', round(large_cv_lasso$lambda.min,2), round(large_rmse_in_lasso,2), round(large_rmse_oos_lasso,2), ' ',
+        ' ', round(vlarge_cv_lasso$lambda.min,2), round(vlarge_rmse_in_lasso,2), round(vlarge_rmse_oos_lasso,2)
+    ),
+    PCs = c(
+        ' ', '-', '-', '-', ' ',
+        ' ', '23', round(large_rmse_in_pc,2), round(large_rmse_oos_pc,2), ' ',
+        ' ', '37', round(vlarge_rmse_in_pc,2), round(vlarge_rmse_oos_pc,2)
+    )
+)
 
-# LassoCV objective scaled by 2*insample
-cLasso = [
-    ' ', '-', '-',  '-', ' ',
-    ' ', f'{3932*large_lasso_model.alpha_:.0f}', f'{large_rmse_in_lasso:.1f}',  f'{large_rmse_oos_lasso:.1f}', ' ',
-    ' ', f'{3932*vlarge_lasso_model.alpha_:.0f}', f'{vlarge_rmse_in_lasso:.1f}',  f'{vlarge_rmse_oos_lasso:.1f}'
-]
-
-cPCs = [
-    ' ', '-', '-',  '-', ' ',
-    ' ', '51', f'{large_rmse_in_pc:.1f}',  f'{large_rmse_oos_pc:.1f}', ' ',
-    ' ', '54', f'{vlarge_rmse_in_pc:.1f}',  f'{vlarge_rmse_oos_pc:.1f}'
-]
-
-df = pd.DataFrame([cOLS, cRidge, cLasso, cPCs]).T
-df.index = predictor_set
-df.columns = colnames
 ```
 
-:::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: Out-of-sample performance of predictive models for test scores
-#| label: tbl-t21.1
+#| label: tbl-t23-t14
 # Print table
-df
+kable(
+  results,
+  row.names = FALSE
+)
 ```
-:::
+
