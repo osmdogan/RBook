@@ -562,21 +562,21 @@ window.Quarto = {
 <section id="randomized-controlled-experiments" class="level2" data-number="22.1">
 <h2 data-number="22.1" class="anchored" data-anchor-id="randomized-controlled-experiments"><span class="header-section-number">22.1</span> Randomized controlled experiments</h2>
 <p>A <strong>randomized controlled experiment</strong> is a study designed to measure the effect of a treatment or policy intervention on an outcome variable by randomly assigning experimental units to treatment and control groups. The units in the treatment group receive the treatment or are subject to the intervention and those in the control group are not subject to any changes. We then measure the treatment or intervention effect by comparing the groups in terms of the outcome variable. We usually collect data on two variables of interest: the outcome variable, denoted by <span class="math inline">\(Y\)</span>, and the treatment indicator, denoted by <span class="math inline">\(D\)</span>, which specifies whether a unit is in the treatment or control group.</p>
-<div id="exm-ex20.1" class="theorem example">
+<div id="exm-ex22.1" class="theorem example">
 <p><span class="theorem-title"><strong>Example 22.1 (Clinical drug trial)</strong></span> Consider a randomized controlled experiment designed to assess whether a proposed drug lowers cholesterol levels. In this experiment, we have:</p>
 <ul>
 <li><span class="math inline">\(Y\)</span> is the cholesterol level,</li>
 <li><span class="math inline">\(D=1\)</span> if the individual is in the treatment group (i.e., receives the drug), and <span class="math inline">\(D=0\)</span> if the individual is in the control group (i.e., does not receive the drug).</li>
 </ul>
 </div>
-<div id="exm-ex20.2" class="theorem example">
+<div id="exm-ex22.2" class="theorem example">
 <p><span class="theorem-title"><strong>Example 22.2 (Job training program)</strong></span> Consider a randomized controlled experiment designed to assess the effect of a job training program on wages. In this experiment, we have:</p>
 <ul>
 <li><span class="math inline">\(Y\)</span> represents the wage income,</li>
 <li><span class="math inline">\(D=1\)</span> if the individual is in the treatment group (i.e., participates to the job training program) and <span class="math inline">\(D=0\)</span> if the individual is in the control group (i.e., does not participate to the job training program).</li>
 </ul>
 </div>
-<div id="exm-ex20.3" class="theorem example">
+<div id="exm-ex22.3" class="theorem example">
 <p><span class="theorem-title"><strong>Example 22.3 (Tennessee class size experiment)</strong></span> The Tennessee class size reduction experiment, known as Project STAR (Student–Teacher Achievement Ratio), was a 4-year experiment designed to evaluate the effect of class size on learning. Students were randomly assigned to one of three groups:</p>
 <ol type="1">
 <li>a regular class (22–25 students),</li>
@@ -600,16 +600,16 @@ window.Quarto = {
 <section id="potential-outcomes-and-causal-effects" class="level2" data-number="22.2">
 <h2 data-number="22.2" class="anchored" data-anchor-id="potential-outcomes-and-causal-effects"><span class="header-section-number">22.2</span> Potential outcomes and causal effects</h2>
 <p>To define the treatment effect, we need to first introduce the potential outcomes framework.</p>
-<div id="def-def20.1" class="theorem definition">
+<div id="def-def22.1" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 22.1 (Potential outcomes)</strong></span> The outcome of an individual under potential treatment or non-treatment is called the potential outcome. We use <span class="math inline">\(Y_i(1)\)</span> and <span class="math inline">\(Y_i(0)\)</span> to denote the treated and untreated potential outcomes of the <span class="math inline">\(i\)</span>th individual, respectively.</p>
 </div>
 <p>If the individual is in the treated group, then the observed outcome <span class="math inline">\(Y_i\)</span> is given by the treated outcome, i.e., <span class="math inline">\(Y_i=Y_i(1)\)</span>, and if the individual is in the control group, the observed outcome <span class="math inline">\(Y_i\)</span> is given by the untreated outcome, i.e., <span class="math inline">\(Y_i=Y_i(0)\)</span>. Note that we do not observe the untreated potential outcome for the treated individual, and the treated potential outcome for the untreated individual.</p>
-<div id="def-def20.2" class="theorem definition">
+<div id="def-def22.2" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 22.2 (Causal effect)</strong></span> The causal effect (or treatment effect) is defined as the difference between the treated and untreated potential outcomes: <span class="math inline">\(Y_i(1)-Y_i(0)\)</span>.</p>
 </div>
 <p>This treatment effect cannot be observed because an individual can be either treated or untreated, but not both at the same time. This is called the <em>the fundamental problem of causal inference</em> in the literature.</p>
-<div id="def-def20.3" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 22.3 (Average treatment effect)</strong></span> The average treatment effect (ATE) is defined as <span id="eq-eq20.1"><span class="math display">\[
+<div id="def-def22.3" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 22.3 (Average treatment effect)</strong></span> The average treatment effect (ATE) is defined as <span id="eq-eq22.1"><span class="math display">\[
 \text{ATE}=\E(Y_i(1)-Y_i(0)).
 \tag{22.1}\]</span></span></p>
 </div>
@@ -628,12 +628,12 @@ Y_i&amp;=D_iY_i(1)+(1-D_i)Y_i(0)\nonumber\\
 <li><span class="math inline">\(\beta_{1i}=\left(Y_i(1)-Y_i(0)\right)\)</span> is the individual causal effect, and</li>
 <li><span class="math inline">\(u_i=\left(Y_i(0)-\E\left[Y_i(0)\right]\right)\)</span>.</li>
 </ul>
-<p>Under the assumption that the treatment effect is constant, i.e., <span class="math inline">\(\beta_{1i}=\beta_1\)</span>, and <span class="math inline">\(\beta_{0i}=\beta_0\)</span>, we obtain the usual regression model: <span id="eq-eq20.2"><span class="math display">\[
+<p>Under the assumption that the treatment effect is constant, i.e., <span class="math inline">\(\beta_{1i}=\beta_1\)</span>, and <span class="math inline">\(\beta_{0i}=\beta_0\)</span>, we obtain the usual regression model: <span id="eq-eq22.2"><span class="math display">\[
 \begin{align}
 Y_i=\beta_{0}+\beta_{1}D_i+u_i.
 \end{align}  
 \tag{22.2}\]</span></span></p>
-<p>We want to show that <span class="math inline">\(\beta_1\)</span> in <a href="#eq-eq20.2" class="quarto-xref">Equation&nbsp;<span>22.2</span></a> equals to the ATE. To that end, we need to make some assumptions about potential outcomes and the treatment assignment.</p>
+<p>We want to show that <span class="math inline">\(\beta_1\)</span> in <a href="#eq-eq22.2" class="quarto-xref">Equation&nbsp;<span>22.2</span></a> equals to the ATE. To that end, we need to make some assumptions about potential outcomes and the treatment assignment.</p>
 <div class="callout callout-style-default callout-important no-icon callout-titled" title="Assumptions for causal inference">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -652,11 +652,11 @@ Assumptions for causal inference
 </div>
 </div>
 <p>Assumptions 1 and 2 together are referred as the Stable Unit-Treatment Value Assumption (SUTVA) (<span class="citation" data-cites="Imbens2015">G. W. Imbens and Rubin (<a href="references.html#ref-Imbens2015" role="doc-biblioref">2015</a>)</span>). Assumption 3 is the ramdomization assumption. In particular, it implies that <span class="math inline">\(\E(u_i|D_i)=0\)</span> because <span class="math inline">\(D_i\)</span> is independent of the potential outcomes. The last part of Assumption 3, <span class="math inline">\(0&lt;P(D_i=1)&lt;1\)</span>, ensures that there are both treated and untreated individuals in the sample.</p>
-<div id="thm-thm20.1" class="theorem">
+<div id="thm-thm22.1" class="theorem">
 <p><span class="theorem-title"><strong>Theorem 22.1 (ATE and <span class="math inline">\(\beta_1\)</span>)</strong></span> Under Assumptions 1-3, we have <span class="math inline">\(ATE=\beta_1\)</span>.</p>
 </div>
 <div class="proof">
-<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm20.1" class="quarto-xref">Theorem&nbsp;<span>22.1</span></a>). </span>Note that we can express <span class="math inline">\(\beta_1\)</span> as <span class="math inline">\(\beta_1=\E[Y_i|D_i=1]-\E[Y_i|D_i=0]\)</span>. Then, we have <span class="math display">\[
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-thm22.1" class="quarto-xref">Theorem&nbsp;<span>22.1</span></a>). </span>Note that we can express <span class="math inline">\(\beta_1\)</span> as <span class="math inline">\(\beta_1=\E[Y_i|D_i=1]-\E[Y_i|D_i=0]\)</span>. Then, we have <span class="math display">\[
 \begin{align*}
 \beta_1&amp;=\E[Y_i|D_i=1]-\E[Y_i|D_i=0]\\
 &amp;=\E\left[Y_i(1)|D_i=1\right]-\E\left[Y_i(0)|D_i=0\right]\\
@@ -664,26 +664,26 @@ Assumptions for causal inference
 \end{align*}
 \]</span> where the second equality follows from Assumption 1 and the third equality from Assumption 3.</p>
 </div>
-<p><a href="#thm-thm20.1" class="quarto-xref">Theorem&nbsp;<span>22.1</span></a> suggests that we can use the OLS estimator of <span class="math inline">\(\beta_1\)</span> to estimate ATE. Since <span class="math inline">\(D_i\)</span> is binary, we can express the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> as <span id="eq-eq20.3"><span class="math display">\[
+<p><a href="#thm-thm22.1" class="quarto-xref">Theorem&nbsp;<span>22.1</span></a> suggests that we can use the OLS estimator of <span class="math inline">\(\beta_1\)</span> to estimate ATE. Since <span class="math inline">\(D_i\)</span> is binary, we can express the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> as <span id="eq-eq22.3"><span class="math display">\[
 \begin{align}
 \hat{\beta}_1=\bar{Y}^{treated}-\bar{Y}^{control}=\frac{1}{n_1}\sum_{i:D_i=1}Y_i-\frac{1}{n_0}\sum_{i:D_i=0}Y_i,
 \end{align}
 \tag{22.3}\]</span></span> where <span class="math inline">\(n_1\)</span> and <span class="math inline">\(n_0\)</span> are the sizes of treatment and control groups, respectively.</p>
-<div id="def-def20.4" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 22.4 (Difference-in-means estimator)</strong></span> The OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> in <a href="#eq-eq20.3" class="quarto-xref">Equation&nbsp;<span>22.3</span></a> is called the <strong>difference-in-means estimator</strong> or <strong>differences estimator</strong>.</p>
+<div id="def-def22.4" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 22.4 (Difference-in-means estimator)</strong></span> The OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> in <a href="#eq-eq22.3" class="quarto-xref">Equation&nbsp;<span>22.3</span></a> is called the <strong>difference-in-means estimator</strong> or <strong>differences estimator</strong>.</p>
 </div>
 <p>If the Assumption 3 fails, i.e., if treatment assignment and the potential outcomes are dependent, then the OLS estimator suffers from <strong>selection bias</strong>. The difference between <span class="math inline">\(\beta_1=\E[Y_i|D_i=1]-\E[Y_i|D_i=0]\)</span> and <span class="math inline">\(\text{ATE}=\E[Y_i(1)-Y_i(0)]\)</span> is called <strong>selection bias</strong>.</p>
-<p>In estimating the ATE using <a href="#eq-eq20.2" class="quarto-xref">Equation&nbsp;<span>22.2</span></a>, do we need to consider any other variables, such as pre-treatment characteristics or control variables? If there are variables that capture the pre-treatment characteristics of units, or if control variables are available, we can include them in <a href="#eq-eq20.2" class="quarto-xref">Equation&nbsp;<span>22.2</span></a> to increase the efficiency of the OLS estimator: <span class="math display">\[
+<p>In estimating the ATE using <a href="#eq-eq22.2" class="quarto-xref">Equation&nbsp;<span>22.2</span></a>, do we need to consider any other variables, such as pre-treatment characteristics or control variables? If there are variables that capture the pre-treatment characteristics of units, or if control variables are available, we can include them in <a href="#eq-eq22.2" class="quarto-xref">Equation&nbsp;<span>22.2</span></a> to increase the efficiency of the OLS estimator: <span class="math display">\[
 Y_i=\beta_0+\beta_1D_i+\beta_2W_{1i}+\dots+\beta_{r+1}W_{ri}+u_i,
 \]</span> where <span class="math inline">\(W_{1i},\dots,W_{ri}\)</span> are pre-treatment characteristics or control variables. Note that since assignment to treatment is randomized, the conditional mean independence assumption holds with respect to <span class="math inline">\(D_i\)</span>: <span class="math display">\[
 \E(u_i|D_i,W_{1i},\dots,W_{ri})=\E(u_i|W_{1i},\dots,W_{ri}).
 \]</span></p>
 <p>Thus, the OLS estimator of <span class="math inline">\(\beta_1\)</span> is an unbiased estimator of the ATE. However, recall that the coefficients on the control variables do not have a causal interpretation unless <span class="math inline">\(\E(u_i|W_{1i},\dots,W_{ri})=0\)</span>.</p>
-<p>When the assignment of individuals to treatment and control groups is influenced by one or more observable variables <span class="math inline">\(W\)</span>, we refer to this as <strong>randomization based on covariates</strong>. In this case, the OLS estimator of <span class="math inline">\(\beta_1\)</span> based on <a href="#eq-eq20.2" class="quarto-xref">Equation&nbsp;<span>22.2</span></a> suffers from omitted variable bias because <span class="math inline">\(D\)</span> is correlated with the omitted variable <span class="math inline">\(W\)</span>. The omitted variable bias can be avoided by using <span class="math inline">\(W\)</span> as a control variable in the model.</p>
+<p>When the assignment of individuals to treatment and control groups is influenced by one or more observable variables <span class="math inline">\(W\)</span>, we refer to this as <strong>randomization based on covariates</strong>. In this case, the OLS estimator of <span class="math inline">\(\beta_1\)</span> based on <span class="quarto-unresolved-ref">?eq-eq20.2</span> suffers from omitted variable bias because <span class="math inline">\(D\)</span> is correlated with the omitted variable <span class="math inline">\(W\)</span>. The omitted variable bias can be avoided by using <span class="math inline">\(W\)</span> as a control variable in the model.</p>
 </section>
 <section id="threats-to-validity-of-experiments" class="level2" data-number="22.3">
 <h2 data-number="22.3" class="anchored" data-anchor-id="threats-to-validity-of-experiments"><span class="header-section-number">22.3</span> Threats to validity of experiments</h2>
-<p>As in the case of multiple linear regression model, threats to internal validity of an experiment can induce correlation between the treatment indicator and the error term in <a href="#eq-eq20.2" class="quarto-xref">Equation&nbsp;<span>22.2</span></a>. These threats include:</p>
+<p>As in the case of multiple linear regression model, threats to internal validity of an experiment can induce correlation between the treatment indicator and the error term in <span class="quarto-unresolved-ref">?eq-eq20.2</span>. These threats include:</p>
 <ul>
 <li>Failure to randomize,</li>
 <li>Failure to follow the treatment protocol,</li>
@@ -691,10 +691,10 @@ Y_i=\beta_0+\beta_1D_i+\beta_2W_{1i}+\dots+\beta_{r+1}W_{ri}+u_i,
 <li>Experimental effects, and</li>
 <li>Small sample sizes.</li>
 </ul>
-<p>Under the first threat, Assumption 3 fails. For example, consider the job training program in <a href="#exm-ex20.2" class="quarto-xref">Example&nbsp;<span>22.2</span></a>. If we assign disproportionately high-ability individuals to the treatment group, we induce correlation between the treatment indicator <span class="math inline">\(D\)</span> and the potential outcomes and, therefore, between <span class="math inline">\(D\)</span> and the error term <span class="math inline">\(u\)</span>. This correlation arises because ability (which is part of the error term) influences both treatment assignment and the outcome variable (wage). In this case, since the zero-conditional mean assumption fails, the OLS estimator of <span class="math inline">\(\beta_1\)</span> will be biased and inconsistent.</p>
+<p>Under the first threat, Assumption 3 fails. For example, consider the job training program in <span class="quarto-unresolved-ref">?exm-ex20.2</span>. If we assign disproportionately high-ability individuals to the treatment group, we induce correlation between the treatment indicator <span class="math inline">\(D\)</span> and the potential outcomes and, therefore, between <span class="math inline">\(D\)</span> and the error term <span class="math inline">\(u\)</span>. This correlation arises because ability (which is part of the error term) influences both treatment assignment and the outcome variable (wage). In this case, since the zero-conditional mean assumption fails, the OLS estimator of <span class="math inline">\(\beta_1\)</span> will be biased and inconsistent.</p>
 <p>If we have pre-treatment covariates <span class="math inline">\(W_1,\dots,W_r\)</span> on the experimental units, we can test whether Assumption 3 holds. The idea of this testing approach is that if the treatment is randomly assigned, then the treatment indicator <span class="math inline">\(D\)</span> should be uncorrelated with the pre-treatment covariates. Therefore, we can use the <span class="math inline">\(F\)</span>-statistic to test the joint null hypothesis that the coefficients on the pre-treatment covariates in the regression of <span class="math inline">\(D\)</span> on <span class="math inline">\(W_1,\dots,W_r\)</span> are zero. If the treatment is randomly assigned, then the <span class="math inline">\(F\)</span>-statistic should fail to reject this joint null hypothesis.</p>
-<p>In an experiment, subjects may not comply with the treatment protocol. For example, in our job training program in <a href="#exm-ex20.2" class="quarto-xref">Example&nbsp;<span>22.2</span></a>, some subjects in the treatment group may not participate in the training, or some subjects from the control group may participate in the training sessions. In either case, the unobserved factors (e.g., ability) that are part of the error term will be correlated with <span class="math inline">\(D\)</span>, since these unobserved factors influence whether subjects comply with the treatment protocol.</p>
-<p>Attrition occurs when subjects leave either the treatment group or the control group during an experiment. For example, in our job training program in <a href="#exm-ex20.2" class="quarto-xref">Example&nbsp;<span>22.2</span></a>, the most able candidates in the treatment group may leave the program early if they are able to find a job before completing the training. This can create systematic differences between the treatment and control groups, thereby inducing a correlation between <span class="math inline">\(D\)</span> and <span class="math inline">\(u\)</span>.</p>
+<p>In an experiment, subjects may not comply with the treatment protocol. For example, in our job training program in <span class="quarto-unresolved-ref">?exm-ex20.2</span>, some subjects in the treatment group may not participate in the training, or some subjects from the control group may participate in the training sessions. In either case, the unobserved factors (e.g., ability) that are part of the error term will be correlated with <span class="math inline">\(D\)</span>, since these unobserved factors influence whether subjects comply with the treatment protocol.</p>
+<p>Attrition occurs when subjects leave either the treatment group or the control group during an experiment. For example, in our job training program in <span class="quarto-unresolved-ref">?exm-ex20.2</span>, the most able candidates in the treatment group may leave the program early if they are able to find a job before completing the training. This can create systematic differences between the treatment and control groups, thereby inducing a correlation between <span class="math inline">\(D\)</span> and <span class="math inline">\(u\)</span>.</p>
 <p>The experimental effect, also known as the Hawthorne effect, arises when subjects in an experiment change their behavior simply because they are aware of being part of the experiment.</p>
 <p>The final threat to internal validity is a small sample size. This threat does not violate Assumption 3, but it can affect the standard error of the OLS estimator of <span class="math inline">\(\beta_1\)</span>. Recall that the asymptotic variance of the OLS estimator is inversely proportional to the sample size. Thus, the estimated standard errorof the OLS estimator can be large when the sample size is small. Therefore, we may fail to reject the null hypothesis of no treatment effect, even if the treatment has an effect on the outcome variable.</p>
 <p>As in the case of the multiple linear regression model, threats to the <strong>external validity</strong> of an experiment make it difficult to generalize its results to other populations and settings.</p>
@@ -805,7 +805,7 @@ Table&nbsp;22.1: The STAR dataset
 </figure>
 </div>
 </div>
-<p>In this experiment, there are two treatment indicators: <code>SmallClass</code> and <code>RegAid</code>. The first indicator equals to 1 if the student is in a small class, and 0 otherwise. The second indicator equals to 1 if the student is in a regular class with teacher’s aid, and 0 otherwise. The control group consists of students in regular classes, denoted by <code>Regular</code>, which takes the value 1 if the student is in a regular class and 0 otherwise. In our empirical model, we use <code>Regular</code> as the reference group. Thus, our estimation equation takes the following form: <span id="eq-eq20.4"><span class="math display">\[
+<p>In this experiment, there are two treatment indicators: <code>SmallClass</code> and <code>RegAid</code>. The first indicator equals to 1 if the student is in a small class, and 0 otherwise. The second indicator equals to 1 if the student is in a regular class with teacher’s aid, and 0 otherwise. The control group consists of students in regular classes, denoted by <code>Regular</code>, which takes the value 1 if the student is in a regular class and 0 otherwise. In our empirical model, we use <code>Regular</code> as the reference group. Thus, our estimation equation takes the following form: <span id="eq-eq22.4"><span class="math display">\[
 \begin{align}
 Y_i=\beta_0+\beta_1{\tt SmallClass}_i+\beta_2{\tt RegAid}_i+u_i,
 \end{align}
@@ -859,7 +859,7 @@ Y_i=\beta_0+\beta_1{\tt SmallClass}_i+\beta_2{\tt RegAid}_i+u_i,
 <span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>r3_se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(r3_vcov))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The estimation results are presented in <a href="#tbl-t20.1" class="quarto-xref">Table&nbsp;<span>22.2</span></a>. For kindergarten students, those in a small class have, on average, 13.9 more points on the test compared to those in a regular class. The estimated effect of being in a regular class with a teacher’s aide is 0.31 points and is statistically insignificant. The average estimated effect of being in a small class, relative to being in a regular class, is 29.8 points for first grade, 19.4 points for second grade, and 15.6 points for third grade. The estimated effect of being in a regular class with a teacher’s aide, relative to being in a regular class, is statistically insignificant for each grade, except for first grade. Overall, these results suggest that reducing class size has a positive effect on test scores, while adding teacher’s aides to regular classes has no effect on test scores, except for first grade.</p>
+<p>The estimation results are presented in <a href="#tbl-t22.1" class="quarto-xref">Table&nbsp;<span>22.2</span></a>. For kindergarten students, those in a small class have, on average, 13.9 more points on the test compared to those in a regular class. The estimated effect of being in a regular class with a teacher’s aide is 0.31 points and is statistically insignificant. The average estimated effect of being in a small class, relative to being in a regular class, is 29.8 points for first grade, 19.4 points for second grade, and 15.6 points for third grade. The estimated effect of being in a regular class with a teacher’s aide, relative to being in a regular class, is statistically insignificant for each grade, except for first grade. Overall, these results suggest that reducing class size has a positive effect on test scores, while adding teacher’s aides to regular classes has no effect on test scores, except for first grade.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
@@ -874,12 +874,12 @@ Y_i=\beta_0+\beta_1{\tt SmallClass}_i+\beta_2{\tt RegAid}_i+u_i,
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log|F"</span></span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t20.1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-t22.1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t20.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t22.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;22.2: Project STAR: Estimation Results
 </figcaption>
-<div aria-describedby="tbl-t20.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-t22.1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -887,25 +887,25 @@ Table&nbsp;22.2: Project STAR: Estimation Results
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_0yjeidwtdfdi2rjhtigx = TinyTable.createTableFunctions("tinytable_0yjeidwtdfdi2rjhtigx");
+      const tableFns_kgsqv9hpu0kfj1il4bh1 = TinyTable.createTableFunctions("tinytable_kgsqv9hpu0kfj1il4bh1");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '23', j: 2 }, { i: '23', j: 3 }, { i: '23', j: 4 }, { i: '23', j: 5 } ], css_id: 'tinytable_css_4qd8iptq89pu23qas5e0',}, 
-          { positions: [ { i: '18', j: 2 }, { i: '18', j: 3 }, { i: '18', j: 4 }, { i: '18', j: 5 } ], css_id: 'tinytable_css_y7r0c2l66yenh9zjefmw',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '17', j: 2 }, { i: '19', j: 2 }, { i: '20', j: 2 }, { i: '21', j: 2 }, { i: '22', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '15', j: 3 }, { i: '16', j: 3 }, { i: '17', j: 3 }, { i: '19', j: 3 }, { i: '20', j: 3 }, { i: '21', j: 3 }, { i: '22', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '16', j: 4 }, { i: '17', j: 4 }, { i: '19', j: 4 }, { i: '20', j: 4 }, { i: '21', j: 4 }, { i: '22', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '10', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '15', j: 5 }, { i: '16', j: 5 }, { i: '17', j: 5 }, { i: '19', j: 5 }, { i: '20', j: 5 }, { i: '21', j: 5 }, { i: '22', j: 5 } ], css_id: 'tinytable_css_xjb1f4ywczgr0b2j208j',}, 
-          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_0do7w4s1jhqyvjrymk7o',}, 
-          { positions: [ { i: '23', j: 1 } ], css_id: 'tinytable_css_xvi9uzrqdlm3khmjg8kz',}, 
-          { positions: [ { i: '18', j: 1 } ], css_id: 'tinytable_css_38umphtcrikly1l3tenz',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '16', j: 1 }, { i: '17', j: 1 }, { i: '19', j: 1 }, { i: '20', j: 1 }, { i: '21', j: 1 }, { i: '22', j: 1 } ], css_id: 'tinytable_css_1cvfxs0sf92a441i04di',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_t758lmho2igab3jibrug',}, 
+          { positions: [ { i: '23', j: 2 }, { i: '23', j: 3 }, { i: '23', j: 4 }, { i: '23', j: 5 } ], css_id: 'tinytable_css_iybpbtkv1ews2ddnypux',}, 
+          { positions: [ { i: '18', j: 2 }, { i: '18', j: 3 }, { i: '18', j: 4 }, { i: '18', j: 5 } ], css_id: 'tinytable_css_2qf2zqxycd0k03xzoptr',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '17', j: 2 }, { i: '19', j: 2 }, { i: '20', j: 2 }, { i: '21', j: 2 }, { i: '22', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '15', j: 3 }, { i: '16', j: 3 }, { i: '17', j: 3 }, { i: '19', j: 3 }, { i: '20', j: 3 }, { i: '21', j: 3 }, { i: '22', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '16', j: 4 }, { i: '17', j: 4 }, { i: '19', j: 4 }, { i: '20', j: 4 }, { i: '21', j: 4 }, { i: '22', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '10', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '15', j: 5 }, { i: '16', j: 5 }, { i: '17', j: 5 }, { i: '19', j: 5 }, { i: '20', j: 5 }, { i: '21', j: 5 }, { i: '22', j: 5 } ], css_id: 'tinytable_css_yq2wj7dl5e2wnil12wgw',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_9q3wj4lrfseo0sl2gb53',}, 
+          { positions: [ { i: '23', j: 1 } ], css_id: 'tinytable_css_8d69ma9317e3lp3fpxrj',}, 
+          { positions: [ { i: '18', j: 1 } ], css_id: 'tinytable_css_xtj1k6wktazi5fylacur',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '16', j: 1 }, { i: '17', j: 1 }, { i: '19', j: 1 }, { i: '20', j: 1 }, { i: '21', j: 1 }, { i: '22', j: 1 } ], css_id: 'tinytable_css_f9vnto856zs4xx03j2ks',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_e4ymiuk1yf3tbxwqc1xz',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_0yjeidwtdfdi2rjhtigx.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_kgsqv9hpu0kfj1il4bh1.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -914,17 +914,17 @@ Table&nbsp;22.2: Project STAR: Estimation Results
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_0yjeidwtdfdi2rjhtigx td.tinytable_css_4qd8iptq89pu23qas5e0, #tinytable_0yjeidwtdfdi2rjhtigx th.tinytable_css_4qd8iptq89pu23qas5e0 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_0yjeidwtdfdi2rjhtigx td.tinytable_css_y7r0c2l66yenh9zjefmw, #tinytable_0yjeidwtdfdi2rjhtigx th.tinytable_css_y7r0c2l66yenh9zjefmw {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_0yjeidwtdfdi2rjhtigx td.tinytable_css_xjb1f4ywczgr0b2j208j, #tinytable_0yjeidwtdfdi2rjhtigx th.tinytable_css_xjb1f4ywczgr0b2j208j { text-align: center }
-    #tinytable_0yjeidwtdfdi2rjhtigx td.tinytable_css_0do7w4s1jhqyvjrymk7o, #tinytable_0yjeidwtdfdi2rjhtigx th.tinytable_css_0do7w4s1jhqyvjrymk7o {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_0yjeidwtdfdi2rjhtigx td.tinytable_css_xvi9uzrqdlm3khmjg8kz, #tinytable_0yjeidwtdfdi2rjhtigx th.tinytable_css_xvi9uzrqdlm3khmjg8kz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_0yjeidwtdfdi2rjhtigx td.tinytable_css_38umphtcrikly1l3tenz, #tinytable_0yjeidwtdfdi2rjhtigx th.tinytable_css_38umphtcrikly1l3tenz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_0yjeidwtdfdi2rjhtigx td.tinytable_css_1cvfxs0sf92a441i04di, #tinytable_0yjeidwtdfdi2rjhtigx th.tinytable_css_1cvfxs0sf92a441i04di { text-align: left }
-    #tinytable_0yjeidwtdfdi2rjhtigx td.tinytable_css_t758lmho2igab3jibrug, #tinytable_0yjeidwtdfdi2rjhtigx th.tinytable_css_t758lmho2igab3jibrug {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_kgsqv9hpu0kfj1il4bh1 td.tinytable_css_iybpbtkv1ews2ddnypux, #tinytable_kgsqv9hpu0kfj1il4bh1 th.tinytable_css_iybpbtkv1ews2ddnypux {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_kgsqv9hpu0kfj1il4bh1 td.tinytable_css_2qf2zqxycd0k03xzoptr, #tinytable_kgsqv9hpu0kfj1il4bh1 th.tinytable_css_2qf2zqxycd0k03xzoptr {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_kgsqv9hpu0kfj1il4bh1 td.tinytable_css_yq2wj7dl5e2wnil12wgw, #tinytable_kgsqv9hpu0kfj1il4bh1 th.tinytable_css_yq2wj7dl5e2wnil12wgw { text-align: center }
+    #tinytable_kgsqv9hpu0kfj1il4bh1 td.tinytable_css_9q3wj4lrfseo0sl2gb53, #tinytable_kgsqv9hpu0kfj1il4bh1 th.tinytable_css_9q3wj4lrfseo0sl2gb53 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_kgsqv9hpu0kfj1il4bh1 td.tinytable_css_8d69ma9317e3lp3fpxrj, #tinytable_kgsqv9hpu0kfj1il4bh1 th.tinytable_css_8d69ma9317e3lp3fpxrj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_kgsqv9hpu0kfj1il4bh1 td.tinytable_css_xtj1k6wktazi5fylacur, #tinytable_kgsqv9hpu0kfj1il4bh1 th.tinytable_css_xtj1k6wktazi5fylacur {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_kgsqv9hpu0kfj1il4bh1 td.tinytable_css_f9vnto856zs4xx03j2ks, #tinytable_kgsqv9hpu0kfj1il4bh1 th.tinytable_css_f9vnto856zs4xx03j2ks { text-align: left }
+    #tinytable_kgsqv9hpu0kfj1il4bh1 td.tinytable_css_e4ymiuk1yf3tbxwqc1xz, #tinytable_kgsqv9hpu0kfj1il4bh1 th.tinytable_css_e4ymiuk1yf3tbxwqc1xz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_0yjeidwtdfdi2rjhtigx" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_kgsqv9hpu0kfj1il4bh1" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -1107,7 +1107,7 @@ Table&nbsp;22.2: Project STAR: Estimation Results
 </figure>
 </div>
 </div>
-<p>Next, we extend the model in <a href="#eq-eq20.4" class="quarto-xref">Equation&nbsp;<span>22.4</span></a> with some covariates because of two main reasons. First, by using additional covariates, we can increase the efficiency of the OLS estimator. Second, assignment to class types may be influenced by observable characteristics of students and teachers. In such cases, the OLS estimator based on a model that includes these covariates may yield different estimates of the treatment effects. For these two reasons, we consider the following covariates in our empirical model:</p>
+<p>Next, we extend the model in <a href="#eq-eq22.4" class="quarto-xref">Equation&nbsp;<span>22.4</span></a> with some covariates because of two main reasons. First, by using additional covariates, we can increase the efficiency of the OLS estimator. Second, assignment to class types may be influenced by observable characteristics of students and teachers. In such cases, the OLS estimator based on a model that includes these covariates may yield different estimates of the treatment effects. For these two reasons, we consider the following covariates in our empirical model:</p>
 <ul>
 <li><code>experience</code>: Teacher’s years of experience</li>
 <li><code>boy</code>: Student is a boy (a dummy variable)</li>
@@ -1179,7 +1179,7 @@ Table&nbsp;22.2: Project STAR: Estimation Results
 <span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>rk3_se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(rk_vcov))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The estimation results are presented in <a href="#tbl-t20.2" class="quarto-xref">Table&nbsp;<span>22.3</span></a>. The results in this table show that adding these additional covariates and school fixed effects to the model does not lead to substantially different estimates of the treatment effects. However, note that the reported standard errors are relatively smaller than those reported in <a href="#tbl-t20.1" class="quarto-xref">Table&nbsp;<span>22.2</span></a>, suggesting an efficiency gain from including these covariates.</p>
+<p>The estimation results are presented in <a href="#tbl-t22.2" class="quarto-xref">Table&nbsp;<span>22.3</span></a>. The results in this table show that adding these additional covariates and school fixed effects to the model does not lead to substantially different estimates of the treatment effects. However, note that the reported standard errors are relatively smaller than those reported in <a href="#tbl-t22.1" class="quarto-xref">Table&nbsp;<span>22.2</span></a>, suggesting an efficiency gain from including these covariates.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">models =</span> <span class="fu">list</span>(</span>
@@ -1194,12 +1194,12 @@ Table&nbsp;22.2: Project STAR: Estimation Results
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log|F"</span></span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t20.2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-t22.2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t20.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t22.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;22.3: Project STAR: Estimation Results with Covariates
 </figcaption>
-<div aria-describedby="tbl-t20.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-t22.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -1207,25 +1207,25 @@ Table&nbsp;22.3: Project STAR: Estimation Results with Covariates
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_ypnc0uib0gfxzh1n2ee8 = TinyTable.createTableFunctions("tinytable_ypnc0uib0gfxzh1n2ee8");
+      const tableFns_pqy9i3cxu8n1svyl489t = TinyTable.createTableFunctions("tinytable_pqy9i3cxu8n1svyl489t");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '21', j: 2 }, { i: '21', j: 3 }, { i: '21', j: 4 }, { i: '21', j: 5 } ], css_id: 'tinytable_css_fltsa1ez3u0ifca7czpt',}, 
-          { positions: [ { i: '16', j: 2 }, { i: '16', j: 3 }, { i: '16', j: 4 }, { i: '16', j: 5 } ], css_id: 'tinytable_css_4aubfd9czeuvpsct7c91',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '17', j: 2 }, { i: '18', j: 2 }, { i: '19', j: 2 }, { i: '20', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '15', j: 3 }, { i: '17', j: 3 }, { i: '18', j: 3 }, { i: '19', j: 3 }, { i: '20', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '17', j: 4 }, { i: '18', j: 4 }, { i: '19', j: 4 }, { i: '20', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '10', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '15', j: 5 }, { i: '17', j: 5 }, { i: '18', j: 5 }, { i: '19', j: 5 }, { i: '20', j: 5 } ], css_id: 'tinytable_css_n36tw79sh5vjjgioufe6',}, 
-          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_fdfqwndpvirobhhnwuom',}, 
-          { positions: [ { i: '21', j: 1 } ], css_id: 'tinytable_css_naiblw5tzvvjxog7ef4b',}, 
-          { positions: [ { i: '16', j: 1 } ], css_id: 'tinytable_css_f1sb41laf7v3vpr4q2sh',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '17', j: 1 }, { i: '18', j: 1 }, { i: '19', j: 1 }, { i: '20', j: 1 } ], css_id: 'tinytable_css_8o0waey984l2zl9vfthj',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_9yhhuwuw6hp40kio8gwn',}, 
+          { positions: [ { i: '21', j: 2 }, { i: '21', j: 3 }, { i: '21', j: 4 }, { i: '21', j: 5 } ], css_id: 'tinytable_css_y251sum50fx7ybnkpsyn',}, 
+          { positions: [ { i: '16', j: 2 }, { i: '16', j: 3 }, { i: '16', j: 4 }, { i: '16', j: 5 } ], css_id: 'tinytable_css_yq81dskpwfwlxjoufzf3',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '17', j: 2 }, { i: '18', j: 2 }, { i: '19', j: 2 }, { i: '20', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '15', j: 3 }, { i: '17', j: 3 }, { i: '18', j: 3 }, { i: '19', j: 3 }, { i: '20', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '17', j: 4 }, { i: '18', j: 4 }, { i: '19', j: 4 }, { i: '20', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '10', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '15', j: 5 }, { i: '17', j: 5 }, { i: '18', j: 5 }, { i: '19', j: 5 }, { i: '20', j: 5 } ], css_id: 'tinytable_css_uk4gyq4ya9x6cgnrmadk',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_on3rsabj8r69ekakraci',}, 
+          { positions: [ { i: '21', j: 1 } ], css_id: 'tinytable_css_nagjzik63hz117dj3nbw',}, 
+          { positions: [ { i: '16', j: 1 } ], css_id: 'tinytable_css_fqk086wkb87ca9a9ctcr',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '17', j: 1 }, { i: '18', j: 1 }, { i: '19', j: 1 }, { i: '20', j: 1 } ], css_id: 'tinytable_css_asyog3kr68aug4rof8c7',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_rwllxggl4wvcf88jq6g6',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_ypnc0uib0gfxzh1n2ee8.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_pqy9i3cxu8n1svyl489t.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1234,17 +1234,17 @@ Table&nbsp;22.3: Project STAR: Estimation Results with Covariates
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_ypnc0uib0gfxzh1n2ee8 td.tinytable_css_fltsa1ez3u0ifca7czpt, #tinytable_ypnc0uib0gfxzh1n2ee8 th.tinytable_css_fltsa1ez3u0ifca7czpt {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ypnc0uib0gfxzh1n2ee8 td.tinytable_css_4aubfd9czeuvpsct7c91, #tinytable_ypnc0uib0gfxzh1n2ee8 th.tinytable_css_4aubfd9czeuvpsct7c91 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ypnc0uib0gfxzh1n2ee8 td.tinytable_css_n36tw79sh5vjjgioufe6, #tinytable_ypnc0uib0gfxzh1n2ee8 th.tinytable_css_n36tw79sh5vjjgioufe6 { text-align: center }
-    #tinytable_ypnc0uib0gfxzh1n2ee8 td.tinytable_css_fdfqwndpvirobhhnwuom, #tinytable_ypnc0uib0gfxzh1n2ee8 th.tinytable_css_fdfqwndpvirobhhnwuom {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ypnc0uib0gfxzh1n2ee8 td.tinytable_css_naiblw5tzvvjxog7ef4b, #tinytable_ypnc0uib0gfxzh1n2ee8 th.tinytable_css_naiblw5tzvvjxog7ef4b {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_ypnc0uib0gfxzh1n2ee8 td.tinytable_css_f1sb41laf7v3vpr4q2sh, #tinytable_ypnc0uib0gfxzh1n2ee8 th.tinytable_css_f1sb41laf7v3vpr4q2sh {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_ypnc0uib0gfxzh1n2ee8 td.tinytable_css_8o0waey984l2zl9vfthj, #tinytable_ypnc0uib0gfxzh1n2ee8 th.tinytable_css_8o0waey984l2zl9vfthj { text-align: left }
-    #tinytable_ypnc0uib0gfxzh1n2ee8 td.tinytable_css_9yhhuwuw6hp40kio8gwn, #tinytable_ypnc0uib0gfxzh1n2ee8 th.tinytable_css_9yhhuwuw6hp40kio8gwn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_pqy9i3cxu8n1svyl489t td.tinytable_css_y251sum50fx7ybnkpsyn, #tinytable_pqy9i3cxu8n1svyl489t th.tinytable_css_y251sum50fx7ybnkpsyn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_pqy9i3cxu8n1svyl489t td.tinytable_css_yq81dskpwfwlxjoufzf3, #tinytable_pqy9i3cxu8n1svyl489t th.tinytable_css_yq81dskpwfwlxjoufzf3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_pqy9i3cxu8n1svyl489t td.tinytable_css_uk4gyq4ya9x6cgnrmadk, #tinytable_pqy9i3cxu8n1svyl489t th.tinytable_css_uk4gyq4ya9x6cgnrmadk { text-align: center }
+    #tinytable_pqy9i3cxu8n1svyl489t td.tinytable_css_on3rsabj8r69ekakraci, #tinytable_pqy9i3cxu8n1svyl489t th.tinytable_css_on3rsabj8r69ekakraci {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_pqy9i3cxu8n1svyl489t td.tinytable_css_nagjzik63hz117dj3nbw, #tinytable_pqy9i3cxu8n1svyl489t th.tinytable_css_nagjzik63hz117dj3nbw {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_pqy9i3cxu8n1svyl489t td.tinytable_css_fqk086wkb87ca9a9ctcr, #tinytable_pqy9i3cxu8n1svyl489t th.tinytable_css_fqk086wkb87ca9a9ctcr {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_pqy9i3cxu8n1svyl489t td.tinytable_css_asyog3kr68aug4rof8c7, #tinytable_pqy9i3cxu8n1svyl489t th.tinytable_css_asyog3kr68aug4rof8c7 { text-align: left }
+    #tinytable_pqy9i3cxu8n1svyl489t td.tinytable_css_rwllxggl4wvcf88jq6g6, #tinytable_pqy9i3cxu8n1svyl489t th.tinytable_css_rwllxggl4wvcf88jq6g6 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_ypnc0uib0gfxzh1n2ee8" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_pqy9i3cxu8n1svyl489t" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -1417,7 +1417,7 @@ Table&nbsp;22.3: Project STAR: Estimation Results with Covariates
 <section id="quasi-experiments" class="level2" data-number="22.5">
 <h2 data-number="22.5" class="anchored" data-anchor-id="quasi-experiments"><span class="header-section-number">22.5</span> Quasi-Experiments</h2>
 <p>In a <strong>quasi-experiment</strong>, also known as a <strong>natural experiment</strong>, units are assigned to treatment and control groups based on changes in their circumstances. In other words, treatment and control groups are not formed through an explicit randomized controlled experiment but as a result of a policy intervention (or other changes in circumstances). Therefore, in a quasi-experiment, we assume that there is “as if” random assignment. Since there is no complete randomization, we expect some systematic differences between the treatment and control groups, which means we cannot resort to the difference-in-means estimator introduced earlier to estimate the treatment effect. In this section, we introduce the differences-in-differences (DiD) and regression discontinuity (RD) approaches for estimating the treatment effect in quasi-experimental settings.</p>
-<div id="exm-ex20.4" class="theorem example">
+<div id="exm-ex22.4" class="theorem example">
 <p><span class="theorem-title"><strong>Example 22.4 (The effect of minimum wage on employment)</strong></span> <span class="citation" data-cites="Card:1994">Card and Krueger (<a href="references.html#ref-Card:1994" role="doc-biblioref">1994</a>)</span> investigate the effect of an increase in the minimum wage on average employment at fast-food restaurants in New Jersey. On April 1, 1992, New Jersey increased the minimum hourly wage from $4.25 to $5.05, making it the highest minimum wage in the country. In contrast, the minimum hourly wage in neighboring Pennsylvania remained unchanged. In this example, the treatment and control groups are naturally formed by the increase in the minimum wage:</p>
 <ul>
 <li>The treatment group consists of fast-food restaurants in New Jersey.</li>
@@ -1449,32 +1449,32 @@ Figure&nbsp;22.1: Minimum wage by state (Source: <a href="https://en.m.wikipedia
 <li><span class="math inline">\(\bar{Y}^{control,before}\)</span>: the sample average of <span class="math inline">\(Y\)</span> for the control group before the intervention, and</li>
 <li><span class="math inline">\(\bar{Y}^{control,after}\)</span>: the sample average of <span class="math inline">\(Y\)</span> for the control group after the intervention.</li>
 </ul>
-<div id="def-def20.5" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 22.5 (The DiD estimator)</strong></span> The DiD estimator is given by <span id="eq-eq20.5"><span class="math display">\[
+<div id="def-def22.5" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 22.5 (The DiD estimator)</strong></span> The DiD estimator is given by <span id="eq-eq22.5"><span class="math display">\[
 \begin{align}
 \hat{\beta}&amp;=\left(\bar{Y}^{ treatment,after}-\bar{Y}^{treatment,before}\right)-\left(\bar{Y}^{control,after}-\bar{Y}^{control,before}\right)\\
 &amp;=\Delta\bar{Y}^{treatment}-\Delta\bar{Y}^{control}.
 \end{align}
 \tag{22.5}\]</span></span></p>
 </div>
-<p>We illustrate the DiD estimator <span class="math inline">\(\hat{\beta}\)</span> in <a href="#fig-f20.2" class="quarto-xref">Figure&nbsp;<span>22.2</span></a>. Before the treatment, the sample averages are <span class="math inline">\(\bar{Y}^{treatment,before}=40\)</span> and <span class="math inline">\(\bar{Y}^{control,before}=20\)</span>, and after the treatment these averages are <span class="math inline">\(\bar{Y}^{treatment,after}=80\)</span> and <span class="math inline">\(\bar{Y}^{control,after}=30\)</span>. Note that the difference in group means after the treatment is <span class="math inline">\(80-30=50\)</span>. Some of this difference is due to the fact that both groups have different pre-treatment means. The DiD approach removes the effect of the difference in the pre-treatment period by focusing on the change in group means. Thus, the DiD estimator gives <span class="math inline">\((80-40)-(30-20)=30\)</span>.</p>
-<p>The DiD approach is based on the assumption that, on average, the treatment and control groups would have followed the same trend in the absence of treatment. This assumption is called the <strong>parallel trends assumption</strong> in the literature. In <a href="#fig-f20.2" class="quarto-xref">Figure&nbsp;<span>22.2</span></a>, the trend in the average outcome for the treated group in the absence of treatment is illustrated with the dashed black line. Thus, the counterfactual average outcome for the treated group in the post-treatment period is <span class="math inline">\(\bar{Y}^{\text{treatment, after}} = 50\)</span>, so that the dashed line is parallel to the steel blue line. This assumption ensures that the difference between the observed average outcome <span class="math inline">\(\bar{Y}^{treatment,after}=80\)</span> and the counterfactual average outcome <span class="math inline">\(\bar{Y}^{\text{treatment, after}} = 50\)</span> is due to the treatment.</p>
-<div id="fig-f20.2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<p>We illustrate the DiD estimator <span class="math inline">\(\hat{\beta}\)</span> in <a href="#fig-f22.2" class="quarto-xref">Figure&nbsp;<span>22.2</span></a>. Before the treatment, the sample averages are <span class="math inline">\(\bar{Y}^{treatment,before}=40\)</span> and <span class="math inline">\(\bar{Y}^{control,before}=20\)</span>, and after the treatment these averages are <span class="math inline">\(\bar{Y}^{treatment,after}=80\)</span> and <span class="math inline">\(\bar{Y}^{control,after}=30\)</span>. Note that the difference in group means after the treatment is <span class="math inline">\(80-30=50\)</span>. Some of this difference is due to the fact that both groups have different pre-treatment means. The DiD approach removes the effect of the difference in the pre-treatment period by focusing on the change in group means. Thus, the DiD estimator gives <span class="math inline">\((80-40)-(30-20)=30\)</span>.</p>
+<p>The DiD approach is based on the assumption that, on average, the treatment and control groups would have followed the same trend in the absence of treatment. This assumption is called the <strong>parallel trends assumption</strong> in the literature. In <a href="#fig-f22.2" class="quarto-xref">Figure&nbsp;<span>22.2</span></a>, the trend in the average outcome for the treated group in the absence of treatment is illustrated with the dashed black line. Thus, the counterfactual average outcome for the treated group in the post-treatment period is <span class="math inline">\(\bar{Y}^{\text{treatment, after}} = 50\)</span>, so that the dashed line is parallel to the steel blue line. This assumption ensures that the difference between the observed average outcome <span class="math inline">\(\bar{Y}^{treatment,after}=80\)</span> and the counterfactual average outcome <span class="math inline">\(\bar{Y}^{\text{treatment, after}} = 50\)</span> is due to the treatment.</p>
+<div id="fig-f22.2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-f20.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="fig-f22.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="figures/did_estimator.png" class="img-fluid figure-img" width="500">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f20.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f22.2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;22.2: The DiD estimator
 </figcaption>
 </figure>
 </div>
-<p>The DiD estimator in <a href="#eq-eq20.5" class="quarto-xref">Equation&nbsp;<span>22.5</span></a> suggests that we can alternatively compute it using the following regression model: <span id="eq-eq20.6"><span class="math display">\[
+<p>The DiD estimator in <a href="#eq-eq22.5" class="quarto-xref">Equation&nbsp;<span>22.5</span></a> suggests that we can alternatively compute it using the following regression model: <span id="eq-eq22.6"><span class="math display">\[
 \begin{align}
 \Delta Y_i=\beta_0+\beta_1D_i+u_i,
 \end{align}
 \tag{22.6}\]</span></span> where <span class="math inline">\(\Delta Y_i\)</span> represents the change in the post-treatment value of <span class="math inline">\(Y_i\)</span> minus the pre-treatment value for the <span class="math inline">\(i\)</span>th individual, and <span class="math inline">\(D_i\)</span> is the treatment indicator. In this regression, the DiD estimator is the OLS estimator of <span class="math inline">\(\beta_1=\E[\Delta Y_i|D_i=1]-\E[\Delta Y_i|D_i=0]\)</span>.</p>
-<p>The DiD estimator can be extended to include additional regressors <span class="math inline">\(W_{1},\dots,W_{r}\)</span>. These variables can be pre-treatment individual characteristics, or they can be control variables: <span id="eq-eq20.7"><span class="math display">\[
+<p>The DiD estimator can be extended to include additional regressors <span class="math inline">\(W_{1},\dots,W_{r}\)</span>. These variables can be pre-treatment individual characteristics, or they can be control variables: <span id="eq-eq22.7"><span class="math display">\[
 \begin{align}
 \Delta Y_i=\beta_0+\beta_1D_i+\beta_2W_{1i}+\dots+\beta_{r+1}W_{ri}+u_i.
 \end{align}
@@ -1486,7 +1486,7 @@ Figure&nbsp;22.2: The DiD estimator
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Key Concept 20.1: Key features of the DiD approach
+Key Concept 22.1: Key features of the DiD approach
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1501,7 +1501,7 @@ Key Concept 20.1: Key features of the DiD approach
 </section>
 <section id="differences-in-differences-with-multiple-time-periods" class="level3" data-number="22.6.2">
 <h3 data-number="22.6.2" class="anchored" data-anchor-id="differences-in-differences-with-multiple-time-periods"><span class="header-section-number">22.6.2</span> Differences-in-differences with multiple time periods</h3>
-<p>We assume that there are two periods in the DiD approach so far. It is also possible to extend the DiD approach when we observe each unit in the treatment and control group at multiple time periods. Let us assume that we observe each unit for <span class="math inline">\(t=1,2,\dots,T\)</span> periods. We also assume that there is a common treatment timing denoted by <span class="math inline">\(t_0\)</span>. Then, the DiD estimator can be computed using the following regression: <span id="eq-eq20.8"><span class="math display">\[
+<p>We assume that there are two periods in the DiD approach so far. It is also possible to extend the DiD approach when we observe each unit in the treatment and control group at multiple time periods. Let us assume that we observe each unit for <span class="math inline">\(t=1,2,\dots,T\)</span> periods. We also assume that there is a common treatment timing denoted by <span class="math inline">\(t_0\)</span>. Then, the DiD estimator can be computed using the following regression: <span id="eq-eq22.8"><span class="math display">\[
 \begin{align}
 Y_{it}=\beta_0+\beta_1D_i+\beta_2{\tt Period}_t+\beta_3(D_i\times{\tt Period}_t)+u_{it},
 \end{align}
@@ -1513,11 +1513,11 @@ Y_{it}=\beta_0+\beta_1D_i+\beta_2{\tt Period}_t+\beta_3(D_i\times{\tt Period}_t)
 0\quad\text{if}\quad t&lt; t_0.
 \end{cases}
 \end{align}
-\]</span> The DiD estimator is the OLS estimator of <span class="math inline">\(\beta_3\)</span> in <a href="#eq-eq20.8" class="quarto-xref">Equation&nbsp;<span>22.8</span></a>. We can also estimate the DiD parameter <span class="math inline">\(\beta_3\)</span> through the following two-way fixed effects regression: <span id="eq-eq20.9"><span class="math display">\[
+\]</span> The DiD estimator is the OLS estimator of <span class="math inline">\(\beta_3\)</span> in <a href="#eq-eq22.8" class="quarto-xref">Equation&nbsp;<span>22.8</span></a>. We can also estimate the DiD parameter <span class="math inline">\(\beta_3\)</span> through the following two-way fixed effects regression: <span id="eq-eq22.9"><span class="math display">\[
 \begin{align}
 Y_{it}=\alpha_i+\lambda_t+\beta_3(D_i\times{\tt Period}_t)+u_{it},
 \end{align}
-\tag{22.9}\]</span></span> where <span class="math inline">\(\alpha_i\)</span> is the individual (entity) fixed effect, <span class="math inline">\(\lambda_t\)</span> is the time fixed effect, <span class="math inline">\(D_i\)</span> is the treatment indicator, and <span class="math inline">\({\tt Period}_t\)</span> is the post-treatment indicator. The DiD estimator is given by the fixed effects estimator of <span class="math inline">\(\beta_3\)</span>. Both <a href="#eq-eq20.8" class="quarto-xref">Equation&nbsp;<span>22.8</span></a> and <a href="#eq-eq20.9" class="quarto-xref">Equation&nbsp;<span>22.9</span></a> can also be extended by considering variables <span class="math inline">\(W_{1t},\dots,W_{rt}\)</span> on the pre-treatment individual characteristics.</p>
+\tag{22.9}\]</span></span> where <span class="math inline">\(\alpha_i\)</span> is the individual (entity) fixed effect, <span class="math inline">\(\lambda_t\)</span> is the time fixed effect, <span class="math inline">\(D_i\)</span> is the treatment indicator, and <span class="math inline">\({\tt Period}_t\)</span> is the post-treatment indicator. The DiD estimator is given by the fixed effects estimator of <span class="math inline">\(\beta_3\)</span>. Both <a href="#eq-eq22.8" class="quarto-xref">Equation&nbsp;<span>22.8</span></a> and <a href="#eq-eq22.9" class="quarto-xref">Equation&nbsp;<span>22.9</span></a> can also be extended by considering variables <span class="math inline">\(W_{1t},\dots,W_{rt}\)</span> on the pre-treatment individual characteristics.</p>
 </section>
 <section id="application-the-effect-of-minimum-wage-on-employment" class="level3" data-number="22.6.3">
 <h3 data-number="22.6.3" class="anchored" data-anchor-id="application-the-effect-of-minimum-wage-on-employment"><span class="header-section-number">22.6.3</span> Application: The effect of minimum wage on employment</h3>
@@ -1610,7 +1610,7 @@ Table&nbsp;22.4: The CK1994 dataset
 [26] "time"        </code></pre>
 </div>
 </div>
-<p>We start by using <a href="#eq-eq20.5" class="quarto-xref">Equation&nbsp;<span>22.5</span></a> to estimate the effect of the change in the minimum hourly wage on employment in New Jersey. In the following code chunk, we generate sample averages for both groups before and after the change. These estimates are provided in <a href="#tbl-t20.3" class="quarto-xref">Table&nbsp;<span>22.5</span></a>. In New Jersey, the average employment was 20.43 employees per restaurant before the increase in the minimum wage and 20.90 employees per restaurant after the change. In Pennsylvania, these averages were 23.38 and 21.10, respectively. The DiD estimator in <a href="#eq-eq20.5" class="quarto-xref">Equation&nbsp;<span>22.5</span></a> gives <span class="math inline">\((20.90-20.43)-(21.10-23.38)=2.75\)</span>. Thus, the average employment increases by 2.75 employees per restaurant after the increase in the minimum wage, a result that contrasts with conventional economic theory.</p>
+<p>We start by using <a href="#eq-eq22.5" class="quarto-xref">Equation&nbsp;<span>22.5</span></a> to estimate the effect of the change in the minimum hourly wage on employment in New Jersey. In the following code chunk, we generate sample averages for both groups before and after the change. These estimates are provided in <a href="#tbl-t22.3" class="quarto-xref">Table&nbsp;<span>22.5</span></a>. In New Jersey, the average employment was 20.43 employees per restaurant before the increase in the minimum wage and 20.90 employees per restaurant after the change. In Pennsylvania, these averages were 23.38 and 21.10, respectively. The DiD estimator in <a href="#eq-eq22.5" class="quarto-xref">Equation&nbsp;<span>22.5</span></a> gives <span class="math inline">\((20.90-20.43)-(21.10-23.38)=2.75\)</span>. Thus, the average employment increases by 2.75 employees per restaurant after the increase in the minimum wage, a result that contrasts with conventional economic theory.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute total employment</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>fte <span class="ot">&lt;-</span> df<span class="sc">$</span>empft <span class="sc">+</span> df<span class="sc">$</span>emppt <span class="sc">/</span> <span class="dv">2</span> <span class="sc">+</span> df<span class="sc">$</span>nmgrs</span>
@@ -1635,12 +1635,12 @@ Table&nbsp;22.4: The CK1994 dataset
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print table</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(tb, <span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t20.3" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-t22.3" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t20.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t22.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;22.5: Average Employment at Fast Food Restaurants
 </figcaption>
-<div aria-describedby="tbl-t20.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-t22.3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
@@ -1677,9 +1677,9 @@ Table&nbsp;22.5: Average Employment at Fast Food Restaurants
 </figure>
 </div>
 </div>
-<p>Next, we use <a href="#eq-eq20.6" class="quarto-xref">Equation&nbsp;<span>22.6</span></a> to estimate the effect of the increase in the minimum wage on employment. In the following code chunk, we generate the <span class="math inline">\(\Delta Y\)</span> and <span class="math inline">\(D\)</span> variables, and then use the OLS estimator to estimate the DiD parameter <span class="math inline">\(\beta_1\)</span>. The DiD estimate of <span class="math inline">\(\beta_1\)</span> is <span class="math inline">\(2.75\)</span>, which is exactly the same as the one in <a href="#tbl-t20.3" class="quarto-xref">Table&nbsp;<span>22.5</span></a>.</p>
+<p>Next, we use <a href="#eq-eq22.6" class="quarto-xref">Equation&nbsp;<span>22.6</span></a> to estimate the effect of the increase in the minimum wage on employment. In the following code chunk, we generate the <span class="math inline">\(\Delta Y\)</span> and <span class="math inline">\(D\)</span> variables, and then use the OLS estimator to estimate the DiD parameter <span class="math inline">\(\beta_1\)</span>. The DiD estimate of <span class="math inline">\(\beta_1\)</span> is <span class="math inline">\(2.75\)</span>, which is exactly the same as the one in <a href="#tbl-t22.3" class="quarto-xref">Table&nbsp;<span>22.5</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation of (20.6)</span></span>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation of (22.6)</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>DeltaY <span class="ot">&lt;-</span> df<span class="sc">$</span>fte[df<span class="sc">$</span>time <span class="sc">==</span> <span class="dv">1</span>] <span class="sc">-</span> df<span class="sc">$</span>fte[df<span class="sc">$</span>time <span class="sc">==</span> <span class="dv">0</span>]</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> df<span class="sc">$</span>state[df<span class="sc">$</span>time <span class="sc">==</span> <span class="dv">1</span>]</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">DeltaY =</span> DeltaY, <span class="at">X =</span> D)</span>
@@ -1693,12 +1693,12 @@ Table&nbsp;22.5: Average Employment at Fast Food Restaurants
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">fmt =</span> <span class="dv">3</span>,</span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik|F|RMSE"</span>,</span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t20.4" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-t22.4" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t20.4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t22.4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;22.6: OLS Estimates of the DiD Parameter
 </figcaption>
-<div aria-describedby="tbl-t20.4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-t22.4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -1706,25 +1706,25 @@ Table&nbsp;22.6: OLS Estimates of the DiD Parameter
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_cs9s3cdbz5itb59f0285 = TinyTable.createTableFunctions("tinytable_cs9s3cdbz5itb59f0285");
+      const tableFns_ixcy8xo5zxh8kl1axu72 = TinyTable.createTableFunctions("tinytable_ixcy8xo5zxh8kl1axu72");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_98u6ja2libg6t16w9j6e',}, 
-          { positions: [ { i: '4', j: 2 } ], css_id: 'tinytable_css_pqjvqidzmikxoidlscsf',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 } ], css_id: 'tinytable_css_bzrgg93kna6m0uc20sqk',}, 
-          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_lpoeujvgecb2f7w4t9ar',}, 
-          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_yicddbf9pke2g4tl0b9y',}, 
-          { positions: [ { i: '4', j: 1 } ], css_id: 'tinytable_css_z59lqnicn1or52y2ux60',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 } ], css_id: 'tinytable_css_r1zrw1u0x1jbld1hkdzd',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_az4h1cy6vxqnu0dhzoey',}, 
+          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_shr7cksuu3y83ef3ajg3',}, 
+          { positions: [ { i: '4', j: 2 } ], css_id: 'tinytable_css_f9fc5k73wr1aq6taul2p',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 } ], css_id: 'tinytable_css_adt272toea1vmqj2447d',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_rpf1hhc24inbj5nph81f',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_5sgftsrclp4ovqtdyit4',}, 
+          { positions: [ { i: '4', j: 1 } ], css_id: 'tinytable_css_gaex22w8sfqink3z5b60',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 } ], css_id: 'tinytable_css_ac9olkd02v5zbpk0zi5h',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_gihge6d6f0qzytjwg5jv',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_cs9s3cdbz5itb59f0285.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_ixcy8xo5zxh8kl1axu72.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1733,17 +1733,17 @@ Table&nbsp;22.6: OLS Estimates of the DiD Parameter
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_cs9s3cdbz5itb59f0285 td.tinytable_css_98u6ja2libg6t16w9j6e, #tinytable_cs9s3cdbz5itb59f0285 th.tinytable_css_98u6ja2libg6t16w9j6e {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_cs9s3cdbz5itb59f0285 td.tinytable_css_pqjvqidzmikxoidlscsf, #tinytable_cs9s3cdbz5itb59f0285 th.tinytable_css_pqjvqidzmikxoidlscsf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_cs9s3cdbz5itb59f0285 td.tinytable_css_bzrgg93kna6m0uc20sqk, #tinytable_cs9s3cdbz5itb59f0285 th.tinytable_css_bzrgg93kna6m0uc20sqk { text-align: center }
-    #tinytable_cs9s3cdbz5itb59f0285 td.tinytable_css_lpoeujvgecb2f7w4t9ar, #tinytable_cs9s3cdbz5itb59f0285 th.tinytable_css_lpoeujvgecb2f7w4t9ar {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_cs9s3cdbz5itb59f0285 td.tinytable_css_yicddbf9pke2g4tl0b9y, #tinytable_cs9s3cdbz5itb59f0285 th.tinytable_css_yicddbf9pke2g4tl0b9y {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_cs9s3cdbz5itb59f0285 td.tinytable_css_z59lqnicn1or52y2ux60, #tinytable_cs9s3cdbz5itb59f0285 th.tinytable_css_z59lqnicn1or52y2ux60 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_cs9s3cdbz5itb59f0285 td.tinytable_css_r1zrw1u0x1jbld1hkdzd, #tinytable_cs9s3cdbz5itb59f0285 th.tinytable_css_r1zrw1u0x1jbld1hkdzd { text-align: left }
-    #tinytable_cs9s3cdbz5itb59f0285 td.tinytable_css_az4h1cy6vxqnu0dhzoey, #tinytable_cs9s3cdbz5itb59f0285 th.tinytable_css_az4h1cy6vxqnu0dhzoey {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_ixcy8xo5zxh8kl1axu72 td.tinytable_css_shr7cksuu3y83ef3ajg3, #tinytable_ixcy8xo5zxh8kl1axu72 th.tinytable_css_shr7cksuu3y83ef3ajg3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ixcy8xo5zxh8kl1axu72 td.tinytable_css_f9fc5k73wr1aq6taul2p, #tinytable_ixcy8xo5zxh8kl1axu72 th.tinytable_css_f9fc5k73wr1aq6taul2p {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ixcy8xo5zxh8kl1axu72 td.tinytable_css_adt272toea1vmqj2447d, #tinytable_ixcy8xo5zxh8kl1axu72 th.tinytable_css_adt272toea1vmqj2447d { text-align: center }
+    #tinytable_ixcy8xo5zxh8kl1axu72 td.tinytable_css_rpf1hhc24inbj5nph81f, #tinytable_ixcy8xo5zxh8kl1axu72 th.tinytable_css_rpf1hhc24inbj5nph81f {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ixcy8xo5zxh8kl1axu72 td.tinytable_css_5sgftsrclp4ovqtdyit4, #tinytable_ixcy8xo5zxh8kl1axu72 th.tinytable_css_5sgftsrclp4ovqtdyit4 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_ixcy8xo5zxh8kl1axu72 td.tinytable_css_gaex22w8sfqink3z5b60, #tinytable_ixcy8xo5zxh8kl1axu72 th.tinytable_css_gaex22w8sfqink3z5b60 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_ixcy8xo5zxh8kl1axu72 td.tinytable_css_ac9olkd02v5zbpk0zi5h, #tinytable_ixcy8xo5zxh8kl1axu72 th.tinytable_css_ac9olkd02v5zbpk0zi5h { text-align: left }
+    #tinytable_ixcy8xo5zxh8kl1axu72 td.tinytable_css_gihge6d6f0qzytjwg5jv, #tinytable_ixcy8xo5zxh8kl1axu72 th.tinytable_css_gihge6d6f0qzytjwg5jv {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_cs9s3cdbz5itb59f0285" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_ixcy8xo5zxh8kl1axu72" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -1794,9 +1794,9 @@ Table&nbsp;22.6: OLS Estimates of the DiD Parameter
 </figure>
 </div>
 </div>
-<p>We can also use <a href="#eq-eq20.8" class="quarto-xref">Equation&nbsp;<span>22.8</span></a> to estimate the DiD parameter <span class="math inline">\(\beta_3\)</span>. In the following code chunk, we first create the <code>treatment</code> variable, which represents <span class="math inline">\(D_i \times {\tt Period}_t\)</span>, and then use the OLS estimator to estimate <span class="math inline">\(\beta_3\)</span>. Note that we use clustered standard errors at the store level to account for correlation. The DiD estimate of <span class="math inline">\(\beta_3\)</span> is 2.75 with a <span class="math inline">\(t\)</span>-value of 2.05.</p>
+<p>We can also use <a href="#eq-eq22.8" class="quarto-xref">Equation&nbsp;<span>22.8</span></a> to estimate the DiD parameter <span class="math inline">\(\beta_3\)</span>. In the following code chunk, we first create the <code>treatment</code> variable, which represents <span class="math inline">\(D_i \times {\tt Period}_t\)</span>, and then use the OLS estimator to estimate <span class="math inline">\(\beta_3\)</span>. Note that we use clustered standard errors at the store level to account for correlation. The DiD estimate of <span class="math inline">\(\beta_3\)</span> is 2.75 with a <span class="math inline">\(t\)</span>-value of 2.05.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation of (20.7)</span></span>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation of (22.7)</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create treatment and period indicators</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>D <span class="ot">&lt;-</span> df<span class="sc">$</span>state</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Period <span class="ot">&lt;-</span> df<span class="sc">$</span>time</span>
@@ -1814,12 +1814,12 @@ Table&nbsp;22.6: OLS Estimates of the DiD Parameter
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="fu">list</span>(model2_se),</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span>,</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik|F|RMSE"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t20.56" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-t22.56" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t20.56-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t22.56-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;22.7: OLS Estimates of the DiD Parameter
 </figcaption>
-<div aria-describedby="tbl-t20.56-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-t22.56-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -1827,25 +1827,25 @@ Table&nbsp;22.7: OLS Estimates of the DiD Parameter
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_i3vs5d325ovqls60ec6k = TinyTable.createTableFunctions("tinytable_i3vs5d325ovqls60ec6k");
+      const tableFns_0wmul1gv14bzwvicfueq = TinyTable.createTableFunctions("tinytable_0wmul1gv14bzwvicfueq");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '12', j: 2 } ], css_id: 'tinytable_css_2cqba6y26h1t3kftmcgb',}, 
-          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_jcw51jot0zpct2zlkz1y',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 } ], css_id: 'tinytable_css_jjwrkkjvfg0tlympva00',}, 
-          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_csp3k23tt8co3uo7smm0',}, 
-          { positions: [ { i: '12', j: 1 } ], css_id: 'tinytable_css_t6z118hloyp49a42oo2k',}, 
-          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_44f2jfcyd5dofftjmw4e',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 } ], css_id: 'tinytable_css_3ua7u9tp7qyk5arge8fc',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_6l6hbmabxjb33h4tin7x',}, 
+          { positions: [ { i: '12', j: 2 } ], css_id: 'tinytable_css_hin8lgl2jyd5j9mt2k14',}, 
+          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_mebj1an6san61qm5olt9',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 } ], css_id: 'tinytable_css_3vin8tvrz17dv3jhzg0l',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_43ex3b5do60cnqk5kbln',}, 
+          { positions: [ { i: '12', j: 1 } ], css_id: 'tinytable_css_dqm8y6aviqr6idfot9zb',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_6gktieyppc44vn3oa2pf',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 } ], css_id: 'tinytable_css_xnscqbojslybyrs42hyk',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_4cwqyl1yg5xxshxx0ylw',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_i3vs5d325ovqls60ec6k.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_0wmul1gv14bzwvicfueq.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1854,17 +1854,17 @@ Table&nbsp;22.7: OLS Estimates of the DiD Parameter
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_i3vs5d325ovqls60ec6k td.tinytable_css_2cqba6y26h1t3kftmcgb, #tinytable_i3vs5d325ovqls60ec6k th.tinytable_css_2cqba6y26h1t3kftmcgb {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_i3vs5d325ovqls60ec6k td.tinytable_css_jcw51jot0zpct2zlkz1y, #tinytable_i3vs5d325ovqls60ec6k th.tinytable_css_jcw51jot0zpct2zlkz1y {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_i3vs5d325ovqls60ec6k td.tinytable_css_jjwrkkjvfg0tlympva00, #tinytable_i3vs5d325ovqls60ec6k th.tinytable_css_jjwrkkjvfg0tlympva00 { text-align: center }
-    #tinytable_i3vs5d325ovqls60ec6k td.tinytable_css_csp3k23tt8co3uo7smm0, #tinytable_i3vs5d325ovqls60ec6k th.tinytable_css_csp3k23tt8co3uo7smm0 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_i3vs5d325ovqls60ec6k td.tinytable_css_t6z118hloyp49a42oo2k, #tinytable_i3vs5d325ovqls60ec6k th.tinytable_css_t6z118hloyp49a42oo2k {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_i3vs5d325ovqls60ec6k td.tinytable_css_44f2jfcyd5dofftjmw4e, #tinytable_i3vs5d325ovqls60ec6k th.tinytable_css_44f2jfcyd5dofftjmw4e {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_i3vs5d325ovqls60ec6k td.tinytable_css_3ua7u9tp7qyk5arge8fc, #tinytable_i3vs5d325ovqls60ec6k th.tinytable_css_3ua7u9tp7qyk5arge8fc { text-align: left }
-    #tinytable_i3vs5d325ovqls60ec6k td.tinytable_css_6l6hbmabxjb33h4tin7x, #tinytable_i3vs5d325ovqls60ec6k th.tinytable_css_6l6hbmabxjb33h4tin7x {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_0wmul1gv14bzwvicfueq td.tinytable_css_hin8lgl2jyd5j9mt2k14, #tinytable_0wmul1gv14bzwvicfueq th.tinytable_css_hin8lgl2jyd5j9mt2k14 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_0wmul1gv14bzwvicfueq td.tinytable_css_mebj1an6san61qm5olt9, #tinytable_0wmul1gv14bzwvicfueq th.tinytable_css_mebj1an6san61qm5olt9 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_0wmul1gv14bzwvicfueq td.tinytable_css_3vin8tvrz17dv3jhzg0l, #tinytable_0wmul1gv14bzwvicfueq th.tinytable_css_3vin8tvrz17dv3jhzg0l { text-align: center }
+    #tinytable_0wmul1gv14bzwvicfueq td.tinytable_css_43ex3b5do60cnqk5kbln, #tinytable_0wmul1gv14bzwvicfueq th.tinytable_css_43ex3b5do60cnqk5kbln {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_0wmul1gv14bzwvicfueq td.tinytable_css_dqm8y6aviqr6idfot9zb, #tinytable_0wmul1gv14bzwvicfueq th.tinytable_css_dqm8y6aviqr6idfot9zb {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_0wmul1gv14bzwvicfueq td.tinytable_css_6gktieyppc44vn3oa2pf, #tinytable_0wmul1gv14bzwvicfueq th.tinytable_css_6gktieyppc44vn3oa2pf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_0wmul1gv14bzwvicfueq td.tinytable_css_xnscqbojslybyrs42hyk, #tinytable_0wmul1gv14bzwvicfueq th.tinytable_css_xnscqbojslybyrs42hyk { text-align: left }
+    #tinytable_0wmul1gv14bzwvicfueq td.tinytable_css_4cwqyl1yg5xxshxx0ylw, #tinytable_0wmul1gv14bzwvicfueq th.tinytable_css_4cwqyl1yg5xxshxx0ylw {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_i3vs5d325ovqls60ec6k" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_0wmul1gv14bzwvicfueq" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -1931,7 +1931,7 @@ Table&nbsp;22.7: OLS Estimates of the DiD Parameter
 </figure>
 </div>
 </div>
-<p>Finally, we use the two-way fixed effects model in <a href="#eq-eq20.9" class="quarto-xref">Equation&nbsp;<span>22.9</span></a> to estimate the DiD parameter <span class="math inline">\(\beta_3\)</span>. The following code chunk provides the same estimate as the previous methods.</p>
+<p>Finally, we use the two-way fixed effects model in <a href="#eq-eq22.9" class="quarto-xref">Equation&nbsp;<span>22.9</span></a> to estimate the DiD parameter <span class="math inline">\(\beta_3\)</span>. The following code chunk provides the same estimate as the previous methods.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">feols</span>(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    fte <span class="sc">~</span> <span class="fu">I</span>(D<span class="sc">*</span>Period) <span class="sc">|</span> store <span class="sc">+</span> time,</span>
@@ -1946,12 +1946,12 @@ Table&nbsp;22.7: OLS Estimates of the DiD Parameter
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fmt =</span> <span class="dv">3</span>,</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik|F|RMSE"</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t20.5" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-t22.5" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t20.5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t22.5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;22.8: OLS Estimates of the DiD Parameter
 </figcaption>
-<div aria-describedby="tbl-t20.5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-t22.5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -1959,25 +1959,25 @@ Table&nbsp;22.8: OLS Estimates of the DiD Parameter
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_yy70uhj5i2lird43xg3k = TinyTable.createTableFunctions("tinytable_yy70uhj5i2lird43xg3k");
+      const tableFns_yfwzcxmq2brmpc1z1o7y = TinyTable.createTableFunctions("tinytable_yfwzcxmq2brmpc1z1o7y");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_6xxc1cdnvlz36j6dotf7',}, 
-          { positions: [ { i: '2', j: 2 } ], css_id: 'tinytable_css_fzkg9wvtzkadmuvifnvy',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 } ], css_id: 'tinytable_css_fvzs9rx0010atq4dxhuw',}, 
-          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_xjvsm3xwud8wej1w537o',}, 
-          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_zxyxn4qj8fd3a7vzqp27',}, 
-          { positions: [ { i: '2', j: 1 } ], css_id: 'tinytable_css_vde12yhbinp1vq245kmr',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 } ], css_id: 'tinytable_css_n3s6k46z81gdyvucaroz',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_wcxlspo0lyjp9bob622l',}, 
+          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_ui2cx2qh5vr5gv4s2dh8',}, 
+          { positions: [ { i: '2', j: 2 } ], css_id: 'tinytable_css_q3zgp9ry8kz4injd7iaw',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 } ], css_id: 'tinytable_css_acelsadv9ojyymv66o81',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_4q4wpiyvx3an2teaitpn',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_qp3c0xrm9brb9k1iv9w2',}, 
+          { positions: [ { i: '2', j: 1 } ], css_id: 'tinytable_css_f2ijl2inszegy3ahkr0n',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 } ], css_id: 'tinytable_css_rglfsnncco4t4gu8uci6',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_9y7rqmy5eqraruzq4j99',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_yy70uhj5i2lird43xg3k.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_yfwzcxmq2brmpc1z1o7y.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1986,17 +1986,17 @@ Table&nbsp;22.8: OLS Estimates of the DiD Parameter
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_yy70uhj5i2lird43xg3k td.tinytable_css_6xxc1cdnvlz36j6dotf7, #tinytable_yy70uhj5i2lird43xg3k th.tinytable_css_6xxc1cdnvlz36j6dotf7 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_yy70uhj5i2lird43xg3k td.tinytable_css_fzkg9wvtzkadmuvifnvy, #tinytable_yy70uhj5i2lird43xg3k th.tinytable_css_fzkg9wvtzkadmuvifnvy {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_yy70uhj5i2lird43xg3k td.tinytable_css_fvzs9rx0010atq4dxhuw, #tinytable_yy70uhj5i2lird43xg3k th.tinytable_css_fvzs9rx0010atq4dxhuw { text-align: center }
-    #tinytable_yy70uhj5i2lird43xg3k td.tinytable_css_xjvsm3xwud8wej1w537o, #tinytable_yy70uhj5i2lird43xg3k th.tinytable_css_xjvsm3xwud8wej1w537o {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_yy70uhj5i2lird43xg3k td.tinytable_css_zxyxn4qj8fd3a7vzqp27, #tinytable_yy70uhj5i2lird43xg3k th.tinytable_css_zxyxn4qj8fd3a7vzqp27 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_yy70uhj5i2lird43xg3k td.tinytable_css_vde12yhbinp1vq245kmr, #tinytable_yy70uhj5i2lird43xg3k th.tinytable_css_vde12yhbinp1vq245kmr {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_yy70uhj5i2lird43xg3k td.tinytable_css_n3s6k46z81gdyvucaroz, #tinytable_yy70uhj5i2lird43xg3k th.tinytable_css_n3s6k46z81gdyvucaroz { text-align: left }
-    #tinytable_yy70uhj5i2lird43xg3k td.tinytable_css_wcxlspo0lyjp9bob622l, #tinytable_yy70uhj5i2lird43xg3k th.tinytable_css_wcxlspo0lyjp9bob622l {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_yfwzcxmq2brmpc1z1o7y td.tinytable_css_ui2cx2qh5vr5gv4s2dh8, #tinytable_yfwzcxmq2brmpc1z1o7y th.tinytable_css_ui2cx2qh5vr5gv4s2dh8 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_yfwzcxmq2brmpc1z1o7y td.tinytable_css_q3zgp9ry8kz4injd7iaw, #tinytable_yfwzcxmq2brmpc1z1o7y th.tinytable_css_q3zgp9ry8kz4injd7iaw {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_yfwzcxmq2brmpc1z1o7y td.tinytable_css_acelsadv9ojyymv66o81, #tinytable_yfwzcxmq2brmpc1z1o7y th.tinytable_css_acelsadv9ojyymv66o81 { text-align: center }
+    #tinytable_yfwzcxmq2brmpc1z1o7y td.tinytable_css_4q4wpiyvx3an2teaitpn, #tinytable_yfwzcxmq2brmpc1z1o7y th.tinytable_css_4q4wpiyvx3an2teaitpn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_yfwzcxmq2brmpc1z1o7y td.tinytable_css_qp3c0xrm9brb9k1iv9w2, #tinytable_yfwzcxmq2brmpc1z1o7y th.tinytable_css_qp3c0xrm9brb9k1iv9w2 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_yfwzcxmq2brmpc1z1o7y td.tinytable_css_f2ijl2inszegy3ahkr0n, #tinytable_yfwzcxmq2brmpc1z1o7y th.tinytable_css_f2ijl2inszegy3ahkr0n {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_yfwzcxmq2brmpc1z1o7y td.tinytable_css_rglfsnncco4t4gu8uci6, #tinytable_yfwzcxmq2brmpc1z1o7y th.tinytable_css_rglfsnncco4t4gu8uci6 { text-align: left }
+    #tinytable_yfwzcxmq2brmpc1z1o7y td.tinytable_css_9y7rqmy5eqraruzq4j99, #tinytable_yfwzcxmq2brmpc1z1o7y th.tinytable_css_9y7rqmy5eqraruzq4j99 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_yy70uhj5i2lird43xg3k" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_yfwzcxmq2brmpc1z1o7y" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -2075,11 +2075,11 @@ Assumptions for ATT
 </div>
 </div>
 <p>The parallel trends assumption requires the average change in the untreated potential outcomes to be the same for both treatment and control groups. The no anticipation assumption states that the untreated and treated potential outcomes of the treated units in the pre-treatment periods are on average equal. That is, receiving treatment in the post-treatment periods does not affect the average potential outcomes in the the pre-treatment periods on average. Hence, <span class="math inline">\(\text{ATT}(t)=0\)</span> for <span class="math inline">\(t&lt;t_0\)</span>.</p>
-<div id="thm-th20.2" class="theorem">
+<div id="thm-th22.2" class="theorem">
 <p><span class="theorem-title"><strong>Theorem 22.2 (Identification of the ATT parameter)</strong></span> Under the parallel trends and no anticipation assumptions, the average treatment effect on the treated at time <span class="math inline">\(t\ge t_0\)</span> is identified as <span class="math display">\[\text{ATT}(t)=\E[\Delta Y_{it}|D_i=1]-\E[\Delta Y_{it}|D_i=0],\]</span> where <span class="math inline">\(\Delta Y_{it}=Y_{it}-Y_{i,t_0-1}\)</span> is the change in the observed outcome for unit <span class="math inline">\(i\)</span> from period <span class="math inline">\(t_0-1\)</span> to period <span class="math inline">\(t\)</span>.</p>
 </div>
 <div class="proof">
-<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-th20.2" class="quarto-xref">Theorem&nbsp;<span>22.2</span></a>). </span>Under the two assumptions above, for <span class="math inline">\(t\ge t_0\)</span>, we have <span class="math display">\[
+<p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-th22.2" class="quarto-xref">Theorem&nbsp;<span>22.2</span></a>). </span>Under the two assumptions above, for <span class="math inline">\(t\ge t_0\)</span>, we have <span class="math display">\[
 \begin{align}
 \text{ATT}(t)&amp;=\E[Y_{it}(1)-Y_{it}(0)|D_i=1]\\
 &amp;=\E[Y_{it}(1)-Y_{i,t_0-1}(0)|D_i=1]-\E[Y_{it}(0)-Y_{i,t_0-1}(0)|D_i=1]\\
@@ -2089,8 +2089,8 @@ Assumptions for ATT
 \end{align}
 \]</span> where the second equality follows by adding and substracting <span class="math inline">\(\E[Y_{i,t_0-1}(0)|D_i=1]\)</span>, the third equality from the parallel trends assumption, and the fourth equality holds because <span class="math inline">\(Y_{it}(1)\)</span> and <span class="math inline">\(Y_{i,t_0-1}(0)\)</span> are equal to the observed outcomes for the treatment group under no anticipation, while <span class="math inline">\(Y_{it}(0)\)</span> and <span class="math inline">\(Y_{i,t_0-1}(0)\)</span> are equal to the observed outcomes for the control group.</p>
 </div>
-<p>The identification result suggests that the ATT(<span class="math inline">\(t\)</span>) for <span class="math inline">\(t\ge t_0\)</span> can be estimated by the DiD estimator in the 2-period case. To this end, the DiD estimator in <a href="#eq-eq20.5" class="quarto-xref">Equation&nbsp;<span>22.5</span></a> (or <a href="#eq-eq20.6" class="quarto-xref">Equation&nbsp;<span>22.6</span></a> or <a href="#eq-eq20.7" class="quarto-xref">Equation&nbsp;<span>22.7</span></a>) can be used by considering <span class="math inline">\(t_0-1\)</span> as the first period and <span class="math inline">\(t\)</span> as the second period.</p>
-<p>In the multiple time period case, we can consider the following two-way fixed effects specification for estimating the ATT parameters: <span id="eq-eq20.10"><span class="math display">\[
+<p>The identification result suggests that the ATT(<span class="math inline">\(t\)</span>) for <span class="math inline">\(t\ge t_0\)</span> can be estimated by the DiD estimator in the 2-period case. To this end, the DiD estimator in <a href="#eq-eq22.5" class="quarto-xref">Equation&nbsp;<span>22.5</span></a> (or <a href="#eq-eq22.6" class="quarto-xref">Equation&nbsp;<span>22.6</span></a> or <a href="#eq-eq22.7" class="quarto-xref">Equation&nbsp;<span>22.7</span></a>) can be used by considering <span class="math inline">\(t_0-1\)</span> as the first period and <span class="math inline">\(t\)</span> as the second period.</p>
+<p>In the multiple time period case, we can consider the following two-way fixed effects specification for estimating the ATT parameters: <span id="eq-eq22.10"><span class="math display">\[
 Y_{it} = \alpha_i + \lambda_t + \sum_{s=1}^{t_0-2}\beta_s (D_i\times P_s) + \sum_{s=t_0}^{T}\beta_s (D_i\times P_s) + u_{it}
 \tag{22.10}\]</span></span> where <span class="math inline">\(P_s=1\)</span> if <span class="math inline">\(s=t\)</span> and <span class="math inline">\(P_s=0\)</span> otherwise. The estimates of <span class="math inline">\(\beta_s\)</span> for <span class="math inline">\(s\ge t_0\)</span> correspond to the estimates of <span class="math inline">\(\text{ATT}(t)\)</span> for <span class="math inline">\(t\ge t_0\)</span>.</p>
 <p>This approach allows us using t-statistics and confidence intervals based on clustered standard errors. We can then plot ATT estimates along (point-wise) confidence intervals to summarize our results. This is often referred to as an <strong>event study analysis</strong>. Note also that <span class="math inline">\(\beta_s\)</span> estimates for the pre-treatment periods can be utilized to assess the plausibility of the parallel trends assumption. If the parallel trends assumption holds, then the estimates of <span class="math inline">\(\beta_s\)</span> for <span class="math inline">\(s&lt;t_0\)</span> should be statistically insignificant.</p>
@@ -2175,20 +2175,20 @@ Table&nbsp;22.10: Summary statistics
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_5eg3t99vmuu6nfg6hp4e = TinyTable.createTableFunctions("tinytable_5eg3t99vmuu6nfg6hp4e");
+      const tableFns_h0pf6ce41t6kczfq8c6j = TinyTable.createTableFunctions("tinytable_h0pf6ce41t6kczfq8c6j");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 }, { i: '3', j: 5 }, { i: '3', j: 6 }, { i: '3', j: 7 }, { i: '3', j: 8 }, { i: '3', j: 9 } ], css_id: 'tinytable_css_lxnqlkzvz5mtf8srw42r',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '1', j: 7 }, { i: '2', j: 7 }, { i: '1', j: 8 }, { i: '2', j: 8 }, { i: '1', j: 9 }, { i: '2', j: 9 } ], css_id: 'tinytable_css_x7dvol4meq3i3nf9yrx2',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 }, { i: '0', j: 9 } ], css_id: 'tinytable_css_nnjtrd7c8evao70i5ef9',}, 
+          { positions: [ { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 }, { i: '3', j: 5 }, { i: '3', j: 6 }, { i: '3', j: 7 }, { i: '3', j: 8 }, { i: '3', j: 9 } ], css_id: 'tinytable_css_nitkp703tpvmn4xunxyy',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '1', j: 7 }, { i: '2', j: 7 }, { i: '1', j: 8 }, { i: '2', j: 8 }, { i: '1', j: 9 }, { i: '2', j: 9 } ], css_id: 'tinytable_css_d73tza9tzy5qjqa7d48s',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 }, { i: '0', j: 9 } ], css_id: 'tinytable_css_trtbtw2r8onr9skx6lg4',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_5eg3t99vmuu6nfg6hp4e.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_h0pf6ce41t6kczfq8c6j.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2197,12 +2197,12 @@ Table&nbsp;22.10: Summary statistics
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_5eg3t99vmuu6nfg6hp4e td.tinytable_css_lxnqlkzvz5mtf8srw42r, #tinytable_5eg3t99vmuu6nfg6hp4e th.tinytable_css_lxnqlkzvz5mtf8srw42r {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_5eg3t99vmuu6nfg6hp4e td.tinytable_css_x7dvol4meq3i3nf9yrx2, #tinytable_5eg3t99vmuu6nfg6hp4e th.tinytable_css_x7dvol4meq3i3nf9yrx2 { text-align: left }
-    #tinytable_5eg3t99vmuu6nfg6hp4e td.tinytable_css_nnjtrd7c8evao70i5ef9, #tinytable_5eg3t99vmuu6nfg6hp4e th.tinytable_css_nnjtrd7c8evao70i5ef9 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_h0pf6ce41t6kczfq8c6j td.tinytable_css_nitkp703tpvmn4xunxyy, #tinytable_h0pf6ce41t6kczfq8c6j th.tinytable_css_nitkp703tpvmn4xunxyy {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_h0pf6ce41t6kczfq8c6j td.tinytable_css_d73tza9tzy5qjqa7d48s, #tinytable_h0pf6ce41t6kczfq8c6j th.tinytable_css_d73tza9tzy5qjqa7d48s { text-align: left }
+    #tinytable_h0pf6ce41t6kczfq8c6j td.tinytable_css_trtbtw2r8onr9skx6lg4, #tinytable_h0pf6ce41t6kczfq8c6j th.tinytable_css_trtbtw2r8onr9skx6lg4 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_5eg3t99vmuu6nfg6hp4e" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_h0pf6ce41t6kczfq8c6j" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -2261,7 +2261,7 @@ Table&nbsp;22.10: Summary statistics
 </figure>
 </div>
 </div>
-<p>We first consider estimating the average treatment effect in the post-treatment periods. To this end, we use <a href="#eq-eq20.9" class="quarto-xref">Equation&nbsp;<span>22.9</span></a> as if we have only 2 periods, pre- and post-treament. We can use the <code>feols</code> function from <code>fixest</code> package to estimate the model. We use the clustered standard errors at the block level to account for correlation in the error terms within blocks.</p>
+<p>We first consider estimating the average treatment effect in the post-treatment periods. To this end, we use <a href="#eq-eq22.9" class="quarto-xref">Equation&nbsp;<span>22.9</span></a> as if we have only 2 periods, pre- and post-treament. We can use the <code>feols</code> function from <code>fixest</code> package to estimate the model. We use the clustered standard errors at the block level to account for correlation in the error terms within blocks.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation of (22.9) using fixest</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>model4_fixest <span class="ot">&lt;-</span> <span class="fu">feols</span>(</span>
@@ -2291,25 +2291,25 @@ Table&nbsp;22.11: The effect of police presence on vehicle thefts
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_k7pwa85mn9vo4txp4qd8 = TinyTable.createTableFunctions("tinytable_k7pwa85mn9vo4txp4qd8");
+      const tableFns_dxpku9ddm9ql88uwk819 = TinyTable.createTableFunctions("tinytable_dxpku9ddm9ql88uwk819");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_mzeb3w2o6gysmjoarkj7',}, 
-          { positions: [ { i: '2', j: 2 } ], css_id: 'tinytable_css_tj5nhnbniqhxduot4urf',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 } ], css_id: 'tinytable_css_s5ih7kvvawn611dzta5n',}, 
-          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_qf7icrqaki0y4sxbgfkx',}, 
-          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_cf30vvryw2u4ujeehrl0',}, 
-          { positions: [ { i: '2', j: 1 } ], css_id: 'tinytable_css_1e8q6nuja5iuuhzhvvq9',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 } ], css_id: 'tinytable_css_y2n0qg2icmbps894d6lq',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_4fg06ceabv8yl5ftabfx',}, 
+          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_iyc9dzvmlwyltr1apwsx',}, 
+          { positions: [ { i: '2', j: 2 } ], css_id: 'tinytable_css_nztllgdce3opvlydg0el',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 } ], css_id: 'tinytable_css_n4s7dixs8pehhsbw1zpv',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_qpjas0oodvjmt3e5yfkk',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_7j5i83u9e7atshg4s4kx',}, 
+          { positions: [ { i: '2', j: 1 } ], css_id: 'tinytable_css_8zo01zyg4l7s7qc60uwo',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 } ], css_id: 'tinytable_css_ow9brijrnexmi9tgzczg',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_wb0jgglhz6eny4xir98p',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_k7pwa85mn9vo4txp4qd8.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_dxpku9ddm9ql88uwk819.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2318,17 +2318,17 @@ Table&nbsp;22.11: The effect of police presence on vehicle thefts
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_k7pwa85mn9vo4txp4qd8 td.tinytable_css_mzeb3w2o6gysmjoarkj7, #tinytable_k7pwa85mn9vo4txp4qd8 th.tinytable_css_mzeb3w2o6gysmjoarkj7 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_k7pwa85mn9vo4txp4qd8 td.tinytable_css_tj5nhnbniqhxduot4urf, #tinytable_k7pwa85mn9vo4txp4qd8 th.tinytable_css_tj5nhnbniqhxduot4urf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_k7pwa85mn9vo4txp4qd8 td.tinytable_css_s5ih7kvvawn611dzta5n, #tinytable_k7pwa85mn9vo4txp4qd8 th.tinytable_css_s5ih7kvvawn611dzta5n { text-align: center }
-    #tinytable_k7pwa85mn9vo4txp4qd8 td.tinytable_css_qf7icrqaki0y4sxbgfkx, #tinytable_k7pwa85mn9vo4txp4qd8 th.tinytable_css_qf7icrqaki0y4sxbgfkx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_k7pwa85mn9vo4txp4qd8 td.tinytable_css_cf30vvryw2u4ujeehrl0, #tinytable_k7pwa85mn9vo4txp4qd8 th.tinytable_css_cf30vvryw2u4ujeehrl0 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_k7pwa85mn9vo4txp4qd8 td.tinytable_css_1e8q6nuja5iuuhzhvvq9, #tinytable_k7pwa85mn9vo4txp4qd8 th.tinytable_css_1e8q6nuja5iuuhzhvvq9 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_k7pwa85mn9vo4txp4qd8 td.tinytable_css_y2n0qg2icmbps894d6lq, #tinytable_k7pwa85mn9vo4txp4qd8 th.tinytable_css_y2n0qg2icmbps894d6lq { text-align: left }
-    #tinytable_k7pwa85mn9vo4txp4qd8 td.tinytable_css_4fg06ceabv8yl5ftabfx, #tinytable_k7pwa85mn9vo4txp4qd8 th.tinytable_css_4fg06ceabv8yl5ftabfx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_dxpku9ddm9ql88uwk819 td.tinytable_css_iyc9dzvmlwyltr1apwsx, #tinytable_dxpku9ddm9ql88uwk819 th.tinytable_css_iyc9dzvmlwyltr1apwsx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_dxpku9ddm9ql88uwk819 td.tinytable_css_nztllgdce3opvlydg0el, #tinytable_dxpku9ddm9ql88uwk819 th.tinytable_css_nztllgdce3opvlydg0el {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_dxpku9ddm9ql88uwk819 td.tinytable_css_n4s7dixs8pehhsbw1zpv, #tinytable_dxpku9ddm9ql88uwk819 th.tinytable_css_n4s7dixs8pehhsbw1zpv { text-align: center }
+    #tinytable_dxpku9ddm9ql88uwk819 td.tinytable_css_qpjas0oodvjmt3e5yfkk, #tinytable_dxpku9ddm9ql88uwk819 th.tinytable_css_qpjas0oodvjmt3e5yfkk {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_dxpku9ddm9ql88uwk819 td.tinytable_css_7j5i83u9e7atshg4s4kx, #tinytable_dxpku9ddm9ql88uwk819 th.tinytable_css_7j5i83u9e7atshg4s4kx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_dxpku9ddm9ql88uwk819 td.tinytable_css_8zo01zyg4l7s7qc60uwo, #tinytable_dxpku9ddm9ql88uwk819 th.tinytable_css_8zo01zyg4l7s7qc60uwo {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_dxpku9ddm9ql88uwk819 td.tinytable_css_ow9brijrnexmi9tgzczg, #tinytable_dxpku9ddm9ql88uwk819 th.tinytable_css_ow9brijrnexmi9tgzczg { text-align: left }
+    #tinytable_dxpku9ddm9ql88uwk819 td.tinytable_css_wb0jgglhz6eny4xir98p, #tinytable_dxpku9ddm9ql88uwk819 th.tinytable_css_wb0jgglhz6eny4xir98p {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_k7pwa85mn9vo4txp4qd8" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_dxpku9ddm9ql88uwk819" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -2380,7 +2380,7 @@ Table&nbsp;22.11: The effect of police presence on vehicle thefts
 </div>
 </div>
 <p>The estimation results are presented in <a href="#tbl-t22-11" class="quarto-xref">Table&nbsp;<span>22.11</span></a>. The estimate of the average treatment effect (on treated blocks) in the post-periods is -0.078, i.e., police presence, on average, reduced car thefts by 0.078 in the treated blocks. This estimate is almost the same as the one reported in the first column of Table 3 in <span class="citation" data-cites="Tella:2004">Tella and Schargrodsky (<a href="references.html#ref-Tella:2004" role="doc-biblioref">2004</a>)</span>. Given that the average number of car theft is around 0.093, this estimate is not negligible.</p>
-<p>Next, we will consider an event study analysis and estimate <a href="#eq-eq20.10" class="quarto-xref">Equation&nbsp;<span>22.10</span></a>. First, we need to generate the interactions of the treatment dummy with pre and post periods.</p>
+<p>Next, we will consider an event study analysis and estimate <a href="#eq-eq22.10" class="quarto-xref">Equation&nbsp;<span>22.10</span></a>. First, we need to generate the interactions of the treatment dummy with pre and post periods.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create lead and lag dummies</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>lead4 <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(df<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df<span class="sc">$</span>month <span class="sc">==</span> <span class="dv">4</span>)   <span class="co"># April</span></span>
@@ -2393,7 +2393,7 @@ Table&nbsp;22.11: The effect of police presence on vehicle thefts
 <span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>lag3  <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(df<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df<span class="sc">$</span>month <span class="sc">==</span> <span class="dv">11</span>)  <span class="co"># November</span></span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>lag4  <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(df<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df<span class="sc">$</span>month <span class="sc">==</span> <span class="dv">12</span>)  <span class="co"># December</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The common treatment timing <span class="math inline">\(t_0\)</span> is August and the <span class="math inline">\(t_0-1\)</span> period is July. Thus, in the event study analysis, July will be the baseline period (reference period) and <span class="math inline">\(\beta_{\text{july}}=0\)</span>. We use the fixed effects estimator to estimate the event study regression in <a href="#eq-eq20.10" class="quarto-xref">Equation&nbsp;<span>22.10</span></a>.</p>
+<p>The common treatment timing <span class="math inline">\(t_0\)</span> is August and the <span class="math inline">\(t_0-1\)</span> period is July. Thus, in the event study analysis, July will be the baseline period (reference period) and <span class="math inline">\(\beta_{\text{july}}=0\)</span>. We use the fixed effects estimator to estimate the event study regression in <span class="quarto-unresolved-ref">?eq-eq20.10</span>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation of (22.10) using fixest</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>model5_fixest <span class="ot">&lt;-</span> <span class="fu">feols</span>(</span>
@@ -2404,19 +2404,19 @@ Table&nbsp;22.11: The effect of police presence on vehicle thefts
 <span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cluster =</span> <span class="sc">~</span>block</span>
 <span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The estimation results are presented in <a href="#tbl-t20.7" class="quarto-xref">Table&nbsp;<span>22.12</span></a>. The estimates of the lead variables (pre-treatment periods) are statistically insignificant, which provides statistical evidence for the plausibility of the parallel trends assumption.</p>
+<p>The estimation results are presented in <a href="#tbl-t22.7" class="quarto-xref">Table&nbsp;<span>22.12</span></a>. The estimates of the lead variables (pre-treatment periods) are statistically insignificant, which provides statistical evidence for the plausibility of the parallel trends assumption.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(model5_fixest,</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fmt =</span> <span class="dv">3</span>,</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik|F|RMSE"</span></span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t20.7" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-t22.7" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t20.7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t22.7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;22.12: Event Study Estimates
 </figcaption>
-<div aria-describedby="tbl-t20.7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-t22.7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -2424,25 +2424,25 @@ Table&nbsp;22.12: Event Study Estimates
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_fjqkl6bk1yk5welr6mkt = TinyTable.createTableFunctions("tinytable_fjqkl6bk1yk5welr6mkt");
+      const tableFns_mvklp1eorfya9t12fz2z = TinyTable.createTableFunctions("tinytable_mvklp1eorfya9t12fz2z");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '22', j: 2 } ], css_id: 'tinytable_css_7uf1cg0fwhklztgtdj28',}, 
-          { positions: [ { i: '16', j: 2 } ], css_id: 'tinytable_css_sizxkqm4fxvql0my7tyy',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '17', j: 2 }, { i: '18', j: 2 }, { i: '19', j: 2 }, { i: '20', j: 2 }, { i: '21', j: 2 } ], css_id: 'tinytable_css_04mi4ekf1hry1hz4z76r',}, 
-          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_wmz7u9hyxqt9plyfrz04',}, 
-          { positions: [ { i: '22', j: 1 } ], css_id: 'tinytable_css_zqj6zftq2vgh4r4v10kn',}, 
-          { positions: [ { i: '16', j: 1 } ], css_id: 'tinytable_css_ji35uzvto3lyf8kcrymu',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '17', j: 1 }, { i: '18', j: 1 }, { i: '19', j: 1 }, { i: '20', j: 1 }, { i: '21', j: 1 } ], css_id: 'tinytable_css_4xabcxh7i5irgv7xq7g3',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_4mcywuv2corc3rea1obn',}, 
+          { positions: [ { i: '22', j: 2 } ], css_id: 'tinytable_css_78tikimd6q5q1q5hq3m9',}, 
+          { positions: [ { i: '16', j: 2 } ], css_id: 'tinytable_css_ladc13bwuzod4qejfbuw',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '17', j: 2 }, { i: '18', j: 2 }, { i: '19', j: 2 }, { i: '20', j: 2 }, { i: '21', j: 2 } ], css_id: 'tinytable_css_qaac3dfodao7yeoq72dl',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_z090y6mk7h0wbjgsjb9s',}, 
+          { positions: [ { i: '22', j: 1 } ], css_id: 'tinytable_css_fxag3e1l1mdwt74dt263',}, 
+          { positions: [ { i: '16', j: 1 } ], css_id: 'tinytable_css_8ld8ejekc6g0fiufnixc',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '17', j: 1 }, { i: '18', j: 1 }, { i: '19', j: 1 }, { i: '20', j: 1 }, { i: '21', j: 1 } ], css_id: 'tinytable_css_u46pnij3umfie84aauv3',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_cs4kz9fw14fza74ntam8',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_fjqkl6bk1yk5welr6mkt.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_mvklp1eorfya9t12fz2z.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2451,17 +2451,17 @@ Table&nbsp;22.12: Event Study Estimates
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_fjqkl6bk1yk5welr6mkt td.tinytable_css_7uf1cg0fwhklztgtdj28, #tinytable_fjqkl6bk1yk5welr6mkt th.tinytable_css_7uf1cg0fwhklztgtdj28 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_fjqkl6bk1yk5welr6mkt td.tinytable_css_sizxkqm4fxvql0my7tyy, #tinytable_fjqkl6bk1yk5welr6mkt th.tinytable_css_sizxkqm4fxvql0my7tyy {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_fjqkl6bk1yk5welr6mkt td.tinytable_css_04mi4ekf1hry1hz4z76r, #tinytable_fjqkl6bk1yk5welr6mkt th.tinytable_css_04mi4ekf1hry1hz4z76r { text-align: center }
-    #tinytable_fjqkl6bk1yk5welr6mkt td.tinytable_css_wmz7u9hyxqt9plyfrz04, #tinytable_fjqkl6bk1yk5welr6mkt th.tinytable_css_wmz7u9hyxqt9plyfrz04 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_fjqkl6bk1yk5welr6mkt td.tinytable_css_zqj6zftq2vgh4r4v10kn, #tinytable_fjqkl6bk1yk5welr6mkt th.tinytable_css_zqj6zftq2vgh4r4v10kn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_fjqkl6bk1yk5welr6mkt td.tinytable_css_ji35uzvto3lyf8kcrymu, #tinytable_fjqkl6bk1yk5welr6mkt th.tinytable_css_ji35uzvto3lyf8kcrymu {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_fjqkl6bk1yk5welr6mkt td.tinytable_css_4xabcxh7i5irgv7xq7g3, #tinytable_fjqkl6bk1yk5welr6mkt th.tinytable_css_4xabcxh7i5irgv7xq7g3 { text-align: left }
-    #tinytable_fjqkl6bk1yk5welr6mkt td.tinytable_css_4mcywuv2corc3rea1obn, #tinytable_fjqkl6bk1yk5welr6mkt th.tinytable_css_4mcywuv2corc3rea1obn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_mvklp1eorfya9t12fz2z td.tinytable_css_78tikimd6q5q1q5hq3m9, #tinytable_mvklp1eorfya9t12fz2z th.tinytable_css_78tikimd6q5q1q5hq3m9 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_mvklp1eorfya9t12fz2z td.tinytable_css_ladc13bwuzod4qejfbuw, #tinytable_mvklp1eorfya9t12fz2z th.tinytable_css_ladc13bwuzod4qejfbuw {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_mvklp1eorfya9t12fz2z td.tinytable_css_qaac3dfodao7yeoq72dl, #tinytable_mvklp1eorfya9t12fz2z th.tinytable_css_qaac3dfodao7yeoq72dl { text-align: center }
+    #tinytable_mvklp1eorfya9t12fz2z td.tinytable_css_z090y6mk7h0wbjgsjb9s, #tinytable_mvklp1eorfya9t12fz2z th.tinytable_css_z090y6mk7h0wbjgsjb9s {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_mvklp1eorfya9t12fz2z td.tinytable_css_fxag3e1l1mdwt74dt263, #tinytable_mvklp1eorfya9t12fz2z th.tinytable_css_fxag3e1l1mdwt74dt263 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_mvklp1eorfya9t12fz2z td.tinytable_css_8ld8ejekc6g0fiufnixc, #tinytable_mvklp1eorfya9t12fz2z th.tinytable_css_8ld8ejekc6g0fiufnixc {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_mvklp1eorfya9t12fz2z td.tinytable_css_u46pnij3umfie84aauv3, #tinytable_mvklp1eorfya9t12fz2z th.tinytable_css_u46pnij3umfie84aauv3 { text-align: left }
+    #tinytable_mvklp1eorfya9t12fz2z td.tinytable_css_cs4kz9fw14fza74ntam8, #tinytable_mvklp1eorfya9t12fz2z th.tinytable_css_cs4kz9fw14fza74ntam8 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_fjqkl6bk1yk5welr6mkt" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_mvklp1eorfya9t12fz2z" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -2568,7 +2568,7 @@ Table&nbsp;22.12: Event Study Estimates
 </figure>
 </div>
 </div>
-<p>Alternatively, we can resort to the OLS estimator to estimate <a href="#eq-eq20.10" class="quarto-xref">Equation&nbsp;<span>22.10</span></a>. The following code chunk produces the same estimates as the fixed effects estimator. Note that we use the <code>factor(month)+factor(block)</code> to include month and block fixed effects, respectively.</p>
+<p>Alternatively, we can resort to the OLS estimator to estimate <a href="#eq-eq22.10" class="quarto-xref">Equation&nbsp;<span>22.10</span></a>. The following code chunk produces the same estimates as the fixed effects estimator. Note that we use the <code>factor(month)+factor(block)</code> to include month and block fixed effects, respectively.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the model with lm()</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>model6_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
