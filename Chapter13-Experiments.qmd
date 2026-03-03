@@ -158,10 +158,10 @@ $$
 
 Thus, the OLS estimator of $\beta_1$ is an unbiased estimator of the ATE. However, recall that the coefficients on the control variables do not have a causal interpretation unless $\E(u_i|W_{1i},\dots,W_{ri})=0$.
 
-When the assignment of individuals to treatment and control groups is influenced by one or more observable variables $W$, we refer to this as **randomization based on covariates**. In this case, the OLS estimator of $\beta_1$ based on @eq-eq20.2 suffers from omitted variable bias because $D$ is correlated with the omitted variable $W$. The omitted variable bias can be avoided by using $W$ as a control variable in the model.
+When the assignment of individuals to treatment and control groups is influenced by one or more observable variables $W$, we refer to this as **randomization based on covariates**. In this case, the OLS estimator of $\beta_1$ based on @eq-eq22.2 suffers from omitted variable bias because $D$ is correlated with the omitted variable $W$. The omitted variable bias can be avoided by using $W$ as a control variable in the model.
 
 ## Threats to validity of experiments
-As in the case of multiple linear regression model, threats to internal validity of an experiment can induce correlation between the treatment indicator and the error term in @eq-eq20.2. These threats include:
+As in the case of multiple linear regression model, threats to internal validity of an experiment can induce correlation between the treatment indicator and the error term in @eq-eq22.2. These threats include:
 
 * Failure to randomize, 
 * Failure to follow the treatment protocol, 
@@ -169,14 +169,14 @@ As in the case of multiple linear regression model, threats to internal validity
 * Experimental effects, and
 * Small sample sizes.
 
-Under the first threat, Assumption 3 fails. For example, consider the job training program in @exm-ex20.2. If we assign disproportionately high-ability individuals to the treatment group, we induce correlation between the treatment indicator $D$ and the potential outcomes and, therefore, between $D$ and the error term $u$. This correlation arises because ability (which is part of the error term) influences both treatment assignment and the outcome variable (wage). In this case, since the zero-conditional mean assumption fails, the OLS estimator of $\beta_1$ will be biased and inconsistent.
+Under the first threat, Assumption 3 fails. For example, consider the job training program in @exm-ex22.2. If we assign disproportionately high-ability individuals to the treatment group, we induce correlation between the treatment indicator $D$ and the potential outcomes and, therefore, between $D$ and the error term $u$. This correlation arises because ability (which is part of the error term) influences both treatment assignment and the outcome variable (wage). In this case, since the zero-conditional mean assumption fails, the OLS estimator of $\beta_1$ will be biased and inconsistent.
 
 
 If we have pre-treatment covariates $W_1,\dots,W_r$ on the experimental units, we can test whether Assumption 3 holds. The idea of this testing approach is that if the treatment is randomly assigned, then the treatment indicator $D$ should be uncorrelated with the pre-treatment covariates. Therefore, we can use the $F$-statistic to test the joint null hypothesis that the coefficients on the pre-treatment covariates in the regression of $D$ on $W_1,\dots,W_r$ are zero. If the treatment is randomly assigned, then the $F$-statistic should fail to reject this joint null hypothesis.
 
-In an experiment, subjects may not comply with the treatment protocol. For example, in our job training program in @exm-ex20.2, some subjects in the treatment group may not participate in the training, or some subjects from the control group may participate in the training sessions. In either case, the unobserved factors (e.g., ability) that are part of the error term will be correlated with $D$, since these unobserved factors influence whether subjects comply with the treatment protocol.
+In an experiment, subjects may not comply with the treatment protocol. For example, in our job training program in @exm-ex22.2, some subjects in the treatment group may not participate in the training, or some subjects from the control group may participate in the training sessions. In either case, the unobserved factors (e.g., ability) that are part of the error term will be correlated with $D$, since these unobserved factors influence whether subjects comply with the treatment protocol.
 
-Attrition occurs when subjects leave either the treatment group or the control group during an experiment. For example, in our job training program in @exm-ex20.2, the most able candidates in the treatment group may leave the program early if they are able to find a job before completing the training. This can create systematic differences between the treatment and control groups, thereby inducing a correlation between $D$ and $u$.
+Attrition occurs when subjects leave either the treatment group or the control group during an experiment. For example, in our job training program in @exm-ex22.2, the most able candidates in the treatment group may leave the program early if they are able to find a job before completing the training. This can create systematic differences between the treatment and control groups, thereby inducing a correlation between $D$ and $u$.
 
 The experimental effect, also known as the Hawthorne effect, arises when subjects in an experiment change their behavior simply because they are aware of being part of the experiment.
 
@@ -919,7 +919,7 @@ ggplot(df, aes(x = W, y = y)) +
     labs(x = "W", y = "Y")
 ```
 
-There are two types of RDDs: (i) the **sharp RDD** and (ii) the **fuzzy RDD**. In the sharp RDD, the treatment group consists of individuals with the running variable values above (or below) the threshold $w_0$, and the control group consists of those with the running variable values below (or above) the threshold. Thus, in the sharp RDD, the cutoff clearly separates the treatment and control groups. The hypothetical example provided in @fig-f22-4 is an example of the sharp RDD study. In the fuzzy RDD, the probability of treatment is a continuous function of the running variable, with a discontinuity at the cutoff.
+There are two types of RDDs: (i) the **sharp RDD** and (ii) the **fuzzy RDD**. In the sharp RDD, the treatment group consists of individuals with the running variable values above (or below) the threshold $w_0$, and the control group consists of those with the running variable values below (or above) the threshold. Thus, in the sharp RDD, the cutoff clearly separates the treatment and control groups. The hypothetical example provided in @fig-f22-f4 is an example of the sharp RDD study. In the fuzzy RDD, the probability of treatment is a continuous function of the running variable, with a discontinuity at the cutoff.
 
 In an RDD study, the treatment effect parameter is the average treatment effect at the threshold.
 
@@ -1033,7 +1033,7 @@ limit_points <- data.frame(
 
 # 3. Plot using ggplot2
 ggplot(df, aes(x = W, y = F)) +
-  geom_line(color = "steelblue", linewidth = 1.5) +
+  geom_line(color = "steelblue", linewidth = 1) +
   geom_vline(xintercept = 5, linetype = "dashed", color = "black", linewidth = 1) +
   geom_point(data = limit_points[limit_points$type=="left", ], 
              aes(x = W, y = F), color = "steelblue", fill = "white", shape = 21, size = 3, stroke = 1.2) +
