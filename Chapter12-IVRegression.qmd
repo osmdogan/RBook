@@ -1,19 +1,20 @@
 # Instrumental Variables Regression {#sec-chapter19}
 
-```{python}
+
+```{r}
 #| warning: false
 #| message: false
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import scipy.stats as stats
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-from statsmodels.iolib.summary2 import summary_col
-from linearmodels.iv import IV2SLS
-from stargazer.stargazer import Stargazer
-import networkx as nx
+# Loading necessary libraries
+library(AER)
+library(readxl)
+library(stargazer)
+library(sandwich)
+library(modelsummary)
+library(lmtest)
+library(car)
+library(haven)
+library(knitr)
+library(tidyverse)
 ```
 
 ## Introduction
@@ -45,7 +46,7 @@ Let $Z_i$ be an instrumental variable for $X_i$. Then, $Z$ satisfies the followi
 1. **Instrument relevance**: The instrumental variable is correlated with the endogenous variable, i.e., $\text{Cov}(Z_i,X_i)\neq 0$.
 2. **Instrument exogeneity**: The instrumental variable is uncorrelated with the error term, i.e., $\text{Cov}(Z_i,u_i)=0$.
 
-::: {#exm-exm19-1}
+::: {#exm-chapter21-1}
 ## Philip Wright and Sewall Wright
 The IV method was developed by Philip Wright and his son Sewall Wright in the 1920s. The key idea first appeared in an appendix to a book written by Philip Wright in 1928 (@Stock2003). The author was interested in estimating the elasticities of demand and supply for products such as vegetable oils, butter, and soy oil. Consider the following demand equation for butter:
 $$
@@ -56,92 +57,11 @@ $$
 
 where $Q^{demand}_i$ is the butter consumption in the $i$th period, $P_i$ is the price of butter, and $u_i$ includes all other factors that affect butter consumption, such as income and consumer preferences. In this equation, $\beta_1$ represents the demand elasticity for butter. Philip Wright collected data on annual butter consumption and the average annual butter price in the U.S. over the period 1912–1922. He realized that these data could not be used to estimate the demand elasticity because the price is determined by the intersection of supply and demand.
 
-In @fig-fig19-1, we plot the supply and demand curves for three periods. At each period, the equilibrium price and quantity are determined by the intersection of the supply and demand curves. In @fig-fig19-2, we plot the equilibrium price and quantity for 11 periods, where the supply and demand curves are hidden. Philip Wright recognized that fitting a linear regression model to the data would yield neither the demand curve nor the supply curve. The reason is that the price is endogenous; it is determined by the intersection of the supply and demand curves.
+In @fig-chapter21-1, we plot the supply and demand curves for three periods. At each period, the equilibrium price and quantity are determined by the intersection of the supply and demand curves. In @fig-chapter21-2, we plot the equilibrium price and quantity for 11 periods, where the supply and demand curves are hidden. Philip Wright recognized that fitting a linear regression model to the data would yield neither the demand curve nor the supply curve. The reason is that the price is endogenous; it is determined by the intersection of the supply and demand curves.
 
-```{python}
-#| fig-cap: "Equilibrium price and quantity data"
-#| label: fig-fig19-1
-# Generate data for the supply and demand curves
-quantity = np.linspace(0, 110, 100)
-demand1 = 100 - 0.8 * quantity
-supply1 = 10 + 1.5 * quantity
-demand2 = 130 - 0.8 * quantity
-supply2 = 60 + 1.5 * quantity
-demand3 = 160 - 0.8 * quantity
-supply3 = -50 + 1.5 * quantity
+![Equilibrium price and quantity data](figures/demand_supply1.png){#fig-chapter21-1 width=500px}
 
-# Calculate the intersection points
-intersection_quantity1 = (100 - 10) / (1.5 + 0.8)
-intersection_price1 = 10 + 1.5 * intersection_quantity1
-
-intersection_quantity2 = (130 - 60) / (1.5 + 0.8)
-intersection_price2 = 60 + 1.5 * intersection_quantity2
-
-intersection_quantity3 = (160 + 50) / (1.5 + 0.8)
-intersection_price3 = -50 + 1.5 * intersection_quantity3
-
-# Create the plot
-sns.set_style('darkgrid')
-plt.figure(figsize=(5, 4))
-
-# Plot the first set of supply and demand curves
-plt.plot(quantity, demand1, label='D_1', color='black')
-plt.plot(quantity, supply1, label='S1', color='steelblue')
-plt.annotate(r'$D_1$', xy=(quantity[-1], demand1[-1]), xytext=(5, 5), textcoords='offset points')
-plt.annotate(r'$S_1$', xy=(quantity[-1], supply1[-1]), xytext=(5, 5), textcoords='offset points')
-
-# Plot the second set of supply and demand curves
-plt.plot(quantity, demand2, label='D2', linestyle='--', color='black')
-plt.plot(quantity, supply2, label='S2', linestyle='--', color='steelblue')
-plt.annotate(r'$D_2$', xy=(quantity[-1], demand2[-1]), xytext=(5, 5), textcoords='offset points')
-plt.annotate(r'$S_2$', xy=(quantity[-1], supply2[-1]), xytext=(5, 5), textcoords='offset points')
-
-# Plot the third set of supply and demand curves
-plt.plot(quantity, demand3, label=r'$D_3$', linestyle=':', color='black')
-plt.plot(quantity, supply3, label='S3', linestyle=':', color='steelblue')
-plt.annotate(r'$D_3$', xy=(quantity[-1], demand3[-1]), xytext=(5, 5), textcoords='offset points')
-plt.annotate(r'$S_3$', xy=(quantity[-1], supply3[-1]), xytext=(5, 5), textcoords='offset points')
-
-# Plot the intersection points
-plt.plot(intersection_quantity1, intersection_price1, 'bo')
-plt.annotate('Period 1 equilibrium', xy=(intersection_quantity1, intersection_price1), xytext=(-5, -15), textcoords='offset points', color='black', fontsize=8)
-
-plt.plot(intersection_quantity2, intersection_price2, 'bo')
-plt.annotate('Period 2 equilibrium', xy=(intersection_quantity2, intersection_price2), xytext=(-8, 8), textcoords='offset points', color='black', fontsize=8)
-
-plt.plot(intersection_quantity3, intersection_price3, 'bo') 
-plt.annotate('Period 3 equilibrium', xy=(intersection_quantity3, intersection_price3), xytext=(-8, 8), textcoords='offset points', color='black', fontsize=8)
-
-# Add labels
-plt.xlabel('Quantity')
-plt.ylabel('Price')
-plt.xlim(0, 130)
-plt.show()
-
-```
-
-```{python}
-#| fig-cap: "Equilibrium price and quantity for 11 periods"
-#| label: fig-fig19-2
-# Additional equilibrium points
-additional_points = {
-    'quantity': [35, 45, 50, 60, 70, 75, 60, 50, 90],
-    'price': [90, 92, 100, 95, 83, 100, 95, 75, 80]
-}
-
-# Create the scatter plot
-plt.figure(figsize=(5, 4))
-plt.scatter(additional_points['quantity'], additional_points['price'], color='steelblue', label='Additional Points')
-
-# Plot the intersection points
-plt.scatter([intersection_quantity1, intersection_quantity2, intersection_quantity3],
-            [intersection_price1, intersection_price2, intersection_price3], color='blue', label='Intersection Points')
-
-# Add labels
-plt.xlabel('Quantity')
-plt.ylabel('Price')
-plt.show()
-```
+![Equilibrium price and quantity for 11 periods](figures/demand_supply2.png){#fig-chapter21-2 width=500px}
 
 Formally, this can be shown by solving the market equilibrium equations for price and quantity. Assume that the supply of butter is given by $Q^{supply}_i = \gamma_0 + \gamma_1P_i + v_i$, where $v_i$ is an error term independent of $u_i$. The equilibrium price and quantity are determined by the intersection of the supply and demand curves, i.e., $Q^{demand}_i = Q^{supply}_i$. The equilibrium condition gives 
 $$
@@ -153,74 +73,22 @@ $$
 Thus, $\text{Cov}(P_i, u_i)=\sigma^2_u/(\gamma_1-\beta_1)$, where $\sigma^2_u$ is the variance of $u_i$. This implies that the price is correlated with the error term, i.e., the price is endogenous.
 
 
-Philip Wright suggested identifying another variable that shifts the supply curve but does not affect the demand curve. In @fig-fig19-3, we illustrate the equilibrium price and quantity when this variable shifts the supply curve over three periods. Using this approach, the demand curve can be identified, allowing us to determine the demand elasticity for butter (the slope of the demand curve).
+Philip Wright suggested identifying another variable that shifts the supply curve but does not affect the demand curve. In @fig-chapter21-3, we illustrate the equilibrium price and quantity when this variable shifts the supply curve over three periods. Using this approach, the demand curve can be identified, allowing us to determine the demand elasticity for butter (the slope of the demand curve).
 
 The variable that shifts the supply curve is referred to as an instrumental variable. Since the instrumental variable shifts the supply curve, it is correlated with the price. However, it is uncorrelated with the error term because it does not influence the demand curve. Philip Wright proposed several potential instrumental variables. One such variable he suggested was below-average rainfall in a dairy region, which could affect the supply of butter but is unlikely to influence the demand for butter.
 
-```{python}
-#| fig-cap: "Single demand curve with three supply curves"
-#| label: fig-fig19-3
-# Generate data for the supply and demand curves
-quantity = np.linspace(0, 110, 100)
-demand = 100 - 0.8 * quantity
-supply1 = 10 + 1.5 * quantity
-supply2 = 60 + 1.5 * quantity
-supply3 = -50 + 1.5 * quantity
+![Single demand curve with three supply curves](figures/demand_supply3.png){#fig-chapter21-3 width=500px}
 
-# Calculate the intersection points
-intersection_quantity1 = (100 - 10) / (1.5 + 0.8)
-intersection_price1 = 10 + 1.5 * intersection_quantity1
-
-intersection_quantity2 = (100 - 60) / (1.5 + 0.8)
-intersection_price2 = 60 + 1.5 * intersection_quantity2
-
-intersection_quantity3 = (100 + 50) / (1.5 + 0.8)
-intersection_price3 = -50 + 1.5 * intersection_quantity3
-
-# Create the plot
-sns.set_style('darkgrid')
-plt.figure(figsize=(5, 4))
-
-# Plot the demand curve
-plt.plot(quantity, demand, label='Demand', color='black')
-plt.annotate(r'$D_1$', xy=(quantity[-1], demand[-1]), xytext=(5, 5), textcoords='offset points')
-
-# Plot the supply curves
-plt.plot(quantity, supply1, label='Supply 1', color='steelblue')
-plt.annotate(r'$S_1$', xy=(quantity[-1], supply1[-1]), xytext=(5, 5), textcoords='offset points')
-
-plt.plot(quantity, supply2, label='Supply 2', linestyle='--', color='steelblue')
-plt.annotate(r'$S_2$', xy=(quantity[-1], supply2[-1]), xytext=(5, 5), textcoords='offset points')
-
-plt.plot(quantity, supply3, label='Supply 3', linestyle=':', color='steelblue')
-plt.annotate(r'$S_3$', xy=(quantity[-1], supply3[-1]), xytext=(5, 5), textcoords='offset points')
-
-# Plot the intersection points
-plt.plot(intersection_quantity1, intersection_price1, 'bo')
-plt.annotate('Equilibrium 1', xy=(intersection_quantity1, intersection_price1), xytext=(-5, -15), textcoords='offset points', color='black', fontsize=8)
-
-plt.plot(intersection_quantity2, intersection_price2, 'bo')
-plt.annotate('Equilibrium 2', xy=(intersection_quantity2, intersection_price2), xytext=(-8, 8), textcoords='offset points', color='black', fontsize=8)
-
-plt.plot(intersection_quantity3, intersection_price3, 'bo') 
-plt.annotate('Equilibrium 3', xy=(intersection_quantity3, intersection_price3), xytext=(-8, 8), textcoords='offset points', color='black', fontsize=8)
-
-# Add labels
-plt.xlabel('Quantity')
-plt.ylabel('Price')
-plt.xlim(0, 130)
-plt.show()
-```
 :::
 
-In @exm-exm19-1, the price of butter is endogenous because it is determined by the intersection of the supply and demand curves. In general, if the dependent variable and the regressor of interest are determined simultaneously, then the regressor of interest is endogenous. 
+In @exm-chapter21-1, the price of butter is endogenous because it is determined by the intersection of the supply and demand curves. In general, if the dependent variable and the regressor of interest are determined simultaneously, then the regressor of interest is endogenous. 
 
-:::{#exm-exm19-2}
+:::{#exm-chapter21-2}
 ## Wage and education
 Assume that $Y_i$ is the wage of individual $i$ and $X_i$ is the years of education of individual $i$. In this classical wage equation, the error term $u_i$ captures unobserved factors that affect wages, such as ability or family background. Since ability and family background are likely to be correlated with education, the education level becomes endogenous.
 :::
 
-In @exm-exm19-2, the education level is endogenous because it is correlated with the error term. In general, if the dependent variable and the regressor of interest are choice variables of the same individual, then the regressor of interest is endogenous (@Hansen2022).
+In @exm-chapter21-2, the education level is endogenous because it is correlated with the error term. In general, if the dependent variable and the regressor of interest are choice variables of the same individual, then the regressor of interest is endogenous (@Hansen2022).
 
 ### The two stage least squares estimator
 Using the instrumental variable $Z_i$, we can use the **two-stage least squares (TSLS)** estimator to consistently estimate $\beta_1$. The TSLS method involves two stages:
@@ -240,7 +108,7 @@ Y_i=\beta_0+\beta_1\hat{X}_i+u_i.
 \end{align}
 $$
 
-:::{#def-def19-3}
+:::{#def-chapter21-3}
 ## Two-stage least squares (TSLS) estimator
 The OLS estimators $\hat{\beta}^{TSLS}_0$ and $\hat{\beta}^{TSLS}_1$ obtained from the second stage are called the TSLS estimators.
 :::
@@ -250,7 +118,7 @@ $$
 \begin{align}
 \hat{\beta}^{TSLS}_1=\frac{s_{\hat{X}Y}}{s^2_{\hat{X}}}.
 \end{align}
-$${#eq-eq19-1}
+$${#eq-chapter21-1}
 
 To determine $s_{\hat{X}Y}$ and $s^2_{\hat{X}}$, we use the predicted equation $\hat{X}=\hat{\pi}_0+\hat{\pi}_1Z$ from the first stage:
 $$
@@ -260,12 +128,12 @@ $$
 \end{align*}
 $$
 
-Also, from the first stage, we have $\hat{\pi}_1=\frac{s_{ZX}}{s^2_Z}\implies s^2_Z=s_{ZX}/\hat{\pi}_1$. Then, using $s_{\hat{X}Y}=\hat{\pi}_1s_{ZY}$ and $s^2_{\hat{X}}=\hat{\pi}^2_1s_{ZX}/\hat{\pi}_1=\hat{\pi}_1s_{ZX}$ in @eq-eq19-1, we derive $\hat{\beta}^{TSLS}_1$ as
+Also, from the first stage, we have $\hat{\pi}_1=\frac{s_{ZX}}{s^2_Z}\implies s^2_Z=s_{ZX}/\hat{\pi}_1$. Then, using $s_{\hat{X}Y}=\hat{\pi}_1s_{ZY}$ and $s^2_{\hat{X}}=\hat{\pi}^2_1s_{ZX}/\hat{\pi}_1=\hat{\pi}_1s_{ZX}$ in @eq-chapter21-1, we derive $\hat{\beta}^{TSLS}_1$ as
 $$
 \begin{align}\label{eq4}
 \hat{\beta}^{TSLS}_1=\frac{s_{ZY}}{s_{ZX}}.
 \end{align}
-$${#eq-eq19-2}
+$${#eq-chapter21-2}
 
 That is, $\hat{\beta}^{TSLS}_1$ is given by the ratio of the sample covariance between $Z$ and $Y$ and the sample covariance between $Z$ and $X$.
 
@@ -279,12 +147,12 @@ $$
 \end{align*}
 $$
 
-where $\sigma_{ZY}$ and $\sigma_{ZX}$ are the population covariance between $Z$ and $Y$ and between $Z$ and $X$, respectively. Then, using @eq-eq19-2, we have
+where $\sigma_{ZY}$ and $\sigma_{ZX}$ are the population covariance between $Z$ and $Y$ and between $Z$ and $X$, respectively. Then, using @eq-chapter21-2, we have
 $$
 \begin{align}
 \hat{\beta}^{TSLS}_1=\frac{s_{ZY}}{s_{ZX}}\xrightarrow{p}\frac{\sigma_{ZY}}{\sigma_{ZX}}=\beta_1,
 \end{align}
-$${#eq-eq19-3}
+$${#eq-chapter21-3}
 
 because $s_{ZY}\xrightarrow{p}\sigma_{ZY}$ and $s_{ZX}\xrightarrow{p}\sigma_{ZX}$ as $n\to\infty$ by the law of large numbers. Thus, the TSLS estimator is a consistent estimator of $\beta_1$.
 
@@ -321,22 +189,27 @@ where $\hat{q}_i=(Z_i-\bar{Z})\hat{u}_i$ and $\hat{u}_i=Y_i-\hat{\beta}^{TSLS}_0
 ### Application to the demand for cigarettes
 We estimate the price elasticity of demand for cigarettes using the instrumental variable method. The data set consists of annual data for the 48 continental U.S. states from 1985 to 1995. Cigarette consumption is measured by annual per capita cigarette sales in packs per year. The price is the average retail cigarette price per pack during the fiscal year, including taxes. The data set is included in the `cig_ch12.xlsx` file. The variables are as follows:
 
-- `state`: State
-- `year`: Year
-- `cpi`: Consumer price index
-- `pop`: State population
-- `packpc`: Number of packs per capita
-- `income`: State personal income (total, nominal)
-- `tax`: Average state, federal, and average local excise taxes for fiscal year
-- `avgprs`: Average price during fiscal year, including sales taxes
-- `taxs`: Average excise taxes for fiscal year, including sales taxes
+::: {style="font-size: 85%"}
+| Variable | Description |
+|:------|:------------------------------|
+| `state`   | State |
+| `year`    | Year |
+| `cpi`     | Consumer price index |
+| `pop`     | State population |
+| `packpc`  | Number of packs per capita |
+| `income`  | State personal income (total, nominal) |
+| `tax`     | Average state, federal, and average local excise taxes for fiscal year |
+| `avgprs`  | Average price during fiscal year, including sales taxes |
+| `taxs`    | Average excise taxes for fiscal year, including sales taxes |
+: The cigarette consumption dataset {#tbl-chapter21-1 .striped .hover}
+:::
 
 We use real variables by deflating the nominal variables by the consumer price index. We consider the following demand equation for cigarette consumption:
 $$
 \begin{align}
 \ln(Q^{cigarettes}_i)=\beta_0+\beta_1\ln(P^{cigarettes}_i)+u_i,
 \end{align}
-$${#eq-eq19-4}
+$${#eq-chapter21-4}
 
 where $Q^{cigarettes}_i$ is the number of packs of cigarettes sold per capita in the $i$th state and $P^{cigarettes}_i$ is the average real price per pack of cigarettes including all taxes. The price is endogenous because it is determined by the intersection of the supply and demand curves, as we illustrated in @exm-exm19-1. We can use the general sales tax as an instrumental variable for the price. The general sales tax is a tax applied to all consumption goods, including cigarettes. We need to ensure that the general sales tax is correlated with the price but uncorrelated with the error term. 
 
@@ -344,70 +217,60 @@ where $Q^{cigarettes}_i$ is the number of packs of cigarettes sold per capita in
 
 * **Instrument exogeneity**: We need to show that the general sales tax affects the demand for cigarettes only through its effect on the price. This assumption is plausible because general sales tax rates vary across states and are usually set based on the state's fiscal policies. Therefore, the general sales tax is likely to be uncorrelated with the factors that affect cigarette consumption.
 
-We use the following code chunk to import data and generate (i) the real cigarettes prices, (ii) the real sales taxes, and (iii) the real per-capita income.The summary statistics of variables are shown in @tbl-t19-1.
+We use the following code chunk to import data and generate (i) the real cigarettes prices, (ii) the real sales taxes, and (iii) the real per-capita income.The summary statistics of variables are shown in @tbl-chapter21-2.
 
-```{python}
+
+```{r}
 #| warning: false
 #| message: false
+
 # Import data
-mydata = pd.read_excel("data/cig_ch12.xlsx")
+mydata <- readxl::read_excel("data/cig_ch12.xlsx")
 
 # Column names
-mydata.columns
+colnames(mydata)
 
-# Generate real cigarettes prices
-mydata['rprice'] = mydata['avgprs'] / mydata['cpi']
+# Generate real cigarette prices
+mydata$rprice <- mydata$avgprs / mydata$cpi
 
 # Generate real sales tax
-mydata['salestax'] = (mydata['taxs'] - mydata['tax']) / mydata['cpi']
+mydata$salestax <- (mydata$taxs - mydata$tax) / mydata$cpi
 
 # Generate real cigarette tax
-mydata['cigtax'] = mydata['tax'] / mydata['cpi']
+mydata$cigtax <- mydata$tax / mydata$cpi
 
 # Generate real per capita income
-mydata['rincome'] = (mydata['income'] / mydata['pop']) / mydata['cpi']
+mydata$rincome <- (mydata$income / mydata$pop) / mydata$cpi
 ```
 
-:::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: "Summary statistics"
-#| label: tbl-t19-1
+#| label: tbl-chapter21-2
+# Variables of interest
+variables <- c("rprice", "salestax", "cigtax", "rincome", "packpc")
+
 # Summary statistics
-variables = ['rprice', 'salestax', 'cigtax', 'rincome', 'packpc']
-mydata[variables].describe().round(2).T
-```
-:::
-
-To estimate @eq-eq19-4, we only use data from the year 1995. The code chunk below generates the subset of data for the year 1995, adds a column of ones to the data frame, and estimates the IV regression using the `IV2SLS` function from the `linearmodels` package.
-
-```{python}
-#| warning: false
-#| message: false
-# Generate a subset for the year 1995
-mydata1995 = mydata[mydata['year'] == 1995]
-
-# Add a column of ones to the dataframe
-mydata1995['const'] = 1
-
-# Perform IV regression
-iv_model = IV2SLS(dependent=np.log(mydata1995['packpc']), exog=mydata1995['const'], endog=np.log(mydata1995['rprice']),instruments=mydata1995['salestax']).fit(cov_type='robust')
+datasummary_skim(
+    mydata[, variables],
+    stats = c("n", "mean", "sd", "min", "max"),
+    fmt = 2
+)
 ```
 
-We can use the `Stargazer` function from the `stargazer` package to display the estimation results. The code chunk below generates the estimation results using the `Stargazer` function.
+To estimate @eq-chapter21-4, we only use data from the year 1995. We use the `ivreg` function from the `AER` package to perform the IV regression. 
 
-:::{layout-ncol=1}
-```{python}
-#| tbl-cap: "Estimation Results"
-#| label: tbl-t19-2
-# Estimation results using stargazer
-stargazer = Stargazer([iv_model])
-stargazer.significant_digits(3)
-stargazer.show_degrees_of_freedom(False)
-stargazer
+```{r}
+# Subset for year 1995
+mydata1995 <- mydata[mydata$year == 1995, ]
+
+# IV regression (2SLS)
+iv_model <- ivreg(
+    log(packpc) ~ log(rprice) | salestax,
+    data = mydata1995
+)
 ```
-:::
 
-According to estimation results in @tbl-t19-2, the estimated model is 
+According to estimation results in @tbl-chapter21-3, the estimated model is 
 $$
 \begin{align}
 \widehat{\ln(Q^{cigarettes}_i)}=9.720-1.084\ln(P^{cigarettes}_i).
@@ -416,6 +279,19 @@ $$
 
 The TSLS estimate $\hat{\beta}^{TSLS}_1=-1.084$ suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately $1.08$ percent, indicating that demand is fairly elastic.
 
+```{r}
+#| tbl-cap: "Estimation Results"
+#| label: tbl-chapter21-3
+# Display results
+modelsummary(
+    models = list("Model" = iv_model),
+    vcov = "HC1",
+    stars = TRUE,
+    fmt = 3,
+    gof_omit = "AIC|BIC|Log.Lik"
+)
+```
+
 ## The general IV regression model
 
 In this section, we extend the IV regression model to include multiple endogenous variables and multiple instruments. Consider the following multiple linear regression model:
@@ -423,7 +299,7 @@ $$
 \begin{align}
 Y_i = \beta_0 + \beta_1X_{1i}+\ldots+\beta_kX_{ki}+\beta_{k+1}W_{1i} +\ldots + \beta_{k+r}W_{ri} + u_i,
 \end{align}
-$${#eq-eq19-5}
+$${#eq-chapter21-5}
 
 where $Y_i$ is the dependent variable, $X_{1i},\ldots,X_{ki}$ are the endogenous variables, and $W_{1i},\ldots,W_{ri}$ are either exogenous variables or the control variables. The endogenous variables are correlated with the error term, i.e., $\text{Cov}(X_{ji},u_i)\neq 0$ for $j=1,\ldots,k$. We use the instrumental variables $Z_{1i},\ldots,Z_{mi}$ for the endogenous variables. In this model, the coefficients $\beta_1,\ldots,\beta_k$ are said to be:
 
@@ -431,10 +307,10 @@ where $Y_i$ is the dependent variable, $X_{1i},\ldots,X_{ki}$ are the endogenous
 * **overidentified** if $m > k$. There are more than enough instruments to estimate $\beta_1,\ldots,\beta_k$. In this case, we can also test whether the instruments are valid (a test of the overidentifying restrictions), which we will discuss later.
 * **underidentified** if $m < k$. There are too few instruments to estimate $\beta_1,\ldots,\beta_k$.
 
-In order to use the IV method to estimate the coefficients in @eq-eq19-5, the coefficients must either be exactly identified or overidentified. The IV method is not applicable when the coefficients are underidentified.
+In order to use the IV method to estimate the coefficients in @eq-chapter21-5, the coefficients must either be exactly identified or overidentified. The IV method is not applicable when the coefficients are underidentified.
 
 ::: {.callout-note icon=false}
-## Key Concept 19.1: The general instrumental variables regression model and terminology
+## Key Concept 21.1: The general instrumental variables regression model and terminology
 The general IV regression model is given by
 $$
 \begin{align}\label{eq8}
@@ -471,6 +347,7 @@ where $\pi_{0j},\ldots,\pi_{mj}$ and $\gamma_{1j},\ldots,\gamma_{rj}$ are the un
 $$
 \hat{X}_{ji}=\hat{\pi}_{0j}+\hat{\pi}_{1j}Z_{1i}+\ldots+\hat{\pi}_{mj}Z_{mi}+ \hat{\gamma}_{1j}W_{1i}+\ldots+\hat{\gamma}_{rj}W_{ri}.
 $$ 
+
 Repeat this for all the endogenous regressors $X_{2i},\ldots,X_{ki}$, thereby computing the predicted values $\hat{X}_{1i},\ldots,\hat{X}_{ki}$.
 
 * **Second-stage regression**: Estimate the following regression by the OLS estimator:
@@ -480,7 +357,7 @@ Y_i=\beta_0+\beta_1\hat{X}_{1i}+\ldots+\beta_k\hat{X}_{ki}+\beta_{k+1}W_{1i}+\ld
 \end{align}
 $$
 
-:::{#def-def19-4}
+:::{#def-chapter21-4}
 ## The TSLS estimator in the general IV model
 The TSLS estimators $\hat{\beta}^{TSLS}_0,\hat{\beta}^{TSLS}_1,\ldots,\hat{\beta}^{TSLS}_{k+r}$ in the general IV regression model are the OLS estimators obtained from the second-stage regression.
 :::
@@ -497,7 +374,7 @@ $$
 1 & \hat{X}_{1n} & \ldots & \hat{X}_{kn} & W_{1n} & \ldots & W_{rn}
 \end{pmatrix}.
 \end{align}
-$${#eq-eq19-6}
+$${#eq-chapter21-6}
 
 This matrix should have full column rank, i.e., the columns of the matrix are linearly independent. This condition corresponds to the no-perfect multicollinearity assumption and ensures that we can use the OLS estimator to estimate the second stage regression. If there is only one endogenous regressor, then at least one of the instrumental variables must be relevant for the endogenous regressor in the reduced form equation.
 
@@ -529,23 +406,23 @@ $$
 \begin{align}
 Y_i = \beta_0 + \beta_1X_i + \beta_2W_i + u_i.
 \end{align}
-$${#eq-eq19-6.0}
+$${#eq-chapter21-7}
 
 In this case, we can replace Assumption 1 with the following conditional mean independence assumption:
 $$
 \begin{align}
 \E\left(u_i|W_i,Z_i\right)=\E(u_i|W_i).
 \end{align}
-$${#eq-eq19-6.1}
+$${#eq-chapter21-8}
 
-Under the assumption that $\E(u_i|W_i)=\gamma_0+\gamma_1W_i$, we can rewrite @eq-eq19-6.0 as
+Under the assumption that $\E(u_i|W_i)=\gamma_0+\gamma_1W_i$, we can rewrite @eq-chapter21-7 as
 $$
 \begin{align}
 Y_i &= \beta_0 + \beta_1X_i + \beta_2W_i +u_i-\E(u_i|W_i,Z_i)+\E(u_i|W_i,Z_i)\\
 &= \beta_0 + \beta_1X_i + \beta_2W_i + \gamma_0 + \gamma_1W_i + \varepsilon_i\\
 &= \delta_0 + \beta_1X_i + \delta_1W_i + \varepsilon_i,
 \end{align}
-$${#eq-eq19-6.2}
+$${#eq-chapter21-9}
 
 where $\delta_0=(\beta_0+\gamma_0)$, $\delta_1=(\beta_2+\gamma_1)$, and $\varepsilon_i=u_i-\E(u_i|W_i,Z_i)$ is the error term in the model. Note that 
 $$
@@ -555,26 +432,27 @@ $$
 \end{align}
 $$
 
-which implies that $\text{Cov}(\varepsilon_i,Z_i)=0$. Thus, if we replace Assumption 1 with the conditional mean independence assumption in @eq-eq19-6.1, the IV regression assumptions are satisfied and we can use the TSLS estimator to estimate the coefficients in @eq-eq19-6.2. Note that the TSLS estimator only consistently estimates $\delta_0$, $\beta_1$, and $\delta_1=(\beta_2+\gamma_1)$ in @eq-eq19-6.2. In particular, we do not have a consistent estimator for $\beta_2$.
+which implies that $\text{Cov}(\varepsilon_i,Z_i)=0$. Thus, if we replace Assumption 1 with the conditional mean independence assumption in @eq-chapter21-8, the IV regression assumptions are satisfied and we can use the TSLS estimator to estimate the coefficients in @eq-chapter21-9. Note that the TSLS estimator only consistently estimates $\delta_0$, $\beta_1$, and $\delta_1=(\beta_2+\gamma_1)$ in @eq-chapter21-9. In particular, we do not have a consistent estimator for $\beta_2$.
 
 ### Application to the demand for cigarettes
-We extend the cigarette demand model to include real per capita income as an additional regressor. Recall that we use the sales tax as an instrument for the average real price in the demand equation stated in @eq-eq19-4. However, if real income is correlated with the sales tax, then the sales tax is not a valid instrument for real prices in @eq-eq19-4. Therefore, we need to extend the demand equation to include real per capita income as an additional regressor:
+We extend the cigarette demand model to include real per capita income as an additional regressor. Recall that we use the sales tax as an instrument for the average real price in the demand equation stated in @eq-chapter21-4. However, if real income is correlated with the sales tax, then the sales tax is not a valid instrument for real prices in @eq-chapter21-4. Therefore, we need to extend the demand equation to include real per capita income as an additional regressor:
 $$
 \begin{align}
 \ln(Q^{cigarettes}_i)=\beta_0+\beta_1\ln(P^{cigarettes}_i)+\beta_2\ln(\text{Income}_i)+u_i.
 \end{align}
-$${#eq-eq19-7}
+$${#eq-chapter21-10}
 
-where $\text{Income}_i$ is the real per capita income in state $i$. 
+where $\text{Income}_i$ is the real per capita income in state $i$. We use the `ivreg` function to estimate the extended demand equation, where we use the sales tax as an instrument for the real price and include real per capita income as a control variable. Note that in the formula for the `ivreg` function, we specify the control variable `log(rincome)` in both the first stage and the second stage.
 
-We use the `from_formula` method of the `IV2SLS` function to specify the formula for the demand equation. In this case, we need to create a formula that includes the dependent variable, the exogenous variables, and the endogenous variable with the instrument(s), where instrument(s) are enclosed in square brackets. The general syntax for the formula is as follows:
-
-```{python}
-#| eval: false
-outcome ~ exogenous + [endogenous ~ instruments]
+```{r}
+# IV regression using salestax as instrument
+iv_model2 <- ivreg(
+    log(packpc) ~ log(rincome) + log(rprice) | log(rincome) + salestax,
+    data = mydata1995
+)
 ```
 
-We use the following code chunk to estimate @eq-eq19-7. The estimation results are shown in @tbl-t19-3. The estimated model is 
+The estimation results are shown in @tbl-chapter21-4. The estimated model is 
 $$
 \begin{align}
 \widehat{\ln(Q^{cigarettes}_i)}=9.43-1.143\ln(P^{cigarettes}_i)+0.215\ln(\text{Income}_i).
@@ -583,51 +461,31 @@ $$
 
 The TSLS estimate $\hat{\beta}^{TSLS}_1=-1.143$ suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately $1.14$ percent, holding real income constant. 
 
-```{python}
-# Model: Using only sales taxes as the instrument
-model = IV2SLS.from_formula(
-    formula="np.log(packpc) ~ 1 + np.log(rincome) + [np.log(rprice) ~ salestax]",
-    data=mydata1995
-).fit(cov_type='robust')
 
+```{r}
+#| tbl-cap: "Estimation results for the extended cigarette demand model"
+#| label: tbl-chapter21-4
+# Display results
+modelsummary(
+    models = list("Model" = iv_model2),
+    vcov = "HC1",
+    stars = TRUE,
+    fmt = 3,
+    gof_omit = "AIC|BIC|Log.Lik"
+)
 ```
 
+The model in @eq-chapter21-4 is exatcly identified because there is only one endogenous variable and one instrument. In addition to this instrument, we can use the cigarette-specific tax as an additional instrument. We use the following code chunk to estimate the model using both the sales tax and the cigarette-specific tax as instruments. 
 
-:::{layout-ncol=1}
-```{python}
-#| tbl-cap: "Estimation Results"
-#| label: tbl-t19-3
-# Estimation results using stargazer
-stargazer = Stargazer([model])
-stargazer.significant_digits(3)
-stargazer.show_degrees_of_freedom(False)
-stargazer
-```
-:::
-
-The model in @eq-eq19-7 is exatcly identified because there is only one endogenous variable and one instrument. In addition to this instrument, we can use the cigarette-specific tax as an additional instrument. We use the following code chunk to estimate the model using both the sales tax and the cigarette-specific tax as instruments. 
-
-```{python}
-# Model: Using both sales tax and cigarette tax as the instruments
-model = IV2SLS.from_formula(
-    formula="np.log(packpc) ~ 1 + np.log(rincome) + [np.log(rprice) ~ salestax + cigtax]",
-    data=mydata1995
-).fit(cov_type='robust')
+```{r}
+# IV regression using salestax and cigtax as instruments
+iv_model3 <- ivreg(
+    log(packpc) ~ log(rincome) + log(rprice) | log(rincome) + salestax + cigtax,
+    data = mydata1995
+)
 ```
 
-:::{layout-ncol=1}
-```{python}
-#| tbl-cap: "Estimation Results"
-#| label: tbl-t19-4
-# Estimation results using stargazer
-stargazer = Stargazer([model])
-stargazer.significant_digits(3)
-stargazer.show_degrees_of_freedom(False)
-stargazer
-```
-:::
-
-The estimation results are shown in @tbl-t19-4. The estimated model is
+The estimation results are shown in @tbl-chapter21-5. The estimated model is
 $$
 \begin{align}
 \widehat{\ln(Q^{cigarettes}_i)}=9.89-1.277\ln(P^{cigarettes}_i)+0.280\ln(\text{Income}_i).
@@ -636,7 +494,20 @@ $$
 
 The TSLS estimate $\hat{\beta}^{TSLS}_1=-1.277$ suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately $1.28$ percent, holding real income constant.
 
-The validity of the estimation results presented in @tbl-t19-3 and @tbl-t19-4 depends on the validity of the instruments. In the next section, we discuss how to check the validity of the instruments.
+```{r}
+#| tbl-cap: "Estimation results for the extended cigarette demand model with two instruments"
+#| label: tbl-chapter21-5
+# Display results
+modelsummary(
+    models = list("Model" = iv_model3),
+    vcov = "HC1",
+    stars = TRUE,
+    fmt = 3,
+    gof_omit = "AIC|BIC|Log.Lik"
+)
+```
+
+The validity of the estimation results presented in @tbl-chapter21-4 and @tbl-chapter21-5 depends on the validity of the instruments. In the next section, we discuss how to check the validity of the instruments.
 
 ## Checking instrument validity
 Recall that we need two conditions for the instrumental variables to be valid: (i) instrument relevance and (ii) instrument exogeneity. Assume that there is only one endogenous variable and multiple instruments. In this case, the first stage regression (the reduced form equation) is
@@ -644,7 +515,7 @@ $$
 \begin{align}
 X_i=\pi_0+\pi_1Z_i+\ldots+\pi_mZ_i+\gamma_1W_i+\ldots+\gamma_rW_i+v_i,
 \end{align}
-$${#eq-eq19-8}
+$${#eq-chapter21-11}
 
 where $\pi_0,\ldots,\pi_m$ and $\gamma_1,\ldots,\gamma_r$ are the unknown parameters, and $v_i$ is the error term. Then, the instruments are relevant if at least one of $\pi_1,\ldots,\pi_m$ is not zero. The instruments are said to be **weak** if all of $\pi_1,\ldots,\pi_m$ are zero or close to zero. That is, in the weak instrument case, the instruments can only explain a small portion of the variation in the endogenous variable.
 
@@ -663,14 +534,14 @@ $$
 \begin{align}
 &\hat{\beta}^{TSLS}_1=\beta_1+\frac{\frac{1}{n}\sum^n_{i=1}(Z_i-\bar{Z})u_i}{\frac{1}{n}\sum^n_{i=1}(Z_i-\bar{Z})(X_i-\bar{X})}\approx \beta_1+\frac{\frac{1}{n}\sum^n_{i=1}q_i}{\frac{1}{n}\sum^n_{i=1}r_i},
 \end{align}
-$${#eq-eq19-9.0}
+$${#eq-chapter21-12}
 
-where $q_i=(Z_i-\mu_Z)u_i$ and $r_i=(Z_i-\mu_Z)(X_i-\mu_X)$. Let $\sigma^2_q=\var(q_i)$, $\sigma^2_r=\var(r_i)$, $\bar{q}=\frac{1}{n}\sum^n_{i=1}q_i$, and $\bar{r}=\frac{1}{n}\sum^n_{i=1}r_i$. Then, under Assumption 2, we have $\var(\bar{q})=\sigma^2_q/n$ and $\var(\bar{r})=\sigma^2_r/n$. Thus, we express @eq-eq19-9.0 as
+where $q_i=(Z_i-\mu_Z)u_i$ and $r_i=(Z_i-\mu_Z)(X_i-\mu_X)$. Let $\sigma^2_q=\var(q_i)$, $\sigma^2_r=\var(r_i)$, $\bar{q}=\frac{1}{n}\sum^n_{i=1}q_i$, and $\bar{r}=\frac{1}{n}\sum^n_{i=1}r_i$. Then, under Assumption 2, we have $\var(\bar{q})=\sigma^2_q/n$ and $\var(\bar{r})=\sigma^2_r/n$. Thus, we express @eq-chapter21-12 as
 $$
 \begin{align}
 \hat{\beta}^{TSLS}_1=\beta_1+\frac{\bar{q}}{\bar{r}}=\beta_1+\frac{\sigma_q}{\sigma_r}\frac{\bar{q}/\sigma_q}{\bar{r}/\sigma_r}.
 \end{align}
-$${#eq-eq19-9.1}
+$${#eq-chapter21-13}
 
 If the instrument is irrelevant, then $\E(r_i) = \E((Z_i - \mu_Z)(X_i - \mu_X)) = 0$. Additionally, by the exogeneity condition, we have $\E(q_i) = 0$. Thus, under Assumptions 2 and 3, we can apply the CLT to show that $\bar{r}/\sigma_r \xrightarrow{d} N(0,1)$ and $\bar{q}/\sigma_q \xrightarrow{d} N(0,1)$. Therefore, in large samples, the distribution of $\hat{\beta}^{TSLS}_1 - \beta_1$ is approximately that of $(\sigma_q / \sigma_r) S$, where $S$ is the ratio of two random variables, each following a standard normal distribution. This extreme case also sheds light on the large sample distribution of the TSLS estimator when the instruments are weak. Specifically, when the instruments are weak but not irrelevant, the large-sample distribution of the TSLS estimator is non-normal.
 
@@ -683,7 +554,7 @@ $$
 $$
 
 
-In the exactly identified case, we cannot use any statistical test to verify whether the instruments are exogenous. Instead, we must rely on economic theory and expert judgment, grounded in personal knowledge of the application, to justify the exogeneity of the instruments. In the overidentified case, however, we can employ the **test of overidentifying restrictions** (also known as the J test) to assess the instrument exogeneity condition. The test can be computed in the following way:
+In the exactly identified case, we cannot use any statistical test to verify whether the instruments are exogenous. Instead, we must rely on economic theory and expert judgment to justify the exogeneity of the instruments. In the overidentified case, however, we can employ the **test of overidentifying restrictions** (also known as the J test) to assess the instrument exogeneity condition. The test can be computed in the following way:
 
 1. Compute the TSLS estimators $\hat{\beta}^{TSLS}_0,\ldots,\hat{\beta}^{TSLS}_{k+r}$.
 2. Compute $\hat{u}^{TSLS}_i=Y_i-(\hat{\beta}^{TSLS}_0+\hat{\beta}^{TSLS}_0X_{1i}+\ldots+\hat{\beta}^{TSLS}_{k+r}W_{ri})$.
@@ -692,7 +563,7 @@ $$
 \begin{align}
 \hat{u}^{TSLS}_i= \delta_0 + \delta_1Z_{1i}+\ldots+ \delta_mZ_{mi} + \delta_{m+1}W_{1i} +\ldots+ \delta_{m+r}W_{ri} + e_i,
 \end{align}
-$${#eq-eq19-9}
+$${#eq-chapter21-14}
 where $\delta_0,\ldots,\delta_{m+r}$ are the unknown coefficients and $e_i$ is the error term.
 4. Compute the homoskedasticity-only $F$-statistic for the following hypothesis:
 $$
@@ -702,15 +573,15 @@ H_0:\delta_1=0,\ldots,\delta_m=0\quad\text{versus}\quad H_1: \text{At least one 
 $$
 5. The $J$-statistic is computed as $J=m\times F$, where $m$ is the number of instruments.
 
-Under the null hypothesis that all instruments are exogeneous, $J$ has a chi-squared distribution with $m-k$ degrees of freedom, i.e., $J\sim \chi^2_{m-k}$. In @sec-chapter26, we will discuss how to compute the $J$-statistic when the error terms are heteroskedastic.
+Under the null hypothesis that all instruments are exogeneous, $J$ has a chi-squared distribution with $m-k$ degrees of freedom, i.e., $J\sim \chi^2_{m-k}$. 
 
 ::: {.callout-note icon=false}
-## Key Concept 19.2: Checking instrument validity
+## Key Concept 21.2: Checking instrument validity
 The validity of the instrumental variables depends on two conditions: (i) instrument relevance and (ii) instrument exogeneity.
 
-* **Instrument relevance**: The instruments are relevant if at least one of the coefficients in the reduced form equation is not zero. A large $F$-statistic for testing $H_0: \pi_1=\ldots=\pi_m=0$ in @eq-eq19-8 indicates that the instruments are relevant. A common rule of thumb is that the $F$-statistic should be greater than 10. An $F$-statistic smaller than 10 suggests that the instruments are weak. When the instruments are weak, the TSLS estimator is biased and does not have an asymptotic normal distribution, even when the sample size is large.
+* **Instrument relevance**: The instruments are relevant if at least one of the coefficients in the reduced form equation is not zero. A large $F$-statistic for testing $H_0: \pi_1=\ldots=\pi_m=0$ in @eq-chapter21-11 indicates that the instruments are relevant. A common rule of thumb is that the $F$-statistic should be greater than 10. An $F$-statistic smaller than 10 suggests that the instruments are weak. When the instruments are weak, the TSLS estimator is biased and does not have an asymptotic normal distribution, even when the sample size is large.
 
-* **Instrument exogeneity**: In the overidentified case, we can use the test of overidentifying restrictions (the J test) to test the instrument exogeneity condition. The J-statistic is computed as $J=m\times F$, where $m$ is the number of instruments and $F$ is the homoskedasticity-only $F$-statistic for testing $H_0:\delta_1=0,\ldots,\delta_m=0$ in @eq-eq19-9 . Under the null hypothesis that all instruments are exogeneous, we have $J\sim\chi^2_{m-k}$. 
+* **Instrument exogeneity**: In the overidentified case, we can use the test of overidentifying restrictions (the J test) to test the instrument exogeneity condition. The J-statistic is computed as $J=m\times F$, where $m$ is the number of instruments and $F$ is the homoskedasticity-only $F$-statistic for testing $H_0:\delta_1=0,\ldots,\delta_m=0$ in @eq-chapter21-14. Under the null hypothesis that all instruments are exogeneous, we have $J\sim\chi^2_{m-k}$. 
 :::
 
 ## Application to the demand for cigarettes
@@ -741,122 +612,178 @@ $${#eq-eq19-10}
 
 We first create the 10-year change variables and then estimate the demand elasticity using the TSLS estimator with the 10-year changes in the instrumental variables.
 
-```{python}
-# Generate the subsets of data for the years 1995 and 1985
-mydata1995 = mydata[mydata['year'] == 1995]
-mydata1985 = mydata[mydata['year'] == 1985]
+```{r}
+#| warning: false
+#| message: false
 
-# Create 10-year change variables
-packdiff = np.log(mydata1995['packpc'].values) - np.log(mydata1985['packpc'].values)
-pricediff = np.log(mydata1995['rprice'].values) - np.log(mydata1985['rprice'].values)
-incomediff = np.log(mydata1995['rincome'].values) - np.log(mydata1985['rincome'].values)
-salestaxdiff = mydata1995['salestax'].values - mydata1985['salestax'].values
-cigtaxdiff = mydata1995['cigtax'].values - mydata1985['cigtax'].values
+# Subset data for years 1995 and 1985
+mydata1995 <- mydata[mydata$year == 1995, ]
+mydata1985 <- mydata[mydata$year == 1985, ]
 
-# Create a DataFrame from the 10-year change variables
-diffData = pd.DataFrame({
-  'packdiff': packdiff,
-  'pricediff': pricediff,
-  'incomediff': incomediff,
-  'salestaxdiff': salestaxdiff,
-  'cigtaxdiff': cigtaxdiff
-})
-# Add a column of ones to the dataframe
-diffData['const'] = 1
+# Compute 10-year change variables
+packdiff <- log(mydata1995$packpc) - log(mydata1985$packpc)
+pricediff <- log(mydata1995$rprice) - log(mydata1985$rprice)
+incomediff <- log(mydata1995$rincome) - log(mydata1985$rincome)
+salestaxdiff <- mydata1995$salestax - mydata1985$salestax
+cigtaxdiff <- mydata1995$cigtax - mydata1985$cigtax
+
+# Create a data frame with the differences
+diffData <- data.frame(
+    packdiff     = packdiff,
+    pricediff    = pricediff,
+    incomediff   = incomediff,
+    salestaxdiff = salestaxdiff,
+    cigtaxdiff   = cigtaxdiff
+)
 ```
-
 
 ### Estimation
-We estimate three models: (i) using only sales taxes as the instrument, (ii) using only the cigarette-specific tax as the instrument, and (iii) using both sales tax and cigarette tax as the instruments. The following code chunk can be used to estimate the model using the `from_formula` method.
+We estimate three models: (i) using only sales taxes as the instrument, (ii) using only the cigarette-specific tax as the instrument, and (iii) using both sales tax and cigarette tax as the instruments. 
 
-```{python}
-#| warning: false
-#| message: false
-# Model 1: Using only sales taxes as the instrument
-model1 = IV2SLS.from_formula(
-    formula="packdiff ~ 1 + incomediff + [pricediff ~ salestaxdiff]",
-    data=diffData
-).fit(cov_type='robust')
+```{r}
+# Model 1: Instrument = salestaxdiff
+model1 <- ivreg(
+    packdiff ~ incomediff + pricediff | incomediff + salestaxdiff,
+    data = diffData
+)
 
-# Model 2: Using only the cigarette-specific tax as the instrument
-model2 = IV2SLS.from_formula(
-    formula="packdiff ~ 1 + incomediff + [pricediff ~ cigtaxdiff]",
-    data=diffData
-).fit(cov_type='robust')
+# Model 2: Instrument = cigtaxdiff
+model2 <- ivreg(
+    packdiff ~ incomediff + pricediff | incomediff + cigtaxdiff,
+    data = diffData
+)
 
-# Model 3: Using both sales tax and cigarette tax as the instruments
-model3 = IV2SLS.from_formula(
-    formula="packdiff ~ 1 + incomediff + [pricediff ~ salestaxdiff + cigtaxdiff]",
-    data=diffData
-).fit(cov_type='robust')
-
+# Model 3: Instruments = salestaxdiff + cigtaxdiff
+model3 <- ivreg(
+    packdiff ~ incomediff + pricediff | incomediff + salestaxdiff + cigtaxdiff,
+    data = diffData
+)
 ```
 
-:::{layout-ncol=1}
-```{python}
-#| tbl-cap: "Estimation Results"
-#| label: tbl-t19-5
-# Create Stargazer table
-stargazer = Stargazer([model1, model2, model3])
-stargazer.significant_digits(3)
-stargazer.show_degrees_of_freedom(False)
 
-# Render Stargazer object
-stargazer
+The estimation results are shown in @tbl-chapter21-6. The TSLS estimates for $\beta_1$ are -0.938, -1.343, and -1.202 for models 1, 2, and 3, respectively. All estimates are statistically significant at the 5% level. The reliability of these coefficient estimates depends on the validity of the instruments. In the next section, we examine the validity of the instruments.
+
+```{r}
+#| tbl-cap: "Estimation results for the cigarette demand model using changes data"
+#| label: tbl-chapter21-6
+# Display results
+modelsummary(
+    models = list("Model 1" = model1, "Model 2" = model2, "Model 3" = model3),
+    vcov = "HC1",
+    stars = TRUE,
+    fmt = 3,
+    gof_omit = "AIC|BIC|Log.Lik"
+)
 ```
-:::
-
-The estimation results are shown in @tbl-t19-5. The TSLS estimates for $\beta_1$ are -0.938, -1.343, and -1.202 for models 1, 2, and 3, respectively. All estimates are statistically significant at the 5% level. The reliability of these coefficient estimates depends on the validity of the instruments. In the next section, we examine the validity of the instruments.
 
 ### Checking instrument validity
-The relevance of the instruments can be checked using the $F$-statistic from the first stage regressions. The code chunk below shows how to compute the $F$-statistics for the first stage regressions.
+The relevance of the instruments can be checked using the F-statistic from the first stage regressions. The code chunk below shows how to compute the F-statistics for the first stage regressions.
 
-```{python}
-#| warning: false
-#| message: false
-f1 = smf.ols(formula='pricediff ~ salestaxdiff + incomediff', data=diffData).fit(cov_type='HC1')
-f2 = smf.ols(formula='pricediff ~ cigtaxdiff + incomediff', data=diffData).fit(cov_type='HC1')
-f3 = smf.ols(formula='pricediff ~ salestaxdiff + cigtaxdiff + incomediff', data=diffData).fit(cov_type='HC1')
+```{r}
+# First-stage regressions
+f1 <- lm(pricediff ~ salestaxdiff + incomediff, data = diffData)
+f2 <- lm(pricediff ~ cigtaxdiff + incomediff, data = diffData)
+f3 <- lm(pricediff ~ salestaxdiff + cigtaxdiff + incomediff, data = diffData)
+
+# F-tests
+# F-tests
+f1_fstat <- linearHypothesis(f1, "salestaxdiff = 0",
+    vcov = vcovHC,
+    type = "HC1"
+)
+f2_fstat <- linearHypothesis(f2, "cigtaxdiff = 0",
+    vcov = vcovHC,
+    type = "HC1"
+)
+f3_fstat <- linearHypothesis(f3, c("salestaxdiff = 0", "cigtaxdiff = 0"),
+    vcov = vcovHC,
+    type = "HC1"
+)
+
+
+# Extract F-statistics and p-values
+fstats_df <- data.frame(
+    Model = c(
+        "Model 1",
+        "Model 2",
+        "Model 3"
+    ),
+    F_statistic = c(
+        f1_fstat$F[2],
+        f2_fstat$F[2],
+        f3_fstat$F[2]
+    ),
+    df1 = c(
+        f1_fstat$Df[2],
+        f2_fstat$Df[2],
+        f3_fstat$Df[2]
+    ),
+    df2 = c(
+        f1_fstat$Res.Df[2],
+        f2_fstat$Res.Df[2],
+        f3_fstat$Res.Df[2]
+    ),
+    p_value = c(
+        f1_fstat$`Pr(>F)`[2],
+        f2_fstat$`Pr(>F)`[2],
+        f3_fstat$`Pr(>F)`[2]
+    )
+)
 ```
 
-```{python}
-# F-statistics
-f1_fstat = f1.f_test("salestaxdiff = 0")
-f2_fstat = f2.f_test("cigtaxdiff = 0")
-f3_fstat = f3.f_test(["salestaxdiff = 0", "cigtaxdiff = 0"])
+The F-statistics for the first stage regressions are presented in @tbl-chapter21-7. The first stage F-statistics are 33.7, 107.2, and 86.7 for models 1, 2, and 3, respectively. These F-statistics are greater than 10, indicating that the instruments are relevant.
 
-print(f1_fstat)
-print(f2_fstat)
-print(f3_fstat)
+```{r}
+#| tbl-cap: "Robust First-Stage F-Statistics"
+#| label: tbl-chapter21-7
+# F-statistics for the first stage regressions
+fstats_df$F_statistic <- round(fstats_df$F_statistic, 2)
+fstats_df$p_value <- round(fstats_df$p_value, 5)
+
+kable(fstats_df, align = "lcccc")
 ```
 
-The first stage $F$-statistics are 33.7, 107.2, and 86.7 for models 1, 2, and 3, respectively. These $F$-statistics are greater than 10, indicating that the instruments are relevant. 
+Since the first two models are exactly identified, we cannot use the J-test to test instrument exogeneity. However, the regression in column (3) is overidentified because there are two instruments and a single included endogenous regressor, resulting in one (m - k = 2 - 1 = 1) overidentifying restriction. Below, we compute the J-test for the overidentifying restriction in model 3.
 
-Since the first two models are exactly identified, we cannot use the $J$-test to test instrument exogeneity. However, the regression in column (3) is overidentified because there are two instruments and a single included endogenous regressor, resulting in one $(m - k = 2 - 1 = 1)$ overidentifying restriction.
+```{r}
+# J-test for overidentifying restrictions
+# Get residuals from Model 3
+diffData$residuals <- resid(model3)
 
-```{python}
-# Get the residuals from the regression in column (3)
-diffData['residuals'] = model3.resids
+# Auxiliary regression
+mj <- lm(
+    residuals ~ salestaxdiff + cigtaxdiff + incomediff,
+    data = diffData
+)
 
-# Fit the auxiliary regression using smf.ols
-mj = smf.ols(
-    formula="residuals ~ salestaxdiff + cigtaxdiff + incomediff",
-    data=diffData
-).fit()
+# Joint test of excluded instruments
+ftest <- linearHypothesis(mj, c("salestaxdiff = 0", "cigtaxdiff = 0"))
 
-# Perform the J-test
-ftest = mj.f_test("salestaxdiff = 0, cigtaxdiff = 0")
-jtest = 2 * ftest.fvalue # J=m*F
-print(jtest)
+# Extract F-statistic
+F_value <- ftest$F[2]
+
+# Number of instruments
+m <- 2
+
+# Compute J-statistic
+jtest <- m * F_value
+
+# Compute p-value
+p_value <- 1 - pchisq(jtest, df = m - 1)
 ```
 
-```{python}
-# Compute the p-value
-p_value=1-stats.chi2.cdf(jtest, df=1)
-print(p_value.round(4))
+```{r}
+#| tbl-cap: "J-test for overidentifying restrictions"
+#| label: tbl-chapter21-8
+# J-test results
+jtest_df <- data.frame(
+    J_statistic = round(jtest, 2),
+    p_value = round(p_value, 5)
+)
+kable(jtest_df, align = "cc")
 ```
 
-The $p$-value indicates that the null hypothesis of both instruments being exogenous is rejected at the 5% significance level. The rejection of the $J$-statistic suggests that at least one of the instruments is endogenous. This leads to three logical possibilities:
+The J-test results are presented in @tbl-chapter21-8. The $p$-value indicates that the null hypothesis of both instruments being exogenous is rejected at the 5% significance level. The rejection of the $J$-statistic suggests that at least one of the instruments is endogenous. This leads to three logical possibilities:
 
 * The sales tax is exogenous, but the cigarette-specific tax is not, making the column (1) regression reliable.
 * The cigarette-specific tax is exogenous, but the sales tax is not, making the column (2) regression reliable.
@@ -864,89 +791,90 @@ The $p$-value indicates that the null hypothesis of both instruments being exoge
 
 @Stock2020 conclude that "We think that the case for the exogeneity of the general sales tax is stronger than that for the cigarette-specific tax because the political process can link changes in the cigarette-specific tax to changes in the cigarette market and smoking policy." 
 
+Finally, both F-statistic from the first stage regression and the J-test for overidentifying restrictions are also returned by the `summary` function for the `ivreg` object: `summary(model3, diagnostics = TRUE)`.
+
 ## Application to the effect of institutions on economic performance
 
 @Acemoglu2001 investigate the effect of institutions on economic outcomes across countries. They use log GDP per capita in 1995 as a measure of economic outcomes and the average index of protection against expropriation over 1985–95 as a proxy for institutional differences.
 
-In our ensuing analysis, we use three data files: `maketable1.dta`, `maketable2.dta`, and `maketable4.dta`.  These files contain data on the following variables:
+In our ensuing analysis, we use three data files: `maketable1.dta`, `maketable2.dta`, and `maketable4.dta`.  In @tbl-chapter21-9, we describe some of the key variables in these datasets. 
 
-* `shortnam`: A three-letter country name.
-* `euro1900`: The fraction of the population of European descent in 1900, which is a measure of European settlement in the colonies.
-* `excolony`: A dummy taking 1 if the country was colony (FLOPS definition).
-* `avexpr`  : Average protection against expropriation risk over 1985-95 (higher values on the index indicate greater protection).
-* `logpgp95`: Log of per capita GDP in 1995 (PPP adjusted).
-* `cons1`   : Constraint on executive in first year 
-of independence. The scale consists of seven categories, ranging from 1 to 7, with higher scores indicating greater constraint.
-* `cons90`  : Constraint on executive in 1990. The scale consists of seven categories, ranging from 1 to 7, with higher scores indicating greater constraint.
-* `democ00a`: Democracy in 1900 and first year of independence. It is an 11-category scale, from 0 to 10, with a higher score indicating more democracy
-* `cons00a `: Constraint on executive in 1900. The scale consists of seven categories, ranging from 1 to 7, with higher scores indicating greater constraint.
-* `extmort4`: Corrected mortality
-* `logem4`  : Log European settler mortality.
-* `loghjypl`: Log output per work from @Hall1999.
-* `baseco`  : A dummy for the base sample of countires that were ex-colonies.
-* `africa`: A dummy variable taking 1 if the counry is in Africa.
-* `asia`: A dummy variable taking 1 if the counry is in Asia.
-* `other`: A dummy variable taking 1 if the counry is in neither Asia, Africa, nor the Americas.
-* `lat_abst`: Absolute value of the latitude of the country (i.e., a measure of distance from the equator), scaled to take values between 0 and 1, where 0 is the equator.
+::: {style="font-size: 85%"}
+| Variable     | Description |
+|:---------|:---------------------------------------------------------|
+| `shortnam`   | A three-letter country name. |
+| `euro1900`   | The fraction of the population of European descent in 1900, measuring European settlement in the colonies. |
+| `excolony`   | A dummy variable equal to 1 if the country was a colony (FLOPS definition). |
+| `avexpr`     | Average protection against expropriation risk over 1985–95 (higher values indicate greater protection). |
+| `logpgp95`   | Log of per capita GDP in 1995 (PPP adjusted). |
+| `extmort4`   | Corrected mortality. |
+| `logem4`     | Log European settler mortality. |
+| `baseco`     | Dummy variable for the base sample of countries that were ex-colonies. |
+| `africa`     | Dummy variable equal to 1 if the country is in Africa. |
+| `asia`       | Dummy variable equal to 1 if the country is in Asia. |
+| `other`      | Dummy variable equal to 1 if the country is in neither Asia, Africa, nor the Americas. |
+| `lat_abst`   | Absolute latitude (distance from the equator), scaled between 0 and 1, where 0 represents the equator. |
+: The dataset for institutions and economic performance {#tbl-chapter21-9 .striped .hover}
+:::
 
-We use the data from `maketable1.dta` to create a scatter plot of log GDP per capita in 1995 (`logpgp95`) against the average protection against expropriation risk over 1985-95 (`avexpr`). The scatter plot is shown in @fig-f19-5. The plot reveals a strong positive relationship between protection against expropriation and log GDP per capita. If protection against expropriation is an indicator of institutional quality, then the scatterplot suggests that income per capita is postively associated with institutional quality.
+We use the data from `maketable1.dta` to create a scatter plot of log GDP per capita in 1995 (`logpgp95`) against the average protection against expropriation risk over 1985-95 (`avexpr`). The scatter plot is shown in @fig-chapter21-4. The plot reveals a strong positive relationship between protection against expropriation and log GDP per capita. If protection against expropriation is an indicator of institutional quality, then the scatter plot suggests that income per capita is postively associated with institutional quality.
 
-```{python}
+```{r}
 # Load the data
-df1 = pd.read_stata("data/maketable1.dta")
-df1.columns
+df1 <- read_dta("data/maketable1.dta")
+
+# Column names
+colnames(df1)
 ```
 
-```{python}
+
+```{r}
 #| fig-cap: "Scatter plot between logpgp95 and avexpr"
-#| label: fig-f19-5
+#| label: fig-chapter21-4
+#| fig-width: 5
+#| fig-height: 4
+#| warning: false
+#| message: false
 # Scatter plot between logpgp95 and avexpr
-plt.figure(figsize=(5, 4))
-plt.scatter(df1['avexpr'], df1['logpgp95'], color='steelblue', s=15)
-plt.xlabel('Average protection against expropriation risk (avexpr)', fontsize=9)
-plt.ylabel('Log of GDP per capita in 1995 (logpgp95)', fontsize=9)
-# plt.title('Scatter plot between logpgp95 and avexpr')
-plt.show()
+ggplot(df1, aes(x = avexpr, y = logpgp95)) +
+    geom_point(color = "steelblue", size = 1.5) +
+    labs(
+        x = "Average protection against expropriation risk (avexpr)",
+        y = "Log of GDP per capita in 1995 (logpgp95)"
+    )
 ```
 
-Given the strong positive relationship in @fig-f19-5, we estimate the following OLS regression model:
+Given the strong positive relationship in @fig-chapter21-4, we estimate the following OLS regression model:
 $$
 \begin{align*}
 \text{logpgp95}_i = \beta_0+\beta_1 \text{avexpr}_i + u_i
 \end{align*}
 $$
 
-In @fig-f19-6, we plot the estimated OLS regression line. The slope coefficient estimate is 0.52, which indicates that a one-unit increase in the average protection against expropriation is associated with a 0.52 increase in log GDP per capita. The coefficient estimate is statistically significant at the 1% level.
+In @fig-chapter21-5, we plot the estimated OLS regression line. The slope coefficient estimate is 0.52, which indicates that a one-unit increase in the average protection against expropriation is associated with a 0.52 increase in log GDP per capita. The coefficient estimate is statistically significant at the 1% level.
 
-```{python}
+
+```{r}
 #| fig-cap: "The OLS relationship between expropriation risk and income"
-#| label: fig-f19-6
-# Dropping NA's is required to use numpy's polyfit
-df1_subset = df1.dropna(subset=['logpgp95', 'avexpr'])
+#| label: fig-chapter21-5
+#| fig-width: 5
+#| fig-height: 4
+#| warning: false
+#| message: false
+# Prepare subset
+df1_subset <- df1 %>%
+    filter(!is.na(logpgp95), !is.na(avexpr), baseco == 1)
 
-# Use only 'base sample' for plotting purposes
-df1_subset = df1_subset[df1_subset['baseco'] == 1]
-X = df1_subset['avexpr']
-y = df1_subset['logpgp95']
-labels = df1_subset['shortnam']
-
-# Replace markers with country labels
-fig, ax = plt.subplots(figsize=(5, 4))
-ax.scatter(X, y, marker='')
-
-for i, label in enumerate(labels):
-    ax.annotate(label, (X.iloc[i], y.iloc[i]), fontsize=8)
-
-# Fit a linear trend line using smf.ols
-model = smf.ols(formula='logpgp95 ~ avexpr', data=df1_subset).fit(vcov="HC1")
-predictions = model.predict(df1_subset['avexpr'])
-ax.plot(df1_subset['avexpr'], predictions, color='steelblue', linewidth=1)
-
-ax.set_xlim([3.3,11])
-ax.set_ylim([4,11])
-ax.set_xlabel('Average expropriation risk over 1985-95')
-ax.set_ylabel('Log GDP per capita in 1995')
-plt.show()
+# Basic scatter with country labels and OLS line
+ggplot(df1_subset, aes(x = avexpr, y = logpgp95, label = shortnam)) +
+    geom_text(size = 2.5) + # Text labels instead of points
+    geom_smooth(method = "lm", color = "steelblue", se = FALSE, linewidth = 0.8) +
+    scale_x_continuous(limits = c(3.3, 11)) +
+    scale_y_continuous(limits = c(4, 11)) +
+    labs(
+        x = "Average expropriation risk over 1985-95",
+        y = "Log GDP per capita in 1995"
+    )
 ```
 
 Our analysis only considers the impact of `avexpr` on economic performance. However, numerous other factors influencing income per capita are not included in the model. Omitting these variables that affect `logpgp95` can lead to omitted variable bias. @Acemoglu2001 consider the following factors:
@@ -954,42 +882,37 @@ Our analysis only considers the impact of `avexpr` on economic performance. Howe
 * Cultural, historical, and other contextual factors, which are accounted for through the inclusion of continent dummy variables.
 * Climate proxied by latitude (`lat_abst`).
 
-We estimate some of the extended models considered by @Acemoglu2001 using data in the `maketable2.dta` file. The results are presented in @tbl-t19-6. The coefficient estimate for the protection against expropriation index is statistically significant at the 1% level across all three models. The relationship remains robust to the inclusion of additional controls, such as geography and continent dummies.
+We estimate some of the extended models considered by @Acemoglu2001 using data in the `maketable2.dta` file. The results are presented in @tbl-chapter21-10. The coefficient estimate for the protection against expropriation index is statistically significant at the 1% level across all three models. The relationship remains robust to the inclusion of additional controls, such as geography and continent dummies.
 
-```{python}
-df2 = pd.read_stata('data/maketable2.dta')
 
-# Estimate an OLS regression for each set of variables using smf.ols
-reg1 = smf.ols(formula='logpgp95 ~ avexpr', data=df2).fit(vcov="HC1")
-reg2 = smf.ols(formula='logpgp95 ~ avexpr + lat_abst', data=df2).fit(vcov="HC1")
-reg3 = smf.ols(formula='logpgp95 ~ avexpr + lat_abst + asia + africa + other', data=df2).fit(vcov="HC1")
+```{r}
+# Load the data
+df2 <- read_dta("data/maketable2.dta")
 
+# Model 1: logpgp95 ~ avexpr
+reg1 <- lm(logpgp95 ~ avexpr, data = df2)
+
+# Model 2: logpgp95 ~ avexpr + lat_abst
+reg2 <- lm(logpgp95 ~ avexpr + lat_abst, data = df2)
+
+# Model 3: logpgp95 ~ avexpr + lat_abst + asia + africa + other
+reg3 <- lm(logpgp95 ~ avexpr + lat_abst + asia + africa + other, data = df2)
 ```
 
-:::{layout-ncol=1}
-```{python}
-#| tbl-cap: "The OLS estimation results"
-#| label: tbl-t19-6
-info_dict = {'R-squared' : lambda x: f"{x.rsquared:.2f}",
-             'No. observations' : lambda x: f"{int(x.nobs):d}"}
-
-results_table = summary_col(results=[reg1,reg2,reg3],
-                            float_format='%0.2f',
-                            stars = True,
-                            model_names=['Model 1',
-                                         'Model 3',
-                                         'Model 4'],
-                            info_dict=info_dict,
-                            regressor_order=['const',
-                                             'avexpr',
-                                             'lat_abst',
-                                             'asia',
-                                             'africa'])
-results_table
+```{r}
+#| tbl-cap: "OLS regression results for the effect of institutions on economic performance"
+#| label: tbl-chapter21-10
+# Display results
+modelsummary(
+    models = list("Model 1" = reg1, "Model 2" = reg2, "Model 3" = reg3),
+    vcov = "HC1",
+    stars = TRUE,
+    fmt = 3,
+    gof_omit = "AIC|BIC|Log.Lik"
+)
 ```
-:::
 
-@Acemoglu2001 highlight several critical reasons to exercise caution when interpreting the estimation results given in @tbl-t19-6 as causal:
+@Acemoglu2001 highlight several critical reasons to exercise caution when interpreting the estimation results given in @tbl-chapter21-10 as causal:
 
 * Omitted variable bias: There are unobserved determinants of income differences that are naturally correlated with institutions.
 * Simultaneous causality bias: Wealthier nations are more likely to invest in and develop better institutional frameworks.
@@ -1000,67 +923,46 @@ We can solve all of these problems by using a valid instrument for institutions 
 * correlated with `avexpr` (instrument relevance),
 * not correlated with the error term $u$ (instrument exogeneity). 
 
-The primary contribution of @Acemoglu2001 lies in their use of "settler mortality rates" (`logem4`) as an instrument for institutional differences. They propose that settler mortality influenced settlement patterns, which in turn shaped early institutions. These early institutions persisted over time, ultimately forming the foundation of current institutional frameworks. This hypothesis is illustrated in @fig-f19-4.
+The primary contribution of @Acemoglu2001 lies in their use of "settler mortality rates" (`logem4`) as an instrument for institutional differences. They propose that settler mortality influenced settlement patterns, which in turn shaped early institutions. These early institutions persisted over time, ultimately forming the foundation of current institutional frameworks. 
 
-```{python}
-#| fig-cap: "From settler mortality to current institutions"
-#| label: fig-f19-4
-# Create a directed graph
-G = nx.DiGraph()
+To check instrument relevance, we generate a scatterplot of `avexpr` against `logem4` (log settler mortality rate). @fig-chapter21-6 reveals a negative correlation between protection against expropriation and settler mortality rates, consistent with the authors' hypothesis. This negative relationship indicates that higher settler mortality rates are associated with lower levels of protection against expropriation during 1985–95. The first stage $F$-statistic is 31.5, which is greater than 10, indicating that the instrument is relevant.
 
-# Add nodes and edges
-G.add_edge("Settler Mortality", "Settlements")
-G.add_edge("Settlements", "Early Institutions")
-G.add_edge("Early Institutions", "Current Institutions")
 
-# Define positions for the nodes
-pos = {
-    "Settler Mortality": (0, 0),
-    "Settlements": (0.5, 0),
-    "Early Institutions": (1, 0),
-    "Current Institutions": (1.5, 0)
-}
-
-# Draw the graph
-plt.figure(figsize=(5.5, 1.5))
-nx.draw(G, pos, with_labels=True, node_size=4500, node_color="skyblue", font_size=8, arrowsize=10)
-plt.show()
-```
-
-To check instrument relevance, we generate a scatterplot of `avexpr` against `logem4` (log settler mortality rate). @fig-f19-7 reveals a negative correlation between protection against expropriation and settler mortality rates, consistent with the authors' hypothesis. This negative relationship indicates that higher settler mortality rates are associated with lower levels of protection against expropriation during 1985–95. The first stage $F$-statistic is 31.5, which is greater than 10, indicating that the instrument is relevant.
-
-```{python}
+```{r}
 #| fig-cap: "First-stage relationship between settler mortality and expropriation risk"
-#| label: fig-f19-7
-# Dropping NA's is required to use numpy's polyfit
-df1_subset2 = df1.dropna(subset=['logem4', 'avexpr'])
+#| label: fig-chapter21-6
+#| fig-width: 5
+#| fig-height: 4
+#| warning: false
+#| message: false
 
-X = df1_subset2['logem4']
-y = df1_subset2['avexpr']
-labels = df1_subset2['shortnam']
+# Subset data: drop NA's
+df1_subset2 <- df1 %>%
+    filter(!is.na(logem4), !is.na(avexpr))
 
-# Replace markers with country labels
-fig, ax = plt.subplots(figsize=(5, 4))
-ax.scatter(X, y, marker='')
-
-for i, label in enumerate(labels):
-    ax.annotate(label, (X.iloc[i], y.iloc[i]), fontsize=8)
-
-# The first stage regression
-m1 = smf.ols(formula='avexpr ~ logem4', data=df1_subset2).fit(vcov="HC1")
-predictions = m1.predict(df1_subset2['logem4'])
-ax.plot(df1_subset2['logem4'], predictions, color='steelblue', linewidth=1)
-
-ax.set_xlim([1.8,8.4])
-ax.set_ylim([3.3,10.4])
-ax.set_xlabel('Log of settler mortality')
-ax.set_ylabel('Average expropriation risk 1985-95')
-plt.show()
+# Scatter plot with country labels and OLS line
+ggplot(df1_subset2, aes(x = logem4, y = avexpr, label = shortnam)) +
+    geom_text(size = 2.5) + # text labels instead of points
+    geom_smooth(method = "lm", color = "steelblue", se = FALSE, linewidth = 0.8) +
+    scale_x_continuous(limits = c(1.8, 8.4)) +
+    scale_y_continuous(limits = c(3.3, 10.4)) +
+    labs(
+        x = "Log of settler mortality",
+        y = "Average expropriation risk 1985-95"
+    )
 ```
 
-```{python}
-# The first stage F-statistic
-m1.f_test("logem4 = 0")
+
+```{r}
+# First-stage regression
+first_stage <- lm(avexpr ~ logem4, data = df1_subset2)
+# F-test for first-stage (logem4 = 0)
+f_test <- linearHypothesis(first_stage, "logem4 = 0",
+    vcov = vcovHC,
+    type = "HC1"
+)
+
+f_test
 ```
 
 The instrument exogeneity condition may not be satisfied if settler mortality rates in the 17th to 19th centuries have a direct effect on current GDP (in addition to their indirect effect through institutions). For example, settler mortality rates may be related to the current disease environment in a country, which could affect current economic performance. @Acemoglu2001 argue this is unlikely because:
@@ -1068,32 +970,27 @@ The instrument exogeneity condition may not be satisfied if settler mortality ra
 * The majority of settler deaths were due to malaria and yellow fever and these diseases had a limited effect on local people.
 * The disease burden on local people in Africa or India, for example, did not appear to be higher than average, supported by relatively high population densities in these areas before colonization.
 
-Hence, the settler mortality rate variable seem to be a valid instrument and we can proceed with the TSLS estimation. The estimation results are presented in @tbl-t19-7. The estimated coefficient on the protection against expropriation index is 0.94, with a standard error of 0.18. The coefficient is statistically significant at the 5% level. Compared to the OLS estimate (0.53), the TSLS estimate is larger, suggesting that the OLS estimate is biased downwards. 
+Hence, the settler mortality rate variable seem to be a valid instrument and we can proceed with the TSLS estimation. The estimation results are presented in @tbl-chapter21-11. The estimated coefficient on the protection against expropriation index is 0.94, with a standard error of 0.18. The coefficient is statistically significant at the 5% level. Compared to the OLS estimate (0.53), the TSLS estimate is larger, suggesting that the OLS estimate is biased downwards. 
 
-```{python}
-#| warning: false
-#| message: false
-# Using only mortality rate as the instrument
-# Import and select the data
-df4 = pd.read_stata('data/maketable4.dta')
-df4 = df4[df4['baseco'] == 1]
 
-model = IV2SLS.from_formula(
-    formula="logpgp95 ~ 1 + [avexpr ~ logem4]",
-    data=df4
-).fit(cov_type='robust')
+```{r}
+# Load the data and select base sample
+df4 <- read_dta("data/maketable4.dta")
+df4 <- subset(df4, baseco == 1)
+
+# IV regression
+iv_model <- ivreg(logpgp95 ~ avexpr | logem4, data = df4)
 ```
 
-:::{layout-ncol=1}
-```{python}
-#| tbl-cap: "The TSLS estimation results"
-#| label: tbl-t19-7
-# Create Stargazer table
-stargazer = Stargazer([model])
-stargazer.significant_digits(3)
-stargazer.show_degrees_of_freedom(False)
-
-# Render Stargazer object
-stargazer
+```{r}
+#| tbl-cap: "IV regression results for the effect of institutions on economic performance"
+#| label: tbl-chapter21-11
+# Display results
+modelsummary(
+    models = list("IV Model" = iv_model),
+    vcov = "HC1",
+    stars = TRUE,
+    fmt = 3,
+    gof_omit = "AIC|BIC|Log.Lik"
+)
 ```
-:::
