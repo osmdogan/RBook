@@ -1,11 +1,13 @@
 # Appendix for Chapter 28 {#sec-appendixC}
 
-```{python}
-import numpy as np
-import matplotlib.pyplot as plt
-plt.style.use('seaborn-v0_8-darkgrid')  
-from scipy.stats import multivariate_normal
-from mpl_toolkits.mplot3d import Axes3D
+```{r}
+#| warning: false
+#| message: false
+# Load necessary packages
+library(tidyverse)
+library(MASS)     
+library(plotly)
+library(gridExtra)
 ```
 
 ## Normal distribution
@@ -450,98 +452,135 @@ $$
 where $\rho$ is the correlation coefficient between $X$ and $Y$. The marginal distributions of $X$ and $Y$ are univariate normal distributions: $X\sim N(\mu_X,\sigma^2_X)$ and $Y\sim N(\mu_Y,\sigma^2_Y)$. 
 
 In @fig-bivariate-normal, we plot the bivariate normal distribution with $\mu_X=\mu_Y=0$, $\sigma_X=\sigma_Y=1$, and $\rho=0.5$. The 3D plot shows the joint PDF of $X$ and $Y$.
-```{python}
-#| fig-cap: "3D plot of bivariate normal distribution"
+
+```{r}
+#| fig-cap: "The 3D plot of the bivariate normal distribution"
 #| label: fig-bivariate-normal
+#| fig-width: 6
+#| fig-height: 5
 # 3D plot of bivariate normal distribution
 # Parameters
-mu = [0, 0]  # mean
-sigma = [[1, 0.5], [0.5, 1]]  # covariance matrix
-x = np.linspace(-3, 3, 100)
-y = np.linspace(-3, 3, 100)
-X, Y = np.meshgrid(x, y)
-pos = np.dstack((X, Y))
-rv = multivariate_normal(mu, sigma)
+mu <- c(0, 0)
+sigma <- matrix(c(1, 0.5, 0.5, 1), nrow = 2)
 
-# Create a 3D plot
-fig = plt.figure(figsize=(8, 4))
-ax = fig.add_subplot(111, projection='3d')
-ax.plot_surface(X, Y, rv.pdf(pos), cmap='viridis', linewidth=1, antialiased=True,rstride=3, cstride=3)
-ax.set_xlabel('X-axis')
-ax.set_ylabel('Y-axis')
-#ax.set_zlabel('Probability Density')
-#ax.set_title('Bivariate Normal Distribution')
+# Grid of values
+x <- seq(-3, 3, length.out = 100)
+y <- seq(-3, 3, length.out = 100)
+grid <- expand.grid(X = x, Y = y)
 
-# Adjust the limits, ticks and view angle
-ax.set_zlim(0, 0.2)
-ax.set_zticks(np.linspace(0, 0.2, 5))
-ax.view_init(30, -27)
+# Compute bivariate normal density
+inv_sigma <- solve(sigma)
+det_sigma <- det(sigma)
+bvn_density <- function(x, y) {
+    z <- cbind(x, y) - matrix(mu, nrow = length(x), ncol = 2, byrow = TRUE)
+    exp(-0.5 * rowSums((z %*% inv_sigma) * z)) / (2 * pi * sqrt(det_sigma))
+}
 
-plt.show()
+z <- matrix(bvn_density(grid$X, grid$Y), nrow = length(x), ncol = length(y))
+
+# 3D plot using plotly
+fig <- plot_ly(x = x, y = y, z = z) %>%
+    add_surface(colorscale = "Viridis") %>%
+    layout(
+        scene = list(
+            xaxis = list(title = "X-axis"),
+            yaxis = list(title = "Y-axis"),
+            zaxis = list(title = "Probability Density"),
+            camera = list(eye = list(x = 1.25, y = -1.25, z = 0.75))
+        )
+    )
+
+fig
 ```
 
-In @fig-normal-scatter, we plot the scatter plots of random draws obtained from the bivariate normal distributions that have different correlation coefficients. The correlation coefficient $\rho$ takes values from $\{-0.8, 0, 0.4, 0.8\}$. The scatter plots show the relationship between $X$ and $Y$ for different values of $\rho$. As $\rho$ gets larger in absolute value, the points in the scatter plot become more aligned along the line $y=x$ or $y=-x$. 
+In @fig-normal-scatter, we plot the scatter plots of random draws obtained from the bivariate normal distributions that have different correlation coefficients. The correlation coefficient $\rho$ takes values from $\{-0.8, 0, 0.4, 0.8\}$. The scatter plots show the relationship between $X$ and $Y$ for different values of $\rho$. As $\rho$ gets larger in absolute value, the points in the scatter plot become more aligned along the line $y=x$ or $y=-x$.
 
-```{python}
+```{r}
 #| fig-cap: "Scatter plots of random samples from a bivariate normal distribution with different correlation coefficients"
 #| label: fig-normal-scatter
-# Create a 2x2 subplot for the plots
-fig, axes = plt.subplots(2, 2, figsize=(8, 6))
-# Define the mean vector
-mean_vector = np.array([0, 0])
+#| fig-width: 8
+#| fig-height: 8
+# Define mean vector
+mean_vector <- c(0, 0)
 
-# Define the values for rho
-rho = [-0.8, 0, 0.4, 0.8]
-# Iterate over the rho values and corresponding subplot axes
-for ax, rho in zip(axes.flatten(), rho):
-    # Define the covariance matrix
-    cov_matrix = np.array([[1, rho], [rho, 1]])
-    # Generate random samples from the multivariate normal distribution
-    samples = np.random.multivariate_normal(mean_vector, cov_matrix, size=500)
-    # Plot the samples
-    ax.scatter(samples[:, 0], samples[:, 1], alpha=0.5)
-    ax.set_title(f"$\\rho$={rho}")
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
-    ax.axis('equal')
-# Adjust layout for better spacing
-plt.tight_layout()
-plt.show()
+# Define rho values
+rho_values <- c(-0.8, 0, 0.4, 0.8)
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Create a list to store plots
+plots <- list()
+
+# Loop over rho values
+for (i in seq_along(rho_values)) {
+  rho <- rho_values[i]
+  cov_matrix <- matrix(c(1, rho, rho, 1), nrow = 2)
+  samples <- mvrnorm(n = 500, mu = mean_vector, Sigma = cov_matrix)
+  df <- data.frame(X = samples[, 1], Y = samples[, 2])
+  
+  p <- ggplot(df, aes(x = X, y = Y)) +
+    geom_point(color = "steelblue") +
+    coord_equal() +
+    labs(title = paste0("ρ = ", rho), x = "X", y = "Y")
+  
+  plots[[i]] <- p
+}
+
+# Arrange plots in 2x2 grid
+grid.arrange(grobs = plots, ncol = 2, nrow = 2)
 ```
 
 In @fig-normal-contour, we plot the contour plots of the bivariate normal distributions that have different correlation coefficients. The contour plots show the level curves of the bivariate normal distribution for different values of $\rho$. @fig-normal-contour shows that as $\rho$ gets larger in absolute value, the contours stretch along the line $y=x$ or $y=-x$.
 
-```{python}
+```{r}
 #| fig-cap: "Contour plots of bivariate normal distribution with different correlation coefficients"
 #| label: fig-normal-contour
-# Create a 2x2 subplot for the plots
-fig, axes = plt.subplots(2, 2, figsize=(8, 6))
-# Define the mean vector
-mean_vector = np.array([0, 0])
-# Define the values for rho
-rho = [-0.8, 0, 0.4, 0.8]
-# Iterate over the rho values and corresponding subplot axes
-for ax, rho in zip(axes.flatten(), rho):
-    # Define the covariance matrix
-    cov_matrix = np.array([[1, rho], [rho, 1]])
-    # Create a grid of points
-    x = np.linspace(-3, 3, 100)
-    y = np.linspace(-3, 3, 100)
-    X, Y = np.meshgrid(x, y)
-    pos = np.dstack((X, Y))
-    # Calculate the probability density function
-    rv = multivariate_normal(mean_vector, cov_matrix)
-    Z = rv.pdf(pos)
-    # Plot the contour
-    ax.contour(X, Y, Z, levels=10)
-    ax.set_title(f"$\\rho$={rho}")
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
-    ax.axis('equal')
-# Adjust layout for better spacing
-plt.tight_layout()
-plt.show()
+#| fig-width: 8
+#| fig-height: 8
+# Define mean vector
+mean_vector <- c(0, 0)
+
+# Define rho values
+rho_values <- c(-0.8, 0, 0.4, 0.8)
+
+# Function to compute bivariate normal density
+bvn_density <- function(x, y, mu, Sigma) {
+    z <- cbind(x, y) - matrix(mu, nrow = length(x), ncol = 2, byrow = TRUE)
+    inv_Sigma <- solve(Sigma)
+    det_Sigma <- det(Sigma)
+    exp(-0.5 * rowSums((z %*% inv_Sigma) * z)) / (2 * pi * sqrt(det_Sigma))
+}
+
+# Create a list to store plots
+plots <- list()
+
+# Loop over rho values
+for (i in seq_along(rho_values)) {
+    rho <- rho_values[i]
+    Sigma <- matrix(c(1, rho, rho, 1), nrow = 2)
+
+    # Grid of points
+    x <- seq(-3, 3, length.out = 100)
+    y <- seq(-3, 3, length.out = 100)
+    grid <- expand.grid(X = x, Y = y)
+
+    # Compute density
+    grid$Z <- bvn_density(grid$X, grid$Y, mu = mean_vector, Sigma = Sigma)
+
+    # Contour plot
+    p <- ggplot(grid, aes(x = X, y = Y, z = Z)) +
+        geom_contour(bins = 10) +
+        coord_equal() +
+        labs(title = paste0("ρ = ", rho), x = "X", y = "Y")
+
+    plots[[i]] <- p
+}
+
+# Arrange plots in 2x2 grid
+grid.arrange(grobs = plots, ncol = 2, nrow = 2)
 ```
+
 
 If $X$ and $Y$ are have a joint normal distribution, then the conditional distribution of $Y$ given $X=x$ is also a normal distribution: $Y|X=x\sim N(\mu_{Y|X},\sigma^2_{Y|X})$, where 
 $$
@@ -628,4 +667,5 @@ where $X_1,X_2,\ldots,X_{\nu_2}$ are independent random variables that have stan
 $$
 F\stackrel{d}{\to}W_1/\nu_1\sim \chi^2_{\nu_1}/\nu_1.
 $$
+
 
