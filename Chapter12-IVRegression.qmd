@@ -211,7 +211,7 @@ $$
 \end{align}
 $${#eq-chapter21-4}
 
-where $Q^{cigarettes}_i$ is the number of packs of cigarettes sold per capita in the $i$th state and $P^{cigarettes}_i$ is the average real price per pack of cigarettes including all taxes. The price is endogenous because it is determined by the intersection of the supply and demand curves, as we illustrated in @exm-exm19-1. We can use the general sales tax as an instrumental variable for the price. The general sales tax is a tax applied to all consumption goods, including cigarettes. We need to ensure that the general sales tax is correlated with the price but uncorrelated with the error term. 
+where $Q^{cigarettes}_i$ is the number of packs of cigarettes sold per capita in the $i$th state and $P^{cigarettes}_i$ is the average real price per pack of cigarettes including all taxes. The price is endogenous because it is determined by the intersection of the supply and demand curves, as we illustrated in @exm-chapter21-1. We can use the general sales tax as an instrumental variable for the price. The general sales tax is a tax applied to all consumption goods, including cigarettes. We need to ensure that the general sales tax is correlated with the price but uncorrelated with the error term. 
 
 * **Instrument relevance**: An increase in general sales tax should increase the price of cigarettes, suggesting that $\text{Cov}(\text{SalesTax}_i, P^{cigarettes}_i)\neq 0$. Thus, the general sales tax is a relevant instrument.
 
@@ -225,7 +225,7 @@ We use the following code chunk to import data and generate (i) the real cigaret
 #| message: false
 
 # Import data
-mydata <- readxl::read_excel("data/cig_ch12.xlsx")
+mydata <- read_excel("data/cig_ch12.xlsx")
 
 # Column names
 colnames(mydata)
@@ -277,7 +277,7 @@ $$
 \end{align}
 $$
 
-The TSLS estimate $\hat{\beta}^{TSLS}_1=-1.084$ suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately $1.08$ percent, indicating that demand is fairly elastic.
+The TSLS estimate $\hat{\beta}^{TSLS}_1=-1.084$ suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately 1.08 percent, indicating that demand is fairly elastic.
 
 ```{r}
 #| tbl-cap: "Estimation Results"
@@ -492,7 +492,7 @@ $$
 \end{align}
 $$
 
-The TSLS estimate $\hat{\beta}^{TSLS}_1=-1.277$ suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately $1.28$ percent, holding real income constant.
+The TSLS estimate $\hat{\beta}^{TSLS}_1=-1.277$ suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately 1.28 percent, holding real income constant.
 
 ```{r}
 #| tbl-cap: "Estimation results for the extended cigarette demand model with two instruments"
@@ -527,7 +527,7 @@ H_1&: \text{At least one of the coefficients is not zero}.
 \end{align}
 $$
 
-A large $F$-statistic indicates that the instruments are relevant. A common rule of thumb is that the $F$-statistic should be greater than 10. An $F$-statistic smaller than 10 suggests that the instruments are weak. In such cases, the TSLS estimator is biased and does not have an asymptotic normal distribution, even when the sample size is large. 
+A large F-statistic indicates that the instruments are relevant. A common rule of thumb is that the F-statistic should be greater than 10. An F-statistic smaller than 10 suggests that the instruments are weak. In such cases, the TSLS estimator is biased and does not have an asymptotic normal distribution, even when the sample size is large. 
 
 To study the large sample distribution of the TSLS estimator under the weak instrument, we consider the case where there is only one endogenous variable and one instrument. In this case, we start with the following expression (for the details, see Section 19.2.2):
 $$
@@ -565,15 +565,15 @@ $$
 \end{align}
 $${#eq-chapter21-14}
 where $\delta_0,\ldots,\delta_{m+r}$ are the unknown coefficients and $e_i$ is the error term.
-4. Compute the homoskedasticity-only $F$-statistic for the following hypothesis:
+4. Compute the homoskedasticity-only F-statistic for the following hypothesis:
 $$
 \begin{align*}
 H_0:\delta_1=0,\ldots,\delta_m=0\quad\text{versus}\quad H_1: \text{At least one coefficient is non-zero}.
 \end{align*}
 $$
-5. The $J$-statistic is computed as $J=m\times F$, where $m$ is the number of instruments.
+5. The J-statistic is computed as $J=m\times F$, where $m$ is the number of instruments.
 
-Under the null hypothesis that all instruments are exogeneous, $J$ has a chi-squared distribution with $m-k$ degrees of freedom, i.e., $J\sim \chi^2_{m-k}$. 
+Under the null hypothesis that all instruments are exogeneous, the J statistic has a chi-squared distribution with m-k degrees of freedom, i.e., $J\sim \chi^2_{m-k}$. 
 
 ::: {.callout-note icon=false}
 ## Key Concept 21.2: Checking instrument validity
@@ -581,7 +581,7 @@ The validity of the instrumental variables depends on two conditions: (i) instru
 
 * **Instrument relevance**: The instruments are relevant if at least one of the coefficients in the reduced form equation is not zero. A large $F$-statistic for testing $H_0: \pi_1=\ldots=\pi_m=0$ in @eq-chapter21-11 indicates that the instruments are relevant. A common rule of thumb is that the $F$-statistic should be greater than 10. An $F$-statistic smaller than 10 suggests that the instruments are weak. When the instruments are weak, the TSLS estimator is biased and does not have an asymptotic normal distribution, even when the sample size is large.
 
-* **Instrument exogeneity**: In the overidentified case, we can use the test of overidentifying restrictions (the J test) to test the instrument exogeneity condition. The J-statistic is computed as $J=m\times F$, where $m$ is the number of instruments and $F$ is the homoskedasticity-only $F$-statistic for testing $H_0:\delta_1=0,\ldots,\delta_m=0$ in @eq-chapter21-14. Under the null hypothesis that all instruments are exogeneous, we have $J\sim\chi^2_{m-k}$. 
+* **Instrument exogeneity**: In the overidentified case, we can use the test of overidentifying restrictions (the J test) to test the instrument exogeneity condition. The J-statistic is computed as $J=m\times F$, where m is the number of instruments and F is the homoskedasticity-only $F$-statistic for testing $H_0:\delta_1=0,\ldots,\delta_m=0$ in @eq-chapter21-14. Under the null hypothesis that all instruments are exogeneous, we have $J\sim\chi^2_{m-k}$. 
 :::
 
 ## Application to the demand for cigarettes
@@ -743,7 +743,7 @@ fstats_df$p_value <- round(fstats_df$p_value, 5)
 kable(fstats_df, align = "lcccc")
 ```
 
-Since the first two models are exactly identified, we cannot use the J-test to test instrument exogeneity. However, the regression in column (3) is overidentified because there are two instruments and a single included endogenous regressor, resulting in one (m - k = 2 - 1 = 1) overidentifying restriction. Below, we compute the J-test for the overidentifying restriction in model 3.
+Since the first two models are exactly identified, we cannot use the J-statistic to test instrument exogeneity. However, the regression in column (3) is overidentified because there are two instruments and a single included endogenous regressor, resulting in one (m - k = 2 - 1 = 1) overidentifying restriction. Below, we compute the J-statistic for the overidentifying restriction in model 3.
 
 ```{r}
 # J-test for overidentifying restrictions
@@ -925,7 +925,7 @@ We can solve all of these problems by using a valid instrument for institutions 
 
 The primary contribution of @Acemoglu2001 lies in their use of "settler mortality rates" (`logem4`) as an instrument for institutional differences. They propose that settler mortality influenced settlement patterns, which in turn shaped early institutions. These early institutions persisted over time, ultimately forming the foundation of current institutional frameworks. 
 
-To check instrument relevance, we generate a scatterplot of `avexpr` against `logem4` (log settler mortality rate). @fig-chapter21-6 reveals a negative correlation between protection against expropriation and settler mortality rates, consistent with the authors' hypothesis. This negative relationship indicates that higher settler mortality rates are associated with lower levels of protection against expropriation during 1985–95. The first stage $F$-statistic is 31.5, which is greater than 10, indicating that the instrument is relevant.
+To check instrument relevance, we generate a scatterplot of `avexpr` against `logem4` (log settler mortality rate). @fig-chapter21-6 reveals a negative correlation between protection against expropriation and settler mortality rates, consistent with the authors' hypothesis. This negative relationship indicates that higher settler mortality rates are associated with lower levels of protection against expropriation during 1985–95. The first stage F-statistic is 31.5, which is greater than 10, indicating that the instrument is relevant.
 
 
 ```{r}

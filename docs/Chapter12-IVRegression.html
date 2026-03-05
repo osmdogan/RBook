@@ -780,7 +780,7 @@ Table&nbsp;21.1: The cigarette consumption dataset
 \ln(Q^{cigarettes}_i)=\beta_0+\beta_1\ln(P^{cigarettes}_i)+u_i,
 \end{align}
 \tag{21.4}\]</span></span></p>
-<p>where <span class="math inline">\(Q^{cigarettes}_i\)</span> is the number of packs of cigarettes sold per capita in the <span class="math inline">\(i\)</span>th state and <span class="math inline">\(P^{cigarettes}_i\)</span> is the average real price per pack of cigarettes including all taxes. The price is endogenous because it is determined by the intersection of the supply and demand curves, as we illustrated in <span class="quarto-unresolved-ref">?exm-exm19-1</span>. We can use the general sales tax as an instrumental variable for the price. The general sales tax is a tax applied to all consumption goods, including cigarettes. We need to ensure that the general sales tax is correlated with the price but uncorrelated with the error term.</p>
+<p>where <span class="math inline">\(Q^{cigarettes}_i\)</span> is the number of packs of cigarettes sold per capita in the <span class="math inline">\(i\)</span>th state and <span class="math inline">\(P^{cigarettes}_i\)</span> is the average real price per pack of cigarettes including all taxes. The price is endogenous because it is determined by the intersection of the supply and demand curves, as we illustrated in <a href="#exm-chapter21-1" class="quarto-xref">Example&nbsp;<span>21.1</span></a>. We can use the general sales tax as an instrumental variable for the price. The general sales tax is a tax applied to all consumption goods, including cigarettes. We need to ensure that the general sales tax is correlated with the price but uncorrelated with the error term.</p>
 <ul>
 <li><p><strong>Instrument relevance</strong>: An increase in general sales tax should increase the price of cigarettes, suggesting that <span class="math inline">\(\text{Cov}(\text{SalesTax}_i, P^{cigarettes}_i)\neq 0\)</span>. Thus, the general sales tax is a relevant instrument.</p></li>
 <li><p><strong>Instrument exogeneity</strong>: We need to show that the general sales tax affects the demand for cigarettes only through its effect on the price. This assumption is plausible because general sales tax rates vary across states and are usually set based on the state’s fiscal policies. Therefore, the general sales tax is likely to be uncorrelated with the factors that affect cigarette consumption.</p></li>
@@ -788,7 +788,7 @@ Table&nbsp;21.1: The cigarette consumption dataset
 <p>We use the following code chunk to import data and generate (i) the real cigarettes prices, (ii) the real sales taxes, and (iii) the real per-capita income.The summary statistics of variables are shown in <a href="#tbl-chapter21-2" class="quarto-xref">Table&nbsp;<span>21.2</span></a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"data/cig_ch12.xlsx"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/cig_ch12.xlsx"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Column names</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mydata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -831,20 +831,20 @@ Table&nbsp;21.2: Summary statistics
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_2ghfgnbakfx5k6o9ocz9 = TinyTable.createTableFunctions("tinytable_2ghfgnbakfx5k6o9ocz9");
+      const tableFns_26tudr2eovle1vu4ssr4 = TinyTable.createTableFunctions("tinytable_26tudr2eovle1vu4ssr4");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 }, { i: '5', j: 4 }, { i: '5', j: 5 }, { i: '5', j: 6 }, { i: '5', j: 7 }, { i: '5', j: 8 }, { i: '5', j: 9 } ], css_id: 'tinytable_css_om5p7wusifpndt7rhyel',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '3', j: 6 }, { i: '4', j: 6 }, { i: '1', j: 7 }, { i: '2', j: 7 }, { i: '3', j: 7 }, { i: '4', j: 7 }, { i: '1', j: 8 }, { i: '2', j: 8 }, { i: '3', j: 8 }, { i: '4', j: 8 }, { i: '1', j: 9 }, { i: '2', j: 9 }, { i: '3', j: 9 }, { i: '4', j: 9 } ], css_id: 'tinytable_css_3eiwgsxvn9f4n4hdke3i',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 }, { i: '0', j: 9 } ], css_id: 'tinytable_css_ah2thk9y2t6z6uperi4d',}, 
+          { positions: [ { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 }, { i: '5', j: 4 }, { i: '5', j: 5 }, { i: '5', j: 6 }, { i: '5', j: 7 }, { i: '5', j: 8 }, { i: '5', j: 9 } ], css_id: 'tinytable_css_40cwpy0jaxi4klfadw2h',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '3', j: 6 }, { i: '4', j: 6 }, { i: '1', j: 7 }, { i: '2', j: 7 }, { i: '3', j: 7 }, { i: '4', j: 7 }, { i: '1', j: 8 }, { i: '2', j: 8 }, { i: '3', j: 8 }, { i: '4', j: 8 }, { i: '1', j: 9 }, { i: '2', j: 9 }, { i: '3', j: 9 }, { i: '4', j: 9 } ], css_id: 'tinytable_css_brefqksx8g8k6qo41fwb',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 }, { i: '0', j: 9 } ], css_id: 'tinytable_css_ewgmayqn35zbybdtcey0',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_2ghfgnbakfx5k6o9ocz9.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_26tudr2eovle1vu4ssr4.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -853,12 +853,12 @@ Table&nbsp;21.2: Summary statistics
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_2ghfgnbakfx5k6o9ocz9 td.tinytable_css_om5p7wusifpndt7rhyel, #tinytable_2ghfgnbakfx5k6o9ocz9 th.tinytable_css_om5p7wusifpndt7rhyel {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_2ghfgnbakfx5k6o9ocz9 td.tinytable_css_3eiwgsxvn9f4n4hdke3i, #tinytable_2ghfgnbakfx5k6o9ocz9 th.tinytable_css_3eiwgsxvn9f4n4hdke3i { text-align: left }
-    #tinytable_2ghfgnbakfx5k6o9ocz9 td.tinytable_css_ah2thk9y2t6z6uperi4d, #tinytable_2ghfgnbakfx5k6o9ocz9 th.tinytable_css_ah2thk9y2t6z6uperi4d {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_26tudr2eovle1vu4ssr4 td.tinytable_css_40cwpy0jaxi4klfadw2h, #tinytable_26tudr2eovle1vu4ssr4 th.tinytable_css_40cwpy0jaxi4klfadw2h {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_26tudr2eovle1vu4ssr4 td.tinytable_css_brefqksx8g8k6qo41fwb, #tinytable_26tudr2eovle1vu4ssr4 th.tinytable_css_brefqksx8g8k6qo41fwb { text-align: left }
+    #tinytable_26tudr2eovle1vu4ssr4 td.tinytable_css_ewgmayqn35zbybdtcey0, #tinytable_26tudr2eovle1vu4ssr4 th.tinytable_css_ewgmayqn35zbybdtcey0 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_2ghfgnbakfx5k6o9ocz9" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_26tudr2eovle1vu4ssr4" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -955,7 +955,7 @@ Table&nbsp;21.2: Summary statistics
 \widehat{\ln(Q^{cigarettes}_i)}=9.720-1.084\ln(P^{cigarettes}_i).
 \end{align}
 \]</span></p>
-<p>The TSLS estimate <span class="math inline">\(\hat{\beta}^{TSLS}_1=-1.084\)</span> suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately <span class="math inline">\(1.08\)</span> percent, indicating that demand is fairly elastic.</p>
+<p>The TSLS estimate <span class="math inline">\(\hat{\beta}^{TSLS}_1=-1.084\)</span> suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately 1.08 percent, indicating that demand is fairly elastic.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display results</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
@@ -978,25 +978,25 @@ Table&nbsp;21.3: Estimation Results
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_xoj9u4jsraovvl8k7k5m = TinyTable.createTableFunctions("tinytable_xoj9u4jsraovvl8k7k5m");
+      const tableFns_iqk3zkamb8294hrcnk63 = TinyTable.createTableFunctions("tinytable_iqk3zkamb8294hrcnk63");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '9', j: 2 } ], css_id: 'tinytable_css_8lb4z2brhix72lccnvxp',}, 
-          { positions: [ { i: '4', j: 2 } ], css_id: 'tinytable_css_h8nnbl1z9mrayteeo6wi',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 } ], css_id: 'tinytable_css_nwfit2tn6wry7i2gm6n8',}, 
-          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_hjbbf0z5y0dg5rdqtkih',}, 
-          { positions: [ { i: '9', j: 1 } ], css_id: 'tinytable_css_vg0igshbzibwtymewzfe',}, 
-          { positions: [ { i: '4', j: 1 } ], css_id: 'tinytable_css_7pygah1yy5zrro3e234r',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 } ], css_id: 'tinytable_css_81zlub3rocslx4ux72lp',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_c6bu6vag6ee9nt0f4tya',}, 
+          { positions: [ { i: '9', j: 2 } ], css_id: 'tinytable_css_zserjpm0lpofasxfsary',}, 
+          { positions: [ { i: '4', j: 2 } ], css_id: 'tinytable_css_6cnll3twvltb4puxc3rn',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 } ], css_id: 'tinytable_css_nq5821tcqux0dq324i8r',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_d9xcb9ycfz34rw6k2rgn',}, 
+          { positions: [ { i: '9', j: 1 } ], css_id: 'tinytable_css_odwtj9pvamd8qcr30nu1',}, 
+          { positions: [ { i: '4', j: 1 } ], css_id: 'tinytable_css_tqmckyg7gyrbjqopm4fm',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 } ], css_id: 'tinytable_css_tccf2fhddvk2wrrwa8ug',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_w1bqruz5q0axp7hzgruf',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_xoj9u4jsraovvl8k7k5m.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_iqk3zkamb8294hrcnk63.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1005,17 +1005,17 @@ Table&nbsp;21.3: Estimation Results
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_xoj9u4jsraovvl8k7k5m td.tinytable_css_8lb4z2brhix72lccnvxp, #tinytable_xoj9u4jsraovvl8k7k5m th.tinytable_css_8lb4z2brhix72lccnvxp {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_xoj9u4jsraovvl8k7k5m td.tinytable_css_h8nnbl1z9mrayteeo6wi, #tinytable_xoj9u4jsraovvl8k7k5m th.tinytable_css_h8nnbl1z9mrayteeo6wi {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_xoj9u4jsraovvl8k7k5m td.tinytable_css_nwfit2tn6wry7i2gm6n8, #tinytable_xoj9u4jsraovvl8k7k5m th.tinytable_css_nwfit2tn6wry7i2gm6n8 { text-align: center }
-    #tinytable_xoj9u4jsraovvl8k7k5m td.tinytable_css_hjbbf0z5y0dg5rdqtkih, #tinytable_xoj9u4jsraovvl8k7k5m th.tinytable_css_hjbbf0z5y0dg5rdqtkih {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_xoj9u4jsraovvl8k7k5m td.tinytable_css_vg0igshbzibwtymewzfe, #tinytable_xoj9u4jsraovvl8k7k5m th.tinytable_css_vg0igshbzibwtymewzfe {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_xoj9u4jsraovvl8k7k5m td.tinytable_css_7pygah1yy5zrro3e234r, #tinytable_xoj9u4jsraovvl8k7k5m th.tinytable_css_7pygah1yy5zrro3e234r {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_xoj9u4jsraovvl8k7k5m td.tinytable_css_81zlub3rocslx4ux72lp, #tinytable_xoj9u4jsraovvl8k7k5m th.tinytable_css_81zlub3rocslx4ux72lp { text-align: left }
-    #tinytable_xoj9u4jsraovvl8k7k5m td.tinytable_css_c6bu6vag6ee9nt0f4tya, #tinytable_xoj9u4jsraovvl8k7k5m th.tinytable_css_c6bu6vag6ee9nt0f4tya {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_iqk3zkamb8294hrcnk63 td.tinytable_css_zserjpm0lpofasxfsary, #tinytable_iqk3zkamb8294hrcnk63 th.tinytable_css_zserjpm0lpofasxfsary {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_iqk3zkamb8294hrcnk63 td.tinytable_css_6cnll3twvltb4puxc3rn, #tinytable_iqk3zkamb8294hrcnk63 th.tinytable_css_6cnll3twvltb4puxc3rn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_iqk3zkamb8294hrcnk63 td.tinytable_css_nq5821tcqux0dq324i8r, #tinytable_iqk3zkamb8294hrcnk63 th.tinytable_css_nq5821tcqux0dq324i8r { text-align: center }
+    #tinytable_iqk3zkamb8294hrcnk63 td.tinytable_css_d9xcb9ycfz34rw6k2rgn, #tinytable_iqk3zkamb8294hrcnk63 th.tinytable_css_d9xcb9ycfz34rw6k2rgn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_iqk3zkamb8294hrcnk63 td.tinytable_css_odwtj9pvamd8qcr30nu1, #tinytable_iqk3zkamb8294hrcnk63 th.tinytable_css_odwtj9pvamd8qcr30nu1 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_iqk3zkamb8294hrcnk63 td.tinytable_css_tqmckyg7gyrbjqopm4fm, #tinytable_iqk3zkamb8294hrcnk63 th.tinytable_css_tqmckyg7gyrbjqopm4fm {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_iqk3zkamb8294hrcnk63 td.tinytable_css_tccf2fhddvk2wrrwa8ug, #tinytable_iqk3zkamb8294hrcnk63 th.tinytable_css_tccf2fhddvk2wrrwa8ug { text-align: left }
+    #tinytable_iqk3zkamb8294hrcnk63 td.tinytable_css_w1bqruz5q0axp7hzgruf, #tinytable_iqk3zkamb8294hrcnk63 th.tinytable_css_w1bqruz5q0axp7hzgruf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_xoj9u4jsraovvl8k7k5m" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_iqk3zkamb8294hrcnk63" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -1256,25 +1256,25 @@ Table&nbsp;21.4: Estimation results for the extended cigarette demand model
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_9adwpqi9tmkkpu5611fg = TinyTable.createTableFunctions("tinytable_9adwpqi9tmkkpu5611fg");
+      const tableFns_lnokh7grazf3iq08eo96 = TinyTable.createTableFunctions("tinytable_lnokh7grazf3iq08eo96");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '11', j: 2 } ], css_id: 'tinytable_css_nasy3owvgsdn0ad8vby5',}, 
-          { positions: [ { i: '6', j: 2 } ], css_id: 'tinytable_css_e091yhfb2nuzqdne7zuo',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 } ], css_id: 'tinytable_css_lpr5h8o1zthfvqojqadc',}, 
-          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_yo4053tdt5cyom4bjvch',}, 
-          { positions: [ { i: '11', j: 1 } ], css_id: 'tinytable_css_pxx4ljziohu12faapvhu',}, 
-          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_tl5xb72rt63ftwx36kvb',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 } ], css_id: 'tinytable_css_z8ih7j7sx1h0qvldhw2k',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_s1vfxmbae6vpr2s9e8g1',}, 
+          { positions: [ { i: '11', j: 2 } ], css_id: 'tinytable_css_h242boczkmhnkty8js9r',}, 
+          { positions: [ { i: '6', j: 2 } ], css_id: 'tinytable_css_fatl8a1oobbx6bh8n7ms',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 } ], css_id: 'tinytable_css_h0kj623yqfjtmdxmjd9y',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_hw6agpd6ldpbk01olxco',}, 
+          { positions: [ { i: '11', j: 1 } ], css_id: 'tinytable_css_qughuj29wcudjee65xnj',}, 
+          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_kget3hq8n7h7jqa4h9oj',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 } ], css_id: 'tinytable_css_xrgkl7kc5nu21v7fx76y',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_6gptp695twgo4peiedg2',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_9adwpqi9tmkkpu5611fg.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_lnokh7grazf3iq08eo96.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1283,17 +1283,17 @@ Table&nbsp;21.4: Estimation results for the extended cigarette demand model
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_9adwpqi9tmkkpu5611fg td.tinytable_css_nasy3owvgsdn0ad8vby5, #tinytable_9adwpqi9tmkkpu5611fg th.tinytable_css_nasy3owvgsdn0ad8vby5 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_9adwpqi9tmkkpu5611fg td.tinytable_css_e091yhfb2nuzqdne7zuo, #tinytable_9adwpqi9tmkkpu5611fg th.tinytable_css_e091yhfb2nuzqdne7zuo {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_9adwpqi9tmkkpu5611fg td.tinytable_css_lpr5h8o1zthfvqojqadc, #tinytable_9adwpqi9tmkkpu5611fg th.tinytable_css_lpr5h8o1zthfvqojqadc { text-align: center }
-    #tinytable_9adwpqi9tmkkpu5611fg td.tinytable_css_yo4053tdt5cyom4bjvch, #tinytable_9adwpqi9tmkkpu5611fg th.tinytable_css_yo4053tdt5cyom4bjvch {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_9adwpqi9tmkkpu5611fg td.tinytable_css_pxx4ljziohu12faapvhu, #tinytable_9adwpqi9tmkkpu5611fg th.tinytable_css_pxx4ljziohu12faapvhu {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_9adwpqi9tmkkpu5611fg td.tinytable_css_tl5xb72rt63ftwx36kvb, #tinytable_9adwpqi9tmkkpu5611fg th.tinytable_css_tl5xb72rt63ftwx36kvb {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_9adwpqi9tmkkpu5611fg td.tinytable_css_z8ih7j7sx1h0qvldhw2k, #tinytable_9adwpqi9tmkkpu5611fg th.tinytable_css_z8ih7j7sx1h0qvldhw2k { text-align: left }
-    #tinytable_9adwpqi9tmkkpu5611fg td.tinytable_css_s1vfxmbae6vpr2s9e8g1, #tinytable_9adwpqi9tmkkpu5611fg th.tinytable_css_s1vfxmbae6vpr2s9e8g1 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_lnokh7grazf3iq08eo96 td.tinytable_css_h242boczkmhnkty8js9r, #tinytable_lnokh7grazf3iq08eo96 th.tinytable_css_h242boczkmhnkty8js9r {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_lnokh7grazf3iq08eo96 td.tinytable_css_fatl8a1oobbx6bh8n7ms, #tinytable_lnokh7grazf3iq08eo96 th.tinytable_css_fatl8a1oobbx6bh8n7ms {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_lnokh7grazf3iq08eo96 td.tinytable_css_h0kj623yqfjtmdxmjd9y, #tinytable_lnokh7grazf3iq08eo96 th.tinytable_css_h0kj623yqfjtmdxmjd9y { text-align: center }
+    #tinytable_lnokh7grazf3iq08eo96 td.tinytable_css_hw6agpd6ldpbk01olxco, #tinytable_lnokh7grazf3iq08eo96 th.tinytable_css_hw6agpd6ldpbk01olxco {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_lnokh7grazf3iq08eo96 td.tinytable_css_qughuj29wcudjee65xnj, #tinytable_lnokh7grazf3iq08eo96 th.tinytable_css_qughuj29wcudjee65xnj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_lnokh7grazf3iq08eo96 td.tinytable_css_kget3hq8n7h7jqa4h9oj, #tinytable_lnokh7grazf3iq08eo96 th.tinytable_css_kget3hq8n7h7jqa4h9oj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_lnokh7grazf3iq08eo96 td.tinytable_css_xrgkl7kc5nu21v7fx76y, #tinytable_lnokh7grazf3iq08eo96 th.tinytable_css_xrgkl7kc5nu21v7fx76y { text-align: left }
+    #tinytable_lnokh7grazf3iq08eo96 td.tinytable_css_6gptp695twgo4peiedg2, #tinytable_lnokh7grazf3iq08eo96 th.tinytable_css_6gptp695twgo4peiedg2 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_9adwpqi9tmkkpu5611fg" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_lnokh7grazf3iq08eo96" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -1369,7 +1369,7 @@ Table&nbsp;21.4: Estimation results for the extended cigarette demand model
 \widehat{\ln(Q^{cigarettes}_i)}=9.89-1.277\ln(P^{cigarettes}_i)+0.280\ln(\text{Income}_i).
 \end{align}
 \]</span></p>
-<p>The TSLS estimate <span class="math inline">\(\hat{\beta}^{TSLS}_1=-1.277\)</span> suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately <span class="math inline">\(1.28\)</span> percent, holding real income constant.</p>
+<p>The TSLS estimate <span class="math inline">\(\hat{\beta}^{TSLS}_1=-1.277\)</span> suggests that a one percent increase in cigarette prices reduces cigarette consumption by approximately 1.28 percent, holding real income constant.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display results</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
@@ -1392,25 +1392,25 @@ Table&nbsp;21.5: Estimation results for the extended cigarette demand model with
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_ie0wvoavvu88qog1figt = TinyTable.createTableFunctions("tinytable_ie0wvoavvu88qog1figt");
+      const tableFns_ml6gg16myomt3uw0075d = TinyTable.createTableFunctions("tinytable_ml6gg16myomt3uw0075d");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '11', j: 2 } ], css_id: 'tinytable_css_rgq811stongsdoo18f8m',}, 
-          { positions: [ { i: '6', j: 2 } ], css_id: 'tinytable_css_w00qo0cyjje5szr4n0or',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 } ], css_id: 'tinytable_css_b3dcm2s9lb6b7fwyjqb9',}, 
-          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_e9tgiysycbg5hmpmhnbz',}, 
-          { positions: [ { i: '11', j: 1 } ], css_id: 'tinytable_css_c35n0cn0gj7j4sz1i7e5',}, 
-          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_awh237sh38ip3qfukzl8',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 } ], css_id: 'tinytable_css_gmlbcq2jbva9uopy4feu',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_qf1qrciw7czbac5jomrg',}, 
+          { positions: [ { i: '11', j: 2 } ], css_id: 'tinytable_css_pl49axowl211geosk8t7',}, 
+          { positions: [ { i: '6', j: 2 } ], css_id: 'tinytable_css_refpdp8649amq4b34ovf',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 } ], css_id: 'tinytable_css_ghcrrkya69949tv60vji',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_y6tdoa4m4xxu55c5lqfd',}, 
+          { positions: [ { i: '11', j: 1 } ], css_id: 'tinytable_css_suxx5sfz6hbj22k0g88v',}, 
+          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_73bveejr945z2tp9bcbp',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 } ], css_id: 'tinytable_css_7y1pgy5trrx6ebqr022d',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_w0b08x9edq6zsssrlenv',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_ie0wvoavvu88qog1figt.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_ml6gg16myomt3uw0075d.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1419,17 +1419,17 @@ Table&nbsp;21.5: Estimation results for the extended cigarette demand model with
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_ie0wvoavvu88qog1figt td.tinytable_css_rgq811stongsdoo18f8m, #tinytable_ie0wvoavvu88qog1figt th.tinytable_css_rgq811stongsdoo18f8m {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ie0wvoavvu88qog1figt td.tinytable_css_w00qo0cyjje5szr4n0or, #tinytable_ie0wvoavvu88qog1figt th.tinytable_css_w00qo0cyjje5szr4n0or {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ie0wvoavvu88qog1figt td.tinytable_css_b3dcm2s9lb6b7fwyjqb9, #tinytable_ie0wvoavvu88qog1figt th.tinytable_css_b3dcm2s9lb6b7fwyjqb9 { text-align: center }
-    #tinytable_ie0wvoavvu88qog1figt td.tinytable_css_e9tgiysycbg5hmpmhnbz, #tinytable_ie0wvoavvu88qog1figt th.tinytable_css_e9tgiysycbg5hmpmhnbz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ie0wvoavvu88qog1figt td.tinytable_css_c35n0cn0gj7j4sz1i7e5, #tinytable_ie0wvoavvu88qog1figt th.tinytable_css_c35n0cn0gj7j4sz1i7e5 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_ie0wvoavvu88qog1figt td.tinytable_css_awh237sh38ip3qfukzl8, #tinytable_ie0wvoavvu88qog1figt th.tinytable_css_awh237sh38ip3qfukzl8 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_ie0wvoavvu88qog1figt td.tinytable_css_gmlbcq2jbva9uopy4feu, #tinytable_ie0wvoavvu88qog1figt th.tinytable_css_gmlbcq2jbva9uopy4feu { text-align: left }
-    #tinytable_ie0wvoavvu88qog1figt td.tinytable_css_qf1qrciw7czbac5jomrg, #tinytable_ie0wvoavvu88qog1figt th.tinytable_css_qf1qrciw7czbac5jomrg {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_ml6gg16myomt3uw0075d td.tinytable_css_pl49axowl211geosk8t7, #tinytable_ml6gg16myomt3uw0075d th.tinytable_css_pl49axowl211geosk8t7 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ml6gg16myomt3uw0075d td.tinytable_css_refpdp8649amq4b34ovf, #tinytable_ml6gg16myomt3uw0075d th.tinytable_css_refpdp8649amq4b34ovf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ml6gg16myomt3uw0075d td.tinytable_css_ghcrrkya69949tv60vji, #tinytable_ml6gg16myomt3uw0075d th.tinytable_css_ghcrrkya69949tv60vji { text-align: center }
+    #tinytable_ml6gg16myomt3uw0075d td.tinytable_css_y6tdoa4m4xxu55c5lqfd, #tinytable_ml6gg16myomt3uw0075d th.tinytable_css_y6tdoa4m4xxu55c5lqfd {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ml6gg16myomt3uw0075d td.tinytable_css_suxx5sfz6hbj22k0g88v, #tinytable_ml6gg16myomt3uw0075d th.tinytable_css_suxx5sfz6hbj22k0g88v {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_ml6gg16myomt3uw0075d td.tinytable_css_73bveejr945z2tp9bcbp, #tinytable_ml6gg16myomt3uw0075d th.tinytable_css_73bveejr945z2tp9bcbp {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_ml6gg16myomt3uw0075d td.tinytable_css_7y1pgy5trrx6ebqr022d, #tinytable_ml6gg16myomt3uw0075d th.tinytable_css_7y1pgy5trrx6ebqr022d { text-align: left }
+    #tinytable_ml6gg16myomt3uw0075d td.tinytable_css_w0b08x9edq6zsssrlenv, #tinytable_ml6gg16myomt3uw0075d th.tinytable_css_w0b08x9edq6zsssrlenv {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_ie0wvoavvu88qog1figt" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_ml6gg16myomt3uw0075d" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -1509,7 +1509,7 @@ H_0&amp;: \pi_1=\ldots=\pi_m=0,\\
 H_1&amp;: \text{At least one of the coefficients is not zero}.
 \end{align}
 \]</span></p>
-<p>A large <span class="math inline">\(F\)</span>-statistic indicates that the instruments are relevant. A common rule of thumb is that the <span class="math inline">\(F\)</span>-statistic should be greater than 10. An <span class="math inline">\(F\)</span>-statistic smaller than 10 suggests that the instruments are weak. In such cases, the TSLS estimator is biased and does not have an asymptotic normal distribution, even when the sample size is large.</p>
+<p>A large F-statistic indicates that the instruments are relevant. A common rule of thumb is that the F-statistic should be greater than 10. An F-statistic smaller than 10 suggests that the instruments are weak. In such cases, the TSLS estimator is biased and does not have an asymptotic normal distribution, even when the sample size is large.</p>
 <p>To study the large sample distribution of the TSLS estimator under the weak instrument, we consider the case where there is only one endogenous variable and one instrument. In this case, we start with the following expression (for the details, see Section 19.2.2): <span id="eq-chapter21-12"><span class="math display">\[
 \begin{align}
 &amp;\hat{\beta}^{TSLS}_1=\beta_1+\frac{\frac{1}{n}\sum^n_{i=1}(Z_i-\bar{Z})u_i}{\frac{1}{n}\sum^n_{i=1}(Z_i-\bar{Z})(X_i-\bar{X})}\approx \beta_1+\frac{\frac{1}{n}\sum^n_{i=1}q_i}{\frac{1}{n}\sum^n_{i=1}r_i},
@@ -1536,14 +1536,14 @@ H_1&amp;: \text{At least one of the coefficients is not zero}.
 \hat{u}^{TSLS}_i= \delta_0 + \delta_1Z_{1i}+\ldots+ \delta_mZ_{mi} + \delta_{m+1}W_{1i} +\ldots+ \delta_{m+r}W_{ri} + e_i,
 \end{align}
 \tag{21.14}\]</span></span> where <span class="math inline">\(\delta_0,\ldots,\delta_{m+r}\)</span> are the unknown coefficients and <span class="math inline">\(e_i\)</span> is the error term.</li>
-<li>Compute the homoskedasticity-only <span class="math inline">\(F\)</span>-statistic for the following hypothesis: <span class="math display">\[
+<li>Compute the homoskedasticity-only F-statistic for the following hypothesis: <span class="math display">\[
 \begin{align*}
 H_0:\delta_1=0,\ldots,\delta_m=0\quad\text{versus}\quad H_1: \text{At least one coefficient is non-zero}.
 \end{align*}
 \]</span></li>
-<li>The <span class="math inline">\(J\)</span>-statistic is computed as <span class="math inline">\(J=m\times F\)</span>, where <span class="math inline">\(m\)</span> is the number of instruments.</li>
+<li>The J-statistic is computed as <span class="math inline">\(J=m\times F\)</span>, where <span class="math inline">\(m\)</span> is the number of instruments.</li>
 </ol>
-<p>Under the null hypothesis that all instruments are exogeneous, <span class="math inline">\(J\)</span> has a chi-squared distribution with <span class="math inline">\(m-k\)</span> degrees of freedom, i.e., <span class="math inline">\(J\sim \chi^2_{m-k}\)</span>.</p>
+<p>Under the null hypothesis that all instruments are exogeneous, the J statistic has a chi-squared distribution with m-k degrees of freedom, i.e., <span class="math inline">\(J\sim \chi^2_{m-k}\)</span>.</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1557,7 +1557,7 @@ Key Concept 21.2: Checking instrument validity
 <p>The validity of the instrumental variables depends on two conditions: (i) instrument relevance and (ii) instrument exogeneity.</p>
 <ul>
 <li><p><strong>Instrument relevance</strong>: The instruments are relevant if at least one of the coefficients in the reduced form equation is not zero. A large <span class="math inline">\(F\)</span>-statistic for testing <span class="math inline">\(H_0: \pi_1=\ldots=\pi_m=0\)</span> in <a href="#eq-chapter21-11" class="quarto-xref">Equation&nbsp;<span>21.11</span></a> indicates that the instruments are relevant. A common rule of thumb is that the <span class="math inline">\(F\)</span>-statistic should be greater than 10. An <span class="math inline">\(F\)</span>-statistic smaller than 10 suggests that the instruments are weak. When the instruments are weak, the TSLS estimator is biased and does not have an asymptotic normal distribution, even when the sample size is large.</p></li>
-<li><p><strong>Instrument exogeneity</strong>: In the overidentified case, we can use the test of overidentifying restrictions (the J test) to test the instrument exogeneity condition. The J-statistic is computed as <span class="math inline">\(J=m\times F\)</span>, where <span class="math inline">\(m\)</span> is the number of instruments and <span class="math inline">\(F\)</span> is the homoskedasticity-only <span class="math inline">\(F\)</span>-statistic for testing <span class="math inline">\(H_0:\delta_1=0,\ldots,\delta_m=0\)</span> in <a href="#eq-chapter21-14" class="quarto-xref">Equation&nbsp;<span>21.14</span></a>. Under the null hypothesis that all instruments are exogeneous, we have <span class="math inline">\(J\sim\chi^2_{m-k}\)</span>.</p></li>
+<li><p><strong>Instrument exogeneity</strong>: In the overidentified case, we can use the test of overidentifying restrictions (the J test) to test the instrument exogeneity condition. The J-statistic is computed as <span class="math inline">\(J=m\times F\)</span>, where m is the number of instruments and F is the homoskedasticity-only <span class="math inline">\(F\)</span>-statistic for testing <span class="math inline">\(H_0:\delta_1=0,\ldots,\delta_m=0\)</span> in <a href="#eq-chapter21-14" class="quarto-xref">Equation&nbsp;<span>21.14</span></a>. Under the null hypothesis that all instruments are exogeneous, we have <span class="math inline">\(J\sim\chi^2_{m-k}\)</span>.</p></li>
 </ul>
 </div>
 </div>
@@ -1652,25 +1652,25 @@ Table&nbsp;21.6: Estimation results for the cigarette demand model using changes
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_ij7l9clv8v47pp9c7ruz = TinyTable.createTableFunctions("tinytable_ij7l9clv8v47pp9c7ruz");
+      const tableFns_8rl594qil6tgg4sfsg12 = TinyTable.createTableFunctions("tinytable_8rl594qil6tgg4sfsg12");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '11', j: 2 }, { i: '11', j: 3 }, { i: '11', j: 4 } ], css_id: 'tinytable_css_6j5tuw65r25z1vr4cf4r',}, 
-          { positions: [ { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 } ], css_id: 'tinytable_css_mb2kx80w0c9t4nrv0pbj',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 } ], css_id: 'tinytable_css_yqga13b97ubr901jvxih',}, 
-          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 } ], css_id: 'tinytable_css_vgq3tizqwmwbu9id11w6',}, 
-          { positions: [ { i: '11', j: 1 } ], css_id: 'tinytable_css_xs7u83crhm57plhbp2pg',}, 
-          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_ojq43qmi7ciioyy4xl76',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 } ], css_id: 'tinytable_css_3iogfkk327z29ydscl7a',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_ruuwae5z9a7av5uxswa3',}, 
+          { positions: [ { i: '11', j: 2 }, { i: '11', j: 3 }, { i: '11', j: 4 } ], css_id: 'tinytable_css_kbcqva3vkpskp0vv6zlm',}, 
+          { positions: [ { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 } ], css_id: 'tinytable_css_jtf5eqbtcpygdiu2xytb',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 } ], css_id: 'tinytable_css_1j2cnmz627pihp0tf7re',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 } ], css_id: 'tinytable_css_umeio91b1p9jk8jjtufy',}, 
+          { positions: [ { i: '11', j: 1 } ], css_id: 'tinytable_css_4pcb3kl2v7txlhdikmt9',}, 
+          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_gyzqtslfasomek87ek80',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 } ], css_id: 'tinytable_css_s0w9gtlnln6foysfcook',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_0k6lu06ow6ke1qv1ovk7',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_ij7l9clv8v47pp9c7ruz.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_8rl594qil6tgg4sfsg12.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1679,17 +1679,17 @@ Table&nbsp;21.6: Estimation results for the cigarette demand model using changes
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_ij7l9clv8v47pp9c7ruz td.tinytable_css_6j5tuw65r25z1vr4cf4r, #tinytable_ij7l9clv8v47pp9c7ruz th.tinytable_css_6j5tuw65r25z1vr4cf4r {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ij7l9clv8v47pp9c7ruz td.tinytable_css_mb2kx80w0c9t4nrv0pbj, #tinytable_ij7l9clv8v47pp9c7ruz th.tinytable_css_mb2kx80w0c9t4nrv0pbj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ij7l9clv8v47pp9c7ruz td.tinytable_css_yqga13b97ubr901jvxih, #tinytable_ij7l9clv8v47pp9c7ruz th.tinytable_css_yqga13b97ubr901jvxih { text-align: center }
-    #tinytable_ij7l9clv8v47pp9c7ruz td.tinytable_css_vgq3tizqwmwbu9id11w6, #tinytable_ij7l9clv8v47pp9c7ruz th.tinytable_css_vgq3tizqwmwbu9id11w6 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ij7l9clv8v47pp9c7ruz td.tinytable_css_xs7u83crhm57plhbp2pg, #tinytable_ij7l9clv8v47pp9c7ruz th.tinytable_css_xs7u83crhm57plhbp2pg {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_ij7l9clv8v47pp9c7ruz td.tinytable_css_ojq43qmi7ciioyy4xl76, #tinytable_ij7l9clv8v47pp9c7ruz th.tinytable_css_ojq43qmi7ciioyy4xl76 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_ij7l9clv8v47pp9c7ruz td.tinytable_css_3iogfkk327z29ydscl7a, #tinytable_ij7l9clv8v47pp9c7ruz th.tinytable_css_3iogfkk327z29ydscl7a { text-align: left }
-    #tinytable_ij7l9clv8v47pp9c7ruz td.tinytable_css_ruuwae5z9a7av5uxswa3, #tinytable_ij7l9clv8v47pp9c7ruz th.tinytable_css_ruuwae5z9a7av5uxswa3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_8rl594qil6tgg4sfsg12 td.tinytable_css_kbcqva3vkpskp0vv6zlm, #tinytable_8rl594qil6tgg4sfsg12 th.tinytable_css_kbcqva3vkpskp0vv6zlm {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_8rl594qil6tgg4sfsg12 td.tinytable_css_jtf5eqbtcpygdiu2xytb, #tinytable_8rl594qil6tgg4sfsg12 th.tinytable_css_jtf5eqbtcpygdiu2xytb {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_8rl594qil6tgg4sfsg12 td.tinytable_css_1j2cnmz627pihp0tf7re, #tinytable_8rl594qil6tgg4sfsg12 th.tinytable_css_1j2cnmz627pihp0tf7re { text-align: center }
+    #tinytable_8rl594qil6tgg4sfsg12 td.tinytable_css_umeio91b1p9jk8jjtufy, #tinytable_8rl594qil6tgg4sfsg12 th.tinytable_css_umeio91b1p9jk8jjtufy {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_8rl594qil6tgg4sfsg12 td.tinytable_css_4pcb3kl2v7txlhdikmt9, #tinytable_8rl594qil6tgg4sfsg12 th.tinytable_css_4pcb3kl2v7txlhdikmt9 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_8rl594qil6tgg4sfsg12 td.tinytable_css_gyzqtslfasomek87ek80, #tinytable_8rl594qil6tgg4sfsg12 th.tinytable_css_gyzqtslfasomek87ek80 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_8rl594qil6tgg4sfsg12 td.tinytable_css_s0w9gtlnln6foysfcook, #tinytable_8rl594qil6tgg4sfsg12 th.tinytable_css_s0w9gtlnln6foysfcook { text-align: left }
+    #tinytable_8rl594qil6tgg4sfsg12 td.tinytable_css_0k6lu06ow6ke1qv1ovk7, #tinytable_8rl594qil6tgg4sfsg12 th.tinytable_css_0k6lu06ow6ke1qv1ovk7 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_ij7l9clv8v47pp9c7ruz" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_8rl594qil6tgg4sfsg12" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -1884,7 +1884,7 @@ Table&nbsp;21.7: Robust First-Stage F-Statistics
 </figure>
 </div>
 </div>
-<p>Since the first two models are exactly identified, we cannot use the J-test to test instrument exogeneity. However, the regression in column (3) is overidentified because there are two instruments and a single included endogenous regressor, resulting in one (m - k = 2 - 1 = 1) overidentifying restriction. Below, we compute the J-test for the overidentifying restriction in model 3.</p>
+<p>Since the first two models are exactly identified, we cannot use the J-statistic to test instrument exogeneity. However, the regression in column (3) is overidentified because there are two instruments and a single included endogenous regressor, resulting in one (m - k = 2 - 1 = 1) overidentifying restriction. Below, we compute the J-statistic for the overidentifying restriction in model 3.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># J-test for overidentifying restrictions</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Get residuals from Model 3</span></span>
@@ -2140,25 +2140,25 @@ Table&nbsp;21.10: OLS regression results for the effect of institutions on econo
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_1fcl0g516v2gbgdq0253 = TinyTable.createTableFunctions("tinytable_1fcl0g516v2gbgdq0253");
+      const tableFns_b2z2anyxw9wal75bubk6 = TinyTable.createTableFunctions("tinytable_b2z2anyxw9wal75bubk6");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '17', j: 2 }, { i: '17', j: 3 }, { i: '17', j: 4 } ], css_id: 'tinytable_css_9ftp6jry44whfztpejhq',}, 
-          { positions: [ { i: '12', j: 2 }, { i: '12', j: 3 }, { i: '12', j: 4 } ], css_id: 'tinytable_css_2o6ki79dhreasiwg1ymx',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '15', j: 3 }, { i: '16', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '11', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '16', j: 4 } ], css_id: 'tinytable_css_kpt55v1tlxfeurs1ryf2',}, 
-          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 } ], css_id: 'tinytable_css_fmn882yf09tjm6n7qxrm',}, 
-          { positions: [ { i: '17', j: 1 } ], css_id: 'tinytable_css_umh9ln8a1i4wzc95d5lf',}, 
-          { positions: [ { i: '12', j: 1 } ], css_id: 'tinytable_css_zcbnvknmpbbatwtrunj1',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '16', j: 1 } ], css_id: 'tinytable_css_vjpmagbjhriip88x1skz',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_c5d8qol8ypnfmu0xnlkx',}, 
+          { positions: [ { i: '17', j: 2 }, { i: '17', j: 3 }, { i: '17', j: 4 } ], css_id: 'tinytable_css_1z1fli89swv0q5220i89',}, 
+          { positions: [ { i: '12', j: 2 }, { i: '12', j: 3 }, { i: '12', j: 4 } ], css_id: 'tinytable_css_0buus00uaqbusq2ucbl8',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '15', j: 3 }, { i: '16', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '11', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '16', j: 4 } ], css_id: 'tinytable_css_7e6vexjmdynqj0f0wwdp',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 } ], css_id: 'tinytable_css_xge5evjsj5h2iate9cf0',}, 
+          { positions: [ { i: '17', j: 1 } ], css_id: 'tinytable_css_6vu4t2mbko23cxz4izgi',}, 
+          { positions: [ { i: '12', j: 1 } ], css_id: 'tinytable_css_06mgtlunzjxfcqa3zh6q',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '16', j: 1 } ], css_id: 'tinytable_css_ppv93ac7mqjgq7vd0w12',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_h044aplrtxta9ss81vij',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_1fcl0g516v2gbgdq0253.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_b2z2anyxw9wal75bubk6.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2167,17 +2167,17 @@ Table&nbsp;21.10: OLS regression results for the effect of institutions on econo
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_1fcl0g516v2gbgdq0253 td.tinytable_css_9ftp6jry44whfztpejhq, #tinytable_1fcl0g516v2gbgdq0253 th.tinytable_css_9ftp6jry44whfztpejhq {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_1fcl0g516v2gbgdq0253 td.tinytable_css_2o6ki79dhreasiwg1ymx, #tinytable_1fcl0g516v2gbgdq0253 th.tinytable_css_2o6ki79dhreasiwg1ymx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_1fcl0g516v2gbgdq0253 td.tinytable_css_kpt55v1tlxfeurs1ryf2, #tinytable_1fcl0g516v2gbgdq0253 th.tinytable_css_kpt55v1tlxfeurs1ryf2 { text-align: center }
-    #tinytable_1fcl0g516v2gbgdq0253 td.tinytable_css_fmn882yf09tjm6n7qxrm, #tinytable_1fcl0g516v2gbgdq0253 th.tinytable_css_fmn882yf09tjm6n7qxrm {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_1fcl0g516v2gbgdq0253 td.tinytable_css_umh9ln8a1i4wzc95d5lf, #tinytable_1fcl0g516v2gbgdq0253 th.tinytable_css_umh9ln8a1i4wzc95d5lf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_1fcl0g516v2gbgdq0253 td.tinytable_css_zcbnvknmpbbatwtrunj1, #tinytable_1fcl0g516v2gbgdq0253 th.tinytable_css_zcbnvknmpbbatwtrunj1 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_1fcl0g516v2gbgdq0253 td.tinytable_css_vjpmagbjhriip88x1skz, #tinytable_1fcl0g516v2gbgdq0253 th.tinytable_css_vjpmagbjhriip88x1skz { text-align: left }
-    #tinytable_1fcl0g516v2gbgdq0253 td.tinytable_css_c5d8qol8ypnfmu0xnlkx, #tinytable_1fcl0g516v2gbgdq0253 th.tinytable_css_c5d8qol8ypnfmu0xnlkx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_b2z2anyxw9wal75bubk6 td.tinytable_css_1z1fli89swv0q5220i89, #tinytable_b2z2anyxw9wal75bubk6 th.tinytable_css_1z1fli89swv0q5220i89 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_b2z2anyxw9wal75bubk6 td.tinytable_css_0buus00uaqbusq2ucbl8, #tinytable_b2z2anyxw9wal75bubk6 th.tinytable_css_0buus00uaqbusq2ucbl8 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_b2z2anyxw9wal75bubk6 td.tinytable_css_7e6vexjmdynqj0f0wwdp, #tinytable_b2z2anyxw9wal75bubk6 th.tinytable_css_7e6vexjmdynqj0f0wwdp { text-align: center }
+    #tinytable_b2z2anyxw9wal75bubk6 td.tinytable_css_xge5evjsj5h2iate9cf0, #tinytable_b2z2anyxw9wal75bubk6 th.tinytable_css_xge5evjsj5h2iate9cf0 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_b2z2anyxw9wal75bubk6 td.tinytable_css_6vu4t2mbko23cxz4izgi, #tinytable_b2z2anyxw9wal75bubk6 th.tinytable_css_6vu4t2mbko23cxz4izgi {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_b2z2anyxw9wal75bubk6 td.tinytable_css_06mgtlunzjxfcqa3zh6q, #tinytable_b2z2anyxw9wal75bubk6 th.tinytable_css_06mgtlunzjxfcqa3zh6q {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_b2z2anyxw9wal75bubk6 td.tinytable_css_ppv93ac7mqjgq7vd0w12, #tinytable_b2z2anyxw9wal75bubk6 th.tinytable_css_ppv93ac7mqjgq7vd0w12 { text-align: left }
+    #tinytable_b2z2anyxw9wal75bubk6 td.tinytable_css_h044aplrtxta9ss81vij, #tinytable_b2z2anyxw9wal75bubk6 th.tinytable_css_h044aplrtxta9ss81vij {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_1fcl0g516v2gbgdq0253" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_b2z2anyxw9wal75bubk6" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -2312,7 +2312,7 @@ Table&nbsp;21.10: OLS regression results for the effect of institutions on econo
 <li>not correlated with the error term <span class="math inline">\(u\)</span> (instrument exogeneity).</li>
 </ul>
 <p>The primary contribution of <span class="citation" data-cites="Acemoglu2001">Acemoglu, Johnson, and Robinson (<a href="references.html#ref-Acemoglu2001" role="doc-biblioref">2001</a>)</span> lies in their use of “settler mortality rates” (<code>logem4</code>) as an instrument for institutional differences. They propose that settler mortality influenced settlement patterns, which in turn shaped early institutions. These early institutions persisted over time, ultimately forming the foundation of current institutional frameworks.</p>
-<p>To check instrument relevance, we generate a scatterplot of <code>avexpr</code> against <code>logem4</code> (log settler mortality rate). <a href="#fig-chapter21-6" class="quarto-xref">Figure&nbsp;<span>21.6</span></a> reveals a negative correlation between protection against expropriation and settler mortality rates, consistent with the authors’ hypothesis. This negative relationship indicates that higher settler mortality rates are associated with lower levels of protection against expropriation during 1985–95. The first stage <span class="math inline">\(F\)</span>-statistic is 31.5, which is greater than 10, indicating that the instrument is relevant.</p>
+<p>To check instrument relevance, we generate a scatterplot of <code>avexpr</code> against <code>logem4</code> (log settler mortality rate). <a href="#fig-chapter21-6" class="quarto-xref">Figure&nbsp;<span>21.6</span></a> reveals a negative correlation between protection against expropriation and settler mortality rates, consistent with the authors’ hypothesis. This negative relationship indicates that higher settler mortality rates are associated with lower levels of protection against expropriation during 1985–95. The first stage F-statistic is 31.5, which is greater than 10, indicating that the instrument is relevant.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset data: drop NA's</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>df1_subset2 <span class="ot">&lt;-</span> df1 <span class="sc">%&gt;%</span></span>
@@ -2404,25 +2404,25 @@ Table&nbsp;21.11: IV regression results for the effect of institutions on econom
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_bl4q88pn2gb2jc0s3uw4 = TinyTable.createTableFunctions("tinytable_bl4q88pn2gb2jc0s3uw4");
+      const tableFns_kuhnl2y7mvql2jlmn6nc = TinyTable.createTableFunctions("tinytable_kuhnl2y7mvql2jlmn6nc");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '9', j: 2 } ], css_id: 'tinytable_css_mdcj630tcamywuzjymkf',}, 
-          { positions: [ { i: '4', j: 2 } ], css_id: 'tinytable_css_nbtjj78m7wkz40v6y4oh',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 } ], css_id: 'tinytable_css_gpbdfeeoduhx5yr04suh',}, 
-          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_msf690nfw9bhin11ztco',}, 
-          { positions: [ { i: '9', j: 1 } ], css_id: 'tinytable_css_jics11b3xnfqqw1gg4ij',}, 
-          { positions: [ { i: '4', j: 1 } ], css_id: 'tinytable_css_h36az6rgv5bwaa3hjh6a',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 } ], css_id: 'tinytable_css_cb6icqyn9w95j880ndku',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_j8ipayjoe6918ekgrp7j',}, 
+          { positions: [ { i: '9', j: 2 } ], css_id: 'tinytable_css_c6gohbyc51m531wkr6gp',}, 
+          { positions: [ { i: '4', j: 2 } ], css_id: 'tinytable_css_qwenc2zwrxz1xlugexhb',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 } ], css_id: 'tinytable_css_rs7baubq79441t1g7mda',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_wzuq6r3keyhu21yzz93x',}, 
+          { positions: [ { i: '9', j: 1 } ], css_id: 'tinytable_css_jjwl7o2y1hccxin5xfq8',}, 
+          { positions: [ { i: '4', j: 1 } ], css_id: 'tinytable_css_nkjpu2pelfftbzzt4o6e',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 } ], css_id: 'tinytable_css_nbu1blu81etpcasc8mxi',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_4a5xwaw8z3jovnrcqbvx',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_bl4q88pn2gb2jc0s3uw4.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_kuhnl2y7mvql2jlmn6nc.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2431,17 +2431,17 @@ Table&nbsp;21.11: IV regression results for the effect of institutions on econom
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_bl4q88pn2gb2jc0s3uw4 td.tinytable_css_mdcj630tcamywuzjymkf, #tinytable_bl4q88pn2gb2jc0s3uw4 th.tinytable_css_mdcj630tcamywuzjymkf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_bl4q88pn2gb2jc0s3uw4 td.tinytable_css_nbtjj78m7wkz40v6y4oh, #tinytable_bl4q88pn2gb2jc0s3uw4 th.tinytable_css_nbtjj78m7wkz40v6y4oh {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_bl4q88pn2gb2jc0s3uw4 td.tinytable_css_gpbdfeeoduhx5yr04suh, #tinytable_bl4q88pn2gb2jc0s3uw4 th.tinytable_css_gpbdfeeoduhx5yr04suh { text-align: center }
-    #tinytable_bl4q88pn2gb2jc0s3uw4 td.tinytable_css_msf690nfw9bhin11ztco, #tinytable_bl4q88pn2gb2jc0s3uw4 th.tinytable_css_msf690nfw9bhin11ztco {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_bl4q88pn2gb2jc0s3uw4 td.tinytable_css_jics11b3xnfqqw1gg4ij, #tinytable_bl4q88pn2gb2jc0s3uw4 th.tinytable_css_jics11b3xnfqqw1gg4ij {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_bl4q88pn2gb2jc0s3uw4 td.tinytable_css_h36az6rgv5bwaa3hjh6a, #tinytable_bl4q88pn2gb2jc0s3uw4 th.tinytable_css_h36az6rgv5bwaa3hjh6a {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_bl4q88pn2gb2jc0s3uw4 td.tinytable_css_cb6icqyn9w95j880ndku, #tinytable_bl4q88pn2gb2jc0s3uw4 th.tinytable_css_cb6icqyn9w95j880ndku { text-align: left }
-    #tinytable_bl4q88pn2gb2jc0s3uw4 td.tinytable_css_j8ipayjoe6918ekgrp7j, #tinytable_bl4q88pn2gb2jc0s3uw4 th.tinytable_css_j8ipayjoe6918ekgrp7j {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_kuhnl2y7mvql2jlmn6nc td.tinytable_css_c6gohbyc51m531wkr6gp, #tinytable_kuhnl2y7mvql2jlmn6nc th.tinytable_css_c6gohbyc51m531wkr6gp {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_kuhnl2y7mvql2jlmn6nc td.tinytable_css_qwenc2zwrxz1xlugexhb, #tinytable_kuhnl2y7mvql2jlmn6nc th.tinytable_css_qwenc2zwrxz1xlugexhb {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_kuhnl2y7mvql2jlmn6nc td.tinytable_css_rs7baubq79441t1g7mda, #tinytable_kuhnl2y7mvql2jlmn6nc th.tinytable_css_rs7baubq79441t1g7mda { text-align: center }
+    #tinytable_kuhnl2y7mvql2jlmn6nc td.tinytable_css_wzuq6r3keyhu21yzz93x, #tinytable_kuhnl2y7mvql2jlmn6nc th.tinytable_css_wzuq6r3keyhu21yzz93x {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_kuhnl2y7mvql2jlmn6nc td.tinytable_css_jjwl7o2y1hccxin5xfq8, #tinytable_kuhnl2y7mvql2jlmn6nc th.tinytable_css_jjwl7o2y1hccxin5xfq8 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_kuhnl2y7mvql2jlmn6nc td.tinytable_css_nkjpu2pelfftbzzt4o6e, #tinytable_kuhnl2y7mvql2jlmn6nc th.tinytable_css_nkjpu2pelfftbzzt4o6e {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_kuhnl2y7mvql2jlmn6nc td.tinytable_css_nbu1blu81etpcasc8mxi, #tinytable_kuhnl2y7mvql2jlmn6nc th.tinytable_css_nbu1blu81etpcasc8mxi { text-align: left }
+    #tinytable_kuhnl2y7mvql2jlmn6nc td.tinytable_css_4a5xwaw8z3jovnrcqbvx, #tinytable_kuhnl2y7mvql2jlmn6nc th.tinytable_css_4a5xwaw8z3jovnrcqbvx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_bl4q88pn2gb2jc0s3uw4" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_kuhnl2y7mvql2jlmn6nc" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
