@@ -519,7 +519,7 @@ $${#eq-chapter21-11}
 
 where $\pi_0,\ldots,\pi_m$ and $\gamma_1,\ldots,\gamma_r$ are the unknown parameters, and $v_i$ is the error term. Then, the instruments are relevant if at least one of $\pi_1,\ldots,\pi_m$ is not zero. The instruments are said to be **weak** if all of $\pi_1,\ldots,\pi_m$ are zero or close to zero. That is, in the weak instrument case, the instruments can only explain a small portion of the variation in the endogenous variable.
 
-In practice, we can use the $F$-statistic from the first stage regression to test the instrument relevance condition. Consider the following null and alternative hypotheses:
+In practice, we can use the F-statistic from the first stage regression to test the instrument relevance condition. Consider the following null and alternative hypotheses:
 $$
 \begin{align}
 H_0&: \pi_1=\ldots=\pi_m=0,\\
@@ -529,7 +529,7 @@ $$
 
 A large F-statistic indicates that the instruments are relevant. A common rule of thumb is that the F-statistic should be greater than 10. An F-statistic smaller than 10 suggests that the instruments are weak. In such cases, the TSLS estimator is biased and does not have an asymptotic normal distribution, even when the sample size is large. 
 
-To study the large sample distribution of the TSLS estimator under the weak instrument, we consider the case where there is only one endogenous variable and one instrument. In this case, we start with the following expression (for the details, see Section 19.2.2):
+To study the large sample distribution of the TSLS estimator under the weak instrument, we consider the case where there is only one endogenous variable and one instrument. In this case, we start with the following expression for the TSLS estimator:
 $$
 \begin{align}
 &\hat{\beta}^{TSLS}_1=\beta_1+\frac{\frac{1}{n}\sum^n_{i=1}(Z_i-\bar{Z})u_i}{\frac{1}{n}\sum^n_{i=1}(Z_i-\bar{Z})(X_i-\bar{X})}\approx \beta_1+\frac{\frac{1}{n}\sum^n_{i=1}q_i}{\frac{1}{n}\sum^n_{i=1}r_i},
@@ -579,9 +579,9 @@ Under the null hypothesis that all instruments are exogeneous, the J statistic h
 ## Key Concept 21.2: Checking instrument validity
 The validity of the instrumental variables depends on two conditions: (i) instrument relevance and (ii) instrument exogeneity.
 
-* **Instrument relevance**: The instruments are relevant if at least one of the coefficients in the reduced form equation is not zero. A large $F$-statistic for testing $H_0: \pi_1=\ldots=\pi_m=0$ in @eq-chapter21-11 indicates that the instruments are relevant. A common rule of thumb is that the $F$-statistic should be greater than 10. An $F$-statistic smaller than 10 suggests that the instruments are weak. When the instruments are weak, the TSLS estimator is biased and does not have an asymptotic normal distribution, even when the sample size is large.
+* **Instrument relevance**: The instruments are relevant if at least one of the coefficients in the reduced form equation is not zero. A large F-statistic for testing $H_0: \pi_1=\ldots=\pi_m=0$ in @eq-chapter21-11 indicates that the instruments are relevant. A common rule of thumb is that the F-statistic should be greater than 10. An F-statistic smaller than 10 suggests that the instruments are weak. When the instruments are weak, the TSLS estimator is biased and does not have an asymptotic normal distribution, even when the sample size is large.
 
-* **Instrument exogeneity**: In the overidentified case, we can use the test of overidentifying restrictions (the J test) to test the instrument exogeneity condition. The J-statistic is computed as $J=m\times F$, where m is the number of instruments and F is the homoskedasticity-only $F$-statistic for testing $H_0:\delta_1=0,\ldots,\delta_m=0$ in @eq-chapter21-14. Under the null hypothesis that all instruments are exogeneous, we have $J\sim\chi^2_{m-k}$. 
+* **Instrument exogeneity**: In the overidentified case, we can use the test of overidentifying restrictions (the J test) to test the instrument exogeneity condition. The J-statistic is computed as $J=m\times F$, where m is the number of instruments and F is the homoskedasticity-only F-statistic for testing $H_0:\delta_1=0,\ldots,\delta_m=0$ in @eq-chapter21-14. Under the null hypothesis that all instruments are exogeneous, we have $J\sim\chi^2_{m-k}$. 
 :::
 
 ## Application to the demand for cigarettes
@@ -783,7 +783,7 @@ jtest_df <- data.frame(
 kable(jtest_df, align = "cc")
 ```
 
-The J-test results are presented in @tbl-chapter21-8. The $p$-value indicates that the null hypothesis of both instruments being exogenous is rejected at the 5% significance level. The rejection of the $J$-statistic suggests that at least one of the instruments is endogenous. This leads to three logical possibilities:
+The J-test results are presented in @tbl-chapter21-8. The $p$-value indicates that the null hypothesis of both instruments being exogenous is rejected at the 5% significance level. The rejection of the J-statistic suggests that at least one of the instruments is endogenous. This leads to three logical possibilities:
 
 * The sales tax is exogenous, but the cigarette-specific tax is not, making the column (1) regression reliable.
 * The cigarette-specific tax is exogenous, but the sales tax is not, making the column (2) regression reliable.
