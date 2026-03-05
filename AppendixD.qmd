@@ -1,19 +1,10 @@
 # Appendix for Chapter 29 {#sec-appendixD}
 
-```{python}
-import numpy as np
-import matplotlib.pyplot as plt
-plt.style.use('seaborn-v0_8-darkgrid')  
-from scipy.stats import multivariate_normal
-from sympy import symbols, solve
-from scipy.linalg import sqrtm
-import time
-```
-
-```{python}
-#| echo: false
-from IPython.core.interactiveshell import InteractiveShell
-InteractiveShell.ast_node_interactivity = "all"
+```{r}
+#| warning: false
+#| message: false
+# Load necessary packages
+library(expm)
 ```
 
 ## Introduction
@@ -698,13 +689,12 @@ $$
 \end{align}
 $$
 
-In Python, we can solve the equation $1-\lambda^3=0$ symbolically using the `sympy` package. The `solve` function from this package returns the roots of the equation. 
+In R, we can solve the equation $1-\lambda^3=0$ numerically using the `polyroot` function as follows: 
 
-```{python}
-# Solving 1-lambda^3=0 symbolically
-x = symbols('x')
-equation = 1-x**3
-roots = solve(equation, x)
+```{r}
+# Coefficients of 1 - x^3 = 0 -> -x^3 + 0*x^2 + 0*x + 1
+coeffs <- c(-1, 0, 0, 1)  # highest degree first: -x^3 + 0*x^2 + 0*x + 1
+roots <- polyroot(coeffs)
 roots
 ```
 
@@ -728,37 +718,38 @@ $$
 
 Let $x_3=t$, then $x_1=6t$ and $x_2=3t$, where $t\in\mathbb{R}$ and $t\ne0$. Thus, the associated eigenvector is $\bs{x}=t(6,3,1)^{'}$, where $t\ne0$. In the following code chunk, we set $t=-1$ and normalize $\bs{x}$:
 
-```{python}
-# Normalize x=t*(6,3,1)
-x = np.array([-6,-3,-1])
-norm_x = np.linalg.norm(x)
-normalized_x = x / norm_x 
+```{r}
+# Define the vector
+x <- -1*c(6, 3, 1)
+
+# Compute the Euclidean norm
+norm_x <- sqrt(sum(x^2))
+
+# Normalize the vector
+normalized_x <- x / norm_x
 normalized_x
 ```
 
-We can compute eigenvalues and normalized eigenvectors using  the `np.linalg.eig` function. Note that `e` returns the same eigenvalues that we derived analytically above. Also, `ev[:,2]` returns the same vector as `normalized_x`.
+We can compute eigenvalues and normalized eigenvectors using the `eigen` function in R. The first column of the matrix `eig$vectors` is the normalized eigenvector associated with the first eigenvalue in `eig$values`. Note that this vector is the same as the one we obtained above.
 
-```{python}
-# Compute eigenvalues and normalized eigenvectors of A
-A = np.array([[0,0,6],
-[1/2,0,0],
-[0,1/3,0]])
+```{r}
+# Define the matrix
+A <- matrix(c(
+    0, 0, 6,
+    1 / 2, 0, 0,
+    0, 1 / 3, 0
+), nrow = 3, byrow = TRUE)
 
-e,ev=np.linalg.eig(A)
-```	
+# Compute eigenvalues and eigenvectors
+eig <- eigen(A, symmetric = FALSE)
 
-```{python}
 # Eigenvalues
-e 
+eig$values
+
+# Eigenvectors (columns are eigenvectors)
+eig$vectors
 ```	
-```{python}
-# Eigenvectors
-ev
-```	
-```{python}
-# Eigenvector corresponding to eigenvalue 1
-ev[:,2] 
-```
+
 :::
 :::
 
@@ -792,6 +783,7 @@ $$
 \end{pmatrix}.
 \end{align}
 $$ 
+
 The matrix $\bs{Q}$ is orthogonal, which means that $\bs{Q}^{'}\bs{Q}=\bs{I}_n$, suggesting that $\bs{Q}^{-1}=\bs{Q}^{'}$. Thus, post-multiplying both sides of the equation $\bs{A}\bs{Q}=\bs{Q}\bs{\Lambda}$ by $\bs{Q}^{'}$ gives us the spectral decomposition of $\bs{A}$.
 
 :::{#exm-quadratic-form}
@@ -818,39 +810,25 @@ v. if $\bs{x}^{'}\bs{A}\bs{x}>0$ for some $\bs{x}\ne0$ and $\bs{y}^{'}\bs{A}\bs{
 
 If $\bs{A}$ is positive definite, then it is invertible. Any symmetric positive-definite matrix $\bs{A}$ can be written as the product of a lower triangular matrix $\bs{L}$ and its transpose $\bs{L}^{'}=\bs{U}$, i.e., $\bs{A}=\bs{LU}$. This decomposition is called the **Cholesky decomposition** of $\bs{A}$. More conveniently,  $\bs{A}^{-1}=\bs{U}^{-1}\bs{L}^{-1}$. The Cholesky decomposition provides a fast and numerically stable way to compute the inverse of a matrix. 
 
-The Cholesky decomposition can be computed using the `np.linalg.cholesky` function in Python. The inverse of a matrix can be computed using the `np.linalg.inv` function. In the following code junks, we compute the Cholesky decomposition of a symmetric positive-definite matrix $\bs{A}$ and its inverse. We also measure the computation time for the inverse of $\bs{A}$ using the Cholesky decomposition and the `np.linalg.inv` function.
+The Cholesky decomposition can be computed using the `chol` function in R. The `chol` function returns an upper triangular matrix $\bs{U}$ such that $\bs{A}=\bs{U}^{'}\bs{U}$. To obtain the lower triangular matrix $\bs{L}$, we can take the transpose of $\bs{U}$.
 
-```{python}
+```{r}
+# Define the matrix
+A <- matrix(c(
+  4, 2, 1, 0, 0,
+  2, 3, 1, 0.7, 0,
+  1, 1, 2, 0, 0.8,
+  0.3, 0.5, 1, 5, 1,
+  0, 0.1, 0, 1, 4
+), nrow = 5, byrow = TRUE)
+
 # Cholesky decomposition
-A = np.array([[4, 2, 1, 0, 0], 
-              [2, 3, 1, 0.7, 0], 
-              [1, 1, 2, 0, 0.8], 
-              [0.3, 0.5, 1, 5, 1], 
-              [0, 0.1, 0, 1, 4]])
-# Cholesky decomposition of A
-L = np.linalg.cholesky(A)
-# Inverse of A
-start_time = time.time()
-L_inv = np.linalg.inv(L)
-U_inv = L_inv.T
-A_inv = U_inv @ L_inv
-A_inv
-end_time = time.time()
-# Computation time 
-computation_time = end_time - start_time
-computation_time
-```
+U <- chol(A)  # Upper triangular matrix
+L <- t(U)  # Lower triangular matrix
 
-```{python}	
-# Measure computation time for A_inv
-start_time = time.time()
-A_inv = np.linalg.inv(A)
-# Inverse of A
-A_inv
-end_time = time.time()
-# Computation time
-computation_time = end_time - start_time
-computation_time
+# Compute the inverse using the Cholesky decomposition
+A <- L %*% U  # Reconstruct A from U
+A
 ```
 
 :::{#thm-quadratic-form}
@@ -877,6 +855,7 @@ $$
 \bs{x}^{'}\bs{A}\bs{x}=\bs{y}^{'}\bs{P}^{'}\bs{A}\bs{P}\bs{y}=\bs{y}^{'}\text{diag}(\lambda_1,\ldots,\lambda_n)\bs{y}=\sum_{i=1}^n\lambda_iy^2_i.
 \end{align}
 $${#eq-quadratic-form}
+
 It follows that $\bs{x}^{'}\bs{A}\bs{x}\geq0$ (res.$\leq0$) for all $\bs{x}$ if and only if $\bs{y}^{'}\bs{P}^{'}\bs{A}\bs{P}\bs{y}\geq0$  (res.$\leq0$) for all $\bs{y}\ne0$.
 
 Also, $\bs{x}=\bs{0}$ if and only if $\bs{y}=\bs{0}$, and so $\bs{x}^{'}\bs{A}\bs{x}>0$ (res.$<0$) for all $\bs{x}\ne\bs{0}$ if and only if $\bs{y}^{'}\bs{P}^{'}\bs{A}\bs{P}\bs{y}>0$  (res.$<0$) for all $\bs{y}\ne\bs{0}$. Then, the conclusion follows from @eq-quadratic-form immediately. 
@@ -901,30 +880,39 @@ Let $\bs{y}\ne\bs{0}$. Then, $\bs{y}^{'}\bs{X}\bs{X}^{'}\bs{y}=(\bs{X}^{'}\bs{y}
 ## Matrix square root
 Let $\bs{A}$ be an $n\times n$ positive definite matrix. Then, we can find a matrix $\bs{B}$ such that $\bs{A}=\bs{B}^{'}\bs{B}$. The matrix $\bs{B}$ is called the **matrix square root** of $\bs{A}$ and is usually denoted by $\bs{B}=\bs{A}^{1/2}$. Note that if $\bs{B}$ is symmetric, then $\bs{A}=\bs{B}^2$.  The matrix square root of a positive-definite matrix always exists, but  is not unique. For example, if $\bs{A}$ has the spectral decomposition $\bs{A}=\bs{Q}\bs{\Lambda}\bs{Q}^{'}$, then its matrix square root is given by $\bs{B}=\bs{Q}\bs{\Lambda}^{1/2}\bs{Q}^{'}$, where $\bs{\Lambda}^{1/2}$ is the diagonal matrix with the square roots of the eigenvalues of $\bs{A}$ on the diagonal. Another way to compute the matrix square root is to use the Cholesky decomposition of $\bs{A}$, which gives us $\bs{B}=\bs{L}^{'}$, where $\bs{L}$ is the lower triangular matrix such that $\bs{A}=\bs{L}\bs{L}^{'}$.
 
-In Python, the square root of a matrix can be computed using the `scipy.linalg.sqrtm` function. 
+In R, we can use the `sqrtm` function from the `expm` package to compute the matrix square root. The following code computes the matrix square root of a positive definite matrix $\bs{A}$:
 
-```{python}
-# Matrix square root
-A = np.array([[4, 2], [2, 3]])
-B = sqrtm(A)
-# B is the matrix square root of A
+```{r}
+# Define the matrix
+A <- matrix(c(
+    4, 2,
+    2, 3
+), nrow = 2, byrow = TRUE)
+
+# Compute the matrix square root
+B <- sqrtm(A)
+
+# Display the result
 B
 ```
 
-```{python}
-# Verify that B is the matrix square root of A
-np.allclose(A, B.T @ B) 
+```{r}
+# Check if B is the matrix square root of A
+all.equal(A, t(B) %*% B)
 ```
-The matrix square root $\bs{B}$ satifies the following properties: (i) $\bs{B}\bs{A}^{-1}\bs{B}^{'}=\bs{I}_n$, and (ii) $\bs{B}^{'-1}\bs{A}\bs{B}^{-1}=\bs{I}_n$. In Python, these properties can be verified as follows:
 
-```{python}
+The matrix square root $\bs{B}$ satifies the following properties: (i) $\bs{B}\bs{A}^{-1}\bs{B}^{'}=\bs{I}_n$, and (ii) $\bs{B}^{'-1}\bs{A}\bs{B}^{-1}=\bs{I}_n$. In R, these properties can be verified as follows:
+
+```{r}
 # Verify the properties of matrix square root
-B_inv = np.linalg.inv(B)
-A_inv = np.linalg.inv(A)
+B_inv <- solve(B)
+A_inv <- solve(A)
+
 # Property (i)
-np.allclose(B @ A_inv @ B.T, np.eye(A.shape[0]), atol=1e-7)
+all.equal(B %*% A_inv %*% t(B), diag(nrow(A)))
+
 # Property (ii)
-np.allclose(B_inv.T @ A @ B_inv, np.eye(A.shape[0]), atol=1e-7)
+all.equal(t(B_inv) %*% A %*% B_inv, diag(nrow(A)))
 ```
 
 :::{}
@@ -1011,32 +999,39 @@ $$
 \end{align}
 $$
 
-In Python, we can use the `np.linalg.norm()` function to compute the Frobenius and spectral norms of a matrix. The following code chunk demonstrates how to compute these norms for a given matrix $\bs{A}$.
+In R, we use the `norm` function to compute the Frobenius norm and the spectral norm of a matrix.
 
-```{python}
-# Define a matrix
-A = np.array([[3,2],[2,4]])
+```{r}
+# Define the matrix
+A <- matrix(c(3, 2,
+              2, 4), nrow = 2, byrow = TRUE)
 
-# Compute the Frobenius norm
-frobenius_norm = np.linalg.norm(A, ord='fro')  # 'fro' specifies the Frobenius norm
+# Frobenius norm using built-in function
+frobenius_norm <- norm(A, type = "F")
 
-# Alternatively, using the sum of squared elements
-frobenius_norm_manual = np.sqrt(np.sum(A**2))
+# Frobenius norm manual calculation
+frobenius_norm_manual <- sqrt(sum(A^2))
 
-print("Frobenius Norm (using np.linalg.norm):", frobenius_norm.round(2))
-print("Frobenius Norm (manual calculation):", frobenius_norm_manual.round(2))
+# Print results
+cat("Frobenius Norm (using norm()):", round(frobenius_norm, 2))
+cat("Frobenius Norm (manual calculation):", round(frobenius_norm_manual, 2))
 ```	
 
-```{python}
-# Compute the spectral norm (largest singular value)
-spectral_norm = np.linalg.norm(A, ord=2)  # 'ord=2' specifies the spectral norm
+```{r}
+# Define the matrix
+A <- matrix(c(3, 2,
+              2, 4), nrow = 2, byrow = TRUE)
 
-# Alternatively, using singular value decomposition (SVD)
-U, S, Vt = np.linalg.svd(A)
-spectral_norm_svd = S[0]  # Largest singular value
+# Spectral norm using built-in function
+spectral_norm <- norm(A, type = "2")
 
-print("Spectral Norm (using np.linalg.norm):", spectral_norm.round(2))
-print("Spectral Norm (using SVD):", spectral_norm_svd.round(2))
+# Spectral norm using singular value decomposition
+S <- svd(A)$d       # Singular values
+spectral_norm_svd <- S[1]  # Largest singular value
+
+# Print results
+cat("Spectral Norm (using norm()):", round(spectral_norm, 2))
+cat("Spectral Norm (using SVD):", round(spectral_norm_svd, 2))
 ```
 
 ## Vector Calculus
