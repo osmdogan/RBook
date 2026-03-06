@@ -1,26 +1,26 @@
 # The Theory of Linear Regression with One Regressor {#sec-chapter25}
 
-```{python}
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import scipy.stats as stats
-plt.style.use('seaborn-v0_8-darkgrid')
+```{r}
+#| warning: false
+#| message: false
+# Load necessary libraries
+library(tidyverse)
+library(reshape2)
+library(gridExtra)
 ```
 
 ## Introduction
-This chapter provides the theoretical foundation for the simple linear regression model with a single regressor. We present extended assumptions for the model and study both the asymptotic and exact sampling distributions of the OLS estimator and the $t$ statistic. 
+This chapter provides the theoretical foundation for the simple linear regression model with a single regressor. We present extended assumptions for the model and study both the asymptotic and exact sampling distributions of the OLS estimator and the t-statistic. 
 
-We first introduce the extended least squares assumptions and discuss some properties of the OLS estimator and the $t$-statistic under these assumptions. Next, we cover the basics of asymptotic distribution theory, including the law of large numbers and the central limit theorem. We then present both the asymptotic and exact sampling distributions of the OLS estimator and the $t$-statistic. Finally, we introduce the weighted least squares estimator for the case where the functional form of heteroskedasticity is known.
+We first introduce the extended least squares assumptions and discuss some properties of the OLS estimator and the t-statistic under these assumptions. Next, we cover the basics of asymptotic distribution theory, including the law of large numbers and the central limit theorem. We then present both the asymptotic and exact sampling distributions of the OLS estimator and the t-statistic. Finally, we introduce the weighted least squares estimator for the case where the functional form of heteroskedasticity is known.
 
 This chapter is supplemented by Appendix C, where we provide additional properties of some well-known distributions.
-
 
 ## The extended least squares assumptions
 The linear regression model with one regressor is
 $$
 Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i = 1, \ldots, n,
-$${#eq-eq25-1}
+$${#eq-chapter27-1}
 where $Y_i$ is the dependent variable, $X_i$ is the regressor, and $u_i$ is the error term. In @sec-lrmone, we derive the OLS estimators of $\beta_0$ and $\beta_1$ as
 $$
 \begin{align*}
@@ -30,7 +30,7 @@ $$
 $$
 where $\bar{X} = \frac{1}{n}\sum_{i=1}^n X_i$ and $\bar{Y} = \frac{1}{n}\sum_{i=1}^n Y_i$.
 
-We consider @eq-eq25-1 under the following extended assumptions.
+We consider @eq-chapter27-1 under the following extended assumptions.
 
 ::: {.callout-important icon=false}
 ## The extended least squares assumptions
@@ -41,9 +41,9 @@ We consider @eq-eq25-1 under the following extended assumptions.
 5. **Normal distribution assumption**: The conditional distribution of $u_i$ given $X_i$ is normal, i.e., $u_i|X_i\sim N(0,\sigma^2_u)$.
 :::
 
-The first three assumptions are the usual assumptions that ensure the large sample properties of the OLS estimator and the $t$-statistic. The last two assumptions are additional assumptions that are required to show further properties of the OLS estimator. In particular, the fourth assumption is required to show that the OLS estimator is the best linear unbiased estimators (BLUE). The fifth assumption is required to show the **exact** sampling distribution of the OLS estimator and the $t$-statistic. We collect these results in the following theorems.
+The first three assumptions are the usual assumptions that ensure the large sample properties of the OLS estimator and the t-statistic. The last two assumptions are additional assumptions that are required to show further properties of the OLS estimator. In particular, the fourth assumption is required to show that the OLS estimator is the best linear unbiased estimators (BLUE). The fifth assumption is required to show the **exact** sampling distribution of the OLS estimator and the t-statistic. We collect these results in the following theorems.
 
-:::{#thm-thm25-1}
+:::{#thm-chapter27-1}
 Under the first three assumptions, the OLS estimators of $\beta_0$ and $\beta_1$ are unbiased, consistent and have asymptotic normal distributions in large samples. Specifically, we have
 $$
 \begin{align*}
@@ -53,7 +53,7 @@ $$
 $$
 :::
 
-:::{#thm-thm25-2}
+:::{#thm-chapter27-2}
 ## The Gauss-Markov theorem
 Under the first four assumptions, the OLS estimators of $\beta_0$ and $\beta_1$ are the best linear unbiased estimators (BLUE). The variances of the OLS estimators simplify to
 $$
@@ -63,19 +63,19 @@ $$
 $$
 :::
 
-:::{#thm-thm25-3}
+:::{#thm-chapter27-3}
 ## Exact sampling distributions of OLS estimators
-Under all five assumptions, conditional on $\{X_i\}_i^n$, the OLS estimators have exact normal sampling distributions with variances given in @thm-thm25-2. The t-statistic for testing hypotheses about $\beta_0$ and $\beta_1$ follows the Student t-distribution with $n - 2$ degrees of freedom.
+Under all five assumptions, conditional on $\{X_i\}_i^n$, the OLS estimators have exact normal sampling distributions with variances given in @thm-chapter27-2. The t-statistic for testing hypotheses about $\beta_0$ and $\beta_1$ follows the Student t-distribution with $n - 2$ degrees of freedom.
 :::
 
-@thm-thm25-1 suggests that we can make inference about the population parameters $\beta_0$ and $\beta_1$ using t-statistics and confidence intervals when the sample size is large. In contrast, @thm-thm25-3 provides the exact sampling distributions of the OLS estimators and the t-statistic under all five assumptions. In this case, a large sample size is not required for inference.
+@thm-chapter27-1 suggests that we can make inference about the population parameters $\beta_0$ and $\beta_1$ using t-statistics and confidence intervals when the sample size is large. In contrast, @thm-chapter27-3 provides the exact sampling distributions of the OLS estimators and the t-statistics under all five assumptions. In this case, a large sample size is not required for inference.
 
 ## Introduction to asymptotic distribution theory
 We use asymptotic distribution theory to investigate the distribution of statistics, including estimators, test statistics, and confidence intervals, in large samples. For a statistic, our goal is to determine its asymptotic distribution when the sample size is large and then use this distribution as an approximation to the exact sampling distribution. Therefore, we require a sufficiently large sample size when making inference based on the asymptotic distribution.
 
 There are two important tools in asymptotic distribution theory: the law of large numbers (LLN) and the central limit theorem (CLT). In this section, we review some important probability concepts and inequalities that will help us apply these tools effectively.
 
-:::{#def-def25-1}
+:::{#def-chapter27-1}
 ## Convergence in probability   
 The sequence of random variables $\{S_n\}$  converges in probability to a random variable $S$ if for any $\epsilon>0$, we have
 $$
@@ -83,6 +83,7 @@ $$
 $$
 We denote this convergence as $S_n \stackrel{p}{\to} S$ or $\text{plim}_{n\to\infty} (S_n -S) = 0$.
 :::
+
 For any $\epsilon>0$, we have the following relations:
 $$
 \begin{align*}
@@ -97,12 +98,12 @@ $$
 
 Thus, $S_n \stackrel{p}{\to} S$ if and only if $P(|S_n - S| \geq \epsilon) \to 0$ for any $\epsilon>0$. That is, we can replace the strict inequality in the definition of convergence in probability with a weak inequality.
 
-Consider the event $A=\{|S_n-S|>\epsilon\}$ given in @def-def25-1. Its complement is $A^c=\{|S_n-S|\leq\epsilon\}$. Since $P(A^c)=1-P(A)$, we can alternatively state the definition of convergence in probability as, for any $\epsilon>0$,
+Consider the event $A=\{|S_n-S|>\epsilon\}$ given in @def-chapter27-1. Its complement is $A^c=\{|S_n-S|\leq\epsilon\}$. Since $P(A^c)=1-P(A)$, we can alternatively state the definition of convergence in probability as, for any $\epsilon>0$,
 $$
 S_n \stackrel{p}{\to} S \iff \lim_{n\to\infty}P(|S_n - S| \leq \epsilon) = 1.
 $$
 
-:::{#exm-exm25-1-plim1}
+:::{#exm-chapter27-1}
 ## Convergence in probability
 Let $X$ be a random variable that has an [exponential distribution](https://en.wikipedia.org/wiki/Exponential_distribution) with parameter $\lambda>0$. Then, its pdf and cdf are given by
 $$
@@ -135,32 +136,34 @@ $$
 as $n\to\infty$. Thus, $S_n \stackrel{p}{\to} 0$, i.e., $\text{plim}_{n\to\infty} S_n = 0$.
 :::
 
-Consider $S_n$ defined in @exm-exm25-1-plim1. In the following, we plot its pdf for different values of $n$. As $n$ increases, @fig-fig25-plim1 indicates that the pdf of $S_n$ becomes more concentrated around $0$, which is consistent with the result that $S_n \stackrel{p}{\to} 0$.
-```{python}
+Consider $S_n$ defined in @exm-chapter27-1. In the following, we plot its pdf for different values of $n$. As $n$ increases, @fig-fig27-1 indicates that the pdf of $S_n$ becomes more concentrated around $0$, which is consistent with the result that $S_n \stackrel{p}{\to} 0$.
+```{r}
 #| fig-cap: The pdf of $S_n$ for different $n$
-#| label: fig-fig25-plim1
+#| label: fig-fig27-1
+#| fig-width: 5
+#| fig-height: 4
 # Plotting the pdf of S_n ~ Exponential(n) for different n
-x = np.linspace(0, 3, 100)
-n_values = [1, 5, 8, 20]
-plt.figure(figsize=(5, 4))
-for n in n_values:
-    pdf = n * np.exp(-n * x)
-    plt.plot(x, pdf, label=f'n={n}')
-plt.xlabel('$S_n$')
-plt.ylabel('Density')
-plt.legend()
-plt.show()
+x <- seq(0, 2, length.out = 100)
+n_values <- c(1, 5, 8, 20)
+
+# Create a data frame for ggplot
+df <- expand.grid(x = x, n = n_values)
+df$y <- with(df, dexp(x, rate = n))
+
+ggplot(df, aes(x = x, y = y, color = factor(n))) +
+    geom_line(linewidth = 1) +
+    labs(x = expression(S[n]), y = "Density", color = "n")
 ```
 
 
-:::{#def-def25-2}
+:::{#def-chapter27-2}
 ## Consistent estimator
 If $S_n\xrightarrow{p}\mu$, where $\mu$ is a constant, then $S_n$ is said to be a consistent estimator of $\mu$.
 :::
 
-In @def-def25-2, the limiting variable is a constant. We call a constant variable a degenerate random variable. Thus, a consistent estimator converges in probability to a degenerate random variable.
+In @def-chapter27-2, the limiting variable is a constant. We call a constant variable a degenerate random variable. Thus, a consistent estimator converges in probability to a degenerate random variable.
 
-:::{#def-def25-2-1}
+:::{#def-chapter27-3}
 ## Degenerate random variable
 A degenerate random variable is a random variable that takes a single value with probability 1.
 :::
@@ -178,7 +181,7 @@ $$
 
 Below, we state some useful inequalities that are often used in the asymptotic distribution theory.
 
-:::{#thm-thm25-4}
+:::{#thm-chapter27-4}
 ## Jensen's inequality
 Let $g$ be a convex function, then for any random variable $X$, we have
 $$
@@ -191,7 +194,7 @@ $$
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-4
+## Proof of @thm-chapter27-4
 See @Hansen2022b.
 :::
 
@@ -202,7 +205,7 @@ Some inequalities based on Jensen's inequality are listed below.
 * The function $g(x)=\sqrt{x}$ is concave for $x>0$. Then, it follows that $\E(\sqrt{X})\leq \sqrt{\E(X)}$ for any non-negative random variable $X$.
 * The function $\log(x)$ is concave for $x>0$. Thus, it follows that $\E(\log(X))\leq \log(\E(X))$ for any random variable $X>0$.
 
-:::{#thm-thm25-5}
+:::{#thm-chapter27-5}
 ## Expectation Inequality 
 Let $X$ be a random variable, then
 $$
@@ -213,7 +216,7 @@ $$
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-5
+## Proof of @thm-chapter27-5
 The function  $g(x)=|x|$ is a convex function. Then, we can apply Jensen's inequality to $g(X)$ to get the result. Alternatively,
 let $X=X^{+}-X^{-}$, where $X^{+}=\max(X,0)$ and $X^{-}=\max(-X,0)$. Then, $|X|=X^{+}+X^{-}$. By the triangle inequality, we have
 $$
@@ -226,9 +229,7 @@ $$
 $$
 :::
 
-The expectation inequality also holds for random vectors. For example, if $\bs{X}\in\mathbb{R}^m$ is a random vector, then $\|\E(\bs{X})\|\leq\E(\|\bs{X}\|)$, where $\|\cdot\|$ can be any valid vector norm. See Appendix D for more details on vector and matrix norms.
-
-:::{#thm-thm25-6}   
+:::{#thm-chapter27-6}   
 ## Lyapunov’s Inequality
 Let $\bs{X}$ be a random variable. Then, for any $0<r\leq p$, we have
 $$
@@ -239,7 +240,7 @@ $$
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-6
+## Proof of @thm-chapter27-6
 The function defined by $g(x)=x^{p/r}$ is convex for $x>0$ and $0<r\leq p$. Let $Y=|X|^r$. Then, by Jensen's inequality, we have
 $$
 \begin{align*}
@@ -252,7 +253,7 @@ Then, taking $p$-th root on both sides yields the result.
 
 Lyapunov's inequality also holds for random vectors and matrices. For example, if $\bs{X}\in\mathbb{R}^{m\times n}$ is a random matrix, then $(\E(\|\bs{X})\|^r))^{1/r}\leq(\E(\|\bs{X}\|^p))^{1/p}$, where $\|\cdot\|$ denotes any matrix norm (@Hansen2022).
 
-:::{#thm-thm25-7}
+:::{#thm-chapter27-7}
 ## Markov's Inequality
 Let $V$ be a non-negative random variable and $\delta$ be a positive constant. Then,
 $$
@@ -263,7 +264,7 @@ $$
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-7
+## Proof of @thm-chapter27-7
 Let $f$ be the pdf of $V$. Then,
 $$
 \begin{align*}
@@ -277,7 +278,7 @@ where the second inequality follows from the fact that $v\geq\delta$ over the ra
 
 Markov's inequality also holds for random vectors and matrices. For example, if $\bs{V}\in\mathbb{R}^{m\times n}$ is a random matrix, then $P(\|\E(\bs{V})\|\geq\delta)\leq\E(\|\bs{V}\|)/\delta$, where $\|\cdot\|$ denotes a matrix norm.
 
-:::{#thm-thm25-8}
+:::{#thm-chapter27-8}
 ## Chebychev's inequality
 Let $V$ be a random variable with mean $\mu_V$ and variance $\sigma^2_V$, and $\delta$ be a positive constant. Then,
 $$
@@ -288,7 +289,7 @@ $$
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-5
+## Proof of @thm-chapter27-8
 Let $W=V-\mu_V$ and let $f$ be the pdf of $W$. Then,
 $$
 \begin{align*}
@@ -306,46 +307,57 @@ Let $A=\{|V-\mu_V|\geq\delta\}$ and $A^c=\{|V-\mu_V|<\delta\}$, where $A^c$ is t
 $$
 P(|V-\mu_V|<\delta)\geq 1-\frac{\sigma^2_V}{\delta^2}.
 $$
+
 Thus, Chebychev's inequality provides a lower bound on the probability that a random variable $V$ is within $\delta$ of its mean $\mu_V$, i.e.,
 $$
 P(\mu_V-\delta<V<\mu_V+\delta)\geq 1-\frac{\sigma^2_V}{\delta^2}.
 $$
 
-In the following code chunk, we assume that $V\sim N(0,1)$ and `delta = np. arange(1, 10)`. We calculate the Chebychev bound and the actual probability that $V$ is within $\delta$ of its mean. @fig-fig25-1 shows that the Chebychev bound is a conservative estimate of the actual probability.
+In the following code chunk, we assume that $V\sim N(0,1)$ and `delta = np. arange(1, 10)`. We calculate the Chebychev bound and the actual probability that $V$ is within $\delta$ of its mean. @fig-chapter27-2 shows that the Chebychev bound is a conservative estimate of the actual probability.
 
-```{python}
-# Illustrating the Chebychev inequality
-sigma2_V = 1
-mu_V = 0
-delta = np.arange(1, 10)
-prob = 1 - sigma2_V / (delta**2)
+```{r}
+# Illustrating the Chebyshev inequality
+sigma2_V <- 1
+mu_V <- 0
+delta <- 1:9
 
-# Actual probability
-prob_actual = stats.norm.cdf(delta, mu_V, np.sqrt(sigma2_V)) - stats.norm.cdf(-delta, mu_V, np.sqrt(sigma2_V))
+# Chebyshev bound
+prob_bound <- 1 - sigma2_V / (delta^2)
+
+# Actual probability for V ~ N(mu_V, sigma2_V)
+prob_actual <- pnorm(delta, mean = mu_V, sd = sqrt(sigma2_V)) -
+    pnorm(-delta, mean = mu_V, sd = sqrt(sigma2_V))
 ```	
 
-```{python}
+```{r}
 #| fig-cap: Chebychev's inequality
-#| label: fig-fig25-1
+#| label: fig-chapter27-2
+#| fig-width: 5
+#| fig-height: 4
 # Chebychev lower bound and actual probability
-plt.subplots(figsize=(6, 4))
-plt.plot(delta, prob, label='Chebychev bound')
-plt.plot(delta, prob_actual, label='Actual probability')
-plt.xlabel(r'$\delta$')
-plt.ylabel('Probability')
-plt.legend()
-plt.show()
+# Create data frame
+df <- data.frame(
+    delta = rep(delta, 2),
+    prob = c(prob_bound, prob_actual),
+    type = rep(c("Chebyshev bound", "Actual probability"), each = length(delta))
+)
+
+# Plot
+ggplot(df, aes(x = delta, y = prob, color = type)) +
+    geom_line(linewidth = 1) +
+    geom_point(size = 2) +
+    labs(x = expression(delta), y = "Probability", color = NULL)
 ```
 
 Using Chebychev's inequality, we can show the law of large numbers given in the following theorem.
 
-:::{#thm-thm25-9}
+:::{#thm-chapter27-9}
 ## Weak law of large numbers
 Let $\{X_i\}$ be a sequence of i.i.d. random variables with mean $\mu<\infty$ and variance $\sigma^2<\infty$. Then, the sample mean $\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i$ converges in probability to $\mu$, i.e., $\bar{X}_n\stackrel{p}{\to}\mu$.
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-9
+## Proof of @thm-chapter27-9
 Note that $\E(\bar{X}_n)=\mu$ and $\text{Var}(\bar{X}_n)=\sigma^2/n$. Then, by Chebychev's inequality, we have
 $$
 \begin{align*}
@@ -355,19 +367,19 @@ $$
 as $n\to\infty$.
 :::
 
-In @thm-thm25-9, we assume that the second moment $\E(X_i^2)$ is finite, i.e., $\sigma^2<\infty$. We note that this is not necessary for the weak law of large numbers. However, our proof based on Chebychev's inequality requires the existence of the second moment. For the sake of completeness, we also state the version without the finite second moment assumption.
+In @thm-chapter27-9, we assume that the second moment $\E(X_i^2)$ is finite, i.e., $\sigma^2<\infty$. We note that this is not necessary for the weak law of large numbers. However, our proof based on Chebychev's inequality requires the existence of the second moment. For the sake of completeness, we also state the version without the finite second moment assumption.
 
-:::{#thm-thm25-9-2}
+:::{#thm-chapter27-10}
 ## Weak law of large numbers
 Let $\{X_i\}$ be a sequence of i.i.d. random variables with mean $\mu<\infty$. Then, $\bar{X}_n\stackrel{p}{\to}\mu$.
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-9-2
+## Proof of @thm-chapter27-10
 See the proof of Theorem 7.4 in @Hansen2022b.
 :::
 
-:::{#exm-exm25-1}
+:::{#exm-chapter27-2}
 ## Law of large numbers
 Suppose $\{Y_i\}_{i=1}^n$ are i.i.d. with $Y_i\sim N(\mu_Y,\sigma^2_Y)$, where $0<\sigma^2_Y<\infty$. Consider the following estimators of $\mu_Y$:
 
@@ -402,117 +414,96 @@ $$
 as $n\to\infty$. Thus, $m_c$ is consistent. 
 :::
 
-In the following code chunk, we illustrate the law of large numbers using the estimators $m_a$, $m_b$, and $m_c$ defined in @exm-exm25-1. We set $\mu_Y = 0$, $\sigma_Y^2 = 1$, and $a = 0.5$. We consider three sample sizes: $n = 10$, $n = 100$, and $n = 1000$. For each sample size, we generate 1000 samples and compute each estimator. We then create histograms of each estimator for each sample size.
+In the following code chunk, we illustrate the law of large numbers using the estimators $m_a$, $m_b$, and $m_c$ defined in @exm-chapter27-2. We set $\mu_Y = 0$, $\sigma_Y^2 = 1$, and $a = 0.5$. We consider three sample sizes: $n = 10$, $n = 100$, and $n = 1000$. For each sample size, we generate 1000 samples and compute each estimator. We then create histograms of each estimator for each sample size.
 
-@fig-fig25-2 displays the histograms of $m_a$, $m_b$, and $m_c$ for different sample sizes. In the case of $m_a$ and $m_b$, the histograms do not concentrate around the true mean $\mu_Y = 0$ as the sample size increases. However, since the histograms are centered around the true mean, these estimators are unbiased. On the other hand, the histogram of $m_c$ becomes more concentrated around the true mean as the sample size increases, indicating that $m_c$ is a consistent estimator.
+@fig-chapter27-3 displays the histograms of $m_a$, $m_b$, and $m_c$ for different sample sizes. In the case of $m_a$ and $m_b$, the histograms do not concentrate around the true mean $\mu_Y = 0$ as the sample size increases. However, since the histograms are centered around the true mean, these estimators are unbiased. On the other hand, the histogram of $m_c$ becomes more concentrated around the true mean as the sample size increases, indicating that $m_c$ is a consistent estimator.
 
-```{python}
+```{r}
 # Illustrating the law of large numbers
-# Parameters
-mu_Y = 0
-sigma2_Y = 1
-a=0.5
+mu_Y <- 0
+sigma2_Y <- 1
+a <- 0.5
 
 # Three sample sizes
-n = [10, 100, 1000]
+n <- c(10, 100, 1000)
 
 # Number of simulations
-n_sim = 1000
+n_sim <- 1000
 
-# Estimators
-m_a = np.zeros((len(n), n_sim))
-m_b = np.zeros((len(n), n_sim))
-m_c = np.zeros((len(n), n_sim))
+# Preallocate matrices
+m_a <- matrix(0, nrow = length(n), ncol = n_sim)
+m_b <- matrix(0, nrow = length(n), ncol = n_sim)
+m_c <- matrix(0, nrow = length(n), ncol = n_sim)
 
-for i in range(len(n)):
-    for j in range(n_sim):
-        Y = np.random.normal(mu_Y, sigma2_Y, n[i])
-        m_a[i, j] = Y[0]
-        m_b[i, j] = ((1-a**n[i])/(1-a))**(-1)*np.sum(a**(np.arange(n[i]))*Y)
-        m_c[i, j] = np.mean(Y) + 1/n[i]
+# Simulations
+for (i in seq_along(n)) {
+    for (j in 1:n_sim) {
+        Y <- rnorm(n[i], mean = mu_Y, sd = sqrt(sigma2_Y))
+        m_a[i, j] <- Y[1]
+        m_b[i, j] <- sum(a^(0:(n[i] - 1)) * Y) / ((1 - a^n[i]) / (1 - a))
+        m_c[i, j] <- mean(Y) + 1 / n[i]
+    }
+}
 ```
 
-```{python}
-#| fig-cap: Illustrating the law of large numbers
-#| label: fig-fig25-2
+```{r}
+#| fig-cap: Histograms of $m_a$, $m_b$, and $m_c$ for different sample sizes
+#| label: fig-chapter27-3
 #| layout-nrow: 3
 #| fig-subcap:
 #|   - "Histograms of $m_a$ for different sample sizes"
 #|   - "Histograms of $m_b$ for different sample sizes"
 #|   - "Histograms of $m_c$ for different sample sizes"
-# Generate histograms for m_a
-fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(7, 4), sharey=True)
-axes[0].hist(m_a[0, :], bins=30, alpha=0.7, color='steelblue', edgecolor='black')
-axes[0].axvline(mu_Y, color='red', linestyle='--', label='True Mean')
-axes[0].set_xlim(-3, 3)
-axes[0].set_title("n=10")
-#axes[0].legend()
+#| warning: false
+#| messages: false
+# True mean
+mu_Y <- 0
+sample_labels <- c("n=10", "n=100", "n=1000")
 
-axes[1].hist(m_a[1, :], bins=30, alpha=0.7, color='steelblue', edgecolor='black')
-axes[1].axvline(mu_Y, color='red', linestyle='--', label='True Mean')
-axes[1].set_xlim(-3, 3)
-axes[1].set_title("n=100")
-#axes[1].legend()
+# Plot for m_a
+df_a <- melt(m_a)
+colnames(df_a) <- c("n_index", "sim", "value")
+df_a$n <- factor(df_a$n_index, labels = sample_labels)
 
-axes[2].hist(m_a[2, :], bins=30, alpha=0.7, color='steelblue', edgecolor='black')
-axes[2].axvline(mu_Y, color='red', linestyle='--', label='True Mean')
-axes[2].set_xlim(-3, 3)
-axes[2].set_title("n=1000")
-#axes[2].legend()
+p1 <- ggplot(df_a, aes(x = value)) +
+    geom_histogram(bins = 30, fill = "steelblue", color = "black", alpha = 0.7) +
+    geom_vline(xintercept = mu_Y, color = "red", linetype = "dashed") +
+    facet_wrap(~n, nrow = 1) +
+    xlim(-3, 3) +
+    labs(x = NULL, y = NULL)
 
-plt.tight_layout()
-plt.show()
+# Plot for m_b
+df_b <- melt(m_b)
+colnames(df_b) <- c("n_index", "sim", "value")
+df_b$n <- factor(df_b$n_index, labels = sample_labels)
 
-# Generate histograms for m_b
-fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(7, 4), sharey=True)
-axes[0].hist(m_b[0, :], bins=30, alpha=0.7, color='steelblue', edgecolor='black')
-axes[0].axvline(mu_Y, color='red', linestyle='--', label='True Mean')
-axes[0].set_xlim(-3, 3)
-axes[0].set_title("n=10")
-#axes[0].legend()
+p2 <- ggplot(df_b, aes(x = value)) +
+    geom_histogram(bins = 30, fill = "steelblue", color = "black", alpha = 0.7) +
+    geom_vline(xintercept = mu_Y, color = "red", linetype = "dashed") +
+    facet_wrap(~n, nrow = 1) +
+    xlim(-3, 3) +
+    labs(x = NULL, y = NULL)
 
-axes[1].hist(m_b[1, :], bins=30, alpha=0.7, color='steelblue', edgecolor='black')
-axes[1].axvline(mu_Y, color='red', linestyle='--', label='True Mean')
-axes[1].set_xlim(-3, 3)
-axes[1].set_title("n=100")
-#axes[1].legend()
+# Plot for m_c
+df_c <- melt(m_c)
+colnames(df_c) <- c("n_index", "sim", "value")
+df_c$n <- factor(df_c$n_index, labels = sample_labels)
 
-axes[2].hist(m_b[2, :], bins=30, alpha=0.7, color='steelblue', edgecolor='black')
-axes[2].axvline(mu_Y, color='red', linestyle='--', label='True Mean')
-axes[2].set_xlim(-3, 3)
-axes[2].set_title("n=1000")
-#axes[2].legend()
+p3 <- ggplot(df_c, aes(x = value)) +
+    geom_histogram(bins = 30, fill = "steelblue", color = "black", alpha = 0.7) +
+    geom_vline(xintercept = mu_Y, color = "red", linetype = "dashed") +
+    facet_wrap(~n, nrow = 1) +
+    xlim(-1, 1) +
+    labs(x = NULL, y = NULL)
 
-plt.tight_layout()
-plt.show()
-
-# Generate histograms for m_c
-fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(7, 4), sharey=True)
-axes[0].hist(m_c[0, :], bins=30, alpha=0.7, color='steelblue', edgecolor='black')
-axes[0].axvline(mu_Y, color='red', linestyle='--', label='True Mean')
-axes[0].set_xlim(-3, 3)
-axes[0].set_title("n=10")
-#axes[0].legend()
-
-axes[1].hist(m_c[1, :], bins=30, alpha=0.7, color='steelblue', edgecolor='black')
-axes[1].axvline(mu_Y, color='red', linestyle='--', label='True Mean')
-axes[1].set_xlim(-3, 3)
-axes[1].set_title("n=100")
-#axes[1].legend()
-
-axes[2].hist(m_c[2, :], bins=30, alpha=0.7, color='blue', edgecolor='black')
-axes[2].axvline(mu_Y, color='red', linestyle='--', label='True Mean')
-axes[2].set_xlim(-3, 3)
-axes[2].set_title("n=1000")
-#axes[2].legend()
-
-plt.tight_layout()
-plt.show()
+p1
+p2
+p3
 ```
 
 Another useful inequality is the Cauchy-Schwarz inequality, which can be used to bound the expectation of the product of two random variables.  
 
-:::{#thm-thm25-10}
+:::{#thm-chapter27-11}
 ## Cauchy-Schwarz Inequality
 Let $X$ and $Y$ be random variables. Then,
 $$
@@ -521,7 +512,7 @@ $$
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-10
+## Proof of @thm-chapter27-11
 Let $W=Y+bX$, where $b$ is a constant. Then,
 $$
 \E(W^2)=\E(Y^2)+2b\E(XY)+b^2\E(X^2).
@@ -544,7 +535,7 @@ $$
 $$
 where the first inequality follows from the expectation inequality. Both forms also hold for random vectors and matrices, e.g., see (B.32) in @Hansen2022.
 
-:::{#exm-exm25-2}
+:::{#exm-chapter27-3}
 ## Cauchy-Schwarz Inequality
 Let $X\sim N(0,1)$ and $Y=2X+u$, where $u\sim N(0,1)$ and is independent of $X$. Then we have
 $$
@@ -560,7 +551,7 @@ $$
 $$
 :::
 
-:::{#thm-thm25-10-0}
+:::{#thm-chapter27-12}
 ## Hölder’s Inequality
 Let $X$ and $Y$ be random variables. Then, for $1\leq p,q<\infty$ with $\frac{1}{p}+\frac{1}{q}=1$, we have
 $$
@@ -569,11 +560,11 @@ $$
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-10-0
+## Proof of @thm-chapter27-12
 See @Hansen2022b.
 :::
 
-:::{#exm-exm25-3}
+:::{#exm-chapter27-4}
 ## Hölder's Inequality
 Consider the following simple linear regression model $Y_i=\beta_0+\beta_1X_i+u_i$. Assume that $X$ and $u$ has finite fourth order moments. Then, $\E(|X_i|^3|u_i|)<\infty$. This can be seen from
 $$
@@ -585,7 +576,7 @@ $$
 where the first inequality follows from Hölder's inequality with $p=4/3$ and $q=4$.
 :::
 
-:::{#thm-thm25-10-1}
+:::{#thm-chapter27-13}
 ##  Minkowski’s Inequality
 Let $X$ and $Y$ be random variables. Then, for $1\leq p<\infty$, we have
 $$
@@ -594,11 +585,11 @@ $$
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-10-1
+## Proof of @thm-chapter27-13
 See @Hansen2022b.
 :::
 
-:::{#exm-exm25-3}
+:::{#exm-chapter27-5}
 ## Minkowski’s Inequality
 Let $Y=X\beta+u$, where $\beta$ is a scalar parameter. Then, we have
 $$
@@ -613,14 +604,9 @@ $$
 
 :::
 
-:::{#rem-rmk25-1}
-## Random vectors and matrices
-The Cauchy-Schwarz inequality, Hölder's inequality, and Minkowski's inequality also hold for random vectors and matrices. For these versions, see @Hansen2022.
-:::
-
 Next, we define convergence in distribution and the asymptotic distribution of a sequence of random variables.
 
-:::{#def-def25-3}
+:::{#def-chapter27-4}
 ## Convergence in distribution
 Let $X$ be a random variable with CDF $F$, and let $\{X_n\}$ be a sequence of random variables with CDFs $\{F_n\}$. We say that the sequence $\{X_n\}$ converges in distribution to $X$ if and only if the sequence $\{F_n\}$ converges to $F$ at all continuity points of $F$. We write this as
 $$
@@ -629,13 +615,13 @@ $$
 where $t$ is a continuity point of $F$.
 :::
 
-:::{#def-def25-4}
+:::{#def-chapter27-5}
 ## Asymptotic distribution
-The distribution $F$ in @def-def25-3 is called the asymptotic distribution of $X_n$.
+The distribution $F$ in @def-chapter27-4 is called the asymptotic distribution of $X_n$.
 :::
 
 :::{}
-:::{#exm-exm25-3}
+:::{#exm-chapter27-6}
 Let $X$ be the poisson random variable with parameter $\lambda$ and $\{X_n\}$ be a sequence of binomial random variables with parameters $n$ and $p$, i.e., $X_n\sim\text{Binomial}(n,p)$. We show that $X_n$ converges in distribution to $X$, i.e., $X_n\xrightarrow{d}X$. The cumulative distribution function of $X_n$ is given by
 $$
 F_n(t)=\sum_{k=0}^{\lfloor t\rfloor}\binom{n}{k}p^k(1-p)^{n-k},
@@ -663,39 +649,57 @@ where the last equality follows from the fact that $\lim_{n\to\infty}\left(1-\fr
 :::
 :::
 
-In the following code chunk, we illustrate the convergence in distribution between the binomial and poisson random variables. We set $\lambda = 5$ and consider three sample sizes: $n = 10$, $n = 20$, and $n = 50$. For each sample size, we then compute the cumulative distribution functions of the binomial and poisson random variables over the range $t = 0, 1, \ldots, 15$. @fig-fig25-3 shows that the cumulative distribution functions of the binomial random variables converge to the cumulative distribution function of the poisson random variable as the sample size increases.
+In the following code chunk, we illustrate the convergence in distribution between the binomial and poisson random variables. We set $\lambda = 5$ and consider three sample sizes: $n = 10$, $n = 20$, and $n = 50$. For each sample size, we then compute the cumulative distribution functions of the binomial and poisson random variables over the range $t = 0, 1, \ldots, 15$. @fig-chapter27-4 shows that the cumulative distribution functions of the binomial random variables converge to the cumulative distribution function of the poisson random variable as the sample size increases.
 
-```{python}
+
+```{r}
+#| fig-cap: Illustrating the convergence in distribution
+#| label: fig-chapter27-4
 # Illustrating the convergence in distribution
 # Parameters
-lambda_p = 5
-n_values = [10, 20, 50]
-p_values = [lambda_p / n for n in n_values]
-```	
+lambda_p <- 5
+n_values <- c(10, 20, 50)
+p_values <- lambda_p / n_values
 
-```{python}
-#| fig-cap: Illustrating the convergence in distribution
-#| label: fig-fig25-3
-# Illustrating the convergence in distribution
-plt.figure(figsize=(6, 4))
-for n, p in zip(n_values, p_values):
-    # Cumulative distribution function
-    F_n = np.array([np.sum(stats.binom.pmf(np.arange(np.floor(t) + 1), n, p)) for t in np.arange(0, 15)])
-    plt.plot(np.arange(0, 15), F_n, label=f'Binomial (n={n})')
+t_vals <- 0:14 # range of t
 
-# Poisson cumulative distribution function
-F = np.array([np.sum(stats.poisson.pmf(np.arange(np.floor(t) + 1), lambda_p)) for t in np.arange(0, 15)])
-plt.plot(np.arange(0, 15), F, label='Poisson', linestyle='--', color='black')
+# Create a data frame for binomial CDFs
+binom_df <- data.frame()
 
-plt.xlabel('t')
-plt.ylabel('Cumulative Distribution Function')
-plt.legend()
-plt.show()
+for (i in seq_along(n_values)) {
+    n <- n_values[i]
+    p <- p_values[i]
+
+    F_n <- sapply(t_vals, function(t) sum(dbinom(0:floor(t), size = n, prob = p)))
+    binom_df <- rbind(binom_df, data.frame(
+        t = t_vals,
+        CDF = F_n,
+        Distribution = paste0("Binomial (n=", n, ")")
+    ))
+}
+
+# Poisson CDF
+F_pois <- sapply(t_vals, function(t) sum(dpois(0:floor(t), lambda = lambda_p)))
+pois_df <- data.frame(
+    t = t_vals,
+    CDF = F_pois,
+    Distribution = "Poisson"
+)
+
+# Combine data
+cdf_df <- rbind(binom_df, pois_df)
+
+# Plot
+ggplot(cdf_df, aes(x = t, y = CDF, color = Distribution, linetype = Distribution)) +
+    geom_line(linewidth = 1) +
+    scale_color_manual(values = c("blue", "green", "red", "black")) +
+    scale_linetype_manual(values = c("solid", "solid", "solid", "dashed")) +
+    labs(x = "t", y = "Cumulative Distribution Function")
 ```
 
 The following theorem presents the central limit theorem, which provides the asymptotic distribution of the sample mean of i.i.d. random variables.
 
-:::{#thm-thm25-10-clt}
+:::{#thm-chapter27-14}
 ## The central limit theorem
 If $\{Y_i\}_{i=1}^n$ are i.i.d with mean $\E(Y_i)=\mu_Y$ and variance $0<\sigma^2_Y<\infty$, then the asymptotic distribution of $(\bar{Y}-\mu_{\bar{Y}})/\sigma_{\bar{Y}}=\sqrt{n}(\bar{Y}-\mu_Y)/\sigma_Y$ is $N(0,1)$. We write this as
 
@@ -705,7 +709,7 @@ $$
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-10-clt
+## Proof of @thm-chapter27-14
 See @sec-appendixC.
 :::
 
@@ -715,7 +719,7 @@ $$
 \bar{Y}\sim N(\mu_Y,\sigma^2_Y/n).
 $$
 
-:::{#exm-exm25-4}
+:::{#exm-chapter27-7}
 ## Central limit theorem
 Let $Y_i\sim U(0,1)$ be i.i.d. random variables. Then, $\E(Y_i)=1/2$ and $\text{Var}(Y_i)=1/12$. The sample mean $\bar{Y}=\sum_{i=1}^nY_i/n$ has mean $\mu_{\bar{Y}}=1/2$ and variance $\sigma^2_{\bar{Y}}=1/(12n)$. Therefore, the asymptotic distribution of $(\bar{Y}-1/2)/\sqrt{1/12n}=\sqrt{12n}(\bar{Y}-1/2)$ is $N(0,1)$. We can write this as
 $$
@@ -724,39 +728,46 @@ $$
 which suggests that $\bar{Y}\sim N(1/2,1/12n)$ when $n$ is large.
 :::
 
-In the following code chunk, we illustrate the central limit theorem using the uniform random variables defined in @exm-exm25-4. We set $n = 10, 50, 100, 500, 1000, 5000$ and generate 1000 samples for each sample size. We then compute the sample mean $\bar{Y}$ and plot the histograms of $\sqrt{12n}(\bar{Y}-1/2)$ for each sample size. @fig-fig25-4 shows the histograms of $\sqrt{12n}(\bar{Y}-1/2)$ along with the standard normal density plot. As the sample size increases, the deviations between the histograms and the standard normal density plot decrease, indicating that the sample mean converges to the standard normal distribution as the sample size grows.
+In the following code chunk, we illustrate the central limit theorem using the uniform random variables defined in @exm-chapter27-7. We set $n = 10, 50, 100, 500, 1000, 5000$ and generate 1000 samples for each sample size. We then compute the sample mean $\bar{Y}$ and plot the histograms of $\sqrt{12n}(\bar{Y}-1/2)$ for each sample size. @fig-chapter27-5 shows the histograms of $\sqrt{12n}(\bar{Y}-1/2)$ along with the standard normal density plot. As the sample size increases, the deviations between the histograms and the standard normal density plot decrease, indicating that the sample mean converges to the standard normal distribution as the sample size grows.
 
-```{python}
-# Illustrating the central limit theorem
-# Parameters
-n_values = [10, 50, 100, 500, 1000, 5000]
-```
 
-```{python}
+```{r}
 #| fig-cap: Illustrating the central limit theorem
-#| label: fig-fig25-4
-#| layout-nrow: 3
-# Illustrating the central limit theorem
-fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(10, 6), sharey=True)
+#| label: fig-chapter27-5
+#| fig-width: 10
+#| fig-height: 10
+#| warning: false
+#| messages: false
+# Illustrating the Central Limit Theorem
+set.seed(123)
 
-np.random.seed(123)
-x = np.linspace(-4, 4, 1000)
-normal_density = stats.norm.pdf(x, 0, 1)
+# Parameters
+n_values <- c(10, 50, 100, 500, 1000, 5000)
+x <- seq(-4, 4, length.out = 1000)
+normal_density <- dnorm(x, mean = 0, sd = 1)
 
-for i, n in enumerate(n_values):
-    row, col = divmod(i, 3)
-    Y = np.random.uniform(0, 1, (n, 1000))
-    Y_bar = np.mean(Y, axis=0)
-    axes[row, col].hist(np.sqrt(12*n)*(Y_bar-1/2), bins=30, alpha=0.7, color='steelblue', edgecolor='black', density=True)
-    axes[row, col].plot(x, normal_density, color='black', label='N(0,1) Density')
-    axes[row, col].set_xlim(-4, 4)
-    axes[row, col].set_title(f"n={n}")
+# Function to create a histogram for a given n
+clt_hist <- function(n) {
+    Y <- matrix(runif(n * 1000, min = 0, max = 1), nrow = n, ncol = 1000)
+    Y_bar <- colMeans(Y)
+    scaled <- sqrt(12 * n) * (Y_bar - 0.5)
+    df <- data.frame(scaled = scaled)
 
-plt.tight_layout()
-plt.show()
+    ggplot(df, aes(x = scaled)) +
+        geom_histogram(aes(y = after_stat(density)), bins = 30, fill = "steelblue", color = "black", alpha = 0.7) +
+        geom_line(aes(x = x, y = normal_density), color = "black", data = data.frame(x = x, normal_density = normal_density)) +
+        xlim(-4, 4) +
+        ggtitle(paste("n =", n))
+}
+
+# Create list of plots
+plots <- lapply(n_values, clt_hist)
+
+# Arrange plots in a 2x3 grid
+grid.arrange(grobs = plots, nrow = 2, ncol = 3)
 ```
 
-:::{#exm-exm25-4-1}
+:::{#exm-chapter27-8}
 Suppose that, at a large public university, the time required for economics majors to complete their graduation thesis follows the [exponential distribution](https://en.wikipedia.org/wiki/Exponential_distribution) with mean 6 months. Given a random sample of 100 students, the university wants to determine the probability that more than 40 students take longer than 6 months to finish their thesis.
 
 Let $X_i$ denote the time required for the $i$th student to complete the graduation thesis. Then, $X_i\sim \text{Exponential}(\lambda)$, where $\lambda=1/6$. The PDF and CDF of $X_i$ are given by
@@ -803,16 +814,19 @@ P(S_n>40)&=P\left(\frac{S_n-np}{\sqrt{np(1-p)}}>\frac{40-np}{\sqrt{np(1-p)}}\rig
 $$
 where $Z\sim N(0,1)$. The last step can be computed using the following code:
 
-```{python}
-np.round(1 - stats.norm.cdf(0.6661), 4)
+```{r}
+# Compute 1 - P(Z <= 0.6661) for Z ~ N(0,1)
+round(1 - pnorm(0.6661), 4)
 ```
 The result indicates that there is approximately a 25.27% chance that more than 40 students will take longer than 6 months to complete their thesis.
 
 Since $P(S_n>40)=1-P(S_n\leq 40)$, we can also compute the exact probability as follows:
 
-```{python}
-np.round(1 - stats.binom.cdf(40, 100, np.exp(-1)), 4)
+```{r}
+# Compute 1 - P(X <= 40) for X ~ Binomial(n=100, p=exp(-1))
+round(1 - pbinom(40, size = 100, prob = exp(-1)), 4)
 ```
+
 The exact probability is approximately 0.2197, which is close to the approximation of 0.2527 obtained using the central limit theorem.
 
 :::
@@ -820,7 +834,7 @@ The exact probability is approximately 0.2197, which is close to the approximati
 
 We now state an important result called Slutsky's theorem. This theorem provides the limiting distributions of sums, products, and quotients of random variables.
 
-:::{#thm-thm25-11}
+:::{#thm-chapter27-15}
 ## Slutsky's theorem
 Let $\{X_n\}$ and $\{Y_n\}$ be two sequences of random variables sucht that $X_n\xrightarrow{d}X$ and $Y_n\xrightarrow{p}a$, where $a$ is a constant and $X$ is a random variable. Then,
 
@@ -830,13 +844,13 @@ Let $\{X_n\}$ and $\{Y_n\}$ be two sequences of random variables sucht that $X_n
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-11
+## Proof of @thm-chapter27-15
 See @sec-appendixC.
 :::
 
 The following theorem provides the continuous mapping theorem, which is useful for finding the probability limit and the asymptotic distribution of functions of random variables.
 
-:::{#thm-thm25-12}
+:::{#thm-chapter27-16}
 ## Continuous mapping theorem
 Let $\{X_n\}$ denote a sequence of random variables, and let $g:\mathbb{R}\to\mathbb{R}$ be a continuous function. Then,
 
@@ -845,34 +859,34 @@ Let $\{X_n\}$ denote a sequence of random variables, and let $g:\mathbb{R}\to\ma
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-12
+## Proof of @thm-chapter27-16
 See Theorem 2.3 in @Vaart1998.
 :::
 
-:::{#exm-exm25-5}
+:::{#exm-chapter27-9}
 Let $g(x)=\sqrt{x}$. If $s^2_Y\xrightarrow{p}\sigma^2_Y$, where $s^2_Y$ is the sample variance, then
 $$
 g(s^2_Y)=s_Y\xrightarrow{p}g(\sigma^2_Y)=\sigma_Y,
 $$
-by the first part of @thm-thm25-12. In other words, the sample standard deviation is a consistent estimator of the population standard deviation.
+by the first part of @thm-chapter27-16. In other words, the sample standard deviation is a consistent estimator of the population standard deviation.
 :::
 
-:::{#exm-exm25-6}
-Let $g(x)=x^2$. If $S_n\xrightarrow{d}Z$, where $Z\sim N(0,1)$, then we have $g(S_n)\xrightarrow{d}g(Z)$ by the second part of @thm-thm25-12. Thus, 
+:::{#exm-chapter27-10}
+Let $g(x)=x^2$. If $S_n\xrightarrow{d}Z$, where $Z\sim N(0,1)$, then we have $g(S_n)\xrightarrow{d}g(Z)$ by the second part of @thm-chapter27-16. Thus, 
 $$
 S^2_n\xrightarrow{d}Z^2.
 $$
 In other words, the distribution of $S^2_n$ converges to the distribution of a squared standard normal random variable, which in turn has a $\chi^2_1$ distribution; that is, $S^2_n\xrightarrow{d}\chi^2_1$.
 :::
 
-:::{#exm-exm25-7}
-Consider t-statistic for testing $H_0:\E(Y_i)=\mu_0$ based on $\bar{Y}$. Then, by @exm-exm25-4 and @thm-thm25-11, we have
+:::{#exm-chapter27-11}
+Consider t-statistic for testing $H_0:\E(Y_i)=\mu_0$ based on $\bar{Y}$. Then, by @exm-chapter27-8 and @thm-chapter27-15, we have
 $$
 t=\frac{\bar{Y}-\mu_0}{s_Y/\sqrt{n}}=\frac{\sqrt{n}(\bar{Y}-\mu_0)}{\sigma_Y}\div\frac{s_Y}{\sigma_Y}\xrightarrow{d}N(0,1).
 $$
 :::
 
-:::{#exm-exm25-8}
+:::{#exm-chapter27-12}
 Suppose that $\{X_i,Y_i\}$ is a sequence of i.i.d. random variables with finite fourth moments. We want to show that $s_{XY}\xrightarrow{p}\sigma_{XY}$, where $s_{XY}$ is the sample covariance and $\sigma_{XY}$ is the population covariance.
 
 Note that
@@ -908,25 +922,25 @@ results on the two terms for $s_{XY}$, we obtain $s_{XY}\xrightarrow{p}\sigma_{X
 
 The following result shows that convergence in probability implies convergence in distribution.
 
-:::{#thm-thm25-12-1}
+:::{#thm-chapter27-17}
 ## Convergence in probability implies convergence in distribution
 If $X_n\xrightarrow{p}X$, then $X_n\xrightarrow{d}X$.
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-12-1
+## Proof of @thm-chapter27-17
 See Theorem 2.7 in @Vaart1998.
 :::
 
 The reverse of this result is not true in general. However, if $X$ is a degenerate random variable, then the reverse is true as shown in the following theorem.
 
-:::{#thm-thm25-12-2}
+:::{#thm-chapter27-18}
 ## Convergence in distribution to a constant
 If $X_n\xrightarrow{d}c$, where $c$ is a constant, then $X_n\xrightarrow{p}c$.
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-12-2
+## Proof of @thm-chapter27-18
 Fix $\epsilon>0$. Then, we can split the event $\{|X_n-c|>\epsilon\}$ into two disjoint events: $\{X_n>c+\epsilon\}$ and $\{X_n<c-\epsilon\}$. Thus, we have
 $$
 \begin{align*}
@@ -963,10 +977,8 @@ which shows that $X_n\xrightarrow{p}c$.
 :::
 
 
-
-
 ## Asymptotic distribution of the OLS estimator
-In this section, we show how to derive the asymptotic distribution of $\widehat{\beta}_1$ and $\widehat{\beta}_0$ as shown in @thm-thm25-1. From $Y_i=\beta_0+\beta_1X_i+u_i$ and $\bar{Y}=\beta_0+\beta_1\bar{X}+\bar{u}$, we obtain
+In this section, we show how to derive the asymptotic distribution of $\widehat{\beta}_1$ and $\widehat{\beta}_0$ as shown in @thm-chapter27-1. From $Y_i=\beta_0+\beta_1X_i+u_i$ and $\bar{Y}=\beta_0+\beta_1\bar{X}+\bar{u}$, we obtain
 $$
 \begin{align}
 Y_i-\bar{Y}=\beta_1(X_i-\bar{X})+(u_i-\bar{u}).
@@ -992,9 +1004,9 @@ $$
 \begin{align}
 &\sqrt{n}\left(\widehat{\beta}_1-\beta_1\right)=\frac{\frac{1}{\sqrt{n}}\sum_{i=1}^nv_i}{\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2}-\frac{\left(\bar{X}-\mu_X\right)\frac{1}{\sqrt{n}}\sum_{i=1}^nu_i}{\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2}.
 \end{align}
-$${#eq-eq25-2}
+$${#eq-chapter27-2}
 
-We first show that the second term in @eq-eq25-2 converges in probability to zero:
+We first show that the second term in @eq-chapter27-2 converges in probability to zero:
 
 1. $\{u_i\}$ are i.i.d. with mean $\mu_u=0$ and variance  $\sigma^2_u$. Thus, by the central limit theorem, we have
 $$
@@ -1013,7 +1025,7 @@ $$
 \frac{\left(\bar{X}-\mu_X\right)\frac{1}{\sqrt{n}}\sum_{i=1}^nu_i}{\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2}\xrightarrow{p}0.
 $$
 
-Next, we consider the first term in @eq-eq25-2.  We will show that 
+Next, we consider the first term in @eq-chapter27-2.  We will show that 
 
 1. $\frac{1}{n}\sum_{i=1}^n(X_i - \bar{X})^2\xrightarrow{p}\sigma^2_X$,
 2. $\frac{1}{\sqrt{n}}\sum_{i=1}^nv_i$ satisfies the central limit theorem conditions: (i) $\{v_i\}$ are i.i.d., and (ii) $\text{var}(v_i)<\infty$.
@@ -1034,7 +1046,7 @@ $$
 \begin{align}
 \sqrt{n}\left(\widehat{\beta}_1-\beta_1\right)\xrightarrow{d}N\left(0,\text{var}(v_i)/(\sigma^2_X)^2\right).
 \end{align}
-$${#eq-eq25-3}
+$${#eq-chapter27-3}
 
 Asymptotic distribution of $\widehat{\beta}_0$ can be obtained by following the similar steps. Below, we will provide the main points and avoid some of the details. Recall that $\widehat{\beta}_0 = \bar{Y} - \widehat{\beta}_1 \bar{X}$ and
 $$
@@ -1104,7 +1116,7 @@ $$
 \end{align}
 $$
 
-:::{#thm-thm25-var}
+:::{#thm-chapter27-19}
 ## Consistent estimators of the asymptotic variances
 Under Assumptions 1-3, the estimators $\hat{\sigma}^2_{\hat{\beta}_1}$ and $\hat{\sigma}^2_{\hat{\beta}_0}$ are consistent for the asymptotic variances $\sigma^2_{\hat{\beta}_1}$ and $\sigma^2_{\hat{\beta}_0}$, respectively. That is,
 $$
@@ -1113,15 +1125,15 @@ $$
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-var
+## Proof of @thm-chapter27-19
 We show that $\frac{\hat{\sigma}^2_{\hat{\beta}_1}}{\sigma^2_{\hat{\beta}_1}}\xrightarrow{p}1$. We can express $\frac{\hat{\sigma}^2_{\hat{\beta}_1}}{\sigma^2_{\hat{\beta}_1}}$ as
 
 $$
 \begin{align}
 \frac{\hat{\sigma}^2_{\hat{\beta}_1}}{\sigma^2_{\hat{\beta}_1}}=\left(\frac{n}{n-2}\right)\left(\frac{\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i}{\text{var}(v_i)}\right)\div\left(\frac{\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2}{\sigma^2_X}\right)^2,
 \end{align}
-$${#eq-eq25-4}
-where $\text{var}(v_i)=\E\left((X_i-\mu_X)^2u^2_i\right)$. The second term in @eq-eq25-4 convergences in probability to one by the consistency of the sample variance. Since $n/(n-2)\to1$ as $n\to\infty$, it will be enough to show that $\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i\xrightarrow{p}\text{var}(v_i)$. The proof of $\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i\xrightarrow{p}\text{var}(v_i)$ proceeds in two steps:
+$${#eq-chapter27-4}
+where $\text{var}(v_i)=\E\left((X_i-\mu_X)^2u^2_i\right)$. The second term in @eq-chapter27-4 convergences in probability to one by the consistency of the sample variance. Since $n/(n-2)\to1$ as $n\to\infty$, it will be enough to show that $\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i\xrightarrow{p}\text{var}(v_i)$. The proof of $\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i\xrightarrow{p}\text{var}(v_i)$ proceeds in two steps:
 
 1. $\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)^2u^2_i\xrightarrow{p}\text{var}(v_i)$, and 
 2. $\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2\hat{u}^2_i-\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)^2u^2_i\xrightarrow{p}0$.
@@ -1144,7 +1156,7 @@ $$
 &=(\bar{X}-\mu_X)^2\frac{1}{n}\sum_{i=1}^n\hat{u}^2_i-2(\bar{X}-\mu_X)\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)\hat{u}^2_i\\
 &+\frac{1}{n}\sum_{i=1}^n(X_i-\mu_X)^2(\hat{u}^2_i-u^2_i).
 \end{align}
-$${#eq-eq25-5}
+$${#eq-chapter27-5}
 
 We use $\hat{u}_i=u_i-(\hat{\beta}_0-\beta_0)-(\hat{\beta}_1-\beta_1)X_i$ to express $\hat{u}^2_i$ as
 $$
@@ -1153,7 +1165,8 @@ $$
 &-2u_i(\hat{\beta}_1-\beta_1)X_i+2(\hat{\beta}_0-\beta_0)(\hat{\beta}_1-\beta_1)X_i.
 \end{align*}
 $$
-Substituting this into @eq-eq25-5 yields a series of terms. We provide convergence arguments for some exemplary terms. For example, we consider two terms from $(\bar{X}-\mu_X)^2\frac{1}{n}\sum_{i=1}^n\hat{u}^2_i$. For the first term, we have
+
+Substituting this into @eq-chapter27-5 yields a series of terms. We provide convergence arguments for some exemplary terms. For example, we consider two terms from $(\bar{X}-\mu_X)^2\frac{1}{n}\sum_{i=1}^n\hat{u}^2_i$. For the first term, we have
 $$
 (\bar{X}-\mu_X)^2\frac{1}{n}\sum_{i=1}^nu^2_i\xrightarrow{p}0,
 $$
@@ -1175,7 +1188,7 @@ $$
 
 In the next theorem, we provide the asymptotic distribution of the $t$-statistic.
 
-:::{#thm-thm25-t}
+:::{#thm-chapter27-20}
 ## Asymptotic distribution of the t-statistic
 Assume that Assumptions 1-3 hold. Then, under $H_0$, we have
 $$
@@ -1184,7 +1197,7 @@ $$
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-t
+## Proof of @thm-chapter27-20
 Note that we can express $t$-statistic as
 $$
 \begin{align}
@@ -1192,11 +1205,11 @@ t=\frac{\hat{\beta}_1-c}{\hat{\sigma}_{\hat{\beta}_1}}=\frac{\sqrt{n}(\hat{\beta
 \end{align}
 $$
 
-We show that $\sqrt{\frac{\hat{\sigma}^2_{\hat{\beta}_1}}{\sigma^2_{\hat{\beta}_1}}}\xrightarrow{p}1$ in @thm-thm25-var. Also, if $H_0$ holds, then it follows from @thm-thm25-1 that $\frac{\sqrt{n}(\hat{\beta}_1-c)}{\sqrt{n\sigma^2_{\hat{\beta}_1}}}\xrightarrow{d}N(0,1)$. Then, it follows from Slutsky's theorem that $t\xrightarrow{d}N(0,1)$.
+We show that $\sqrt{\frac{\hat{\sigma}^2_{\hat{\beta}_1}}{\sigma^2_{\hat{\beta}_1}}}\xrightarrow{p}1$ in @thm-chapter27-19. Also, if $H_0$ holds, then it follows from @thm-chapter27-1 that $\frac{\sqrt{n}(\hat{\beta}_1-c)}{\sqrt{n\sigma^2_{\hat{\beta}_1}}}\xrightarrow{d}N(0,1)$. Then, it follows from Slutsky's theorem that $t\xrightarrow{d}N(0,1)$.
 :::
 
 ## The Gauss-Markov theorem
-The Gauss-Markov theorem in @thm-thm25-2 states that the OLS estimators are the best linear unbiased estimators (BLUE) under the first four assumptions. We prove this claim in @sec-chapter26 using matrix algebra. In this section, we show how the variances of the OLS estimators simplify. 
+The Gauss-Markov theorem in @thm-chapter27-2 states that the OLS estimators are the best linear unbiased estimators (BLUE) under the first four assumptions. We prove this claim in @sec-chapter26 using matrix algebra. In this section, we show how the variances of the OLS estimators simplify. 
 
 Under the fourth assumption, the numerator of $\sigma^2_{\widehat{\beta}_1}$ can be written as
 $$
@@ -1224,7 +1237,7 @@ $$
 $$
 
 ## Exact sampling distribution of the OLS estimator
-In @thm-thm25-3, we claim that the OLS estimator has an exact conditional normal sampling distribution, and the homoskedasticity-only t-statistic has an exact Student t distribution. In this section, we will provide the proof of this results. 
+In @thm-chapter27-3, we claim that the OLS estimator has an exact conditional normal sampling distribution, and the homoskedasticity-only t-statistic has an exact Student t distribution. In this section, we will provide the proof of this results. 
 
 We start with the following expression for $(\widehat{\beta}_1-\beta_1)$:
 $$
@@ -1262,12 +1275,12 @@ t&=\frac{\hat{\beta}_1-c}{\sqrt{\widehat{\text{var}}(\hat{\beta}_1|X_1,\ldots,X_
 \end{align}
 $$
 
-:::{#thm-thm25-t2}
+:::{#thm-chapter27-21}
 Assume that all five assumptions hold. Then, under $H_0$, the homoskedasticity-only $t$-statistic has the Student t distribution with $n-2$ degrees of freedom.
 :::
 
 :::{.proof}
-## Proof of @thm-thm25-t2
+## Proof of @thm-chapter27-21
 We can express the $t$-statistic as
 $$
 \begin{align}
@@ -1280,24 +1293,24 @@ where $W=\sum_{i=1}^n\hat{u}^2_i/\sigma^2_u$. Under $H_0$, we have $\frac{\hat{\
 
 ## Weighted least squares
 
-The Gauss-Markov theorem stated in @thm-thm25-2 requires that the errors are homoskedastic. If the errors are heteroskedastic, then the OLS estimator is no longer the most efficient estimator. In this section, we will discuss the weighted least squares (WLS) estimator, which is can be efficient under heteroskedasticity.
+The Gauss-Markov theorem stated in @thm-chapter27-2 requires that the errors are homoskedastic. If the errors are heteroskedastic, then the OLS estimator is no longer the most efficient estimator. In this section, we will discuss the weighted least squares (WLS) estimator, which is can be efficient under heteroskedasticity.
 
 ### WLS with known heteroskedasticity
 We assume that the conditional variance of the errors is known up to a factor of proportionality. In other words, we assume that $\text{var}(u_i|X_i)=\lambda h(X_i)$ for $i=1,\ldots,n$, where $\lambda$ is a constant and $h(X_i)$ is known. Under this assumption, we can express our linear regression model with one explanatory variable as
 $$
 \tilde{Y}_i=\beta_0\tilde{X}_{0i}+\beta_1\tilde{X}_{1i}+\tilde{u}_i,
-$${#eq-eq25-8}
+$${#eq-chapter27-6}
 where $\tilde{Y}_i=Y_i/\sqrt{h(X_i)}$, $\tilde{X}_{0i}=1/\sqrt{h(X_i)}$, $\tilde{X}_{1i}=X_i/\sqrt{h(X_i)}$, and $\tilde{u}_i=u_i/\sqrt{h(X_i)}$. Note that the conditional variance of $\tilde{u}_i$ is given by
 $$
 \text{var}(\tilde{u}_i|\tilde{X}_{0i},\tilde{X}_{1i})=\frac{\text{var}(u_i|X_i)}{h(X_i)}=\lambda,
 $$
-suggesting that $\tilde{u}_i$'s are homoskedastic. The model in @eq-eq25-8 is a linear regression model with homoskedastic errors, and we can apply the OLS estimator to this model. The WLS estimator of $\beta_1$ is is the OLS estimator of $\beta_1$ based on the transformed model. Under the first three assumptions of the linear regression model and $\text{var}(u_i|X_i)=\lambda h(X_i)$, the Gauss-Markov theorem ensures that the WLS estimator is BLUE.
+suggesting that $\tilde{u}_i$'s are homoskedastic. The model in @eq-chapter27-6 is a linear regression model with homoskedastic errors, and we can apply the OLS estimator to this model. The WLS estimator of $\beta_1$ is is the OLS estimator of $\beta_1$ based on the transformed model. Under the first three assumptions of the linear regression model and $\text{var}(u_i|X_i)=\lambda h(X_i)$, the Gauss-Markov theorem ensures that the WLS estimator is BLUE.
 
 ### WLS with a known functional form for heteroskedasticity
-In practice, we do not know the functional form of $h(X_i)$, therefore the WLS approach based on @eq-eq25-8 is not feasible. However, if we know the functional form of $h(X_i)$, we can use the WLS estimator based on the transformed model. For example, if we know that 
+In practice, we do not know the functional form of $h(X_i)$, therefore the WLS approach based on @eq-chapter27-6 is not feasible. However, if we know the functional form of $h(X_i)$, we can use the WLS estimator based on the transformed model. For example, if we know that 
 $$
 \text{var}(u_i|X_i)=\lambda h(X_i)=\lambda_0+\lambda_1X^2_i,
-$${#eq-eq25-9}
+$${#eq-chapter27-7}
 where $\lambda_0>0$, and $\lambda_1\geq0$ are unknown parameters. Then, if we know the values of $\lambda_0$ and $\lambda_1$, we can use the WLS estimator based on the transformed model as in the previous section. 
 
 If we do not know the values of $\lambda_0$ and $\lambda_1$, we can estimate them using the OLS estimator. Thus, the WLS estimation becomes feasible. The WLS estimator can be computed by the following steps:
@@ -1305,7 +1318,7 @@ If we do not know the values of $\lambda_0$ and $\lambda_1$, we can estimate the
 1. Estimate the OLS model using the original data to obtain $\hat{\beta}_0$ and $\hat{\beta}_1$.
 2. Compute the residuals $\hat{u}_i=Y_i-\hat{\beta}_0-\hat{\beta}_1X_i$.
 3. Regress $\hat{u}^2_i$ on $X^2_i$ to obtain the predicted values of the conditional variance $\widehat{\text{var}}(u_i|X_i)=\hat{\lambda}_0+\hat{\lambda}_1X^2_i$.
-4. Formulate the model in @eq-eq25-8 with $\tilde{Y}_i=Y_i/\sqrt{\widehat{\text{var}}(u_i|X_i)}$, $\tilde{X}_{0i}=1/\sqrt{\widehat{\text{var}}(u_i|X_i)}$, and $\tilde{X}_{1i}=X_i/\sqrt{\widehat{\text{var}}(u_i|X_i)}$.
+4. Formulate the model in @eq-chapter27-6 with $\tilde{Y}_i=Y_i/\sqrt{\widehat{\text{var}}(u_i|X_i)}$, $\tilde{X}_{0i}=1/\sqrt{\widehat{\text{var}}(u_i|X_i)}$, and $\tilde{X}_{1i}=X_i/\sqrt{\widehat{\text{var}}(u_i|X_i)}$.
 5. Estimate the transformed model using the OLS estimator to obtain the WLS estimator of $\beta_1$.
 
 The WLS estimator computed in this way is usually called the feasible WLS estimator. The advantage of the feasible WLS estimator is that it is asymptotically efficient if the functional form of the conditional variance is correctly specified. The disadvantage is that it produces invalid inference if the functional form is misspecified. Since, in practice, the functional form is mostly unknown, @Stock2020 concludes that "it is our opinion that, despite the theoretical appeal of WLS, heteroskedasticity-robust standard errors provide a better way to handle potential heteroskedasticity in most applications."
