@@ -18,7 +18,7 @@ $$
 \begin{align}
 Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i=1,\dots,n,
 \end{align}
-$$ {#eq-eq11-1}
+$$ {#eq-chapter13-1}
 where 
 
 * $Y_i$ is the outcome (or dependent) variable, 
@@ -26,7 +26,7 @@ where
 *  $\beta_0$ and $\beta_1$ are the coefficients (or parameters) of the model, and
 * $u_i$ is the error (or disturbance) term.
 
-In @eq-eq11-1, under the assumption that $\E(u_i|X_i)=0$, the conditional mean $\E(Y_i|X_i)$ is a linear function of $X_i$, i.e., $\E(Y_i|X_i)=\beta_0 + \beta_1 X_i$. This conditional mean equation is called the **population regression line** or the **population regression function** and shows the average value of $Y_i$ for a given $X_i$. Thus, in the linear regression model,  the error term $u_i$ denotes the difference between $Y_i$ and $\E(Y_i|X_i)$, i.e., $u_i=Y_i-\E(Y_i|X_i)$ for $i=1,\dots,n$.
+In @eq-chapter13-1, under the assumption that $\E(u_i|X_i)=0$, the conditional mean $\E(Y_i|X_i)$ is a linear function of $X_i$, i.e., $\E(Y_i|X_i)=\beta_0 + \beta_1 X_i$. This conditional mean equation is called the **population regression line** or the **population regression function** and shows the average value of $Y_i$ for a given $X_i$. Thus, in the linear regression model,  the error term $u_i$ denotes the difference between $Y_i$ and $\E(Y_i|X_i)$, i.e., $u_i=Y_i-\E(Y_i|X_i)$ for $i=1,\dots,n$.
 
 ## Estimating the coefficients of the linear regression model
 We can estimate the parameters of the model using the ordinary least squares (OLS) estimator. The OLS estimators of $\beta_0$ and $\beta_1$ are the values of $b_0$ and $b_1$ that minimize the following objective function: 
@@ -35,13 +35,14 @@ $$
 \sum_{i=1}^n \left(Y_i - b_0 - b_1 X_i \right)^2.
 \end{align}
 $$
+
 Using calculus, we can show the minimization of the objective function yields the following OLS estimators (see @sec-OlsProperties for the detailed derivation):
 $$
 \begin{align}
 &\hat{\beta}_1 = \frac{\sum_{i=1}^n(X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n(X_i - \bar{X})^2} = \frac{s_{XY}}{s_X^2},\\
 &\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1\bar{X}, 
 \end{align}
-$$ {#eq-eq11-2}
+$$ {#eq-chapter13-2}
 where $\bar{Y}$ and $\bar{X}$ are the sample averages of $Y$ and $X$, respectively . The OLS **predicted values** $\hat{Y}_i$ and **residuals** $\hat{u}_i$ are
 $$
 \begin{align}
@@ -66,11 +67,11 @@ $$
 \begin{align}
 \text{TestScore}_i=\beta_0+\beta_1\text{STR}_i+u_i,
 \end{align} 
-$$ {#eq-eq11-3}
+$$ {#eq-chapter13-3}
 for $i=1,2,\dots,n$. 
 
 ### Data
-The dataset is the California school districts dataset provided in the `caschools.xlsx` (`caschools.csv`) file. This dataset contains information on kindergarten through eighth-grade students across 420 California school districts (K-6 and K-8 districts) in 1999. It is a district-level dataset that includes variables on average student performance and demographic characteristics. @tbl-chapter11-t0 provides a description of the variables in this dataset.^[In @sec-CaschoolsData, we provide choropleth maps to show how variables of interest are distributed across California school districts.]
+The dataset is the California school districts dataset provided in the `caschools.xlsx` (`caschools.csv`) file. This dataset contains information on kindergarten through eighth-grade students across 420 California school districts (K-6 and K-8 districts) in 1999. It is a district-level dataset that includes variables on average student performance and demographic characteristics. @tbl-chapter13-1 provides a description of the variables in this dataset.
 
 ::: {layout-ncol=1}
 ::: {style="font-size: 85%"}
@@ -93,11 +94,11 @@ The dataset is the California school districts dataset provided in the `caschool
 | `meal_pct`    | Percentage of students who qualify for a reduced-price lunch |
 | `clw_pct`     | Percentage of students who are in the public assistance program CalWorks^[For the details, see <https://www.cdss.ca.gov/calworks>.] |
 | `aving`       | District average income (in \$1000s) |
-: California school districts dataset {#tbl-chapter11-t0 .stripped .hover}
+: California school districts dataset {#tbl-chapter13-1 .stripped .hover}
 :::
 :::
 
-The reading and math scores are the average test scores on the Stanford 9 Achievement Test (SAT-9) in 1999. The SAT-9 is a standardized achievement test administered to almost all students from grades 2 through 11 in California public schools. The `testscr` variable is the average of the reading and math scores. The summary statistics are presented in @tbl-t11-1. Across 420 school districts, the average student-teacher ratio and the average test scores are around $19.7$ and $654.2$, respectively. 
+The reading and math scores are the average test scores on the Stanford 9 Achievement Test (SAT-9) in 1999. The SAT-9 is a standardized achievement test administered to almost all students from grades 2 through 11 in California public schools. The `testscr` variable is the average of the reading and math scores. The summary statistics are presented in @tbl-chapter13-2. Across 420 school districts, the average student-teacher ratio and the average test scores are around $19.7$ and $654.2$, respectively. 
 
 
 
@@ -108,16 +109,16 @@ CAschools <- read.csv("data/caschool.csv", sep=",", header=TRUE)
 
 ```{r}
 #| tbl-cap: Summary Statistics
-#| label: tbl-t11-1
+#| label: tbl-chapter13-2
 # Summary statistics
 datasummary_skim(CAschools[,c("str","testscr")])
 ```
 
-In @fig-fig11-f1, we present a scatter plot of the test score against the student–teacher ratio. The figure indicates a negative relationship between test scores and the student–teacher ratio; that is, as the student–teacher ratio increases, test scores tend to decrease. 
+In @fig-chapter13-1, we present a scatter plot of the test score against the student–teacher ratio. The figure indicates a negative relationship between test scores and the student–teacher ratio; that is, as the student–teacher ratio increases, test scores tend to decrease. 
 
 ```{r}
 #| fig-cap: The scatter plot of test score and student-teacher ratio
-#| label: fig-fig11-f1
+#| label: fig-chapter13-1
 #| fig-width: 5
 #| fig-height: 4
 ggplot(CAschools, aes(x = str, y = testscr)) +
@@ -130,7 +131,6 @@ ggplot(CAschools, aes(x = str, y = testscr)) +
 
 ### Estimation Results
 In R, we use the `lm` function from the `stats` package to estimate the regression model. The syntax is `lm(y~x,data)`, where `y` is the dependent variable, `x` is the explanatory variable, and `data` is the data frame that contains `y` and `x`. We use the `summary` function to obtain the regression results.
-
 
 ```{r}
 # Estimate the regression model
@@ -149,7 +149,7 @@ In the following table, we describe these components.
 
 ::: {style="font-size: 85%"}
 | Component        | Description |
-|:------------------|:-------------|
+|:--------|:--------------------------|
 | `coefficients`   | Estimated coefficients of the regression model |
 | `fitted.values`  | Fitted values: $\hat{Y}_i=\hat{\beta}_0+\hat{\beta}_1 X_i$ |
 | `residuals`      | Residuals: $\hat{u}_i=Y_i-\hat{Y}_i$ |
@@ -157,7 +157,7 @@ In the following table, we describe these components.
 | `df.residual`    | Degrees of freedom of the residuals: $n-k-1$ |
 | `call`           | The function call used to estimate the model |
 | `model`         | The data frame used to estimate the model |
-: Some components of the `model` object {#tbl-chapter11-t1 .stripped .hover}
+: Some components of the `model` object {#tbl-chapter13-3 .stripped .hover}
 :::
 
 We can access these components using the `$` operator. Below, we provide some examples.
@@ -177,7 +177,7 @@ model$fitted.values[1:5]
 summary(model$residuals)
 ```
 
-There are also functions to extract specific components from the model object, such as `coef`, `fitted`, and `residuals`. In @tbl-chapter11-t2, we summarize some of these functions.
+There are also functions to extract specific components from the model object, such as `coef`, `fitted`, and `residuals`. In @tbl-chapter13-4, we summarize some of these functions.
 
 ```{r}
 # Access the coefficients
@@ -196,7 +196,7 @@ summary(residuals(model))
 
 ::: {style="font-size: 85%"}
 | Function                 | Description                                |
-|:------------------------------------ |:------------------------------------------ |
+|:----------------|:----------------------------------|
 | `coef(model)`                        | Estimated regression coefficients          |
 | `residuals(model)`                   | OLS residuals                              |
 | `fitted(model)`                      | Predicted values                           |
@@ -209,7 +209,7 @@ summary(residuals(model))
 | `model.frame(model)`                 | Data used in estimation                    |
 | `formula(model)`                     | Model formula                              |
 | `nobs(model)`                        | Sample size                                |
-: Some generic functions for the `model` object {#tbl-chapter11-t2 .stripped .hover}
+: Some generic functions for the `model` object {#tbl-chapter13-4 .stripped .hover}
 :::
 
 ### Interpretation of results
@@ -218,11 +218,11 @@ $$
 \widehat{\text{TestScore}}_i = 698.933-2.279 \cdot \text{STR}_i.
 $$
 
-According to the estimated model, if `str` increases by one then on average test scores decline by 2.28 points. @fig-fig11-2 shows the scatterplot between the test score and the student-teacher ratio along with the estimated regression function. 
+According to the estimated model, if `str` increases by one then on average test scores decline by 2.28 points. @fig-chapter13-2 shows the scatterplot between the test score and the student-teacher ratio along with the estimated regression function. 
 
 ```{r}
 #| fig-cap: The estimated regression line
-#| label: fig-fig11-2
+#| label: fig-chapter13-2
 #| fig-width: 5
 #| fig-height: 4
 #| message: false
@@ -261,7 +261,7 @@ where the fourth equality is due to $\sum_{i=1}^n \hat{u}_i = 0$, which means $\
 
 The $R^2$ ranges between $0$ and $1$, and a high value of $R^2$ indicates that the model explains a large fraction of the variation in $Y$. The SER is always non-negative, and a smaller value indicates that the model fits the data better.
 
-In the output of the `summary` function, these measures are referred as `Multiple R-squared` and `Residual standard error`. In the following code chunk, we compute both measures of fit manually for the test score regression in @eq-eq11-3. The estimates are given in @tbl-t11-3. The $R^2=0.05$ means that the `STR` regressor explains $5\%$ of the variance of the dependent variable `TestScore`. The SER estimate is $18.6$, providing an estimate of the standard deviation of the error terms in units of test score points.
+In the output of the `summary` function, these measures are referred as `Multiple R-squared` and `Residual standard error`. In the following code chunk, we compute both measures of fit manually for the test score regression in @eq-chapter13-3. The estimates are given in @tbl-chapter13-5. The $R^2=0.05$ means that the `STR` regressor explains $5\%$ of the variance of the dependent variable `TestScore`. The SER estimate is $18.6$, providing an estimate of the standard deviation of the error terms in units of test score points.
 
 ```{r}
 # Measures of fit
@@ -279,17 +279,17 @@ fit_measures <- data.frame(
 
 ```{r}
 #| tbl-cap: Measures of fit
-#| label: tbl-t11-3
+#| label: tbl-chapter13-5
 # Measures of fit
 kable(fit_measures, digits = 3, col.names = NULL)
 ```
 
-Recall that the predicted value for the $i$th outcome variable is defined as $\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i$. These predicted values are referred to as **in-sample predictions** when computed from the $X_i$ values already used in the OLS estimation. If we use $X_i$ values that are not in the estimation sample, the prediction is referred to as an **out-of-sample prediction**. In either case, the prediction error is given by $Y_i - \hat{Y}_i$. For the standard deviation of both in-sample and out-of-sample prediction errors, we can use $s_{\hat{u}}$. Thus, a model will produce relatively accurate predictions if it has a relatively smaller $s_{\hat{u}}$. Therefore, we usually report $\hat{Y}_i \pm s_{\hat{u}}$ along with the predicted value $\hat{Y}_i$. For the test score regression in @eq-eq11-3, we provide the plots of the predicted values along with those of $\hat{Y}_i \pm s_{\hat{u}}$ in @fig-fig11-3.
+Recall that the predicted value for the $i$th outcome variable is defined as $\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i$. These predicted values are referred to as **in-sample predictions** when computed from the $X_i$ values already used in the OLS estimation. If we use $X_i$ values that are not in the estimation sample, the prediction is referred to as an **out-of-sample prediction**. In either case, the prediction error is given by $Y_i - \hat{Y}_i$. For the standard deviation of both in-sample and out-of-sample prediction errors, we can use $s_{\hat{u}}$. Thus, a model will produce relatively accurate predictions if it has a relatively smaller $s_{\hat{u}}$. Therefore, we usually report $\hat{Y}_i \pm s_{\hat{u}}$ along with the predicted value $\hat{Y}_i$. For the test score regression in @eq-chapter13-3, we provide the plots of the predicted values along with those of $\hat{Y}_i \pm s_{\hat{u}}$ in @fig-chapter13-3.
 
 
 ```{r}
 #| fig-cap: The in-sample predicted values
-#| label: fig-fig11-3
+#| label: fig-chapter13-3
 #| fig-width: 5
 #| fig-height: 4
 
@@ -345,7 +345,6 @@ ggplot(plot_data, aes(x = str)) +
 
 ```
 
-
 ## The least squares assumptions for causal inference
 In this section, we provide the least square assumptions. These assumptions ensure two important results. First, under these assumptions, we can interpret the slope parameter $\beta_1$ as the causal effect of $X$ on $Y$. Second, these assumptions ensure that the OLS estimator has large sample properties, namely consistency and asymptotic normal distributions. We list these assumptions below.
 
@@ -369,11 +368,11 @@ This last result is important because it provides a way to check the plausibilit
 
 In the following code chunk, we consider two data-generating processes to illustrate the zero-conditional mean assumption. We assume that the zero-conditional mean assumption holds in the first process but is violated in the second. In both cases, we assume that $X$ takes integer values between $-4$ and $4$: `x_values <- sample(-4:4, size = size, replace = TRUE)`. In the first process, we generate the error terms independently from the standard normal distribution, i.e., $u \sim N(0, 1)$. In this case, since $u$ is independent of $X$, we have $\E(u|X)=\E(u)=0$. In contrast, in the second process, we generate the error terms according to $u \sim N(0.5X, 1)$ so that $\E(u|X)=0.5X$. 
 
-In @fig-f11-3, we use boxplots to present the distribution of $u$ against $X$. In @fig-f11-3(a), the conditional mean of $u$ remains close to zero across all values of $X$. Thus, in this case, $\E(u|X)=0$ holds. On the other hand, @fig-f11-3(b) shows that the mean of $u$ varies with $X$, indicating that $\E(u|X)$ depends on $X$.
+In @fig-chapter13-4, we use boxplots to present the distribution of $u$ against $X$. In @fig-chapter13-4(a), the conditional mean of $u$ remains close to zero across all values of $X$. Thus, in this case, $\E(u|X)=0$ holds. On the other hand, @fig-chapter13-4(b) shows that the mean of $u$ varies with $X$, indicating that $\E(u|X)$ depends on $X$.
 
 ```{r}
 #| fig-cap: The zero-conditional mean assumption
-#| label: fig-f11-3
+#| label: fig-chapter13-4
 #| layout-nrow: 2
 #| fig-subcap:
 #|   - "The zero-conditional mean assumption holds"
@@ -431,29 +430,29 @@ The second assumption requires a random sample on $X$ and $Y$. This assumption g
 The final assumption requires that $X$ and $Y$ cannot take large values. We need this assumption because the OLS estimator is sensitive to large values in the data set. This assumption is stated in terms of the fourth moments of $X$ and $Y$, and is also used to establish the asymptotic normality of the OLS estimators, as shown in @sec-chapter26.
 
 ## The sampling distribution of the OLS estimators
-We first show that the OLS estimators given in @eq-eq11-2 are unbiased estimators. From $Y_i=\beta_0+\beta_1X_i+u_i$ and $\bar{Y}=\beta_0+\beta_1\bar{X}+\bar{u}$, we obtain
+We first show that the OLS estimators given in @eq-chapter13-2 are unbiased estimators. From $Y_i=\beta_0+\beta_1X_i+u_i$ and $\bar{Y}=\beta_0+\beta_1\bar{X}+\bar{u}$, we obtain
 $$
 \begin{align}
 Y_i-\bar{Y}=\beta_1(X_i-\bar{X})+(u_i-\bar{u}).
 \end{align}
-$$ {#eq-eq11-4}
+$$ {#eq-chapter13-4}
 
-Then, substituting @eq-eq11-4 into @eq-eq11-2 yields
+Then, substituting @eq-chapter13-4 into @eq-chapter13-2 yields
 $$
 \begin{aligned}
 \hat{\beta}_1 &= \frac{\sum_{i=1}^n(X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n(X_i - \bar{X})^2} =\frac{\sum_{i=1}^n(X_i - \bar{X})\left(\beta_1(X_i-\bar{X})+(u_i-\bar{u})\right)}{\sum_{i=1}^n(X_i - \bar{X})^2}\\
 &=\beta_1+\frac{\sum_{i=1}^n(X_i - \bar{X})(u_i-\bar{u})}{\sum_{i=1}^n(X_i - \bar{X})^2}.
 \end{aligned}
-$$ {#eq-eq11-5}
+$$ {#eq-chapter13-5}
 
 Since $\sum_{i=1}^n(X_i - \bar{X})(u_i-\bar{u})=\sum_{i=1}^n(X_i-\bar{X})u_i$, we obtain
 $$
 \begin{align}
 \hat{\beta}_1=\beta_1+\frac{\sum_{i=1}^n(X_i - \bar{X})u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}.
 \end{align}
-$$ {#eq-eq11-6}
+$$ {#eq-chapter13-6}
 
-We can use @eq-eq11-6 to determine $\E(\hat{\beta}_1|X_1,\dots,X_n)$:
+We can use @eq-chapter13-6 to determine $\E(\hat{\beta}_1|X_1,\dots,X_n)$:
 
 $$
 \begin{align}
@@ -478,16 +477,16 @@ $$
 &= \beta_0+\bar{X}\beta_1-\bar{X}\beta_1=\beta_0.
 \end{align}
 $$
-
 where the third equality follows from $\E(\bar{Y}|X_1,\dots,X_n)=\beta_0+\bar{X}\beta_1$. Then, it follows from the law of iterated expectations that 
 $$
 \begin{align}
 \E(\hat{\beta}_0) = \E\left(\E\left(\hat{\beta}_0|X_1,\dots,X_n\right)\right) = \E(\beta_0)=\beta_0.
 \end{align}
 $$
+
 Let $\mu_X$ and $\sigma^2_X$ be the population mean and variance of $X$. In the following theorem, we show the asymptotic distributions of the OLS estimators.
 
-::: {#thm-thm11.1}
+::: {#thm-chapter13-1}
 ## Asymptotic distributions of the OLS estimators
 Under the least squares assumptions, we have $\E(\hat{\beta}_0) = \beta_0$ and $\E(\hat{\beta}_1) = \beta_1$, i.e, the OLS estimators are **unbiased**. In large samples, $\hat{\beta}_0$ and $\hat{\beta}_1$ have a joint normal distribution. Specifically, 
 $$
@@ -498,20 +497,20 @@ $$
 $$
 :::
 
-We prove @thm-thm11.1 in @sec-chapter25. There are three important observations from @thm-thm11.1:
+We prove @thm-chapter13-1 in @sec-chapter25. There are three important observations from @thm-chapter13-1:
 
 * The OLS estimators are unbiased. 
 * The variance of the OLS estimators are inversely proportional to the sample size $n$.
 * The sampling distributions of the OLS estimators are approximated by the normal distributions when the sample size is large. 
 
-We investigate the properties of the OLS estimators in the simulation setting given in the following code chunk. We assume that the population regression model is given by $Y_i=\beta_0+X_i\beta_1+u_i$, where $\beta_0=1.5$, $\beta_1=3$, $X_i\sim N(0,1)$, and $u_i\sim N(0,1)$. We first assume that the population size is $N=5000$ and then generate the population data. We consider four sample size with $n\in \{50, 100, 200, 500\}$. For each sample size, we generate $1000$ samples from the population and estimate the model with each sample. Thus, we obtain $1000$ estimates of $\beta_0$ and $\beta_1$ for each sample size. We then construct the histograms of these estimates along with the kernel density plots. The simulation results are shown in @fig-f11-5. 
+We investigate the properties of the OLS estimators in the simulation setting given in the following code chunk. We assume that the population regression model is given by $Y_i=\beta_0+X_i\beta_1+u_i$, where $\beta_0=1.5$, $\beta_1=3$, $X_i\sim N(0,1)$, and $u_i\sim N(0,1)$. We first assume that the population size is $N=5000$ and then generate the population data. We consider four sample size with $n\in \{50, 100, 200, 500\}$. For each sample size, we generate $1000$ samples from the population and estimate the model with each sample. Thus, we obtain $1000$ estimates of $\beta_0$ and $\beta_1$ for each sample size. We then construct the histograms of these estimates along with the kernel density plots. The simulation results are shown in @fig-chapter13-5. 
 
-Each histogram and kernel density plot in @fig-f11-5 is centered around the true value $\beta_1=3$, indicating that the OLS estimator $\hat{\beta}_1$ is unbiased. The shape of the histograms and kernel density plots are bell-shaped, suggesting that the sampling distribution of the OLS estimator $\hat{\beta}_1$ resembles the normal distribution. We also observe that the variance of the OLS estimator decreases as $n$ increases from $50$ to $500$. All of these observations are consistent with @thm-thm11.1.
+Each histogram and kernel density plot in @fig-chapter13-5 is centered around the true value $\beta_1=3$, indicating that the OLS estimator $\hat{\beta}_1$ is unbiased. The shape of the histograms and kernel density plots are bell-shaped, suggesting that the sampling distribution of the OLS estimator $\hat{\beta}_1$ resembles the normal distribution. We also observe that the variance of the OLS estimator decreases as $n$ increases from $50$ to $500$. All of these observations are consistent with @thm-chapter13-1.
 
 
 ```{r}
 #| fig-cap: Simulation results
-#| label: fig-f11-5
+#| label: fig-chapter13-5
 # Set seed for reproducibility
 set.seed(45)
 
@@ -569,4 +568,4 @@ grid.arrange(
 )
 ```
 
-In the next chapter, we will show how to formulate estimators for $\sigma^2_{\hat{\beta}_1}$ and $\sigma^2_{\hat{\beta}_0}$ given in @thm-thm11.1. We will also show how to use these estimators to conduct hypothesis tests and construct confidence intervals for the parameters $\beta_0$ and $\beta_1$.
+In the next chapter, we will show how to formulate estimators for $\sigma^2_{\hat{\beta}_1}$ and $\sigma^2_{\hat{\beta}_0}$ given in @thm-chapter13-1. We will also show how to use these estimators to conduct hypothesis tests and construct confidence intervals for the parameters $\beta_0$ and $\beta_1$.

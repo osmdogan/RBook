@@ -529,7 +529,7 @@ window.Quarto = {
 </div>
 <section id="the-linear-regression-model" class="level2" data-number="13.1">
 <h2 data-number="13.1" class="anchored" data-anchor-id="the-linear-regression-model"><span class="header-section-number">13.1</span> The linear regression model</h2>
-<p>We assume that we have a random sample <span class="math inline">\(\{(Y_i, X_i)\}_{i=1}^n\)</span> on the random variables <span class="math inline">\((Y,X)\)</span>. Then, the linear regression model between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span> is specified as <span id="eq-eq11-1"><span class="math display">\[
+<p>We assume that we have a random sample <span class="math inline">\(\{(Y_i, X_i)\}_{i=1}^n\)</span> on the random variables <span class="math inline">\((Y,X)\)</span>. Then, the linear regression model between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X\)</span> is specified as <span id="eq-chapter13-1"><span class="math display">\[
 \begin{align}
 Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i=1,\dots,n,
 \end{align}
@@ -540,7 +540,7 @@ Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i=1,\dots,n,
 <li><span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> are the coefficients (or parameters) of the model, and</li>
 <li><span class="math inline">\(u_i\)</span> is the error (or disturbance) term.</li>
 </ul>
-<p>In <a href="#eq-eq11-1" class="quarto-xref">Equation&nbsp;<span>13.1</span></a>, under the assumption that <span class="math inline">\(\E(u_i|X_i)=0\)</span>, the conditional mean <span class="math inline">\(\E(Y_i|X_i)\)</span> is a linear function of <span class="math inline">\(X_i\)</span>, i.e., <span class="math inline">\(\E(Y_i|X_i)=\beta_0 + \beta_1 X_i\)</span>. This conditional mean equation is called the <strong>population regression line</strong> or the <strong>population regression function</strong> and shows the average value of <span class="math inline">\(Y_i\)</span> for a given <span class="math inline">\(X_i\)</span>. Thus, in the linear regression model, the error term <span class="math inline">\(u_i\)</span> denotes the difference between <span class="math inline">\(Y_i\)</span> and <span class="math inline">\(\E(Y_i|X_i)\)</span>, i.e., <span class="math inline">\(u_i=Y_i-\E(Y_i|X_i)\)</span> for <span class="math inline">\(i=1,\dots,n\)</span>.</p>
+<p>In <a href="#eq-chapter13-1" class="quarto-xref">Equation&nbsp;<span>13.1</span></a>, under the assumption that <span class="math inline">\(\E(u_i|X_i)=0\)</span>, the conditional mean <span class="math inline">\(\E(Y_i|X_i)\)</span> is a linear function of <span class="math inline">\(X_i\)</span>, i.e., <span class="math inline">\(\E(Y_i|X_i)=\beta_0 + \beta_1 X_i\)</span>. This conditional mean equation is called the <strong>population regression line</strong> or the <strong>population regression function</strong> and shows the average value of <span class="math inline">\(Y_i\)</span> for a given <span class="math inline">\(X_i\)</span>. Thus, in the linear regression model, the error term <span class="math inline">\(u_i\)</span> denotes the difference between <span class="math inline">\(Y_i\)</span> and <span class="math inline">\(\E(Y_i|X_i)\)</span>, i.e., <span class="math inline">\(u_i=Y_i-\E(Y_i|X_i)\)</span> for <span class="math inline">\(i=1,\dots,n\)</span>.</p>
 </section>
 <section id="estimating-the-coefficients-of-the-linear-regression-model" class="level2" data-number="13.2">
 <h2 data-number="13.2" class="anchored" data-anchor-id="estimating-the-coefficients-of-the-linear-regression-model"><span class="header-section-number">13.2</span> Estimating the coefficients of the linear regression model</h2>
@@ -548,7 +548,8 @@ Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i=1,\dots,n,
 \begin{align}
 \sum_{i=1}^n \left(Y_i - b_0 - b_1 X_i \right)^2.
 \end{align}
-\]</span> Using calculus, we can show the minimization of the objective function yields the following OLS estimators (see <a href="AppendixA.html" class="quarto-xref"><span>Appendix A</span></a> for the detailed derivation): <span id="eq-eq11-2"><span class="math display">\[
+\]</span></p>
+<p>Using calculus, we can show the minimization of the objective function yields the following OLS estimators (see <a href="AppendixA.html" class="quarto-xref"><span>Appendix A</span></a> for the detailed derivation): <span id="eq-chapter13-2"><span class="math display">\[
 \begin{align}
 &amp;\hat{\beta}_1 = \frac{\sum_{i=1}^n(X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n(X_i - \bar{X})^2} = \frac{s_{XY}}{s_X^2},\\
 &amp;\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1\bar{X},
@@ -566,30 +567,30 @@ Y_i = \beta_0 + \beta_1 X_i + u_i, \quad i=1,\dots,n,
 <li>The OLS residuals and the explanatory variable are uncorrelated: <span class="math inline">\(\sum_{i=1}^n X_i\hat{u}_i = 0\)</span>.</li>
 <li>The regression line passes through the sample mean: <span class="math inline">\(\bar{Y} = \hat{\beta}_0 + \hat{\beta}_1 \bar{X}\)</span>.</li>
 </ul>
-<p>These algebraic properties are proved in <a href="AppendixA.html#sec-OlsDerivation" class="quarto-xref"><span>Section A.2</span></a>. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 28</span></a>, we extent these results to a multiple linear regression model.</p>
+<p>These algebraic properties are proved in <a href="AppendixA.html#sec-OlsDerivation" class="quarto-xref"><span>Section A.1</span></a>. In <a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref"><span>Chapter 28</span></a>, we extent these results to a multiple linear regression model.</p>
 </section>
 <section id="estimating-the-relationship-between-test-scores-and-the-studentteacher-ratio" class="level2" data-number="13.3">
 <h2 data-number="13.3" class="anchored" data-anchor-id="estimating-the-relationship-between-test-scores-and-the-studentteacher-ratio"><span class="header-section-number">13.3</span> Estimating the relationship between test scores and the student–teacher ratio</h2>
-<p>We consider the following regression model between test score (TestScore) and the student-teacher ratio (STR): <span id="eq-eq11-3"><span class="math display">\[
+<p>We consider the following regression model between test score (TestScore) and the student-teacher ratio (STR): <span id="eq-chapter13-3"><span class="math display">\[
 \begin{align}
 \text{TestScore}_i=\beta_0+\beta_1\text{STR}_i+u_i,
 \end{align}
 \tag{13.3}\]</span></span> for <span class="math inline">\(i=1,2,\dots,n\)</span>.</p>
 <section id="data" class="level3" data-number="13.3.1">
 <h3 data-number="13.3.1" class="anchored" data-anchor-id="data"><span class="header-section-number">13.3.1</span> Data</h3>
-<p>The dataset is the California school districts dataset provided in the <code>caschools.xlsx</code> (<code>caschools.csv</code>) file. This dataset contains information on kindergarten through eighth-grade students across 420 California school districts (K-6 and K-8 districts) in 1999. It is a district-level dataset that includes variables on average student performance and demographic characteristics. <a href="#tbl-chapter11-t0" class="quarto-xref">Table&nbsp;<span>13.1</span></a> provides a description of the variables in this dataset.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>The dataset is the California school districts dataset provided in the <code>caschools.xlsx</code> (<code>caschools.csv</code>) file. This dataset contains information on kindergarten through eighth-grade students across 420 California school districts (K-6 and K-8 districts) in 1999. It is a district-level dataset that includes variables on average student performance and demographic characteristics. <a href="#tbl-chapter13-1" class="quarto-xref">Table&nbsp;<span>13.1</span></a> provides a description of the variables in this dataset.</p>
 <div>
 
 </div>
 <div class="quarto-layout-panel" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
-<div id="tbl-chapter11-t0" class="stripped hover quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-chapter13-1" class="stripped hover quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chapter11-t0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chapter13-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;13.1: California school districts dataset
 </figcaption>
-<div aria-describedby="tbl-chapter11-t0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-chapter13-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="stripped table-hover caption-top table">
 <thead>
 <tr class="header">
@@ -660,7 +661,7 @@ Table&nbsp;13.1: California school districts dataset
 </tr>
 <tr class="even">
 <td style="text-align: left;"><code>clw_pct</code></td>
-<td style="text-align: left;">Percentage of students who are in the public assistance program CalWorks<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></td>
+<td style="text-align: left;">Percentage of students who are in the public assistance program CalWorks<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><code>aving</code></td>
@@ -674,7 +675,7 @@ Table&nbsp;13.1: California school districts dataset
 </div>
 </div>
 </div>
-<p>The reading and math scores are the average test scores on the Stanford 9 Achievement Test (SAT-9) in 1999. The SAT-9 is a standardized achievement test administered to almost all students from grades 2 through 11 in California public schools. The <code>testscr</code> variable is the average of the reading and math scores. The summary statistics are presented in <a href="#tbl-t11-1" class="quarto-xref">Table&nbsp;<span>13.2</span></a>. Across 420 school districts, the average student-teacher ratio and the average test scores are around <span class="math inline">\(19.7\)</span> and <span class="math inline">\(654.2\)</span>, respectively.</p>
+<p>The reading and math scores are the average test scores on the Stanford 9 Achievement Test (SAT-9) in 1999. The SAT-9 is a standardized achievement test administered to almost all students from grades 2 through 11 in California public schools. The <code>testscr</code> variable is the average of the reading and math scores. The summary statistics are presented in <a href="#tbl-chapter13-2" class="quarto-xref">Table&nbsp;<span>13.2</span></a>. Across 420 school districts, the average student-teacher ratio and the average test scores are around <span class="math inline">\(19.7\)</span> and <span class="math inline">\(654.2\)</span>, respectively.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>CAschools <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/caschool.csv"</span>, <span class="at">sep=</span><span class="st">","</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -682,12 +683,12 @@ Table&nbsp;13.1: California school districts dataset
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">datasummary_skim</span>(CAschools[,<span class="fu">c</span>(<span class="st">"str"</span>,<span class="st">"testscr"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t11-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-chapter13-2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t11-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chapter13-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;13.2: Summary Statistics
 </figcaption>
-<div aria-describedby="tbl-t11-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-chapter13-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -695,20 +696,20 @@ Table&nbsp;13.2: Summary Statistics
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_j10me5nijvmvwf2l7gtj = TinyTable.createTableFunctions("tinytable_j10me5nijvmvwf2l7gtj");
+      const tableFns_hslq71idlxmg50np8nqy = TinyTable.createTableFunctions("tinytable_hslq71idlxmg50np8nqy");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '2', j: 1 }, { i: '2', j: 2 }, { i: '2', j: 3 }, { i: '2', j: 4 }, { i: '2', j: 5 }, { i: '2', j: 6 }, { i: '2', j: 7 }, { i: '2', j: 8 }, { i: '2', j: 9 } ], css_id: 'tinytable_css_cwlmpk9dhbug2ln39fwx',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '1', j: 2 }, { i: '1', j: 3 }, { i: '1', j: 4 }, { i: '1', j: 5 }, { i: '1', j: 6 }, { i: '1', j: 7 }, { i: '1', j: 8 }, { i: '1', j: 9 } ], css_id: 'tinytable_css_x1kly2ao78v2axmdt38z',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 }, { i: '0', j: 9 } ], css_id: 'tinytable_css_dgrg6xa3lu0gricusfoi',}, 
+          { positions: [ { i: '2', j: 1 }, { i: '2', j: 2 }, { i: '2', j: 3 }, { i: '2', j: 4 }, { i: '2', j: 5 }, { i: '2', j: 6 }, { i: '2', j: 7 }, { i: '2', j: 8 }, { i: '2', j: 9 } ], css_id: 'tinytable_css_rxav2e3mcti9vpzo7swo',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '1', j: 2 }, { i: '1', j: 3 }, { i: '1', j: 4 }, { i: '1', j: 5 }, { i: '1', j: 6 }, { i: '1', j: 7 }, { i: '1', j: 8 }, { i: '1', j: 9 } ], css_id: 'tinytable_css_zqen5zck9x0oe51lmldo',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 }, { i: '0', j: 9 } ], css_id: 'tinytable_css_6qu3e5hhc7oa5kjjk56s',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_j10me5nijvmvwf2l7gtj.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_hslq71idlxmg50np8nqy.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -717,12 +718,12 @@ Table&nbsp;13.2: Summary Statistics
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_j10me5nijvmvwf2l7gtj td.tinytable_css_cwlmpk9dhbug2ln39fwx, #tinytable_j10me5nijvmvwf2l7gtj th.tinytable_css_cwlmpk9dhbug2ln39fwx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_j10me5nijvmvwf2l7gtj td.tinytable_css_x1kly2ao78v2axmdt38z, #tinytable_j10me5nijvmvwf2l7gtj th.tinytable_css_x1kly2ao78v2axmdt38z { text-align: left }
-    #tinytable_j10me5nijvmvwf2l7gtj td.tinytable_css_dgrg6xa3lu0gricusfoi, #tinytable_j10me5nijvmvwf2l7gtj th.tinytable_css_dgrg6xa3lu0gricusfoi {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_hslq71idlxmg50np8nqy td.tinytable_css_rxav2e3mcti9vpzo7swo, #tinytable_hslq71idlxmg50np8nqy th.tinytable_css_rxav2e3mcti9vpzo7swo {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_hslq71idlxmg50np8nqy td.tinytable_css_zqen5zck9x0oe51lmldo, #tinytable_hslq71idlxmg50np8nqy th.tinytable_css_zqen5zck9x0oe51lmldo { text-align: left }
+    #tinytable_hslq71idlxmg50np8nqy td.tinytable_css_6qu3e5hhc7oa5kjjk56s, #tinytable_hslq71idlxmg50np8nqy th.tinytable_css_6qu3e5hhc7oa5kjjk56s {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_j10me5nijvmvwf2l7gtj" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_hslq71idlxmg50np8nqy" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -770,7 +771,7 @@ Table&nbsp;13.2: Summary Statistics
 </figure>
 </div>
 </div>
-<p>In <a href="#fig-fig11-f1" class="quarto-xref">Figure&nbsp;<span>13.1</span></a>, we present a scatter plot of the test score against the student–teacher ratio. The figure indicates a negative relationship between test scores and the student–teacher ratio; that is, as the student–teacher ratio increases, test scores tend to decrease.</p>
+<p>In <a href="#fig-chapter13-1" class="quarto-xref">Figure&nbsp;<span>13.1</span></a>, we present a scatter plot of the test score against the student–teacher ratio. The figure indicates a negative relationship between test scores and the student–teacher ratio; that is, as the student–teacher ratio increases, test scores tend to decrease.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(CAschools, <span class="fu">aes</span>(<span class="at">x =</span> str, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
@@ -779,12 +780,12 @@ Table&nbsp;13.2: Summary Statistics
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Score"</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-fig11-f1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-chapter13-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig11-f1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-fig11-f1-1.png" class="img-fluid figure-img" width="480">
+<div aria-describedby="fig-chapter13-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-chapter13-1-1.png" class="img-fluid figure-img" width="480">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig11-f1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chapter13-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;13.1: The scatter plot of test score and student-teacher ratio
 </figcaption>
 </figure>
@@ -832,16 +833,16 @@ F-statistic: 22.58 on 1 and 418 DF,  p-value: 2.783e-06</code></pre>
 </div>
 <p>In the following table, we describe these components.</p>
 <div style="font-size: 85%">
-<div id="tbl-chapter11-t1" class="stripped hover quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-chapter13-3" class="stripped hover quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chapter11-t1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chapter13-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;13.3: Some components of the <code>model</code> object
 </figcaption>
-<div aria-describedby="tbl-chapter11-t1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-chapter13-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="stripped table-hover caption-top table">
 <colgroup>
-<col style="width: 57%">
-<col style="width: 42%">
+<col style="width: 25%">
+<col style="width: 75%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -909,7 +910,7 @@ Table&nbsp;13.3: Some components of the <code>model</code> object
 -47.7267 -14.2507   0.4826   0.0000  12.8222  48.5404 </code></pre>
 </div>
 </div>
-<p>There are also functions to extract specific components from the model object, such as <code>coef</code>, <code>fitted</code>, and <code>residuals</code>. In <a href="#tbl-chapter11-t2" class="quarto-xref">Table&nbsp;<span>13.4</span></a>, we summarize some of these functions.</p>
+<p>There are also functions to extract specific components from the model object, such as <code>coef</code>, <code>fitted</code>, and <code>residuals</code>. In <a href="#tbl-chapter13-4" class="quarto-xref">Table&nbsp;<span>13.4</span></a>, we summarize some of these functions.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Access the coefficients</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -935,16 +936,16 @@ Table&nbsp;13.3: Some components of the <code>model</code> object
 </div>
 </div>
 <div style="font-size: 85%">
-<div id="tbl-chapter11-t2" class="stripped hover quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-chapter13-4" class="stripped hover quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chapter11-t2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chapter13-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;13.4: Some generic functions for the <code>model</code> object
 </figcaption>
-<div aria-describedby="tbl-chapter11-t2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-chapter13-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="stripped table-hover caption-top table">
 <colgroup>
-<col style="width: 46%">
-<col style="width: 53%">
+<col style="width: 32%">
+<col style="width: 67%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1013,7 +1014,7 @@ Table&nbsp;13.4: Some generic functions for the <code>model</code> object
 <p>The estimated model can be expressed as <span class="math display">\[
 \widehat{\text{TestScore}}_i = 698.933-2.279 \cdot \text{STR}_i.
 \]</span></p>
-<p>According to the estimated model, if <code>str</code> increases by one then on average test scores decline by 2.28 points. <a href="#fig-fig11-2" class="quarto-xref">Figure&nbsp;<span>13.2</span></a> shows the scatterplot between the test score and the student-teacher ratio along with the estimated regression function.</p>
+<p>According to the estimated model, if <code>str</code> increases by one then on average test scores decline by 2.28 points. <a href="#fig-chapter13-2" class="quarto-xref">Figure&nbsp;<span>13.2</span></a> shows the scatterplot between the test score and the student-teacher ratio along with the estimated regression function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(CAschools, <span class="fu">aes</span>(<span class="at">x =</span> str, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
@@ -1023,12 +1024,12 @@ Table&nbsp;13.4: Some generic functions for the <code>model</code> object
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Score"</span></span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-fig11-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-chapter13-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig11-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-fig11-2-1.png" class="img-fluid figure-img" width="480">
+<div aria-describedby="fig-chapter13-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-chapter13-2-1.png" class="img-fluid figure-img" width="480">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig11-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chapter13-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;13.2: The estimated regression line
 </figcaption>
 </figure>
@@ -1058,7 +1059,7 @@ SER &amp;= s_{\hat{u}} = \sqrt{\frac{1}{n-2}\sum_{i=1}^n\left(\hat{u}_i - \bar{\
 \end{align*}
 \]</span> where the fourth equality is due to <span class="math inline">\(\sum_{i=1}^n \hat{u}_i = 0\)</span>, which means <span class="math inline">\(\bar{\hat{u}} = 0\)</span>. The SER has the same units as <span class="math inline">\(𝑌\)</span> and measures the spread of the observations around the regression line.</p>
 <p>The <span class="math inline">\(R^2\)</span> ranges between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, and a high value of <span class="math inline">\(R^2\)</span> indicates that the model explains a large fraction of the variation in <span class="math inline">\(Y\)</span>. The SER is always non-negative, and a smaller value indicates that the model fits the data better.</p>
-<p>In the output of the <code>summary</code> function, these measures are referred as <code>Multiple R-squared</code> and <code>Residual standard error</code>. In the following code chunk, we compute both measures of fit manually for the test score regression in <a href="#eq-eq11-3" class="quarto-xref">Equation&nbsp;<span>13.3</span></a>. The estimates are given in <a href="#tbl-t11-3" class="quarto-xref">Table&nbsp;<span>13.5</span></a>. The <span class="math inline">\(R^2=0.05\)</span> means that the <code>STR</code> regressor explains <span class="math inline">\(5\%\)</span> of the variance of the dependent variable <code>TestScore</code>. The SER estimate is <span class="math inline">\(18.6\)</span>, providing an estimate of the standard deviation of the error terms in units of test score points.</p>
+<p>In the output of the <code>summary</code> function, these measures are referred as <code>Multiple R-squared</code> and <code>Residual standard error</code>. In the following code chunk, we compute both measures of fit manually for the test score regression in <a href="#eq-chapter13-3" class="quarto-xref">Equation&nbsp;<span>13.3</span></a>. The estimates are given in <a href="#tbl-chapter13-5" class="quarto-xref">Table&nbsp;<span>13.5</span></a>. The <span class="math inline">\(R^2=0.05\)</span> means that the <code>STR</code> regressor explains <span class="math inline">\(5\%\)</span> of the variance of the dependent variable <code>TestScore</code>. The SER estimate is <span class="math inline">\(18.6\)</span>, providing an estimate of the standard deviation of the error terms in units of test score points.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Measures of fit</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> CAschools<span class="sc">$</span>testscr</span>
@@ -1075,12 +1076,12 @@ SER &amp;= s_{\hat{u}} = \sqrt{\frac{1}{n-2}\sum_{i=1}^n\left(\hat{u}_i - \bar{\
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Measures of fit</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(fit_measures, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">col.names =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="tbl-t11-3" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-chapter13-5" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chapter13-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;13.5: Measures of fit
 </figcaption>
-<div aria-describedby="tbl-t11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-chapter13-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <tbody>
@@ -1099,7 +1100,7 @@ Table&nbsp;13.5: Measures of fit
 </figure>
 </div>
 </div>
-<p>Recall that the predicted value for the <span class="math inline">\(i\)</span>th outcome variable is defined as <span class="math inline">\(\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i\)</span>. These predicted values are referred to as <strong>in-sample predictions</strong> when computed from the <span class="math inline">\(X_i\)</span> values already used in the OLS estimation. If we use <span class="math inline">\(X_i\)</span> values that are not in the estimation sample, the prediction is referred to as an <strong>out-of-sample prediction</strong>. In either case, the prediction error is given by <span class="math inline">\(Y_i - \hat{Y}_i\)</span>. For the standard deviation of both in-sample and out-of-sample prediction errors, we can use <span class="math inline">\(s_{\hat{u}}\)</span>. Thus, a model will produce relatively accurate predictions if it has a relatively smaller <span class="math inline">\(s_{\hat{u}}\)</span>. Therefore, we usually report <span class="math inline">\(\hat{Y}_i \pm s_{\hat{u}}\)</span> along with the predicted value <span class="math inline">\(\hat{Y}_i\)</span>. For the test score regression in <a href="#eq-eq11-3" class="quarto-xref">Equation&nbsp;<span>13.3</span></a>, we provide the plots of the predicted values along with those of <span class="math inline">\(\hat{Y}_i \pm s_{\hat{u}}\)</span> in <a href="#fig-fig11-3" class="quarto-xref">Figure&nbsp;<span>13.3</span></a>.</p>
+<p>Recall that the predicted value for the <span class="math inline">\(i\)</span>th outcome variable is defined as <span class="math inline">\(\hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X_i\)</span>. These predicted values are referred to as <strong>in-sample predictions</strong> when computed from the <span class="math inline">\(X_i\)</span> values already used in the OLS estimation. If we use <span class="math inline">\(X_i\)</span> values that are not in the estimation sample, the prediction is referred to as an <strong>out-of-sample prediction</strong>. In either case, the prediction error is given by <span class="math inline">\(Y_i - \hat{Y}_i\)</span>. For the standard deviation of both in-sample and out-of-sample prediction errors, we can use <span class="math inline">\(s_{\hat{u}}\)</span>. Thus, a model will produce relatively accurate predictions if it has a relatively smaller <span class="math inline">\(s_{\hat{u}}\)</span>. Therefore, we usually report <span class="math inline">\(\hat{Y}_i \pm s_{\hat{u}}\)</span> along with the predicted value <span class="math inline">\(\hat{Y}_i\)</span>. For the test score regression in <a href="#eq-chapter13-3" class="quarto-xref">Equation&nbsp;<span>13.3</span></a>, we provide the plots of the predicted values along with those of <span class="math inline">\(\hat{Y}_i \pm s_{\hat{u}}\)</span> in <a href="#fig-chapter13-3" class="quarto-xref">Figure&nbsp;<span>13.3</span></a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In-sample predicted values</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>fitted_vals <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model)</span>
@@ -1151,12 +1152,12 @@ Table&nbsp;13.5: Measures of fit
 <span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-fig11-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-chapter13-3" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-fig11-3-1.png" class="img-fluid figure-img" width="480">
+<div aria-describedby="fig-chapter13-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-chapter13-3-1.png" class="img-fluid figure-img" width="480">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chapter13-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;13.3: The in-sample predicted values
 </figcaption>
 </figure>
@@ -1191,7 +1192,7 @@ The least squares assumptions
 \]</span></p>
 <p>This last result is important because it provides a way to check the plausibility of the zero-conditional mean assumption. If we think that the error term <span class="math inline">\(u_i\)</span> is likely to include a variable that is correlated with the regressor <span class="math inline">\(X_i\)</span>, then we can claim that <span class="math inline">\(\E(u_i |X_i)\ne 0\)</span>.</p>
 <p>In the following code chunk, we consider two data-generating processes to illustrate the zero-conditional mean assumption. We assume that the zero-conditional mean assumption holds in the first process but is violated in the second. In both cases, we assume that <span class="math inline">\(X\)</span> takes integer values between <span class="math inline">\(-4\)</span> and <span class="math inline">\(4\)</span>: <code>x_values &lt;- sample(-4:4, size = size, replace = TRUE)</code>. In the first process, we generate the error terms independently from the standard normal distribution, i.e., <span class="math inline">\(u \sim N(0, 1)\)</span>. In this case, since <span class="math inline">\(u\)</span> is independent of <span class="math inline">\(X\)</span>, we have <span class="math inline">\(\E(u|X)=\E(u)=0\)</span>. In contrast, in the second process, we generate the error terms according to <span class="math inline">\(u \sim N(0.5X, 1)\)</span> so that <span class="math inline">\(\E(u|X)=0.5X\)</span>.</p>
-<p>In <a href="#fig-f11-3" class="quarto-xref">Figure&nbsp;<span>13.4</span></a>, we use boxplots to present the distribution of <span class="math inline">\(u\)</span> against <span class="math inline">\(X\)</span>. In <a href="#fig-f11-3" class="quarto-xref">Figure&nbsp;<span>13.4</span></a>(a), the conditional mean of <span class="math inline">\(u\)</span> remains close to zero across all values of <span class="math inline">\(X\)</span>. Thus, in this case, <span class="math inline">\(\E(u|X)=0\)</span> holds. On the other hand, <a href="#fig-f11-3" class="quarto-xref">Figure&nbsp;<span>13.4</span></a>(b) shows that the mean of <span class="math inline">\(u\)</span> varies with <span class="math inline">\(X\)</span>, indicating that <span class="math inline">\(\E(u|X)\)</span> depends on <span class="math inline">\(X\)</span>.</p>
+<p>In <a href="#fig-chapter13-4" class="quarto-xref">Figure&nbsp;<span>13.4</span></a>, we use boxplots to present the distribution of <span class="math inline">\(u\)</span> against <span class="math inline">\(X\)</span>. In <a href="#fig-chapter13-4" class="quarto-xref">Figure&nbsp;<span>13.4</span></a>(a), the conditional mean of <span class="math inline">\(u\)</span> remains close to zero across all values of <span class="math inline">\(X\)</span>. Thus, in this case, <span class="math inline">\(\E(u|X)=0\)</span> holds. On the other hand, <a href="#fig-chapter13-4" class="quarto-xref">Figure&nbsp;<span>13.4</span></a>(b) shows that the mean of <span class="math inline">\(u\)</span> varies with <span class="math inline">\(X\)</span>, indicating that <span class="math inline">\(\E(u|X)\)</span> depends on <span class="math inline">\(X\)</span>.</p>
 <div class="cell" data-layout-nrow="2">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate data</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>generate_data <span class="ot">&lt;-</span> <span class="cf">function</span>(seed, size, <span class="at">zero_conditional_mean =</span> <span class="cn">TRUE</span>) {</span>
@@ -1239,17 +1240,17 @@ The least squares assumptions
 <span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_boxplot</span>(df1)</span>
 <span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_boxplot</span>(df2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="fig-f11-3" class="quarto-layout-panel">
+<div id="fig-chapter13-4" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-f11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="fig-chapter13-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-f11-3" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-f11-3-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-chapter13-4" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-chapter13-4-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-f11-3-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-f11-3-1.png" class="img-fluid figure-img" data-ref-parent="fig-f11-3" width="672">
+<div aria-describedby="fig-chapter13-4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-chapter13-4-1.png" class="img-fluid figure-img" data-ref-parent="fig-chapter13-4" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-f11-3-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-chapter13-4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) The zero-conditional mean assumption holds
 </figcaption>
 </figure>
@@ -1257,13 +1258,13 @@ The least squares assumptions
 </div>
 </div>
 <div class="quarto-layout-row">
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-f11-3" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div id="fig-f11-3-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-chapter13-4" style="flex-basis: 100.0%;justify-content: flex-start;">
+<div id="fig-chapter13-4-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-f11-3-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-f11-3-2.png" class="img-fluid figure-img" data-ref-parent="fig-f11-3" width="672">
+<div aria-describedby="fig-chapter13-4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-chapter13-4-2.png" class="img-fluid figure-img" data-ref-parent="fig-chapter13-4" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-f11-3-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-chapter13-4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) The zero-conditional mean assumption does not hold
 </figcaption>
 </figure>
@@ -1271,7 +1272,7 @@ The least squares assumptions
 </div>
 </div>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f11-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chapter13-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;13.4: The zero-conditional mean assumption
 </figcaption>
 </figure>
@@ -1282,23 +1283,23 @@ Figure&nbsp;13.4: The zero-conditional mean assumption
 </section>
 <section id="the-sampling-distribution-of-the-ols-estimators" class="level2" data-number="13.6">
 <h2 data-number="13.6" class="anchored" data-anchor-id="the-sampling-distribution-of-the-ols-estimators"><span class="header-section-number">13.6</span> The sampling distribution of the OLS estimators</h2>
-<p>We first show that the OLS estimators given in <a href="#eq-eq11-2" class="quarto-xref">Equation&nbsp;<span>13.2</span></a> are unbiased estimators. From <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span> and <span class="math inline">\(\bar{Y}=\beta_0+\beta_1\bar{X}+\bar{u}\)</span>, we obtain <span id="eq-eq11-4"><span class="math display">\[
+<p>We first show that the OLS estimators given in <a href="#eq-chapter13-2" class="quarto-xref">Equation&nbsp;<span>13.2</span></a> are unbiased estimators. From <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span> and <span class="math inline">\(\bar{Y}=\beta_0+\beta_1\bar{X}+\bar{u}\)</span>, we obtain <span id="eq-chapter13-4"><span class="math display">\[
 \begin{align}
 Y_i-\bar{Y}=\beta_1(X_i-\bar{X})+(u_i-\bar{u}).
 \end{align}
 \tag{13.4}\]</span></span></p>
-<p>Then, substituting <a href="#eq-eq11-4" class="quarto-xref">Equation&nbsp;<span>13.4</span></a> into <a href="#eq-eq11-2" class="quarto-xref">Equation&nbsp;<span>13.2</span></a> yields <span id="eq-eq11-5"><span class="math display">\[
+<p>Then, substituting <a href="#eq-chapter13-4" class="quarto-xref">Equation&nbsp;<span>13.4</span></a> into <a href="#eq-chapter13-2" class="quarto-xref">Equation&nbsp;<span>13.2</span></a> yields <span id="eq-chapter13-5"><span class="math display">\[
 \begin{aligned}
 \hat{\beta}_1 &amp;= \frac{\sum_{i=1}^n(X_i - \bar{X})(Y_i - \bar{Y})}{\sum_{i=1}^n(X_i - \bar{X})^2} =\frac{\sum_{i=1}^n(X_i - \bar{X})\left(\beta_1(X_i-\bar{X})+(u_i-\bar{u})\right)}{\sum_{i=1}^n(X_i - \bar{X})^2}\\
 &amp;=\beta_1+\frac{\sum_{i=1}^n(X_i - \bar{X})(u_i-\bar{u})}{\sum_{i=1}^n(X_i - \bar{X})^2}.
 \end{aligned}
 \tag{13.5}\]</span></span></p>
-<p>Since <span class="math inline">\(\sum_{i=1}^n(X_i - \bar{X})(u_i-\bar{u})=\sum_{i=1}^n(X_i-\bar{X})u_i\)</span>, we obtain <span id="eq-eq11-6"><span class="math display">\[
+<p>Since <span class="math inline">\(\sum_{i=1}^n(X_i - \bar{X})(u_i-\bar{u})=\sum_{i=1}^n(X_i-\bar{X})u_i\)</span>, we obtain <span id="eq-chapter13-6"><span class="math display">\[
 \begin{align}
 \hat{\beta}_1=\beta_1+\frac{\sum_{i=1}^n(X_i - \bar{X})u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}.
 \end{align}
 \tag{13.6}\]</span></span></p>
-<p>We can use <a href="#eq-eq11-6" class="quarto-xref">Equation&nbsp;<span>13.6</span></a> to determine <span class="math inline">\(\E(\hat{\beta}_1|X_1,\dots,X_n)\)</span>:</p>
+<p>We can use <a href="#eq-chapter13-6" class="quarto-xref">Equation&nbsp;<span>13.6</span></a> to determine <span class="math inline">\(\E(\hat{\beta}_1|X_1,\dots,X_n)\)</span>:</p>
 <p><span class="math display">\[
 \begin{align}
 \E(\hat{\beta}_1|X_1,\dots,X_n) &amp;= \beta_1+\E\left(\frac{\sum_{i=1}^n(X_i - \bar{X})u_i}{\sum_{i=1}^n(X_i - \bar{X})^2}\bigg|X_1,\dots,X_n\right)\nonumber\\
@@ -1316,13 +1317,13 @@ Y_i-\bar{Y}=\beta_1(X_i-\bar{X})+(u_i-\bar{u}).
 &amp;= \E(\bar{Y}|X_1,\dots,X_n)-\bar{X}\E(\hat{\beta}_1|X_1,\dots,X_n)\\
 &amp;= \beta_0+\bar{X}\beta_1-\bar{X}\beta_1=\beta_0.
 \end{align}
-\]</span></p>
-<p>where the third equality follows from <span class="math inline">\(\E(\bar{Y}|X_1,\dots,X_n)=\beta_0+\bar{X}\beta_1\)</span>. Then, it follows from the law of iterated expectations that <span class="math display">\[
+\]</span> where the third equality follows from <span class="math inline">\(\E(\bar{Y}|X_1,\dots,X_n)=\beta_0+\bar{X}\beta_1\)</span>. Then, it follows from the law of iterated expectations that <span class="math display">\[
 \begin{align}
 \E(\hat{\beta}_0) = \E\left(\E\left(\hat{\beta}_0|X_1,\dots,X_n\right)\right) = \E(\beta_0)=\beta_0.
 \end{align}
-\]</span> Let <span class="math inline">\(\mu_X\)</span> and <span class="math inline">\(\sigma^2_X\)</span> be the population mean and variance of <span class="math inline">\(X\)</span>. In the following theorem, we show the asymptotic distributions of the OLS estimators.</p>
-<div id="thm-thm11.1" class="theorem">
+\]</span></p>
+<p>Let <span class="math inline">\(\mu_X\)</span> and <span class="math inline">\(\sigma^2_X\)</span> be the population mean and variance of <span class="math inline">\(X\)</span>. In the following theorem, we show the asymptotic distributions of the OLS estimators.</p>
+<div id="thm-chapter13-1" class="theorem">
 <p><span class="theorem-title"><strong>Theorem 13.1 (Asymptotic distributions of the OLS estimators)</strong></span> Under the least squares assumptions, we have <span class="math inline">\(\E(\hat{\beta}_0) = \beta_0\)</span> and <span class="math inline">\(\E(\hat{\beta}_1) = \beta_1\)</span>, i.e, the OLS estimators are <strong>unbiased</strong>. In large samples, <span class="math inline">\(\hat{\beta}_0\)</span> and <span class="math inline">\(\hat{\beta}_1\)</span> have a joint normal distribution. Specifically, <span class="math display">\[
 \begin{align*}
 &amp;\hat{\beta}_1 \stackrel{A}{\sim} N\left(\beta_1, \sigma^2_{\hat{\beta}_1}\right),\,\text{where}\quad\sigma^2_{\hat{\beta}_1} = \frac{1}{n}\frac{\var\left((X_i - \mu_X)u_i\right)}{\left(\sigma^2_X\right)^2},\\
@@ -1330,14 +1331,14 @@ Y_i-\bar{Y}=\beta_1(X_i-\bar{X})+(u_i-\bar{u}).
 \end{align*}
 \]</span></p>
 </div>
-<p>We prove <a href="#thm-thm11.1" class="quarto-xref">Theorem&nbsp;<span>13.1</span></a> in <a href="Chapter18-TheoryRegression.html" class="quarto-xref"><span>Chapter 27</span></a>. There are three important observations from <a href="#thm-thm11.1" class="quarto-xref">Theorem&nbsp;<span>13.1</span></a>:</p>
+<p>We prove <a href="#thm-chapter13-1" class="quarto-xref">Theorem&nbsp;<span>13.1</span></a> in <a href="Chapter18-TheoryRegression.html" class="quarto-xref"><span>Chapter 27</span></a>. There are three important observations from <a href="#thm-chapter13-1" class="quarto-xref">Theorem&nbsp;<span>13.1</span></a>:</p>
 <ul>
 <li>The OLS estimators are unbiased.</li>
 <li>The variance of the OLS estimators are inversely proportional to the sample size <span class="math inline">\(n\)</span>.</li>
 <li>The sampling distributions of the OLS estimators are approximated by the normal distributions when the sample size is large.</li>
 </ul>
-<p>We investigate the properties of the OLS estimators in the simulation setting given in the following code chunk. We assume that the population regression model is given by <span class="math inline">\(Y_i=\beta_0+X_i\beta_1+u_i\)</span>, where <span class="math inline">\(\beta_0=1.5\)</span>, <span class="math inline">\(\beta_1=3\)</span>, <span class="math inline">\(X_i\sim N(0,1)\)</span>, and <span class="math inline">\(u_i\sim N(0,1)\)</span>. We first assume that the population size is <span class="math inline">\(N=5000\)</span> and then generate the population data. We consider four sample size with <span class="math inline">\(n\in \{50, 100, 200, 500\}\)</span>. For each sample size, we generate <span class="math inline">\(1000\)</span> samples from the population and estimate the model with each sample. Thus, we obtain <span class="math inline">\(1000\)</span> estimates of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> for each sample size. We then construct the histograms of these estimates along with the kernel density plots. The simulation results are shown in <a href="#fig-f11-5" class="quarto-xref">Figure&nbsp;<span>13.5</span></a>.</p>
-<p>Each histogram and kernel density plot in <a href="#fig-f11-5" class="quarto-xref">Figure&nbsp;<span>13.5</span></a> is centered around the true value <span class="math inline">\(\beta_1=3\)</span>, indicating that the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> is unbiased. The shape of the histograms and kernel density plots are bell-shaped, suggesting that the sampling distribution of the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> resembles the normal distribution. We also observe that the variance of the OLS estimator decreases as <span class="math inline">\(n\)</span> increases from <span class="math inline">\(50\)</span> to <span class="math inline">\(500\)</span>. All of these observations are consistent with <a href="#thm-thm11.1" class="quarto-xref">Theorem&nbsp;<span>13.1</span></a>.</p>
+<p>We investigate the properties of the OLS estimators in the simulation setting given in the following code chunk. We assume that the population regression model is given by <span class="math inline">\(Y_i=\beta_0+X_i\beta_1+u_i\)</span>, where <span class="math inline">\(\beta_0=1.5\)</span>, <span class="math inline">\(\beta_1=3\)</span>, <span class="math inline">\(X_i\sim N(0,1)\)</span>, and <span class="math inline">\(u_i\sim N(0,1)\)</span>. We first assume that the population size is <span class="math inline">\(N=5000\)</span> and then generate the population data. We consider four sample size with <span class="math inline">\(n\in \{50, 100, 200, 500\}\)</span>. For each sample size, we generate <span class="math inline">\(1000\)</span> samples from the population and estimate the model with each sample. Thus, we obtain <span class="math inline">\(1000\)</span> estimates of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> for each sample size. We then construct the histograms of these estimates along with the kernel density plots. The simulation results are shown in <a href="#fig-chapter13-5" class="quarto-xref">Figure&nbsp;<span>13.5</span></a>.</p>
+<p>Each histogram and kernel density plot in <a href="#fig-chapter13-5" class="quarto-xref">Figure&nbsp;<span>13.5</span></a> is centered around the true value <span class="math inline">\(\beta_1=3\)</span>, indicating that the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> is unbiased. The shape of the histograms and kernel density plots are bell-shaped, suggesting that the sampling distribution of the OLS estimator <span class="math inline">\(\hat{\beta}_1\)</span> resembles the normal distribution. We also observe that the variance of the OLS estimator decreases as <span class="math inline">\(n\)</span> increases from <span class="math inline">\(50\)</span> to <span class="math inline">\(500\)</span>. All of these observations are consistent with <a href="#thm-chapter13-1" class="quarto-xref">Theorem&nbsp;<span>13.1</span></a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">45</span>)</span>
@@ -1395,27 +1396,26 @@ Y_i-\bar{Y}=\beta_1(X_i-\bar{X})+(u_i-\bar{u}).
 <span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">2</span></span>
 <span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-f11-5" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-chapter13-5" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-f11-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-f11-5-1.png" class="img-fluid figure-img" width="672">
+<div aria-describedby="fig-chapter13-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter4-LinearRegressionOneRegressor_files/figure-html/fig-chapter13-5-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-f11-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chapter13-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;13.5: Simulation results
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>In the next chapter, we will show how to formulate estimators for <span class="math inline">\(\sigma^2_{\hat{\beta}_1}\)</span> and <span class="math inline">\(\sigma^2_{\hat{\beta}_0}\)</span> given in <a href="#thm-thm11.1" class="quarto-xref">Theorem&nbsp;<span>13.1</span></a>. We will also show how to use these estimators to conduct hypothesis tests and construct confidence intervals for the parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
+<p>In the next chapter, we will show how to formulate estimators for <span class="math inline">\(\sigma^2_{\hat{\beta}_1}\)</span> and <span class="math inline">\(\sigma^2_{\hat{\beta}_0}\)</span> given in <a href="#thm-chapter13-1" class="quarto-xref">Theorem&nbsp;<span>13.1</span></a>. We will also show how to use these estimators to conduct hypothesis tests and construct confidence intervals for the parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
 
 
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>In <a href="AppendixA.html#sec-CaschoolsData" class="quarto-xref"><span>Section A.1</span></a>, we provide choropleth maps to show how variables of interest are distributed across California school districts.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>For the details, see <a href="https://www.cdss.ca.gov/calworks" class="uri">https://www.cdss.ca.gov/calworks</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>For the details, see <a href="https://www.cdss.ca.gov/calworks" class="uri">https://www.cdss.ca.gov/calworks</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
