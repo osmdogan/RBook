@@ -5,7 +5,6 @@
 #| message: false
 # Load necessary libraries
 library(tidyverse)
-library(gt)
 library(knitr)
 library(pracma)  # for numerical integration
 library(gridExtra)  # for arranging multiple ggplots
@@ -752,16 +751,18 @@ kable(result, digits = 3)
 ```
 
 
-## Scatterplots, the sample covariance, and the sample correlation
+## Scatter plots, the sample covariance, and the sample correlation
 
-A **scatterplot** is a plot of observations on two variables. We use the scatter plot to explore the relationship between two variables. For example, @fig-fig10-5 displays the scatterplot of the average test scores against the average student-teacher ratios for 420 California school districts. Each point in the figure represents an $(X, Y)$ pair for a school district, where $X$ is the average student-teacher ratio, and $Y$ is the average test score. The scatterplot in @fig-fig10-5 indicates a negative relationship between the average student-teacher ratio and the average test score. That is, as the student-teacher ratio increases, the average test score tends to decrease.
+A **scatter plot** is a plot of observations on two variables. We use the scatter plot to explore the relationship between two variables. For example, @fig-fig10-5 displays the scatter plot of the average test scores against the average student-teacher ratios for 420 California school districts. Each point in the figure represents an $(X, Y)$ pair for a school district, where $X$ is the average student-teacher ratio, and $Y$ is the average test score. The scatter plot in @fig-fig10-5 indicates a negative relationship between the average student-teacher ratio and the average test score. That is, as the student-teacher ratio increases, the average test score tends to decrease.
 
 
 ```{r}
-#| fig-cap: "The scatterplot of test score and student–teacher ratio"
+#| fig-cap: "The scatter plot of test score and student–teacher ratio"
 #| label: fig-fig10-5
 #| fig-width: 5.5
 #| fig-height: 4
+#| warning: false
+#| message: false
 # Import the data
 CAschool <- read_csv("data/caschool.csv")
 
@@ -825,7 +826,7 @@ In @fig-fig10-6, we show four correlation coefficients for four hypothetical dat
 
 
 ```{r}
-#| fig-cap: "The scatterplots for four hypothetical data sets"
+#| fig-cap: "The scatter plots for four hypothetical data sets"
 #| label: fig-fig10-6
 #| fig-width: 10
 #| fig-height: 8
@@ -860,7 +861,7 @@ names(data3) <- c("X", "Y")
 # Common plotting function
 make_plot <- function(df, title) {
   ggplot(df, aes(x = X, y = Y)) +
-    geom_point(color = "steelblue", size = 1.5) +
+    geom_point(color = "steelblue", size = 2) +
     labs(x = "X", y = "Y", title = title)
 }
 
