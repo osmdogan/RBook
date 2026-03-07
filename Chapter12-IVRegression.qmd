@@ -10,6 +10,7 @@ library(readxl)
 library(stargazer)
 library(sandwich)
 library(modelsummary)
+options("modelsummary_factory_default" = "gt") 
 library(lmtest)
 library(car)
 library(haven)
@@ -246,6 +247,8 @@ mydata$rincome <- (mydata$income / mydata$pop) / mydata$cpi
 ```{r}
 #| tbl-cap: "Summary statistics"
 #| label: tbl-chapter21-2
+#| warning: false
+#| message: false
 # Variables of interest
 variables <- c("rprice", "salestax", "cigtax", "rincome", "packpc")
 
@@ -740,7 +743,7 @@ The F-statistics for the first stage regressions are presented in @tbl-chapter21
 fstats_df$F_statistic <- round(fstats_df$F_statistic, 2)
 fstats_df$p_value <- round(fstats_df$p_value, 5)
 
-kable(fstats_df, align = "lcccc")
+kable(fstats_df, align = "lcccc", col.names = c("Model", "F-statistic", "df1", "df2", "p-value"))
 ```
 
 Since the first two models are exactly identified, we cannot use the J-statistic to test instrument exogeneity. However, the regression in column (3) is overidentified because there are two instruments and a single included endogenous regressor, resulting in one (m - k = 2 - 1 = 1) overidentifying restriction. Below, we compute the J-statistic for the overidentifying restriction in model 3.
@@ -780,7 +783,7 @@ jtest_df <- data.frame(
     J_statistic = round(jtest, 2),
     p_value = round(p_value, 5)
 )
-kable(jtest_df, align = "cc")
+kable(jtest_df, align = "cc", col.names = c("J-statistic", "p-value"))
 ```
 
 The J-test results are presented in @tbl-chapter21-8. The $p$-value indicates that the null hypothesis of both instruments being exogenous is rejected at the 5% significance level. The rejection of the J-statistic suggests that at least one of the instruments is endogenous. This leads to three logical possibilities:

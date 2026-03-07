@@ -11,7 +11,8 @@ library(sandwich)
 library(lmtest)
 library(knitr)
 library(readxl)
-library(car) 
+library(car)
+options("modelsummary_factory_default" = "gt")  
 ```
 
 ## Hypothesis tests and confidence intervals for a single coefficient
@@ -547,11 +548,6 @@ Besides our variable of interest `str`, there many other factors that affect the
 #| fig-cap: Scatterplots of test scores vs. three student characteristics
 #| label: fig-fig14-3
 # Scatterplots of Test Scores vs. Three Student Characteristics
-# Common theme elements
-base_theme <- theme(
-    plot.title = element_text(size = 10)#,
-    #plot.margin = margin(5, 5, 5, 5)
-  )
 
 # 1. English learners
 p1 <- ggplot(data, aes(x = el_pct, y = testscr)) +
@@ -561,8 +557,7 @@ p1 <- ggplot(data, aes(x = el_pct, y = testscr)) +
     title = "Percentage of english language learners",
     x = "Percent",
     y = "Test Scores"
-  ) +
-  base_theme
+  ) 
 
 # 2. Reduced lunch
 p2 <- ggplot(data, aes(x = meal_pct, y = testscr)) +
@@ -571,8 +566,7 @@ p2 <- ggplot(data, aes(x = meal_pct, y = testscr)) +
     title = "Percentage qualifying for reduced price lunch",
     x = "Percent",
     y = "Test Scores"
-  ) +
-  base_theme
+  ) 
 
 # 3. Income assistance
 p3 <- ggplot(data, aes(x = calw_pct, y = testscr)) +
@@ -582,16 +576,14 @@ p3 <- ggplot(data, aes(x = calw_pct, y = testscr)) +
     title = "Percentage qualifying for income assistance",
     x = "Percent",
     y = "Test Scores"
-  ) +
-  base_theme
+  ) 
 
 # Empty plot (bottom-right)
-p_empty <- grid::nullGrob()
+#p_empty <- grid::nullGrob()
 
 # Arrange in 2x2 layout
 grid.arrange(
-  p1, p2,
-  p3, p_empty,
+  p1, p2, p3, 
   nrow = 2, ncol = 2
 )
 ```

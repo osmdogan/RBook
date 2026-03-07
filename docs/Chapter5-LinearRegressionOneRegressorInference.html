@@ -538,9 +538,9 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="st">"modelsummary_factory_default"</span> <span class="ot">=</span> <span class="st">"gt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="testing-hypotheses-about-one-of-the-regression-parameters" class="level2" data-number="14.1">
 <h2 data-number="14.1" class="anchored" data-anchor-id="testing-hypotheses-about-one-of-the-regression-parameters"><span class="header-section-number">14.1</span> Testing hypotheses about one of the regression parameters</h2>
@@ -1011,7 +1011,7 @@ Figure&nbsp;14.4: The dummy variable regression model
 <section id="heteroskedasticity-versus-homoskedasticity" class="level2" data-number="14.5">
 <h2 data-number="14.5" class="anchored" data-anchor-id="heteroskedasticity-versus-homoskedasticity"><span class="header-section-number">14.5</span> Heteroskedasticity versus Homoskedasticity</h2>
 <p>In the least squares assumptions introduced in <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 13</span></a>, we only assume the zero-conditional mean assumption about the error terms. Other than this assumption, we do not impose any structure on the error term <span class="math inline">\(u_i\)</span>. In this section, we introduce two concepts about the conditional variance of the error term <span class="math inline">\(u_i\)</span> given <span class="math inline">\(X_i\)</span>: homoskedasticity and heteroskedasticity. We say that the error term <span class="math inline">\(u_i\)</span> is <strong>homoskedastic</strong> if the variance of <span class="math inline">\(u_i\)</span> given <span class="math inline">\(X_i\)</span> is constant for all <span class="math inline">\(i = 1,2,\dots,n\)</span>. In particular, this means that the variance does not depend on <span class="math inline">\(X_i\)</span>. On the other hand, if the variance does depend on <span class="math inline">\(X_i\)</span>, we say that the error term <span class="math inline">\(u_i\)</span> is <strong>heteroskedastic</strong>.</p>
-<p>Homoskedasticity and heteroskedasticity do not affect the unbiasedness and consistency of the OLS estimators of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>. However, they do affect the variance formulas of the OLS estimators given in <a href="Chapter4-LinearRegressionOneRegressor.html#thm-thm11.1" class="quarto-xref">Theorem&nbsp;<span>13.1</span></a> of <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 13</span></a>. Under homoskedasticity, let <span class="math inline">\(\var(u_i|X_i)=\sigma^2_u\)</span>, where <span class="math inline">\(\sigma^2_u\)</span> is an unknown scalar parameter. Then, the variance formulas of <span class="math inline">\(\hat{\beta}_1\)</span> and <span class="math inline">\(\hat{\beta}_0\)</span> simplify to <span class="math display">\[
+<p>Homoskedasticity and heteroskedasticity do not affect the unbiasedness and consistency of the OLS estimators of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>. However, they do affect the variance formulas of the OLS estimators given in <span class="quarto-unresolved-ref">?thm-thm11.1</span> of <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 13</span></a>. Under homoskedasticity, let <span class="math inline">\(\var(u_i|X_i)=\sigma^2_u\)</span>, where <span class="math inline">\(\sigma^2_u\)</span> is an unknown scalar parameter. Then, the variance formulas of <span class="math inline">\(\hat{\beta}_1\)</span> and <span class="math inline">\(\hat{\beta}_0\)</span> simplify to <span class="math display">\[
 \begin{align*}
 &amp;\sigma^2_{\widehat{\beta}_1} = \frac{1}{n}\frac{\var\left((X_i - \mu_X)u_i\right)}{\left(\var(X_i)\right)^2} = \frac{\sigma^2_u}{n\var(X_i)},\\
 &amp;\sigma^2_{\hat{\beta}_0} = \frac{1}{n}\frac{\var\left(H_i u_i\right)}{\left(\E(H_i^2)\right)^2} = \frac{\E(X^2_i)\sigma^2_u}{n\sigma^2_X}.
@@ -1047,129 +1047,539 @@ Table&nbsp;14.1: The estimation results for the test scores regressions
 </figcaption>
 <div aria-describedby="tbl-t12-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<!-- preamble start -->
+<div id="hnvlbruubp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hnvlbruubp table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+#hnvlbruubp thead, #hnvlbruubp tbody, #hnvlbruubp tfoot, #hnvlbruubp tr, #hnvlbruubp td, #hnvlbruubp th {
+  border-style: none;
+}
 
-    <script>
-      // Create table-specific functions using external factory
-      const tableFns_p6gb4honipf3wv7f5up0 = TinyTable.createTableFunctions("tinytable_p6gb4honipf3wv7f5up0");
-      // tinytable span after
-      window.addEventListener('load', function () {
-          var cellsToStyle = [
-            // tinytable style arrays after
-          { positions: [ { i: '13', j: 2 }, { i: '13', j: 3 } ], css_id: 'tinytable_css_mq6ia4l6jhqw9u3yb600',}, 
-          { positions: [ { i: '4', j: 2 }, { i: '4', j: 3 } ], css_id: 'tinytable_css_996bdt2lt4mai3enqz60',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 } ], css_id: 'tinytable_css_c00ex987p2w2m4xemu2k',}, 
-          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_k6wuss7siz81ocqr3val',}, 
-          { positions: [ { i: '13', j: 1 } ], css_id: 'tinytable_css_k8zzdd0kb6pt7h6om1l4',}, 
-          { positions: [ { i: '4', j: 1 } ], css_id: 'tinytable_css_f5m5v39ya3ukgrwibsf5',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 } ], css_id: 'tinytable_css_dka4soygf37yu8u15c07',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_f49zooul4jvnb91ehpwf',}, 
-          ];
+#hnvlbruubp p {
+  margin: 0;
+  padding: 0;
+}
 
-          // Loop over the arrays to style the cells
-          cellsToStyle.forEach(function (group) {
-              group.positions.forEach(function (cell) {
-                  tableFns_p6gb4honipf3wv7f5up0.styleCell(cell.i, cell.j, group.css_id);
-              });
-          });
-      });
-    </script>
+#hnvlbruubp .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
-    <style>
-    /* tinytable css entries after */
-    #tinytable_p6gb4honipf3wv7f5up0 td.tinytable_css_mq6ia4l6jhqw9u3yb600, #tinytable_p6gb4honipf3wv7f5up0 th.tinytable_css_mq6ia4l6jhqw9u3yb600 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_p6gb4honipf3wv7f5up0 td.tinytable_css_996bdt2lt4mai3enqz60, #tinytable_p6gb4honipf3wv7f5up0 th.tinytable_css_996bdt2lt4mai3enqz60 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_p6gb4honipf3wv7f5up0 td.tinytable_css_c00ex987p2w2m4xemu2k, #tinytable_p6gb4honipf3wv7f5up0 th.tinytable_css_c00ex987p2w2m4xemu2k { text-align: center }
-    #tinytable_p6gb4honipf3wv7f5up0 td.tinytable_css_k6wuss7siz81ocqr3val, #tinytable_p6gb4honipf3wv7f5up0 th.tinytable_css_k6wuss7siz81ocqr3val {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_p6gb4honipf3wv7f5up0 td.tinytable_css_k8zzdd0kb6pt7h6om1l4, #tinytable_p6gb4honipf3wv7f5up0 th.tinytable_css_k8zzdd0kb6pt7h6om1l4 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_p6gb4honipf3wv7f5up0 td.tinytable_css_f5m5v39ya3ukgrwibsf5, #tinytable_p6gb4honipf3wv7f5up0 th.tinytable_css_f5m5v39ya3ukgrwibsf5 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_p6gb4honipf3wv7f5up0 td.tinytable_css_dka4soygf37yu8u15c07, #tinytable_p6gb4honipf3wv7f5up0 th.tinytable_css_dka4soygf37yu8u15c07 { text-align: left }
-    #tinytable_p6gb4honipf3wv7f5up0 td.tinytable_css_f49zooul4jvnb91ehpwf, #tinytable_p6gb4honipf3wv7f5up0 th.tinytable_css_f49zooul4jvnb91ehpwf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    </style>
-    <div class="container">
-      <table class="tinytable" id="tinytable_p6gb4honipf3wv7f5up0" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        
-        <thead>
-              <tr>
-                <th scope="col" data-row="0" data-col="1"> </th>
-                <th scope="col" data-row="0" data-col="2">Homoskedastic</th>
-                <th scope="col" data-row="0" data-col="3">Heteroskedastic</th>
-              </tr>
-        </thead>
-        <tfoot><tr><td colspan="3">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
-        <tbody>
-                <tr>
-                  <td data-row="1" data-col="1">(Intercept)</td>
-                  <td data-row="1" data-col="2">698.933***</td>
-                  <td data-row="1" data-col="3">698.933***</td>
-                </tr>
-                <tr>
-                  <td data-row="2" data-col="1"></td>
-                  <td data-row="2" data-col="2">(9.467)</td>
-                  <td data-row="2" data-col="3">(10.364)</td>
-                </tr>
-                <tr>
-                  <td data-row="3" data-col="1">str</td>
-                  <td data-row="3" data-col="2">-2.280***</td>
-                  <td data-row="3" data-col="3">-2.280***</td>
-                </tr>
-                <tr>
-                  <td data-row="4" data-col="1"></td>
-                  <td data-row="4" data-col="2">(0.480)</td>
-                  <td data-row="4" data-col="3">(0.519)</td>
-                </tr>
-                <tr>
-                  <td data-row="5" data-col="1">Num.Obs.</td>
-                  <td data-row="5" data-col="2">420</td>
-                  <td data-row="5" data-col="3">420</td>
-                </tr>
-                <tr>
-                  <td data-row="6" data-col="1">R2</td>
-                  <td data-row="6" data-col="2">0.051</td>
-                  <td data-row="6" data-col="3">0.051</td>
-                </tr>
-                <tr>
-                  <td data-row="7" data-col="1">R2 Adj.</td>
-                  <td data-row="7" data-col="2">0.049</td>
-                  <td data-row="7" data-col="3">0.049</td>
-                </tr>
-                <tr>
-                  <td data-row="8" data-col="1">AIC</td>
-                  <td data-row="8" data-col="2">3650.5</td>
-                  <td data-row="8" data-col="3">3650.5</td>
-                </tr>
-                <tr>
-                  <td data-row="9" data-col="1">BIC</td>
-                  <td data-row="9" data-col="2">3662.6</td>
-                  <td data-row="9" data-col="3">3662.6</td>
-                </tr>
-                <tr>
-                  <td data-row="10" data-col="1">Log.Lik.</td>
-                  <td data-row="10" data-col="2">-1822.250</td>
-                  <td data-row="10" data-col="3">-1822.250</td>
-                </tr>
-                <tr>
-                  <td data-row="11" data-col="1">F</td>
-                  <td data-row="11" data-col="2">22.575</td>
-                  <td data-row="11" data-col="3"></td>
-                </tr>
-                <tr>
-                  <td data-row="12" data-col="1">RMSE</td>
-                  <td data-row="12" data-col="2">18.54</td>
-                  <td data-row="12" data-col="3">18.54</td>
-                </tr>
-                <tr>
-                  <td data-row="13" data-col="1">Std.Errors</td>
-                  <td data-row="13" data-col="2"></td>
-                  <td data-row="13" data-col="3">Custom</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-<!-- hack to avoid NA insertion in last line -->
+#hnvlbruubp .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#hnvlbruubp .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#hnvlbruubp .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#hnvlbruubp .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hnvlbruubp .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hnvlbruubp .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hnvlbruubp .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#hnvlbruubp .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#hnvlbruubp .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#hnvlbruubp .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#hnvlbruubp .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#hnvlbruubp .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#hnvlbruubp .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#hnvlbruubp .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#hnvlbruubp .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#hnvlbruubp .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#hnvlbruubp .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#hnvlbruubp .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hnvlbruubp .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#hnvlbruubp .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#hnvlbruubp .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#hnvlbruubp .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hnvlbruubp .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#hnvlbruubp .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#hnvlbruubp .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hnvlbruubp .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hnvlbruubp .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#hnvlbruubp .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hnvlbruubp .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#hnvlbruubp .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hnvlbruubp .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hnvlbruubp .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hnvlbruubp .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hnvlbruubp .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hnvlbruubp .gt_left {
+  text-align: left;
+}
+
+#hnvlbruubp .gt_center {
+  text-align: center;
+}
+
+#hnvlbruubp .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#hnvlbruubp .gt_font_normal {
+  font-weight: normal;
+}
+
+#hnvlbruubp .gt_font_bold {
+  font-weight: bold;
+}
+
+#hnvlbruubp .gt_font_italic {
+  font-style: italic;
+}
+
+#hnvlbruubp .gt_super {
+  font-size: 65%;
+}
+
+#hnvlbruubp .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#hnvlbruubp .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#hnvlbruubp .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#hnvlbruubp .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#hnvlbruubp .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#hnvlbruubp .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#hnvlbruubp .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#hnvlbruubp .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#hnvlbruubp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th id="Homoskedastic" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Homoskedastic</th>
+<th id="Heteroskedastic" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Heteroskedastic</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">(Intercept)</td>
+<td class="gt_row gt_center" headers="Homoskedastic">698.933***</td>
+<td class="gt_row gt_center" headers="Heteroskedastic">698.933***</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Homoskedastic">(9.467)</td>
+<td class="gt_row gt_center" headers="Heteroskedastic">(10.364)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">str</td>
+<td class="gt_row gt_center" headers="Homoskedastic">-2.280***</td>
+<td class="gt_row gt_center" headers="Heteroskedastic">-2.280***</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" " style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="Homoskedastic" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.480)</td>
+<td class="gt_row gt_center" headers="Heteroskedastic" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.519)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">Num.Obs.</td>
+<td class="gt_row gt_center" headers="Homoskedastic">420</td>
+<td class="gt_row gt_center" headers="Heteroskedastic">420</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">R2</td>
+<td class="gt_row gt_center" headers="Homoskedastic">0.051</td>
+<td class="gt_row gt_center" headers="Heteroskedastic">0.051</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">R2 Adj.</td>
+<td class="gt_row gt_center" headers="Homoskedastic">0.049</td>
+<td class="gt_row gt_center" headers="Heteroskedastic">0.049</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">AIC</td>
+<td class="gt_row gt_center" headers="Homoskedastic">3650.5</td>
+<td class="gt_row gt_center" headers="Heteroskedastic">3650.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">BIC</td>
+<td class="gt_row gt_center" headers="Homoskedastic">3662.6</td>
+<td class="gt_row gt_center" headers="Heteroskedastic">3662.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">Log.Lik.</td>
+<td class="gt_row gt_center" headers="Homoskedastic">-1822.250</td>
+<td class="gt_row gt_center" headers="Heteroskedastic">-1822.250</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">F</td>
+<td class="gt_row gt_center" headers="Homoskedastic">22.575</td>
+<td class="gt_row gt_center" headers="Heteroskedastic"></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">RMSE</td>
+<td class="gt_row gt_center" headers="Homoskedastic">18.54</td>
+<td class="gt_row gt_center" headers="Heteroskedastic">18.54</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">Std.Errors</td>
+<td class="gt_row gt_center" headers="Homoskedastic"></td>
+<td class="gt_row gt_center" headers="Heteroskedastic">Custom</td>
+</tr>
+</tbody><tfoot>
+<tr class="even gt_sourcenotes">
+<td colspan="3" class="gt_sourcenote">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
 </div>
 </div>
 </figure>

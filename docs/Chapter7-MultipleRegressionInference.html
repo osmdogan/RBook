@@ -549,7 +549,8 @@ window.Quarto = {
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="st">"modelsummary_factory_default"</span> <span class="ot">=</span> <span class="st">"gt"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="hypothesis-tests-and-confidence-intervals-for-a-single-coefficient" class="level2" data-number="16.1">
 <h2 data-number="16.1" class="anchored" data-anchor-id="hypothesis-tests-and-confidence-intervals-for-a-single-coefficient"><span class="header-section-number">16.1</span> Hypothesis tests and confidence intervals for a single coefficient</h2>
@@ -618,134 +619,544 @@ Table&nbsp;16.1: Estimation Results
 </figcaption>
 <div aria-describedby="tbl-t14-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<!-- preamble start -->
+<div id="aucgxoptif" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#aucgxoptif table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+#aucgxoptif thead, #aucgxoptif tbody, #aucgxoptif tfoot, #aucgxoptif tr, #aucgxoptif td, #aucgxoptif th {
+  border-style: none;
+}
 
-    <script>
-      // Create table-specific functions using external factory
-      const tableFns_a6aeq9cxf5bazosh9zm5 = TinyTable.createTableFunctions("tinytable_a6aeq9cxf5bazosh9zm5");
-      // tinytable span after
-      window.addEventListener('load', function () {
-          var cellsToStyle = [
-            // tinytable style arrays after
-          { positions: [ { i: '14', j: 2 }, { i: '14', j: 3 } ], css_id: 'tinytable_css_c1oddhqzio9ffyk2zfyc',}, 
-          { positions: [ { i: '8', j: 2 }, { i: '8', j: 3 } ], css_id: 'tinytable_css_c8jho51xwhvsgilehe35',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 } ], css_id: 'tinytable_css_qaes8njjlbky3ut0gwwd',}, 
-          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_rz6v3iooz3zkkf6gybkc',}, 
-          { positions: [ { i: '14', j: 1 } ], css_id: 'tinytable_css_eipvmdc21jjbr1zg8um9',}, 
-          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_s7aicdzhn5pk7zo93tke',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 } ], css_id: 'tinytable_css_1156v9bcgg94ua88fkro',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_ym1lnaxoo4pti8p9bm2l',}, 
-          ];
+#aucgxoptif p {
+  margin: 0;
+  padding: 0;
+}
 
-          // Loop over the arrays to style the cells
-          cellsToStyle.forEach(function (group) {
-              group.positions.forEach(function (cell) {
-                  tableFns_a6aeq9cxf5bazosh9zm5.styleCell(cell.i, cell.j, group.css_id);
-              });
-          });
-      });
-    </script>
+#aucgxoptif .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
-    <style>
-    /* tinytable css entries after */
-    #tinytable_a6aeq9cxf5bazosh9zm5 td.tinytable_css_c1oddhqzio9ffyk2zfyc, #tinytable_a6aeq9cxf5bazosh9zm5 th.tinytable_css_c1oddhqzio9ffyk2zfyc {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_a6aeq9cxf5bazosh9zm5 td.tinytable_css_c8jho51xwhvsgilehe35, #tinytable_a6aeq9cxf5bazosh9zm5 th.tinytable_css_c8jho51xwhvsgilehe35 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_a6aeq9cxf5bazosh9zm5 td.tinytable_css_qaes8njjlbky3ut0gwwd, #tinytable_a6aeq9cxf5bazosh9zm5 th.tinytable_css_qaes8njjlbky3ut0gwwd { text-align: center }
-    #tinytable_a6aeq9cxf5bazosh9zm5 td.tinytable_css_rz6v3iooz3zkkf6gybkc, #tinytable_a6aeq9cxf5bazosh9zm5 th.tinytable_css_rz6v3iooz3zkkf6gybkc {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_a6aeq9cxf5bazosh9zm5 td.tinytable_css_eipvmdc21jjbr1zg8um9, #tinytable_a6aeq9cxf5bazosh9zm5 th.tinytable_css_eipvmdc21jjbr1zg8um9 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_a6aeq9cxf5bazosh9zm5 td.tinytable_css_s7aicdzhn5pk7zo93tke, #tinytable_a6aeq9cxf5bazosh9zm5 th.tinytable_css_s7aicdzhn5pk7zo93tke {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_a6aeq9cxf5bazosh9zm5 td.tinytable_css_1156v9bcgg94ua88fkro, #tinytable_a6aeq9cxf5bazosh9zm5 th.tinytable_css_1156v9bcgg94ua88fkro { text-align: left }
-    #tinytable_a6aeq9cxf5bazosh9zm5 td.tinytable_css_ym1lnaxoo4pti8p9bm2l, #tinytable_a6aeq9cxf5bazosh9zm5 th.tinytable_css_ym1lnaxoo4pti8p9bm2l {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    </style>
-    <div class="container">
-      <table class="tinytable" id="tinytable_a6aeq9cxf5bazosh9zm5" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        
-        <thead>
-              <tr>
-                <th scope="col" data-row="0" data-col="1"> </th>
-                <th scope="col" data-row="0" data-col="2">Homoskedastic Model</th>
-                <th scope="col" data-row="0" data-col="3">Heteroskedastic Model</th>
-              </tr>
-        </thead>
-        <tfoot><tr><td colspan="3">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
-        <tbody>
-                <tr>
-                  <td data-row="1" data-col="1">(Intercept)</td>
-                  <td data-row="1" data-col="2">649.578***</td>
-                  <td data-row="1" data-col="3">649.578***</td>
-                </tr>
-                <tr>
-                  <td data-row="2" data-col="1"></td>
-                  <td data-row="2" data-col="2">(15.206)</td>
-                  <td data-row="2" data-col="3">(15.458)</td>
-                </tr>
-                <tr>
-                  <td data-row="3" data-col="1">str</td>
-                  <td data-row="3" data-col="2">-0.286</td>
-                  <td data-row="3" data-col="3">-0.286</td>
-                </tr>
-                <tr>
-                  <td data-row="4" data-col="1"></td>
-                  <td data-row="4" data-col="2">(0.481)</td>
-                  <td data-row="4" data-col="3">(0.482)</td>
-                </tr>
-                <tr>
-                  <td data-row="5" data-col="1">expn</td>
-                  <td data-row="5" data-col="2">3.868**</td>
-                  <td data-row="5" data-col="3">3.868*</td>
-                </tr>
-                <tr>
-                  <td data-row="6" data-col="1"></td>
-                  <td data-row="6" data-col="2">(1.412)</td>
-                  <td data-row="6" data-col="3">(1.581)</td>
-                </tr>
-                <tr>
-                  <td data-row="7" data-col="1">el_pct</td>
-                  <td data-row="7" data-col="2">-0.656***</td>
-                  <td data-row="7" data-col="3">-0.656***</td>
-                </tr>
-                <tr>
-                  <td data-row="8" data-col="1"></td>
-                  <td data-row="8" data-col="2">(0.039)</td>
-                  <td data-row="8" data-col="3">(0.032)</td>
-                </tr>
-                <tr>
-                  <td data-row="9" data-col="1">Num.Obs.</td>
-                  <td data-row="9" data-col="2">420</td>
-                  <td data-row="9" data-col="3">420</td>
-                </tr>
-                <tr>
-                  <td data-row="10" data-col="1">R2</td>
-                  <td data-row="10" data-col="2">0.437</td>
-                  <td data-row="10" data-col="3">0.437</td>
-                </tr>
-                <tr>
-                  <td data-row="11" data-col="1">R2 Adj.</td>
-                  <td data-row="11" data-col="2">0.433</td>
-                  <td data-row="11" data-col="3">0.433</td>
-                </tr>
-                <tr>
-                  <td data-row="12" data-col="1">F</td>
-                  <td data-row="12" data-col="2">107.455</td>
-                  <td data-row="12" data-col="3">147.204</td>
-                </tr>
-                <tr>
-                  <td data-row="13" data-col="1">RMSE</td>
-                  <td data-row="13" data-col="2">14.28</td>
-                  <td data-row="13" data-col="3">14.28</td>
-                </tr>
-                <tr>
-                  <td data-row="14" data-col="1">Std.Errors</td>
-                  <td data-row="14" data-col="2">IID</td>
-                  <td data-row="14" data-col="3">HC1</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-<!-- hack to avoid NA insertion in last line -->
+#aucgxoptif .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#aucgxoptif .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#aucgxoptif .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#aucgxoptif .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#aucgxoptif .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#aucgxoptif .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#aucgxoptif .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#aucgxoptif .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#aucgxoptif .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#aucgxoptif .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#aucgxoptif .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#aucgxoptif .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#aucgxoptif .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#aucgxoptif .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#aucgxoptif .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#aucgxoptif .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#aucgxoptif .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#aucgxoptif .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aucgxoptif .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#aucgxoptif .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#aucgxoptif .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#aucgxoptif .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aucgxoptif .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#aucgxoptif .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#aucgxoptif .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#aucgxoptif .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aucgxoptif .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#aucgxoptif .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#aucgxoptif .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#aucgxoptif .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#aucgxoptif .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#aucgxoptif .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aucgxoptif .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#aucgxoptif .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aucgxoptif .gt_left {
+  text-align: left;
+}
+
+#aucgxoptif .gt_center {
+  text-align: center;
+}
+
+#aucgxoptif .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#aucgxoptif .gt_font_normal {
+  font-weight: normal;
+}
+
+#aucgxoptif .gt_font_bold {
+  font-weight: bold;
+}
+
+#aucgxoptif .gt_font_italic {
+  font-style: italic;
+}
+
+#aucgxoptif .gt_super {
+  font-size: 65%;
+}
+
+#aucgxoptif .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#aucgxoptif .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#aucgxoptif .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#aucgxoptif .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#aucgxoptif .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#aucgxoptif .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#aucgxoptif .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#aucgxoptif .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#aucgxoptif div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th id="Homoskedastic-Model" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Homoskedastic Model</th>
+<th id="Heteroskedastic-Model" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Heteroskedastic Model</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">(Intercept)</td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">649.578***</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">649.578***</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">(15.206)</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">(15.458)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">str</td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">-0.286</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">-0.286</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">(0.481)</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">(0.482)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">expn</td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">3.868**</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">3.868*</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">(1.412)</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">(1.581)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">el_pct</td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">-0.656***</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">-0.656***</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" " style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="Homoskedastic Model" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.039)</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.032)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">Num.Obs.</td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">420</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">420</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">R2</td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">0.437</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">0.437</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">R2 Adj.</td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">0.433</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">0.433</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">F</td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">107.455</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">147.204</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">RMSE</td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">14.28</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">14.28</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">Std.Errors</td>
+<td class="gt_row gt_center" headers="Homoskedastic Model">IID</td>
+<td class="gt_row gt_center" headers="Heteroskedastic Model">HC1</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd gt_sourcenotes">
+<td colspan="3" class="gt_sourcenote">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
 </div>
 </div>
 </figure>
@@ -1278,53 +1689,44 @@ Key Concept 14.1: <span class="math inline">\(R^2\)</span> and <span class="math
 <p><a href="#fig-fig14-3" class="quarto-xref">Figure&nbsp;<span>16.3</span></a> shows the scatterplots between these variables and the test scores. We observe that each variable is negatively correlated with the test scores.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplots of Test Scores vs. Three Student Characteristics</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Common theme elements</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>base_theme <span class="ot">&lt;-</span> <span class="fu">theme</span>(</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>)<span class="co">#,</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#plot.margin = margin(5, 5, 5, 5)</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. English learners</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> el_pct, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Percentage of english language learners"</span>,</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Percent"</span>,</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Scores"</span></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  base_theme</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Reduced lunch</span></span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> meal_pct, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Percentage qualifying for reduced price lunch"</span>,</span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Percent"</span>,</span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Scores"</span></span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>  base_theme</span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Income assistance</span></span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> calw_pct, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Percentage qualifying for income assistance"</span>,</span>
-<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Percent"</span>,</span>
-<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Scores"</span></span>
-<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>  base_theme</span>
-<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Empty plot (bottom-right)</span></span>
-<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>p_empty <span class="ot">&lt;-</span> grid<span class="sc">::</span><span class="fu">nullGrob</span>()</span>
-<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange in 2x2 layout</span></span>
-<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
-<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>  p1, p2,</span>
-<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>  p3, p_empty,</span>
-<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span></span>
-<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. English learners</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> el_pct, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Percentage of english language learners"</span>,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Percent"</span>,</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Scores"</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Reduced lunch</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> meal_pct, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Percentage qualifying for reduced price lunch"</span>,</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Percent"</span>,</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Scores"</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Income assistance</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> calw_pct, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Percentage qualifying for income assistance"</span>,</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Percent"</span>,</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Scores"</span></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Empty plot (bottom-right)</span></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a><span class="co">#p_empty &lt;- grid::nullGrob()</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange in 2x2 layout</span></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>  p1, p2, p3, </span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span></span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-fig14-3" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1387,187 +1789,597 @@ Table&nbsp;16.3: OLS Estimation Results
 </figcaption>
 <div aria-describedby="tbl-t14-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<!-- preamble start -->
+<div id="ltujkfvwnz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ltujkfvwnz table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+#ltujkfvwnz thead, #ltujkfvwnz tbody, #ltujkfvwnz tfoot, #ltujkfvwnz tr, #ltujkfvwnz td, #ltujkfvwnz th {
+  border-style: none;
+}
 
-    <script>
-      // Create table-specific functions using external factory
-      const tableFns_ia8rv71g72xqu6mmb0r1 = TinyTable.createTableFunctions("tinytable_ia8rv71g72xqu6mmb0r1");
-      // tinytable span after
-      window.addEventListener('load', function () {
-          var cellsToStyle = [
-            // tinytable style arrays after
-          { positions: [ { i: '15', j: 2 }, { i: '15', j: 3 }, { i: '15', j: 4 }, { i: '15', j: 5 }, { i: '15', j: 6 } ], css_id: 'tinytable_css_0kkkixz6l9s7e5f4ae8z',}, 
-          { positions: [ { i: '10', j: 2 }, { i: '10', j: 3 }, { i: '10', j: 4 }, { i: '10', j: 5 }, { i: '10', j: 6 } ], css_id: 'tinytable_css_3rqp9t5ec5uxibbtrofo',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '1', j: 6 }, { i: '2', j: 6 }, { i: '3', j: 6 }, { i: '4', j: 6 }, { i: '5', j: 6 }, { i: '6', j: 6 }, { i: '7', j: 6 }, { i: '8', j: 6 }, { i: '9', j: 6 }, { i: '11', j: 6 }, { i: '12', j: 6 }, { i: '13', j: 6 }, { i: '14', j: 6 } ], css_id: 'tinytable_css_q0ej47tydht77ohz78ry',}, 
-          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 } ], css_id: 'tinytable_css_2qs6609624u0lmfp55b1',}, 
-          { positions: [ { i: '15', j: 1 } ], css_id: 'tinytable_css_ecvt0jvuedsivoq6pbn3',}, 
-          { positions: [ { i: '10', j: 1 } ], css_id: 'tinytable_css_fpxcq5r2rb2j3nxwspfa',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 } ], css_id: 'tinytable_css_nqtm2gfmdthjap1qxg8b',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_i5qxmoyd1oi53xtl6fk5',}, 
-          ];
+#ltujkfvwnz p {
+  margin: 0;
+  padding: 0;
+}
 
-          // Loop over the arrays to style the cells
-          cellsToStyle.forEach(function (group) {
-              group.positions.forEach(function (cell) {
-                  tableFns_ia8rv71g72xqu6mmb0r1.styleCell(cell.i, cell.j, group.css_id);
-              });
-          });
-      });
-    </script>
+#ltujkfvwnz .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
-    <style>
-    /* tinytable css entries after */
-    #tinytable_ia8rv71g72xqu6mmb0r1 td.tinytable_css_0kkkixz6l9s7e5f4ae8z, #tinytable_ia8rv71g72xqu6mmb0r1 th.tinytable_css_0kkkixz6l9s7e5f4ae8z {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ia8rv71g72xqu6mmb0r1 td.tinytable_css_3rqp9t5ec5uxibbtrofo, #tinytable_ia8rv71g72xqu6mmb0r1 th.tinytable_css_3rqp9t5ec5uxibbtrofo {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ia8rv71g72xqu6mmb0r1 td.tinytable_css_q0ej47tydht77ohz78ry, #tinytable_ia8rv71g72xqu6mmb0r1 th.tinytable_css_q0ej47tydht77ohz78ry { text-align: center }
-    #tinytable_ia8rv71g72xqu6mmb0r1 td.tinytable_css_2qs6609624u0lmfp55b1, #tinytable_ia8rv71g72xqu6mmb0r1 th.tinytable_css_2qs6609624u0lmfp55b1 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_ia8rv71g72xqu6mmb0r1 td.tinytable_css_ecvt0jvuedsivoq6pbn3, #tinytable_ia8rv71g72xqu6mmb0r1 th.tinytable_css_ecvt0jvuedsivoq6pbn3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_ia8rv71g72xqu6mmb0r1 td.tinytable_css_fpxcq5r2rb2j3nxwspfa, #tinytable_ia8rv71g72xqu6mmb0r1 th.tinytable_css_fpxcq5r2rb2j3nxwspfa {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_ia8rv71g72xqu6mmb0r1 td.tinytable_css_nqtm2gfmdthjap1qxg8b, #tinytable_ia8rv71g72xqu6mmb0r1 th.tinytable_css_nqtm2gfmdthjap1qxg8b { text-align: left }
-    #tinytable_ia8rv71g72xqu6mmb0r1 td.tinytable_css_i5qxmoyd1oi53xtl6fk5, #tinytable_ia8rv71g72xqu6mmb0r1 th.tinytable_css_i5qxmoyd1oi53xtl6fk5 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    </style>
-    <div class="container">
-      <table class="tinytable" id="tinytable_ia8rv71g72xqu6mmb0r1" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        
-        <thead>
-              <tr>
-                <th scope="col" data-row="0" data-col="1"> </th>
-                <th scope="col" data-row="0" data-col="2">Model 1</th>
-                <th scope="col" data-row="0" data-col="3">Model 2</th>
-                <th scope="col" data-row="0" data-col="4">Model 3</th>
-                <th scope="col" data-row="0" data-col="5">Model 4</th>
-                <th scope="col" data-row="0" data-col="6">Model 5</th>
-              </tr>
-        </thead>
-        <tfoot><tr><td colspan="6">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
-        <tbody>
-                <tr>
-                  <td data-row="1" data-col="1">(Intercept)</td>
-                  <td data-row="1" data-col="2">698.933***</td>
-                  <td data-row="1" data-col="3">686.032***</td>
-                  <td data-row="1" data-col="4">700.150***</td>
-                  <td data-row="1" data-col="5">697.999***</td>
-                  <td data-row="1" data-col="6">700.392***</td>
-                </tr>
-                <tr>
-                  <td data-row="2" data-col="1"></td>
-                  <td data-row="2" data-col="2">(10.364)</td>
-                  <td data-row="2" data-col="3">(8.728)</td>
-                  <td data-row="2" data-col="4">(5.568)</td>
-                  <td data-row="2" data-col="5">(6.920)</td>
-                  <td data-row="2" data-col="6">(5.537)</td>
-                </tr>
-                <tr>
-                  <td data-row="3" data-col="1">str</td>
-                  <td data-row="3" data-col="2">-2.280***</td>
-                  <td data-row="3" data-col="3">-1.101*</td>
-                  <td data-row="3" data-col="4">-0.998***</td>
-                  <td data-row="3" data-col="5">-1.308***</td>
-                  <td data-row="3" data-col="6">-1.014***</td>
-                </tr>
-                <tr>
-                  <td data-row="4" data-col="1"></td>
-                  <td data-row="4" data-col="2">(0.519)</td>
-                  <td data-row="4" data-col="3">(0.433)</td>
-                  <td data-row="4" data-col="4">(0.270)</td>
-                  <td data-row="4" data-col="5">(0.339)</td>
-                  <td data-row="4" data-col="6">(0.269)</td>
-                </tr>
-                <tr>
-                  <td data-row="5" data-col="1">el_pct</td>
-                  <td data-row="5" data-col="2"></td>
-                  <td data-row="5" data-col="3">-0.650***</td>
-                  <td data-row="5" data-col="4">-0.122***</td>
-                  <td data-row="5" data-col="5">-0.488***</td>
-                  <td data-row="5" data-col="6">-0.130***</td>
-                </tr>
-                <tr>
-                  <td data-row="6" data-col="1"></td>
-                  <td data-row="6" data-col="2"></td>
-                  <td data-row="6" data-col="3">(0.031)</td>
-                  <td data-row="6" data-col="4">(0.033)</td>
-                  <td data-row="6" data-col="5">(0.030)</td>
-                  <td data-row="6" data-col="6">(0.036)</td>
-                </tr>
-                <tr>
-                  <td data-row="7" data-col="1">meal_pct</td>
-                  <td data-row="7" data-col="2"></td>
-                  <td data-row="7" data-col="3"></td>
-                  <td data-row="7" data-col="4">-0.547***</td>
-                  <td data-row="7" data-col="5"></td>
-                  <td data-row="7" data-col="6">-0.529***</td>
-                </tr>
-                <tr>
-                  <td data-row="8" data-col="1"></td>
-                  <td data-row="8" data-col="2"></td>
-                  <td data-row="8" data-col="3"></td>
-                  <td data-row="8" data-col="4">(0.024)</td>
-                  <td data-row="8" data-col="5"></td>
-                  <td data-row="8" data-col="6">(0.038)</td>
-                </tr>
-                <tr>
-                  <td data-row="9" data-col="1">calw_pct</td>
-                  <td data-row="9" data-col="2"></td>
-                  <td data-row="9" data-col="3"></td>
-                  <td data-row="9" data-col="4"></td>
-                  <td data-row="9" data-col="5">-0.790***</td>
-                  <td data-row="9" data-col="6">-0.048</td>
-                </tr>
-                <tr>
-                  <td data-row="10" data-col="1"></td>
-                  <td data-row="10" data-col="2"></td>
-                  <td data-row="10" data-col="3"></td>
-                  <td data-row="10" data-col="4"></td>
-                  <td data-row="10" data-col="5">(0.068)</td>
-                  <td data-row="10" data-col="6">(0.059)</td>
-                </tr>
-                <tr>
-                  <td data-row="11" data-col="1">Num.Obs.</td>
-                  <td data-row="11" data-col="2">420</td>
-                  <td data-row="11" data-col="3">420</td>
-                  <td data-row="11" data-col="4">420</td>
-                  <td data-row="11" data-col="5">420</td>
-                  <td data-row="11" data-col="6">420</td>
-                </tr>
-                <tr>
-                  <td data-row="12" data-col="1">R2</td>
-                  <td data-row="12" data-col="2">0.051</td>
-                  <td data-row="12" data-col="3">0.426</td>
-                  <td data-row="12" data-col="4">0.775</td>
-                  <td data-row="12" data-col="5">0.629</td>
-                  <td data-row="12" data-col="6">0.775</td>
-                </tr>
-                <tr>
-                  <td data-row="13" data-col="1">R2 Adj.</td>
-                  <td data-row="13" data-col="2">0.049</td>
-                  <td data-row="13" data-col="3">0.424</td>
-                  <td data-row="13" data-col="4">0.773</td>
-                  <td data-row="13" data-col="5">0.626</td>
-                  <td data-row="13" data-col="6">0.773</td>
-                </tr>
-                <tr>
-                  <td data-row="14" data-col="1">RMSE</td>
-                  <td data-row="14" data-col="2">18.54</td>
-                  <td data-row="14" data-col="3">14.41</td>
-                  <td data-row="14" data-col="4">9.04</td>
-                  <td data-row="14" data-col="5">11.60</td>
-                  <td data-row="14" data-col="6">9.03</td>
-                </tr>
-                <tr>
-                  <td data-row="15" data-col="1">Std.Errors</td>
-                  <td data-row="15" data-col="2">HC1</td>
-                  <td data-row="15" data-col="3">HC1</td>
-                  <td data-row="15" data-col="4">HC1</td>
-                  <td data-row="15" data-col="5">HC1</td>
-                  <td data-row="15" data-col="6">HC1</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-<!-- hack to avoid NA insertion in last line -->
+#ltujkfvwnz .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ltujkfvwnz .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ltujkfvwnz .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ltujkfvwnz .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ltujkfvwnz .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ltujkfvwnz .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ltujkfvwnz .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ltujkfvwnz .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ltujkfvwnz .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ltujkfvwnz .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ltujkfvwnz .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ltujkfvwnz .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ltujkfvwnz .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ltujkfvwnz .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ltujkfvwnz .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ltujkfvwnz .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ltujkfvwnz .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ltujkfvwnz .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ltujkfvwnz .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ltujkfvwnz .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ltujkfvwnz .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ltujkfvwnz .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ltujkfvwnz .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ltujkfvwnz .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ltujkfvwnz .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ltujkfvwnz .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ltujkfvwnz .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ltujkfvwnz .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ltujkfvwnz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ltujkfvwnz .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ltujkfvwnz .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ltujkfvwnz .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ltujkfvwnz .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ltujkfvwnz .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ltujkfvwnz .gt_left {
+  text-align: left;
+}
+
+#ltujkfvwnz .gt_center {
+  text-align: center;
+}
+
+#ltujkfvwnz .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ltujkfvwnz .gt_font_normal {
+  font-weight: normal;
+}
+
+#ltujkfvwnz .gt_font_bold {
+  font-weight: bold;
+}
+
+#ltujkfvwnz .gt_font_italic {
+  font-style: italic;
+}
+
+#ltujkfvwnz .gt_super {
+  font-size: 65%;
+}
+
+#ltujkfvwnz .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ltujkfvwnz .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ltujkfvwnz .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ltujkfvwnz .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ltujkfvwnz .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ltujkfvwnz .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ltujkfvwnz .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ltujkfvwnz .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ltujkfvwnz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th id="Model-1" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Model 1</th>
+<th id="Model-2" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Model 2</th>
+<th id="Model-3" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Model 3</th>
+<th id="Model-4" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Model 4</th>
+<th id="Model-5" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Model 5</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">(Intercept)</td>
+<td class="gt_row gt_center" headers="Model 1">698.933***</td>
+<td class="gt_row gt_center" headers="Model 2">686.032***</td>
+<td class="gt_row gt_center" headers="Model 3">700.150***</td>
+<td class="gt_row gt_center" headers="Model 4">697.999***</td>
+<td class="gt_row gt_center" headers="Model 5">700.392***</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Model 1">(10.364)</td>
+<td class="gt_row gt_center" headers="Model 2">(8.728)</td>
+<td class="gt_row gt_center" headers="Model 3">(5.568)</td>
+<td class="gt_row gt_center" headers="Model 4">(6.920)</td>
+<td class="gt_row gt_center" headers="Model 5">(5.537)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">str</td>
+<td class="gt_row gt_center" headers="Model 1">-2.280***</td>
+<td class="gt_row gt_center" headers="Model 2">-1.101*</td>
+<td class="gt_row gt_center" headers="Model 3">-0.998***</td>
+<td class="gt_row gt_center" headers="Model 4">-1.308***</td>
+<td class="gt_row gt_center" headers="Model 5">-1.014***</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Model 1">(0.519)</td>
+<td class="gt_row gt_center" headers="Model 2">(0.433)</td>
+<td class="gt_row gt_center" headers="Model 3">(0.270)</td>
+<td class="gt_row gt_center" headers="Model 4">(0.339)</td>
+<td class="gt_row gt_center" headers="Model 5">(0.269)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">el_pct</td>
+<td class="gt_row gt_center" headers="Model 1"></td>
+<td class="gt_row gt_center" headers="Model 2">-0.650***</td>
+<td class="gt_row gt_center" headers="Model 3">-0.122***</td>
+<td class="gt_row gt_center" headers="Model 4">-0.488***</td>
+<td class="gt_row gt_center" headers="Model 5">-0.130***</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Model 1"></td>
+<td class="gt_row gt_center" headers="Model 2">(0.031)</td>
+<td class="gt_row gt_center" headers="Model 3">(0.033)</td>
+<td class="gt_row gt_center" headers="Model 4">(0.030)</td>
+<td class="gt_row gt_center" headers="Model 5">(0.036)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">meal_pct</td>
+<td class="gt_row gt_center" headers="Model 1"></td>
+<td class="gt_row gt_center" headers="Model 2"></td>
+<td class="gt_row gt_center" headers="Model 3">-0.547***</td>
+<td class="gt_row gt_center" headers="Model 4"></td>
+<td class="gt_row gt_center" headers="Model 5">-0.529***</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" "></td>
+<td class="gt_row gt_center" headers="Model 1"></td>
+<td class="gt_row gt_center" headers="Model 2"></td>
+<td class="gt_row gt_center" headers="Model 3">(0.024)</td>
+<td class="gt_row gt_center" headers="Model 4"></td>
+<td class="gt_row gt_center" headers="Model 5">(0.038)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">calw_pct</td>
+<td class="gt_row gt_center" headers="Model 1"></td>
+<td class="gt_row gt_center" headers="Model 2"></td>
+<td class="gt_row gt_center" headers="Model 3"></td>
+<td class="gt_row gt_center" headers="Model 4">-0.790***</td>
+<td class="gt_row gt_center" headers="Model 5">-0.048</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" " style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="Model 1" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="Model 2" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="Model 3" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
+<td class="gt_row gt_center" headers="Model 4" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.068)</td>
+<td class="gt_row gt_center" headers="Model 5" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.059)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">Num.Obs.</td>
+<td class="gt_row gt_center" headers="Model 1">420</td>
+<td class="gt_row gt_center" headers="Model 2">420</td>
+<td class="gt_row gt_center" headers="Model 3">420</td>
+<td class="gt_row gt_center" headers="Model 4">420</td>
+<td class="gt_row gt_center" headers="Model 5">420</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">R2</td>
+<td class="gt_row gt_center" headers="Model 1">0.051</td>
+<td class="gt_row gt_center" headers="Model 2">0.426</td>
+<td class="gt_row gt_center" headers="Model 3">0.775</td>
+<td class="gt_row gt_center" headers="Model 4">0.629</td>
+<td class="gt_row gt_center" headers="Model 5">0.775</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">R2 Adj.</td>
+<td class="gt_row gt_center" headers="Model 1">0.049</td>
+<td class="gt_row gt_center" headers="Model 2">0.424</td>
+<td class="gt_row gt_center" headers="Model 3">0.773</td>
+<td class="gt_row gt_center" headers="Model 4">0.626</td>
+<td class="gt_row gt_center" headers="Model 5">0.773</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">RMSE</td>
+<td class="gt_row gt_center" headers="Model 1">18.54</td>
+<td class="gt_row gt_center" headers="Model 2">14.41</td>
+<td class="gt_row gt_center" headers="Model 3">9.04</td>
+<td class="gt_row gt_center" headers="Model 4">11.60</td>
+<td class="gt_row gt_center" headers="Model 5">9.03</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">Std.Errors</td>
+<td class="gt_row gt_center" headers="Model 1">HC1</td>
+<td class="gt_row gt_center" headers="Model 2">HC1</td>
+<td class="gt_row gt_center" headers="Model 3">HC1</td>
+<td class="gt_row gt_center" headers="Model 4">HC1</td>
+<td class="gt_row gt_center" headers="Model 5">HC1</td>
+</tr>
+</tbody><tfoot>
+<tr class="even gt_sourcenotes">
+<td colspan="6" class="gt_sourcenote">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
 </div>
 </div>
 </figure>

@@ -10,6 +10,7 @@ library(modelsummary)
 library(stargazer)
 library(knitr)
 library(gridExtra)
+options("modelsummary_factory_default" = "gt")
 ```
 
 ## The linear regression model
@@ -110,6 +111,8 @@ CAschools <- read.csv("data/caschool.csv", sep=",", header=TRUE)
 ```{r}
 #| tbl-cap: Summary Statistics
 #| label: tbl-chapter13-2
+#| warning: false
+#| message: false
 # Summary statistics
 datasummary_skim(CAschools[,c("str","testscr")])
 ```

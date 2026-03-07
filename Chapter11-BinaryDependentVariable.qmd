@@ -178,7 +178,7 @@ $$
 \end{align*}
 $$
 
-According to Model 1, if `pirat` increases by one percentage point (i.e., if `pirat` increases by 0.01), the probability of denial increases by $0.604 \times 0.01 = 0.00604 \approx 0.6\%$. According to Model 2, if `pirat` increases by one percentage point (i.e., by 0.01), the probability of denial increases by $0.559 \times 0.01 = 0.00559 \approx 0.6\%$, holding black constant. Additionally, holding `pirat` constant, being Black increases the probability of a mortgage application denial by about $17.7\%$. That is, a black applicant is $17.7$ percentage points more likely to have their mortgage application denied compared to a white applicant, holding constant their payment-to-income ratio.
+According to Model 1, if `pirat` increases by one percentage point (i.e., if `pirat` increases by 0.01), the probability of denial increases by $0.604 \times 0.01 = 0.00604 \approx 0.6\%$. According to Model 2, if `pirat` increases by one percentage point (i.e., by 0.01), the probability of denial increases by $0.559 \times 0.01 = 0.00559 \approx 0.6\%$, holding black constant. Additionally, holding `pirat` constant, being Black increases the probability of a mortgage application denial by about 17.7%. That is, a black applicant is 17.7 percentage points more likely to have their mortgage application denied compared to a white applicant, holding constant their payment-to-income ratio.
 
 Although the linear probability model is easy to estimate and interpret, it has two main drawbacks. The first drawback is that the predicted probabilities from the linear probability model can be less than 0 or greater than 1. We assume that the population regression function is specified as $P(Y_i=1|X_{1i},X_{2i},\ldots,X_{ki})=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki}$. In estimating this function, we do not constrain the predicted probabilities to lie within the valid interval [0,1].  In @fig-chapter20-2 and @fig-chapter20-3, we present the predicted probabilities for Models 1 and 2. These figures show that some of the predicted probabilities fall outside the valid interval [0,1].
 
@@ -389,7 +389,7 @@ ggplot(mydata, aes(x = pirat, y = deny)) +
   coord_cartesian(ylim = c(-0.4, 1.4))
 ```
 
-In Model 1, the predicted change in the denial probability when `pirat` increases from $0.3$ to $0.4$ can be computed as
+In Model 1, the predicted change in the denial probability when `pirat` increases from 0.3 to 0.4 can be computed as
 $$
  \begin{align*}
  &\Delta \hat{P}({\tt deny}=1|{\tt pirat})\\
@@ -444,9 +444,9 @@ cat("Difference in predicted denial probabilities:",
     round(probability_difference, 3))
 ```
 
-These computations indicates that the difference in denial probabilities between these two hypothetical applicants is $15.8$ percentage points.
+These computations indicates that the difference in denial probabilities between these two hypothetical applicants is 15.8 percentage points.
 
-The partial effects can be computed using the `probitmfx()` function from the `mfx` package. We can compute the partial effects at the average (PEA) and the average partial effect (APE) for both models. For the first model, both marginal effects are approximately $0.56$. For the second model, there is a small difference between the two marginal effects. 
+The partial effects can be computed using the `probitmfx()` function from the `mfx` package. We can compute the partial effects at the average (PEA) and the average partial effect (APE) for both models. For the first model, both marginal effects are approximately 0.56. For the second model, there is a small difference between the two marginal effects. 
 
 ```{r}
 # Partial effects at the average for Model 1
@@ -573,7 +573,7 @@ cat(
 )
 ```
 
-These computations indicate that for a white applicant with `pirat = 0.3`, the predicted denial probability is $7.5\%$, while for a black applicant with `pirat = 0.3`, it is $23\%$. The difference in denial probabilities between these two hypothetical applicants is approximately $15$ percentage points. 
+These computations indicate that for a white applicant with `pirat = 0.3`, the predicted denial probability is 7.5%, while for a black applicant with `pirat = 0.3`, it is 23%. The difference in denial probabilities between these two hypothetical applicants is approximately 15 percentage points. 
 
 The logit and probit regressions provide similar predicted probabilities. In @fig-chapter20-5, we plot the predicted probabilities based on Model 1 for both probit and logit regressions.  The differences between predicted probabilities are small. Historically, the logit model has been more popular than the probit model because of its computational advantages. However, given the availability of modern computational tools, the choice between the probit and logit models is often based on the researcher's preference.
 

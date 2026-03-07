@@ -10,7 +10,8 @@ library(readxl)
 library(MASS) 
 library(knitr)
 library(gridExtra)
-library(plotly) 
+library(plotly)
+options("modelsummary_factory_default" = "gt") 
 ```
 
 ## Omitted variable bias
@@ -128,6 +129,8 @@ colnames(CAschool)
 ```{r}
 #| tbl-cap: Summary statistics
 #| label: tbl-t13-1
+#| warning: false
+#| message: false
 # Summary statistics
 datasummary_skim(CAschool[,c("str", "el_pct", "testscr")])
 ```
@@ -242,7 +245,7 @@ fit_measures <- data.frame(
 #| tbl-cap: Measures of fit for the MLRM
 #| label: tbl-t13-t4
 # Measures of fit for the second model
-kable(fit_measures, digits = 3, col.names = NULL)
+kable(fit_measures, digits = 3, col.names = NULL, align = "c")
 ```
 
 ## The least squares assumptions for causal inference in multiple regression
@@ -444,6 +447,8 @@ colnames(mydata)
 ```{r}
 #| tbl-cap: Summary statistics
 #| label: tbl-t13-5
+#| warning: false
+#| message: false
 # Summary statistics
 datasummary_skim(mydata, fmt = 3)
 ```

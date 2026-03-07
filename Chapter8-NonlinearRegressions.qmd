@@ -11,7 +11,8 @@ library(sandwich)
 library(lmtest)
 library(knitr)
 library(readxl)
-library(car) 
+library(car)
+options("modelsummary_factory_default" = "gt")  
 ```
 
 ## Introduction
@@ -1067,7 +1068,6 @@ r7 <- lm(testscr ~ str + I(str^2) + I(str^3) +
 ```
 
 
-::: {style="font-size: 80%"}
 ```{r}
 #| tbl-cap: "Estimation results for empirical application"
 #| label: tbl-t15-7
@@ -1087,7 +1087,6 @@ modelsummary(
   fmt = 3
 )
 ```
-:::
 
 Starting with the results for Model 1, we see that the estimated coefficient on `STR` is statistically significant. The results for Model 2 show that adding `ln(avginc)` reduces the estimated coefficient on `STR` to `-0.734`, though this estimate remains statistically significant. In Models 3 and 4, we aim to assess the effect of allowing for an interaction term, `STR × HiEL`, both without and with economic control variables. In both models, we observe that the coefficient on the interaction term and the coefficient on `HiEL` are not statistically significant. Thus, even with economic controls, we cannot reject the null hypothesis that the effect of the student-teacher ratio on test scores is the same for districts with high and low shares of English learners.
 

@@ -8,6 +8,7 @@ library(fixest)
 library(sandwich)
 library(lmtest)
 library(modelsummary)
+options("modelsummary_factory_default" = "gt") 
 library(haven)
 library(rdrobust)
 library(knitr)
@@ -565,7 +566,7 @@ rownames(tb) <- c("Before Increase", "After Increase", "Difference")
 #| tbl-cap: "Average Employment at Fast Food Restaurants"
 #| label: tbl-t22.3
 # Print table
-kable(tb, digits = 2)
+kable(tb, digits = 2, col.names = c("New Jersey", "Pennsylvania", "Difference"))
 ```
 
 Next, we use @eq-eq22.6 to estimate the effect of the increase in the minimum wage on employment. In the following code chunk, we generate the $\Delta Y$ and $D$ variables, and then use the OLS estimator to estimate the DiD parameter $\beta_1$. The DiD estimate of $\beta_1$ is $2.75$, which is exactly the same as the one in @tbl-t22.3. 
@@ -729,6 +730,8 @@ df$Period <- as.integer(df$month > 7)
 ```{r}
 #| tbl-cap: "Summary statistics"
 #| label: tbl-t22-10
+#| warning: false
+#| message: false
 # Summary statistics
 var_label(df$D)      <- "D"
 var_label(df$Period) <- "Period"
@@ -1097,6 +1100,8 @@ colnames(df_head)
 ```{r}
 #| tbl-cap: "Summary statistics"
 #| label: tbl-t22-14
+#| warning: false
+#| message: false
 # Summary statistics
 var_label(df_head$mort_age59_related_postHS) <- "Mortality Rate"
 var_label(df_head$povrate60) <- "Poverty Rate"
