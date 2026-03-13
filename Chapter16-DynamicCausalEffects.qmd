@@ -615,12 +615,13 @@ In this section, we provide examples to illustrate how to think about the exogen
 In the first example, we consider a distributed lag model that relates Australian exports to U.S. income. The model is given by
 $$
 \begin{align}
-\text{Exports}_t=\beta_0+\beta_1\text{Income}_t+\beta_2\text{Income}_{t-1}+\ldots+\beta_{5}\text{Income}_{t-4}+u_t,
+\text{Exports}_t&=\beta_0+\beta_1\text{Income}_t+\beta_2\text{Income}_{t-1}+\beta_3\text{Income}_{t-2}\\
+&+\beta_{4}\text{Income}_{t-3}+\beta_{5}\text{Income}_{t-4}+u_t,
 \end{align}
-$${#eq-eq25-14}
+$${#eq-chapter25-14}
 where $\text{Exports}_t$ is the real value of Australian exports to the U.S. in quarter $t$, and $\text{Income}_t$ is the real U.S. income in quarter $t$. The error term $u_t$ captures factors affecting Australian exports to the U.S. other than the real U.S. income.
 
-Due to international movements in goods and capital, there is a simultaneous relationship between U.S. income and Australian exports. For instance, an increase in U.S. income may lead to a rise in Australian exports, and an increase in Australian exports may, in turn, lead to a rise in the real U.S. income. This simultaneity implies that the error term $u_t$ in @eq-eq25-14 may be correlated with the real U.S. income in both the current and past quarters. However, since the Australian economy is small relative to the U.S. economy, it is unlikely that Australian exports significantly affect the real U.S. income. Therefore, the real U.S. income is likely to be exogenous in this model.
+Due to international movements in goods and capital, there is a simultaneous relationship between U.S. income and Australian exports. For instance, an increase in U.S. income may lead to a rise in Australian exports, and an increase in Australian exports may, in turn, lead to a rise in the real U.S. income. This simultaneity implies that the error term $u_t$ in @eq-chapter25-14 may be correlated with the real U.S. income in both the current and past quarters. However, since the Australian economy is small relative to the U.S. economy, it is unlikely that Australian exports significantly affect the real U.S. income. Therefore, the real U.S. income is likely to be exogenous in this model.
 
 However, if we consider European Union exports to the U.S., the simultaneity issue may be more pronounced. This is because the European Union is a major trading partner of the U.S., and changes in European Union exports to the U.S. could influence the real U.S. income. In this case, the real U.S. income may not be exogenous in the model.
 
@@ -628,7 +629,8 @@ However, if we consider European Union exports to the U.S., the simultaneity iss
 In the second example, we consider a distributed lag model that relates U.S. inflation to oil prices. The model is given by
 $$
 \begin{align}
-\text{Inflation}_t=\beta_0+\beta_1\text{OilPrice}_t+\beta_2\text{OilPrice}_{t-1}+\ldots+\beta_{13}\text{OilPrice}_{t-12}+u_t,
+\text{Inflation}_t&=\beta_0+\beta_1\text{OilPrice}_t+\beta_2\text{OilPrice}_{t-1}\\
+&+\ldots+\beta_{13}\text{OilPrice}_{t-12}+u_t,
 \end{align}
 $${#eq-chapter25-15}
 where $\text{Inflation}_t$ is the U.S. inflation rate in month $t$, and $\text{OilPrice}_t$ is the price of oil in month $t$. 
@@ -639,7 +641,8 @@ In this example, we need to consider how oil prices are determined. The price of
 In the third example, we consider a distributed lag model that relates the U.S. inflation rate to the interest rate. The model is given by
 $$
 \begin{align}
-\text{Inflation}_t=\beta_0+\beta_1\text{InterestRate}_t+\beta_2\text{InterestRate}_{t-1}+\ldots+\beta_{5}\text{InterestRate}_{t-4}+u_t,
+\text{Inflation}_t&=\beta_0+\beta_1\text{InterestRate}_t+\beta_2\text{InterestRate}_{t-1}\\
+&+\ldots+\beta_{5}\text{InterestRate}_{t-4}+u_t,
 \end{align}
 $${#eq-chapter25-16}
 where $\text{InterestRate}_t$ is the U.S. interest rate in month $t$.
@@ -650,7 +653,8 @@ In this example, we need to consider how the central bank sets the interest rate
 In the fourth example, we consider the following ADL model from @sec-chapter22: 
 $$
 \begin{align}
-\text{GDPGR}_t=\beta_0+\beta_1{\tt GDPGR}_{t-1}+\beta_2{\tt GDPGR}_{t-2}+\delta_1{\tt TSpread}_{t-1}+\delta_2{\tt TSpread}_{t-2}+u_t,
+\text{GDPGR}_t&=\beta_0+\beta_1{\tt GDPGR}_{t-1}+\beta_2{\tt GDPGR}_{t-2}\\
+&+\delta_1{\tt TSpread}_{t-1}+\delta_2{\tt TSpread}_{t-2}+u_t,
 \end{align}
 $${#eq-chapter25-17}
 
