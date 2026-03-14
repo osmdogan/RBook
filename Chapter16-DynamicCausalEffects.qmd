@@ -136,26 +136,38 @@ $$
 where the approximation follows from $\bar{X}\xrightarrow{p}\mu_{X}$ and $\frac{1}{T}\sum_{t=1}^T(X_t-\bar{X})^2\xrightarrow{p}\sigma^2_X$.  Since $v_t$ is autocorrelated, we have
 $$
 \begin{align}
-\var(\bar{v})&=(\var(v_1)+\cov(v_1,v_2)+\ldots+\cov(v_1,v_T)\\
-&+\cov(v_2,v_1),\var(v_2),\ldots,\cov(v_2,v_T)\\
-&+\ldots\\
-&+\cov(v_T,v_1),\cov(v_T,v_2),\ldots,\var(v_T))/T^2.
+\var(\bar{v})&=\var\left(\frac{1}{T}\sum_{t=1}^Tv_t\right)=\frac{1}{T^2}\sum_{t=1}^T\sum_{s=1}^T\cov(v_t,v_s)\\
 \end{align}
 $$
-We can express $\var(\bar{v})$ as
+
+Under Assumption 2, the covariance $\cov(v_t,v_s)$ depends only on the lag $|t-s|$. Let $\gamma_{|t-s|}=\cov(v_t,v_s)$. Thus, we can express $\var(\bar{v})$ as
 $$
 \begin{align}
-\var(\bar{v})&=(T\var(v_t)+2(T-1)\cov(v_t,v_{t-1})+2(T-2)\cov(v_{t},v_{t-2})+\ldots+2\cov(v_t,v_{t-T+1}))/T^2\\
+\var(\bar{v})&=\frac{1}{T^2}\sum_{t=1}^T\sum_{s=1}^T\gamma_{|t-s|}.
+\end{align}
+$$
+
+When $t=s$, we have $\gamma_{|t-s|}=\gamma_0=\var(v_t)$. There are $T$ such terms in the double sum. When $k=|t-s|$, we need to consider the terms with (i) $t-s=k$ and (ii) $s-t=k$:
+
+(i) In the first case, there are pairs with $t=s+k$ for $s=1,\ldots,T-k$. Thus, there are $T-k$ such pairs.
+(ii) In the second case, there are pairs with $s=t+k$ for $t=1,\ldots,T-k$. Thus, there are also $T-k$ such pairs.
+
+Therefore, there are $2(T-k)$ pairs with $|t-s|=k$ for $k=1,\ldots,T-1$. Thus, we can express $\sum_{t=1}^T\sum_{s=1}^T\gamma_{|t-s|}$ as
+$$
+\begin{align}
+\sum_{t=1}^T\sum_{s=1}^T\gamma_{|t-s|}&=T\gamma_0+2\sum_{k=1}^{T-1}(T-k)\gamma_k.
+\end{align}
+$$
+
+Substituting this expression into $\var(\bar{v})$, we obtain
+$$
+\begin{align}
+\var(\bar{v})&=\frac{1}{T^2}\sum_{t=1}^T\sum_{s=1}^T\gamma_{|t-s|}=\frac{1}{T^2}\left(T\gamma_0+2\sum_{k=1}^{T-1}(T-k)\gamma_k\right)\\
+&=\frac{\gamma_0}{T}\left(1+2\sum_{k=1}^{T-1}\left(1-\frac{k}{T}\right)\frac{\gamma_k}{\gamma_0}\right)\\
 &=\frac{\sigma^2_v}{T}f_T,
 \end{align}
 $$
-where $\sigma^2_v$ is the variance of $v_t$ and $f_T=1+2\sum_{j=1}^{T-1}(\frac{T-j}{T})\rho_j$ with $\rho_j=\corr(v_t,v_{t-j})$. Thus, we can write the variance of the OLS estimator as
-$$
-\begin{align}
-\sigma^2_{\hat{\beta}_1}=\var(\hat{\beta}_1)=\left(\frac{\sigma^2_v}{T(\sigma^2_X)^2}\right)f_T.
-\end{align}
-$$
-Using this last expression, we can formulate the HAC estimator of the variance of the OLS estimator as
+where $\sigma^2_v=\gamma_0$ is the variance of $v_t$ and $f_T=1+2\sum_{k=1}^{T-1}(\frac{T-k}{T})\rho_k$ with $\rho_k=\corr(v_t,v_{t-k})=\gamma_k/\gamma_0$. Using this last expression, we can formulate the HAC estimator of the variance of the OLS estimator as
 $$
 \begin{align}
 \tilde{\sigma}^2_{\hat{\beta}_1}=\hat{\sigma}^2_{\hat{\beta}_1}\hat{f}_T,

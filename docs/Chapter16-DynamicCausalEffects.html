@@ -668,21 +668,31 @@ Y_t=\beta_0+\beta_1X_t+u_t.
 \end{align}
 \]</span> where the approximation follows from <span class="math inline">\(\bar{X}\xrightarrow{p}\mu_{X}\)</span> and <span class="math inline">\(\frac{1}{T}\sum_{t=1}^T(X_t-\bar{X})^2\xrightarrow{p}\sigma^2_X\)</span>. Since <span class="math inline">\(v_t\)</span> is autocorrelated, we have <span class="math display">\[
 \begin{align}
-\var(\bar{v})&amp;=(\var(v_1)+\cov(v_1,v_2)+\ldots+\cov(v_1,v_T)\\
-&amp;+\cov(v_2,v_1),\var(v_2),\ldots,\cov(v_2,v_T)\\
-&amp;+\ldots\\
-&amp;+\cov(v_T,v_1),\cov(v_T,v_2),\ldots,\var(v_T))/T^2.
+\var(\bar{v})&amp;=\var\left(\frac{1}{T}\sum_{t=1}^Tv_t\right)=\frac{1}{T^2}\sum_{t=1}^T\sum_{s=1}^T\cov(v_t,v_s)\\
 \end{align}
-\]</span> We can express <span class="math inline">\(\var(\bar{v})\)</span> as <span class="math display">\[
+\]</span></p>
+<p>Under Assumption 2, the covariance <span class="math inline">\(\cov(v_t,v_s)\)</span> depends only on the lag <span class="math inline">\(|t-s|\)</span>. Let <span class="math inline">\(\gamma_{|t-s|}=\cov(v_t,v_s)\)</span>. Thus, we can express <span class="math inline">\(\var(\bar{v})\)</span> as <span class="math display">\[
 \begin{align}
-\var(\bar{v})&amp;=(T\var(v_t)+2(T-1)\cov(v_t,v_{t-1})+2(T-2)\cov(v_{t},v_{t-2})+\ldots+2\cov(v_t,v_{t-T+1}))/T^2\\
+\var(\bar{v})&amp;=\frac{1}{T^2}\sum_{t=1}^T\sum_{s=1}^T\gamma_{|t-s|}.
+\end{align}
+\]</span></p>
+<p>When <span class="math inline">\(t=s\)</span>, we have <span class="math inline">\(\gamma_{|t-s|}=\gamma_0=\var(v_t)\)</span>. There are <span class="math inline">\(T\)</span> such terms in the double sum. When <span class="math inline">\(k=|t-s|\)</span>, we need to consider the terms with (i) <span class="math inline">\(t-s=k\)</span> and (ii) <span class="math inline">\(s-t=k\)</span>:</p>
+<ol type="i">
+<li>In the first case, there are pairs with <span class="math inline">\(t=s+k\)</span> for <span class="math inline">\(s=1,\ldots,T-k\)</span>. Thus, there are <span class="math inline">\(T-k\)</span> such pairs.</li>
+<li>In the second case, there are pairs with <span class="math inline">\(s=t+k\)</span> for <span class="math inline">\(t=1,\ldots,T-k\)</span>. Thus, there are also <span class="math inline">\(T-k\)</span> such pairs.</li>
+</ol>
+<p>Therefore, there are <span class="math inline">\(2(T-k)\)</span> pairs with <span class="math inline">\(|t-s|=k\)</span> for <span class="math inline">\(k=1,\ldots,T-1\)</span>. Thus, we can express <span class="math inline">\(\sum_{t=1}^T\sum_{s=1}^T\gamma_{|t-s|}\)</span> as <span class="math display">\[
+\begin{align}
+\sum_{t=1}^T\sum_{s=1}^T\gamma_{|t-s|}&amp;=T\gamma_0+2\sum_{k=1}^{T-1}(T-k)\gamma_k.
+\end{align}
+\]</span></p>
+<p>Substituting this expression into <span class="math inline">\(\var(\bar{v})\)</span>, we obtain <span class="math display">\[
+\begin{align}
+\var(\bar{v})&amp;=\frac{1}{T^2}\sum_{t=1}^T\sum_{s=1}^T\gamma_{|t-s|}=\frac{1}{T^2}\left(T\gamma_0+2\sum_{k=1}^{T-1}(T-k)\gamma_k\right)\\
+&amp;=\frac{\gamma_0}{T}\left(1+2\sum_{k=1}^{T-1}\left(1-\frac{k}{T}\right)\frac{\gamma_k}{\gamma_0}\right)\\
 &amp;=\frac{\sigma^2_v}{T}f_T,
 \end{align}
-\]</span> where <span class="math inline">\(\sigma^2_v\)</span> is the variance of <span class="math inline">\(v_t\)</span> and <span class="math inline">\(f_T=1+2\sum_{j=1}^{T-1}(\frac{T-j}{T})\rho_j\)</span> with <span class="math inline">\(\rho_j=\corr(v_t,v_{t-j})\)</span>. Thus, we can write the variance of the OLS estimator as <span class="math display">\[
-\begin{align}
-\sigma^2_{\hat{\beta}_1}=\var(\hat{\beta}_1)=\left(\frac{\sigma^2_v}{T(\sigma^2_X)^2}\right)f_T.
-\end{align}
-\]</span> Using this last expression, we can formulate the HAC estimator of the variance of the OLS estimator as <span id="eq-chapter25-4"><span class="math display">\[
+\]</span> where <span class="math inline">\(\sigma^2_v=\gamma_0\)</span> is the variance of <span class="math inline">\(v_t\)</span> and <span class="math inline">\(f_T=1+2\sum_{k=1}^{T-1}(\frac{T-k}{T})\rho_k\)</span> with <span class="math inline">\(\rho_k=\corr(v_t,v_{t-k})=\gamma_k/\gamma_0\)</span>. Using this last expression, we can formulate the HAC estimator of the variance of the OLS estimator as <span id="eq-chapter25-4"><span class="math display">\[
 \begin{align}
 \tilde{\sigma}^2_{\hat{\beta}_1}=\hat{\sigma}^2_{\hat{\beta}_1}\hat{f}_T,
 \end{align}
@@ -794,23 +804,23 @@ Table&nbsp;25.1: Summary statistics
 </figcaption>
 <div aria-describedby="tbl-t23-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="oremrgccmg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#oremrgccmg table {
+<div id="awwucxexpx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#awwucxexpx table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#oremrgccmg thead, #oremrgccmg tbody, #oremrgccmg tfoot, #oremrgccmg tr, #oremrgccmg td, #oremrgccmg th {
+#awwucxexpx thead, #awwucxexpx tbody, #awwucxexpx tfoot, #awwucxexpx tr, #awwucxexpx td, #awwucxexpx th {
   border-style: none;
 }
 
-#oremrgccmg p {
+#awwucxexpx p {
   margin: 0;
   padding: 0;
 }
 
-#oremrgccmg .gt_table {
+#awwucxexpx .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -836,12 +846,12 @@ Table&nbsp;25.1: Summary statistics
   border-left-color: #D3D3D3;
 }
 
-#oremrgccmg .gt_caption {
+#awwucxexpx .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#oremrgccmg .gt_title {
+#awwucxexpx .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -853,7 +863,7 @@ Table&nbsp;25.1: Summary statistics
   border-bottom-width: 0;
 }
 
-#oremrgccmg .gt_subtitle {
+#awwucxexpx .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -865,7 +875,7 @@ Table&nbsp;25.1: Summary statistics
   border-top-width: 0;
 }
 
-#oremrgccmg .gt_heading {
+#awwucxexpx .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -877,13 +887,13 @@ Table&nbsp;25.1: Summary statistics
   border-right-color: #D3D3D3;
 }
 
-#oremrgccmg .gt_bottom_border {
+#awwucxexpx .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#oremrgccmg .gt_col_headings {
+#awwucxexpx .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -898,7 +908,7 @@ Table&nbsp;25.1: Summary statistics
   border-right-color: #D3D3D3;
 }
 
-#oremrgccmg .gt_col_heading {
+#awwucxexpx .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -918,7 +928,7 @@ Table&nbsp;25.1: Summary statistics
   overflow-x: hidden;
 }
 
-#oremrgccmg .gt_column_spanner_outer {
+#awwucxexpx .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -930,15 +940,15 @@ Table&nbsp;25.1: Summary statistics
   padding-right: 4px;
 }
 
-#oremrgccmg .gt_column_spanner_outer:first-child {
+#awwucxexpx .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#oremrgccmg .gt_column_spanner_outer:last-child {
+#awwucxexpx .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#oremrgccmg .gt_column_spanner {
+#awwucxexpx .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -950,11 +960,11 @@ Table&nbsp;25.1: Summary statistics
   width: 100%;
 }
 
-#oremrgccmg .gt_spanner_row {
+#awwucxexpx .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#oremrgccmg .gt_group_heading {
+#awwucxexpx .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -980,7 +990,7 @@ Table&nbsp;25.1: Summary statistics
   text-align: left;
 }
 
-#oremrgccmg .gt_empty_group_heading {
+#awwucxexpx .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -995,15 +1005,15 @@ Table&nbsp;25.1: Summary statistics
   vertical-align: middle;
 }
 
-#oremrgccmg .gt_from_md > :first-child {
+#awwucxexpx .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#oremrgccmg .gt_from_md > :last-child {
+#awwucxexpx .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#oremrgccmg .gt_row {
+#awwucxexpx .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1022,7 +1032,7 @@ Table&nbsp;25.1: Summary statistics
   overflow-x: hidden;
 }
 
-#oremrgccmg .gt_stub {
+#awwucxexpx .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1035,7 +1045,7 @@ Table&nbsp;25.1: Summary statistics
   padding-right: 5px;
 }
 
-#oremrgccmg .gt_stub_row_group {
+#awwucxexpx .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1049,15 +1059,15 @@ Table&nbsp;25.1: Summary statistics
   vertical-align: top;
 }
 
-#oremrgccmg .gt_row_group_first td {
+#awwucxexpx .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#oremrgccmg .gt_row_group_first th {
+#awwucxexpx .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#oremrgccmg .gt_summary_row {
+#awwucxexpx .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1067,16 +1077,16 @@ Table&nbsp;25.1: Summary statistics
   padding-right: 5px;
 }
 
-#oremrgccmg .gt_first_summary_row {
+#awwucxexpx .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#oremrgccmg .gt_first_summary_row.thick {
+#awwucxexpx .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#oremrgccmg .gt_last_summary_row {
+#awwucxexpx .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1086,7 +1096,7 @@ Table&nbsp;25.1: Summary statistics
   border-bottom-color: #D3D3D3;
 }
 
-#oremrgccmg .gt_grand_summary_row {
+#awwucxexpx .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1096,7 +1106,7 @@ Table&nbsp;25.1: Summary statistics
   padding-right: 5px;
 }
 
-#oremrgccmg .gt_first_grand_summary_row {
+#awwucxexpx .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1106,7 +1116,7 @@ Table&nbsp;25.1: Summary statistics
   border-top-color: #D3D3D3;
 }
 
-#oremrgccmg .gt_last_grand_summary_row_top {
+#awwucxexpx .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1116,11 +1126,11 @@ Table&nbsp;25.1: Summary statistics
   border-bottom-color: #D3D3D3;
 }
 
-#oremrgccmg .gt_striped {
+#awwucxexpx .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#oremrgccmg .gt_table_body {
+#awwucxexpx .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1129,7 +1139,7 @@ Table&nbsp;25.1: Summary statistics
   border-bottom-color: #D3D3D3;
 }
 
-#oremrgccmg .gt_footnotes {
+#awwucxexpx .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1143,7 +1153,7 @@ Table&nbsp;25.1: Summary statistics
   border-right-color: #D3D3D3;
 }
 
-#oremrgccmg .gt_footnote {
+#awwucxexpx .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1152,7 +1162,7 @@ Table&nbsp;25.1: Summary statistics
   padding-right: 5px;
 }
 
-#oremrgccmg .gt_sourcenotes {
+#awwucxexpx .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1166,7 +1176,7 @@ Table&nbsp;25.1: Summary statistics
   border-right-color: #D3D3D3;
 }
 
-#oremrgccmg .gt_sourcenote {
+#awwucxexpx .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1174,72 +1184,72 @@ Table&nbsp;25.1: Summary statistics
   padding-right: 5px;
 }
 
-#oremrgccmg .gt_left {
+#awwucxexpx .gt_left {
   text-align: left;
 }
 
-#oremrgccmg .gt_center {
+#awwucxexpx .gt_center {
   text-align: center;
 }
 
-#oremrgccmg .gt_right {
+#awwucxexpx .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#oremrgccmg .gt_font_normal {
+#awwucxexpx .gt_font_normal {
   font-weight: normal;
 }
 
-#oremrgccmg .gt_font_bold {
+#awwucxexpx .gt_font_bold {
   font-weight: bold;
 }
 
-#oremrgccmg .gt_font_italic {
+#awwucxexpx .gt_font_italic {
   font-style: italic;
 }
 
-#oremrgccmg .gt_super {
+#awwucxexpx .gt_super {
   font-size: 65%;
 }
 
-#oremrgccmg .gt_footnote_marks {
+#awwucxexpx .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#oremrgccmg .gt_asterisk {
+#awwucxexpx .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#oremrgccmg .gt_indent_1 {
+#awwucxexpx .gt_indent_1 {
   text-indent: 5px;
 }
 
-#oremrgccmg .gt_indent_2 {
+#awwucxexpx .gt_indent_2 {
   text-indent: 10px;
 }
 
-#oremrgccmg .gt_indent_3 {
+#awwucxexpx .gt_indent_3 {
   text-indent: 15px;
 }
 
-#oremrgccmg .gt_indent_4 {
+#awwucxexpx .gt_indent_4 {
   text-indent: 20px;
 }
 
-#oremrgccmg .gt_indent_5 {
+#awwucxexpx .gt_indent_5 {
   text-indent: 25px;
 }
 
-#oremrgccmg .katex-display {
+#awwucxexpx .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#oremrgccmg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#awwucxexpx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1450,23 +1460,23 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
 </figcaption>
 <div aria-describedby="tbl-chapter25-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="rmeesdvawp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#rmeesdvawp table {
+<div id="efvqjzovxi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#efvqjzovxi table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#rmeesdvawp thead, #rmeesdvawp tbody, #rmeesdvawp tfoot, #rmeesdvawp tr, #rmeesdvawp td, #rmeesdvawp th {
+#efvqjzovxi thead, #efvqjzovxi tbody, #efvqjzovxi tfoot, #efvqjzovxi tr, #efvqjzovxi td, #efvqjzovxi th {
   border-style: none;
 }
 
-#rmeesdvawp p {
+#efvqjzovxi p {
   margin: 0;
   padding: 0;
 }
 
-#rmeesdvawp .gt_table {
+#efvqjzovxi .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1492,12 +1502,12 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   border-left-color: #D3D3D3;
 }
 
-#rmeesdvawp .gt_caption {
+#efvqjzovxi .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#rmeesdvawp .gt_title {
+#efvqjzovxi .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1509,7 +1519,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   border-bottom-width: 0;
 }
 
-#rmeesdvawp .gt_subtitle {
+#efvqjzovxi .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1521,7 +1531,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   border-top-width: 0;
 }
 
-#rmeesdvawp .gt_heading {
+#efvqjzovxi .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1533,13 +1543,13 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   border-right-color: #D3D3D3;
 }
 
-#rmeesdvawp .gt_bottom_border {
+#efvqjzovxi .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#rmeesdvawp .gt_col_headings {
+#efvqjzovxi .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1554,7 +1564,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   border-right-color: #D3D3D3;
 }
 
-#rmeesdvawp .gt_col_heading {
+#efvqjzovxi .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1574,7 +1584,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   overflow-x: hidden;
 }
 
-#rmeesdvawp .gt_column_spanner_outer {
+#efvqjzovxi .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1586,15 +1596,15 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   padding-right: 4px;
 }
 
-#rmeesdvawp .gt_column_spanner_outer:first-child {
+#efvqjzovxi .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#rmeesdvawp .gt_column_spanner_outer:last-child {
+#efvqjzovxi .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#rmeesdvawp .gt_column_spanner {
+#efvqjzovxi .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1606,11 +1616,11 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   width: 100%;
 }
 
-#rmeesdvawp .gt_spanner_row {
+#efvqjzovxi .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#rmeesdvawp .gt_group_heading {
+#efvqjzovxi .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1636,7 +1646,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   text-align: left;
 }
 
-#rmeesdvawp .gt_empty_group_heading {
+#efvqjzovxi .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1651,15 +1661,15 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   vertical-align: middle;
 }
 
-#rmeesdvawp .gt_from_md > :first-child {
+#efvqjzovxi .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#rmeesdvawp .gt_from_md > :last-child {
+#efvqjzovxi .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#rmeesdvawp .gt_row {
+#efvqjzovxi .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1678,7 +1688,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   overflow-x: hidden;
 }
 
-#rmeesdvawp .gt_stub {
+#efvqjzovxi .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1691,7 +1701,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   padding-right: 5px;
 }
 
-#rmeesdvawp .gt_stub_row_group {
+#efvqjzovxi .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1705,15 +1715,15 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   vertical-align: top;
 }
 
-#rmeesdvawp .gt_row_group_first td {
+#efvqjzovxi .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#rmeesdvawp .gt_row_group_first th {
+#efvqjzovxi .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#rmeesdvawp .gt_summary_row {
+#efvqjzovxi .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1723,16 +1733,16 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   padding-right: 5px;
 }
 
-#rmeesdvawp .gt_first_summary_row {
+#efvqjzovxi .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#rmeesdvawp .gt_first_summary_row.thick {
+#efvqjzovxi .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#rmeesdvawp .gt_last_summary_row {
+#efvqjzovxi .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1742,7 +1752,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   border-bottom-color: #D3D3D3;
 }
 
-#rmeesdvawp .gt_grand_summary_row {
+#efvqjzovxi .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1752,7 +1762,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   padding-right: 5px;
 }
 
-#rmeesdvawp .gt_first_grand_summary_row {
+#efvqjzovxi .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1762,7 +1772,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   border-top-color: #D3D3D3;
 }
 
-#rmeesdvawp .gt_last_grand_summary_row_top {
+#efvqjzovxi .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1772,11 +1782,11 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   border-bottom-color: #D3D3D3;
 }
 
-#rmeesdvawp .gt_striped {
+#efvqjzovxi .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#rmeesdvawp .gt_table_body {
+#efvqjzovxi .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1785,7 +1795,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   border-bottom-color: #D3D3D3;
 }
 
-#rmeesdvawp .gt_footnotes {
+#efvqjzovxi .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1799,7 +1809,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   border-right-color: #D3D3D3;
 }
 
-#rmeesdvawp .gt_footnote {
+#efvqjzovxi .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1808,7 +1818,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   padding-right: 5px;
 }
 
-#rmeesdvawp .gt_sourcenotes {
+#efvqjzovxi .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1822,7 +1832,7 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   border-right-color: #D3D3D3;
 }
 
-#rmeesdvawp .gt_sourcenote {
+#efvqjzovxi .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1830,72 +1840,72 @@ Table&nbsp;25.2: The dynamic effect of a freezing degree day on the price of ora
   padding-right: 5px;
 }
 
-#rmeesdvawp .gt_left {
+#efvqjzovxi .gt_left {
   text-align: left;
 }
 
-#rmeesdvawp .gt_center {
+#efvqjzovxi .gt_center {
   text-align: center;
 }
 
-#rmeesdvawp .gt_right {
+#efvqjzovxi .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#rmeesdvawp .gt_font_normal {
+#efvqjzovxi .gt_font_normal {
   font-weight: normal;
 }
 
-#rmeesdvawp .gt_font_bold {
+#efvqjzovxi .gt_font_bold {
   font-weight: bold;
 }
 
-#rmeesdvawp .gt_font_italic {
+#efvqjzovxi .gt_font_italic {
   font-style: italic;
 }
 
-#rmeesdvawp .gt_super {
+#efvqjzovxi .gt_super {
   font-size: 65%;
 }
 
-#rmeesdvawp .gt_footnote_marks {
+#efvqjzovxi .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#rmeesdvawp .gt_asterisk {
+#efvqjzovxi .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#rmeesdvawp .gt_indent_1 {
+#efvqjzovxi .gt_indent_1 {
   text-indent: 5px;
 }
 
-#rmeesdvawp .gt_indent_2 {
+#efvqjzovxi .gt_indent_2 {
   text-indent: 10px;
 }
 
-#rmeesdvawp .gt_indent_3 {
+#efvqjzovxi .gt_indent_3 {
   text-indent: 15px;
 }
 
-#rmeesdvawp .gt_indent_4 {
+#efvqjzovxi .gt_indent_4 {
   text-indent: 20px;
 }
 
-#rmeesdvawp .gt_indent_5 {
+#efvqjzovxi .gt_indent_5 {
   text-indent: 25px;
 }
 
-#rmeesdvawp .katex-display {
+#efvqjzovxi .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#rmeesdvawp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#efvqjzovxi div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
