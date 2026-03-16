@@ -1,22 +1,24 @@
 # Additional Topics in Time Series Regression {#sec-chapter24}
 
-```{python}
-import numpy as np
-import pandas as pd
-import pandas_datareader as pdr
-import statsmodels.tsa.stattools as stt
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
-from statsmodels.iolib.summary2 import summary_col
-from statsmodels.tsa.api import VAR
-from statsmodels.tsa.vector_ar.vecm import VECM
-from statsmodels.tsa.vector_ar.vecm import coint_johansen
-from statsmodels.stats.diagnostic import acorr_ljungbox
-from scipy import stats
-import matplotlib.pyplot as plt
-from arch import arch_model
-#plt.style.use('ggplot')
-plt.style.use('seaborn-v0_8-darkgrid')
+```{r}
+#| warning: false
+#| message: false
+# Load necessary packages
+library(tidyverse)
+library(readxl)
+library(dynlm)
+library(vars)
+library(urca)
+library(modelsummary)
+library(tsDyn)
+options("modelsummary_factory_default" = "gt")
+library(gridExtra)
+library(knitr)
+library(haven)
+library(fGarch)
+library(rugarch)
+library(forecast)
+library(tseries)
 ```
 
 ## Introduction
@@ -30,7 +32,7 @@ $$
 Y_t &= \beta_{10}+\beta_{11}Y_{t-1}+\beta_{12}Y_{t-2}+\cdots+\beta_{1p}Y_{t-p}+\gamma_{11}X_{t-1}+\cdots+\gamma_{1p}X_{t-p}+u_{1t},\\
 X_t &= \beta_{20}+\beta_{21}Y_{t-1}+\beta_{22}Y_{t-2}+\cdots+\beta_{2p}Y_{t-p}+\gamma_{21}X_{t-1}+\cdots+\gamma_{2p}X_{t-p}+u_{2t},
 \end{align*}
-$${#eq-eq24-1}
+$${#eq-chapter26-1}
 where $\beta$'s and $\gamma$'s are unknown parameters, and $u_{1t}$ and $u_{2t}$ are the error terms. 
 
 Using matrix notation, we can express the two-variable VAR($p$) as
@@ -79,7 +81,7 @@ $$
 \begin{align}
 \bs{Y}_t=\bs{B}_0+\bs{B}_1\bs{Y}_{t-1}+\ldots+\bs{B}_{p}\bs{Y}_{t-p}+\bs{u}_t,
 \end{align}
-$${#eq-eq24-2}
+$${#eq-chapter26-2}
 where
 $$
 \begin{align*}
@@ -107,7 +109,7 @@ u_{2t}
 $$
 for $j=1,2,\ldots,p$.
 
-The VAR($p$) in @eq-eq24-2 is called the reduced-form VAR($p$) or the VAR($p$) in standard form.
+The VAR($p$) in @eq-chapter26-2 is called the reduced-form VAR($p$) or the VAR($p$) in standard form.
 
 We can use the OLS estimator to estimate each equation in a VAR model. The assumptions required for estimating the VAR model are the same as those outlined in @sec-chapter22-assumptions for the ADL model. In particular, each variable in the model must be stationary. In large samples, the OLS estimator is consistent and asymptotically normal. Consequently, inference can be conducted as in a multiple regression model.
 
@@ -167,11 +169,15 @@ The `GDGGR` variable is contained in the `GrowthRate.csv` file, and the `TSpread
 - `YGROWTH`: Annual real GDP growth rate
 - `RECESSION`: Recession indicator (1 if recession, 0 otherwise)
 
-```{python}
+```{r}
 # Load the GrowthRate data
-dfGrowth = pd.read_excel('data/GrowthRate.xlsx', header = 0)
-dfGrowth.index = pd.date_range(start = '1960', periods = len(dfGrowth), freq = 'QS')
-dfGrowth.columns
+dfGrowth <- read_excel("data/GrowthRate.xlsx")
+
+# Convert to a quarterly time-series object starting in 1960 Q1
+dfGrowth <- ts(dfGrowth, start = c(1960, 1), frequency = 4)
+
+# Display column names
+colnames(dfGrowth)
 ```
 
 The `TermSpread.csv` file includes data on the following variables:
@@ -179,86 +185,136 @@ The `TermSpread.csv` file includes data on the following variables:
 - `GS10`: Interest rate on 10-year US Treasury bonds
 - `TB3MS`: Interest rate on 3-month Treasury bills
 - `RSPREAD`: Term-spread (`GS10-TB3MS`)
-- `RECESSION`: Dummy variable specifying the recession periods.
+- `RECESSION`: Dummy variable indicating recession periods
 
-```{python}
+
+```{r}
 # Load the TermSpread data
-dfTermSpread = pd.read_csv('data/TermSpread.csv', header = 0)
-dfTermSpread.index = pd.date_range(start = '1960-01-01', periods = len(dfTermSpread), freq = 'QS') 
-dfTermSpread.columns
+dfTermSpread <- read.csv("data/TermSpread.csv", header = TRUE)
+
+# Convert to a quarterly time-series object starting in 1960 Q1
+dfTermSpread <- ts(dfTermSpread, start = c(1960, 1), frequency = 4)
+
+# Display column names
+colnames(dfTermSpread)
 ```
 
-In the following code chunk, we merge the two datasets into a single dataset and plot the GDP growth rate and the term spread. The shaded areas in @fig-fig24-1 indicate the recession periods.
+In the following, we merge the two datasets into a single dataset and plot the GDP growth rate and the term spread. The resulting plots are shown in @fig-chapter26-1, with shaded areas indicating recession periods. The figure illustrates that the GDP growth rate fluctuates over time and is often negative during recessions. Similarly, the term spread varies over time and tends to be negative during recession periods.
 
-```{python}
+```{r}
 # Merge the data
-mydata = pd.merge(dfGrowth, dfTermSpread, left_index=True, right_index=True)
-mydata.columns
+data <- cbind(dfGrowth, dfTermSpread)
+
+# Rename the column names
+colnames(data) <- c("Period_x", "Y", "YGROWTH", "RECESSION_x", "Period_y", "GS10", "TB3MS", "RSPREAD", "RECESSION_y")
 ```
 
-```{python}
+
+```{r}
 #| fig-cap: "GDP growth rate and term spread in the US"
-#| label: fig-fig24-1
-# Plots of the GDP growth rate and the term spread
-# Create a figure and a set of subplots
-fig, axes = plt.subplots(2, 1, figsize=(6, 6))
+#| label: fig-chapter26-1
+#| fig-width: 10
+#| fig-height: 8
+# Convert ts object to data frame for ggplot
+data_df <- data.frame(
+    Date = as.yearqtr(time(data)),
+    YGROWTH = as.numeric(data[, "YGROWTH"]),
+    RSPREAD = as.numeric(data[, "RSPREAD"]),
+    RECESSION_x = as.numeric(data[, "RECESSION_x"]),
+    RECESSION_y = as.numeric(data[, "RECESSION_y"])
+)
 
 # Plot GDP growth rate
-axes[0].plot(mydata.index, mydata['YGROWTH'], linestyle='-', color='steelblue')
-axes[0].fill_between(mydata.index, mydata['YGROWTH'].min(), mydata['YGROWTH'].max(), where=mydata['RECESSION_x'] == 1, color='steelblue', alpha=0.3)
-axes[0].set_title('The GDP growth rate', fontsize=12)
-axes[0].set_xlabel('Date', fontsize=10)
-axes[0].set_ylabel('Percentage', fontsize=10)
+p1 <- ggplot(data_df, aes(x = Date, y = YGROWTH)) +
+    geom_line(color = "steelblue", linewidth = 1) +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+    geom_rect(
+        data = subset(data_df, RECESSION_x == 1),
+        aes(xmin = Date - 0.125, xmax = Date + 0.125, ymin = -Inf, ymax = Inf),
+        fill = "steelblue", alpha = 0.3, inherit.aes = FALSE
+    ) +
+    labs(title = "The GDP growth rate", x = "Date", y = "Percentage")
 
-# Plot term spread
-axes[1].plot(mydata.index, mydata['RSPREAD'], linestyle='-', color='steelblue')
-axes[1].fill_between(mydata.index, mydata['RSPREAD'].min(), mydata['RSPREAD'].max(), where=mydata['RECESSION_y'] == 1, color='steelblue', alpha=0.3)
-axes[1].set_title('Term sperad', fontsize=12)
-axes[1].set_xlabel('Date', fontsize=10)
-axes[1].set_ylabel('Percentage rate', fontsize=10)
+# Plot Term Spread
+p2 <- ggplot(data_df, aes(x = Date, y = RSPREAD)) +
+    geom_line(color = "steelblue", linewidth = 1) +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+    geom_rect(
+        data = subset(data_df, RECESSION_y == 1),
+        aes(xmin = Date - 0.125, xmax = Date + 0.125, ymin = -Inf, ymax = Inf),
+        fill = "steelblue", alpha = 0.3, inherit.aes = FALSE
+    ) +
+    labs(title = "Term spread", x = "Date", y = "Percentage rate")
 
-plt.tight_layout()
-plt.show()
+# Arrange plots vertically
+grid.arrange(p1, p2, ncol = 1)
 ```
 
-Although our model is a VAR($2$) model, we can check whether the information criteria return the same number of lags. In the following code chunk, we first use the `VAR()` function to create the VAR model. The `select_order` method is then used to determine the number of lags selected by the information criteria. The results indicate that all information criteria suggest 2 lags.
+Although our model is a VAR($2$) model, we can check whether the information criteria return the same number of lags. In the following, we use the `VARselect` function from the `vars` package to select the number of lags. The results show that both the BIC (SC) and the AIC suggest two lags, which is consistent with our model specification.
 
-```{python}
-# Fit the VAR model
-varData = mydata.loc["1981-01-01":"2017-07-01", ['YGROWTH', 'RSPREAD']]
-model = VAR(varData)
-lag_selection = model.select_order(maxlags=4)
-print(lag_selection.summary())
+
+```{r}
+# Select the sample period
+varData <- window(data[, c("YGROWTH", "RSPREAD")],
+    start = c(1981, 1),
+    end   = c(2017, 3)
+)
+
+# Lag order selection (up to 4 lags)
+lag_selection <- VARselect(varData, lag.max = 4, type = "const")
+
+# Print results
+lag_selection
 ```
 
-We then use the `fit` method to estimate the VAR model with 2 lags. The `summary` method provides an overview of the estimation results. In the `YGROWTH` equation, all estimated coefficients are statistically significant at the 5% level, indicating that the GDP growth rate can be forecasted using its own lagged values and the lagged values of the term spread. In the `RSPREAD` equation, except for the first lag of `YGROWTH`, all other estimated coefficients are statistically significant at the 5% level.
+We then use the `VAR` function from the `vars` package to estimate the VAR($2$) model. The estimation results are shown in @tab-chapter26-1. In the `YGROWTH` equation, all estimated coefficients are statistically significant at the 5% level, indicating that the GDP growth rate can be forecasted using its own lagged values and the lagged values of the term spread. In the `RSPREAD` equation, except for the first lag of `YGROWTH`, all other estimated coefficients are statistically significant at the 5% level.
 
-```{python}
-# Fitting VAR model with lag = 2
-var_model = model.fit(2)
-print(var_model.summary())
+
+```{r}
+# Fit the VAR model with lag = 2
+var_model <- VAR(varData, p = 2, type = "const")
 ```
 
-Although all information criteria suggest two lags, we can still use autocorrelation tests to check whether there is any remaining correlation in the error terms. In the following code chunk, we use the Ljung-Box test to check for serial correlation in the residuals. The results show that there is no serial correlation in the residuals.
 
-```{python}
-# Checking for serial correlation in the residuals: YGROWTH
-ljungbox_results = acorr_ljungbox(var_model.resid['YGROWTH'], lags=[4], return_df=True)
-print(ljungbox_results)
-```
-```{python}
-# Checking for serial correlation in the residuals: RSPREAD
-ljungbox_results = acorr_ljungbox(var_model.resid['RSPREAD'], lags=[4], return_df=True)
-print(ljungbox_results)
+```{r}
+#| tbl-cap: "The VAR model estimation results"
+#| label: tbl-chapter26-1
+# Display the summary of the VAR model
+modelsummary(var_model$varresult,
+    fmt = 3,
+    stars = TRUE
+)
 ```
 
-In the following code chunk, we use the `test_whiteness` method, which provides a portmanteau test for testing the overall significance of the residual autocorrelations up to the fourth lag. The results show that there is no serial correlation in the residuals.
-```{python}
-# Overall significance of the residual autocorrelations up to the fourth lag
-var_model.test_whiteness(nlags=4).summary()
+Although all information criteria suggest two lags, we can still use autocorrelation tests to check whether there is any remaining correlation in the error terms. To that end, we use the Ljung-Box test to check for serial correlation in the residuals. Since the p-values are greater than 0.05, we fail to reject the null hypothesis of no serial correlation in the residuals.
+
+```{r}
+# Extract residuals for the YGROWTH equation
+res_y <- residuals(var_model$varresult$YGROWTH)
+
+# Ljung-Box test with 4 lags
+Box.test(res_y, lag = 4, type = "Ljung-Box")
 ```
 
-Thus, both `acos_ljungbox()` and `test_whiteness()` tests indicate that there is no serial correlation in the residuals, suggesting that two lags are sufficient to capture the dynamics of the GDP growth rate and the term spread.
+```{r}
+# Extract residuals for the RSPREAD equation
+res_r <- residuals(var_model$varresult$RSPREAD)
+
+# Ljung-Box test with 4 lags
+Box.test(res_r, lag = 4, type = "Ljung-Box")
+```
+
+In the following, we use the `serial.test` function, which provides a portmanteau test for testing the overall significance of the residual autocorrelations up to the fourth lag. The results show that there is no serial correlation in the residuals. 
+
+```{r}
+# Overall test for residual autocorrelation up to lag 4
+serial_test <- serial.test(var_model, lags.pt = 4, type = "PT.asymptotic")
+
+# Display results
+serial_test
+```
+
+Thus, both `Box.test` and `serial.test` tests indicate that there is no serial correlation in the residuals, suggesting that two lags are sufficient to capture the dynamics of the GDP growth rate and the term spread.
 
 Next, to determine whether `TSpread` Granger-causes `GDPGR`, we use the $F$-statistic for the following null and alternative hypotheses:
 $$
@@ -268,50 +324,109 @@ $$
 \end{align}
 $$
 
-This test is conducted using the `test_causality` method in the following code chunk. The results show that the null hypothesis is rejected, indicating that `TSpread` Granger-causes `GDPGR`.
+This test is conducted using the `causality` function from the `vars` package. Since the p-value is less than 0.05, we reject the null hypothesis and conclude that `TSpread` Granger-causes `GDPGR`.
 
-```{python}
-gtest = var_model.test_causality('YGROWTH', ['RSPREAD'], kind='f')
-print(gtest.summary())
+```{r}
+# Granger causality test: Does RSPREAD Granger-cause YGROWTH?
+gtest <- causality(var_model, cause = "RSPREAD")
+
+# Display results
+gtest$Granger
 ```
 
-We can use the `forecast` method to forecast the GDP growth rate and the term spread for the next 10 periods. The forecasted values are plotted in @fig-fig24-forecast1.
+We can use the `predict` function with the option `n.ahead = 5` to forecast the GDP growth rate and the term spread for the next 5 periods. The forecasted values are plotted in @fig-chapter26-2.
 
-```{python}
-# Forecasting
-forecast = var_model.forecast(varData.values[-2:], steps=10)
-forecast = pd.DataFrame(forecast, columns=['GDPGR', 'TSpread'], index=pd.date_range(start='2017-10-01', periods=10, freq='QS'))
+```{r}
+# Forecast for the next 5 periods
+# Produce 5-step-ahead forecasts
+fc <- predict(var_model, n.ahead = 5)
 ```
 
-```{python}
-#| tbl-cap: "Forecast of the GDP growth rate and the term spread"
-#| label: tbl-tbl24-1
-# Forecast of the GDP growth rate and the term spread
-forecast
+
+```{r}
+#| tbl-cap: "Forecasts of the GDP growth rate"
+#| label: tbl-chapter26-2
+# Display the forecasted values for GDP growth rate
+forecast_growth <- ts(fc$fcst$YGROWTH, start = c(2017, 4), frequency = 4)
+rownames(forecast_growth) <- c("2017 Q4", "2018 Q1", "2018 Q2", "2018 Q3", "2018 Q4")
+kable(forecast_growth, digits = 3)
 ```
 
-```{python}
-#| fig-cap: "Forecast of the GDP growth rate and the term spread"
-#| label: fig-fig24-forecast1
-# Forecast of the GDP growth rate and the term spread
-fig = var_model.plot_forecast(10)
-#fig.set_size_inches(8, 4)
-plt.show()
+```{r}
+#| tbl-cap: "Forecasts of the term spread"
+#| label: tbl-chapter26-3
+# Display the forecasted values for the term spread
+forecast_spread <- ts(fc$fcst$RSPREAD, start = c(2017, 4), frequency = 4)
+rownames(forecast_spread) <- c("2017 Q4", "2018 Q1", "2018 Q2", "2018 Q3", "2018 Q4")
+kable(forecast_spread, digits = 3)
 ```
+
+```{r}
+#| fig-cap: "Forecasts of the GDP growth rate and the term spread"
+#| label: fig-chapter26-2
+#| layout-ncol: 1
+#| layout-nrow: 2
+#| fig-height: 4
+#| fig-subcap:
+#|   - "GDP growth rate"
+#|   - "Term Spread"
+plot(fc,
+    names = "YGROWTH",
+    main = "", lwd = 2
+)
+
+plot(fc,
+    names = "RSPREAD",
+    main = "", lwd = 2
+)
+```
+
+The `fanchart` function from the `vars` package can be used to present forecasts with differently shaded confidence regions. @fig-chapter26-3 shows the fancharts.
+
+```{r}
+#| layout-ncol: 2
+#| layout-nrow: 1
+#| fig-height: 6
+#| label: fig-chapter26-3
+#| fig-cap: Fancharts
+#| fig-subcap:
+#|   - "GDP growth rate"
+#|   - "Term Spread"
+fanchart(fc,
+    names = "YGROWTH",
+    main = NA, lwd = 2
+)
+fanchart(fc,
+    names = "RSPREAD",
+    main = NA, lwd = 2
+)
+```
+
 
 Finally, we consider the effect of a shock in the term spread on the GDP growth rate. Suppose that we are willing to assume that `GDPGR` has a contemporaneous effect on `TSpread` but `TSpread` affects the  `GDPGR` sequence with a one-period lag. To impose such an assumption, we need to order the variable such that `GDPGR` is the first column in `varData` (which is the case). That is, the order of variables in the system is important, and the variable that has the contemporaneous effect should be the first variable in the system. 
 
-The effect of a shock in `TSpread` on `GDPGR` can be analysed through the impulse-response analysis. To that end, we can use the `irf` method. The response function of `GDPGR` is plotted in @fig-fig24-irf1. The plot shows that a shock in the term spread has a negative effect on the GDP growth rate in the first period.
+The effect of a shock in `TSpread` on `GDPGR` can be analysed through the impulse-response analysis. To that end, we can use the `irf` function from the `vars` package. The response function of `GDPGR` is plotted in @fig-chapter26-4. The plot shows that a shock in the term spread has a negative effect on the GDP growth rate in the first period.
 
-```{python}
+
+```{r}
 #| fig-cap: "Impulse response analysis"
-#| label: fig-fig24-irf1
-# Impulse response analysis
-irf = var_model.irf(10)
-fig = irf.plot(orth=True, impulse='RSPREAD', figsize=(5, 5))
-fig.suptitle(None)
-plt.show()
+#| label: fig-chapter26-4
+#| fig-width: 8
+#| fig-height: 6
+
+# Compute impulse response functions
+irf_res <- irf(
+    var_model,
+    impulse = "RSPREAD",
+    response = "YGROWTH",
+    n.ahead = 10,
+    ortho = TRUE
+)
+
+# Plot IRFs
+plot(irf_res, cex.axis = 0.5, cex.lab = 0.8)
 ```
+
 
 ## Multi-period forecasts
 In this section, we discuss two forecasting methods for generating multi-period forecasts: the iterated method and the direct method. In the iterated method, we first forecast the next period's value and then use this forecast to predict the value for the subsequent period. This process is repeated until the desired forecast horizon is reached. For example, the one-period, two-period, and three-period-ahead iterated forecasts based on an AR($p$) model are computed as follows:
@@ -326,7 +441,7 @@ $$
 $$
 where the $\hat{\beta}$'s are the OLS estimates of the AR($p$) coefficients. Note that we use the forecast $\hat{Y}_{T+1|T}$ to compute the two-step-ahead forecast and the forecasts $\hat{Y}_{T+1|T}$ and $\hat{Y}_{T+2|T}$ to compute the three-step-ahead forecast. We can continue this process (iterating) to produce forecasts further into the future.
 
-Using the same approach, we can also generate multi-period forecasts for VAR models. We need to first compute the one-step ahead forecast for all variables in the VAR model. Then, we use these forecasts to generate the two-step ahead forecast, and so on. For example, in our two-variable VAR($p$) model in @eq-eq24-1, the two-step ahead forecast for $Y_t$ is
+Using the same approach, we can also generate multi-period forecasts for VAR models. We need to first compute the one-step ahead forecast for all variables in the VAR model. Then, we use these forecasts to generate the two-step ahead forecast, and so on. For example, in our two-variable VAR($p$) model in @eq-chapter26-1, the two-step ahead forecast for $Y_t$ is
 $$
 \begin{align*}
 \hat{Y}_{T+2|T}&= \hat{\beta}_{10}+\hat{\beta}_{11}\hat{Y}_{T+1|T}+\hat{\beta}_{12}Y_{T}+\cdots+\hat{\beta}_{1p}Y_{T+2-p}\\
@@ -335,9 +450,9 @@ $$
 $$
 where $\hat{Y}_{T+1|T}$ and $\hat{X}_{T+1|T}$ are the one-step ahead forecasts of $Y_{T+1}$ and $X_{T+1}$, respectively.
 
-In the VAR($2$) model that we consider in Section 24.2.5 for the GDP growth rate and the term spread, we use the `forecast` method to generate multi-period forecasts.  We report the forecasted values in @tbl-tbl24-1.
+In the VAR($2$) model that we consider in Section 26.2.5 for the GDP growth rate and the term spread, we use the `predict` function to generate multi-period forecasts.  We report the forecasted values in @tbl-chapter26-2 and @tbl-chapter26-3, and the forecast plots in @fig-chapter26-2.
 
-In the direct method, we generate the multi-period forecasts using a single regression with the dependent variable being the variable to be forecasted at the forecast horizon and the regressors are predictors lagged at the forecast horizon. Consider the first equation in the VAR($2$) model in @eq-eq24-1. Then, we can estimate the following regression model to generate $h$-step ahead forecasts for $Y_t$:
+In the direct method, we generate the multi-period forecasts using a single regression with the dependent variable being the variable to be forecasted at the forecast horizon and the regressors are predictors lagged at the forecast horizon. Consider the first equation in the VAR($2$) model in @eq-chapter26-1. Then, we can estimate the following regression model to generate $h$-step ahead forecasts for $Y_t$:
 $$
 \begin{align*}
 Y_t &= \delta_{0}+\delta_{1}Y_{t-h}+\delta_{2}Y_{t-h-1}+\cdots+\delta_{p}Y_{t-h-p+1}\\
@@ -361,7 +476,7 @@ $$
 \begin{align}
 Y_t = \beta_0+Y_{t-1}+u_t,
 \end{align}
-$${#eq-eq24-3}
+$${#eq-chapter26-3}
 where $u_t$ is an error term. Although $Y_t$ is non-stationary, its first difference $\Delta Y_t$ is stationary. We use the order of integration to characterize the stochastic trend in a time series.
 
 ::: {#def-orders}
@@ -392,7 +507,10 @@ $$
 &\quad\quad\quad+\alpha_2(Y_{1,t - 1} - \theta Y_{2,t-1})+u_{2t},
 \end{align}
 $$
-where $a_{i}$, $\delta_{ij}$, $\gamma_{ij}$, and $\alpha_i$ for $i,j\in\{1,2\}$ are unknown parameters, and $u_{1t}$ and $u_{2t}$ are the error terms. To express the VECM in matrix form, we define the following matrices:
+where $a_{i}$, $\delta_{ij}$, $\gamma_{ij}$, and $\alpha_i$ for $i,j\in\{1,2\}$ are unknown parameters, and $u_{1t}$ and $u_{2t}$ are the error terms. Note that the error correction term $(Y_{1,t - 1} - \theta Y_{2,t-1})$ is included in both equations of the VECM. The parameters $\alpha_1$ and $\alpha_2$ are called the **adjustment parameters**. If $\alpha_i$ is negative, then $Y_{it}$ tends to adjust towards the long-run equilibrium relationship defined by the error correction term.
+
+
+To express the VECM in matrix form, we define the following matrices:
 $$
 \begin{align*}
 &\bs{Y}_t=
@@ -438,7 +556,7 @@ $$
 \begin{align}
 \bs{\Delta Y}_t=\bs{a}+\bs{B}_1\bs{\Delta Y}_{t-1}+\ldots+\bs{B}_{p}\bs{\Delta Y}_{t-p}+\bs{\alpha}\bs{\beta}^{'}\bs{Y}_{t-1}+\bs{u}_t.
 \end{align}
-$${#eq-eq24-4.2}
+$${#eq-chapter26-4}
 
 In the VECM model, our goal is to use the past value of the error correction term to predict the future values of $\bs{\Delta Y}_t$. 
 
@@ -466,11 +584,9 @@ $$
 \end{align*}
 $$
 
-This last equation resembles the VECM representation in @eq-eq24-4.2 with one lag, i.e., $p=1$. If $\bs{Y}_t$ has a stochastic trend, then one or more of the roots of $\operatorname{det}(\bs{\Pi})$ must be unity [@Lutkepohl2005, chapter 2]. In that case, $\bs{\Pi}$ is singular and its rank $r$ must be less than $k$. Hence, $\bs{\Pi}$ can be decomposed as $\bs{\Pi}=\bs{\alpha}\bs{\beta}^{'}$, where $\bs{\alpha}$ and $\bs{\beta}$ are $k\times r$ matrices.
+This last equation resembles the VECM representation in @eq-chapter26-4 with one lag, i.e., $p=1$. If $\bs{Y}_t$ has a stochastic trend, then one or more of the roots of $\operatorname{det}(\bs{\Pi})$ must be unity [@Lutkepohl2005, chapter 2]. In that case, $\bs{\Pi}$ is singular and its rank $r$ must be less than $k$. Hence, $\bs{\Pi}$ can be decomposed as $\bs{\Pi}=\bs{\alpha}\bs{\beta}^{'}$, where $\bs{\alpha}$ and $\bs{\beta}$ are $k\times r$ matrices.
 
 This decomposition of $\bs{\Pi}$ is not unique. For any positive definite $r\times r$ matrix $\bs{Q}$, we can write $\bs{\Pi}=\bs{\alpha}^\star\bs{\beta}^{\star'}$, where $\bs{\alpha}^\star = \bs{\alpha}\bs{Q}$ and $\bs{\beta}^{\star}=\bs{\beta}\bs{Q}^{-1}$. Therefore, cointegration relations are not unique. To avoid this problem, restrictions on $\bs{\beta}$ and/or $\bs{\alpha}$ can be imposed. Normalizing the first component of $\bs{\beta}$ to unity in the definition above serves to avoid the identification problem.
-
-
 
 ### Estimating the cointegrating parameter
 In order to form a VECM, we first need to check whether the variables are cointegrated.  We can use the following two-step approach to decide whether $Y_{1t}$ and $Y_{2t}$ are cointegrated:
@@ -480,27 +596,27 @@ $$
 \begin{align}
 Y_{1t} = \mu_0 + \theta Y_{2t} + v_t,
 \end{align}
-$${#eq-eq24-4}
+$${#eq-chapter26-5}
 where $\mu_0$ is the intercept term, and $v_t$ is the error term.
 
-- Step 2: Compute the residual $\hat{v}_t$. Then, use the ADF test (with an intercept but no time trend) to test whether $\hat{v}_t$ is stationary. In @tbl-t24-2, we provide the critical values for the ADF statistic.
+- Step 2: Compute the residual $\hat{v}_t$. Then, use the ADF test (with an intercept but no time trend) to test whether $\hat{v}_t$ is stationary. In @tbl-chapter26-4, we provide the critical values for the ADF statistic.
 
 If $\hat{v}_t$ is $I(0)$, then we conclude that $Y_{1t}$ and $Y_{2t}$ are cointegrated. This two-step procedure is called the **Engle-Granger Augmented Dickey-Fuller test (EG-ADF test)** for cointegration. 
 
-| Number of X’s in @eq-eq24-4 | 10%   | 5%    | 1%    |
+| Number of X’s in @eq-chapter26-5 | 10%   | 5%    | 1%    |
 |-----------------------------|-------|-------|-------|
 | 1                           | -3.12 | -3.41 | -3.96 |
 | 2                           | -3.52 | -3.80 | -4.36 |
 | 3                           | -3.84 | -4.16 | -4.73 |
 | 4                           | -4.20 | -4.49 | -5.07 |
-: Critical values for the EG-ADF statistic {#tbl-t24-2}
+: Critical values for the EG-ADF statistic {#tbl-chapter26-4}
 
-We estimate the cointegrating parameter $\theta$ in the two-step procedure by the OLS estimator. If the variables are cointegrated, the OLS estimator is consistent but has a non-standard distribution (see Theorem 16.19 in @Hansen2022). There is also an alternative estimator called the **dynamic OLS (DOLS)** estimator, which is more efficient than the OLS estimator. The DOLS estimator is based on the following extended version of @eq-eq24-4:
+We estimate the cointegrating parameter $\theta$ in the two-step procedure by the OLS estimator. If the variables are cointegrated, the OLS estimator is consistent but has a non-standard distribution (see Theorem 16.19 in @Hansen2022). There is also an alternative estimator called the **dynamic OLS (DOLS)** estimator, which is more efficient than the OLS estimator. The DOLS estimator is based on the following extended version of @eq-chapter26-5:
 $$
 \begin{align}
 Y_{1t}=\mu_0+\theta Y_{2t}+\sum_{j=-p}^p\delta_j\Delta Y_{2,t-j}+u_t,
 \end{align}
-$${#eq-eq24-5}
+$${#eq-chapter26-5}
 where the regressors are $Y_{2t}, \Delta Y_{2,t+p},\ldots,\Delta Y_{2,t-p}$. If the variables are cointegrated, the DOLS estimator is consistent and asymptotically normal. For inference, we need to use the HAC standard errors.
 
 So far we assume only two variables for the cointegration analysis. However, the cointegration analysis can be extended to multiple variables. If there are three  $I(1)$ variables $Y_{1t}$, $Y_{2t}$ and $Y_{3t}$, then they are cointegrated if the following linear combination is stationary: $Y_{1t}-\theta_1Y_{2t}-\theta_2Y_{3t}$ for some parameters $\theta_1$ and $\theta_2$. Note that when there are multiple variables, there can be multiple cointegrating relationships among the variables. For example, in the case of three  $I(1)$ variables $Y_{1t}$, $Y_{2t}$ and $Y_{3t}$, one cointegrating relationship can be $Y_{1t}-\theta_1Y_{2t}$, and another cointegrating relationship can be $Y_{2t}-\theta_2Y_{3t}$ for some parameters $\theta_1$ and $\theta_2$.
@@ -510,24 +626,24 @@ $$
 \begin{align}
 Y_{1t}=\mu_0+\theta_1Y_{2t}+\theta_2Y_{3t}+v_t.
 \end{align}
-$${#eq-eq24-7}
+$${#eq-chapter26-7}
 
-In the second step, we need to check whether $\hat{v}_t$ is stationary using the EG-ADF test. Instead of using the OLS estimator, we can also use the DOLS estimator to estimate the cointegrating parameters in @eq-eq24-7. In this case, the DOLS estimator is based on the following regression model:
+In the second step, we need to check whether $\hat{v}_t$ is stationary using the EG-ADF test with the critical values from @tbl-chapter26-4. Instead of using the OLS estimator, we can also use the DOLS estimator to estimate the cointegrating parameters in @eq-chapter26-7. In this case, the DOLS estimator is based on the following regression model:
 $$
 \begin{align}
 Y_{1t}=\mu_0+\theta_1Y_{1t}+\theta_2Y_{2t}+\sum_{j=-p}^p\delta_j\Delta Y_{1,t-j}+\sum_{j=-p}^p\gamma_j\Delta Y_{3,t-j}+u_t.
 \end{align}
-$${#eq-eq24-8}
+$${#eq-chapter26-8}
 
 ### Alternative VECM specifications
-In @eq-eq24-4.2, we consider a VECM model that includes an intercept but no linear time trend. Alternative VECM specifications exist depending on whether an intercept and a linear time trend are included in the VECM and the error correction term. @Lutkepohl2005 and @Hansen2022 provide a detailed discussion on these alternative VECM models. Below, we list some major options.
+In @eq-chapter26-4, we consider a VECM model that includes an intercept but no linear time trend. Alternative VECM specifications exist depending on whether an intercept and a linear time trend are included in the VECM and the error correction term. @Lutkepohl2005 and @Hansen2022 provide a detailed discussion on these alternative VECM models. Below, we list some major options.
 
 - **Model 1**: Both the VECM and the error correction term do not include an intercept:
 $$
 \begin{align}
 \bs{\Delta Y}_t=\bs{B}_1\bs{\Delta Y}_{t-1}+\ldots+\bs{B}_{p}\bs{\Delta Y}_{t-p}+\bs{\alpha}\bs{\beta}^{'}\bs{Y}_{t-1}+\bs{u}_t.
 \end{align}
-$${#eq-eq24-9}
+$${#eq-chapter26-9}
 According to @Hansen2022, this model is not suitable for empirical applications.
 
 - **Model 2**: The error correction term includes an intercept but the VECM does not include an intercept:
@@ -535,7 +651,7 @@ $$
 \begin{align}
 \bs{\Delta Y}_t=\bs{B}_1\bs{\Delta Y}_{t-1}+\ldots+\bs{B}_{p}\bs{\Delta Y}_{t-p}+\bs{\alpha}\bs{\beta}^{'}(\bs{Y}_{t-1}+\bs{\mu})+\bs{u}_t.
 \end{align}
-$$ {#eq-eq24-10}
+$$ {#eq-chapter26-10}
 where $\bs{\mu}$ is the intercept in the error correction term. This model should be used for non-trended series such as interest rates.
 
 - **Model 3**: The VECM includes an intercept term but the error correction term does not include an intercept:
@@ -543,7 +659,7 @@ $$
 \begin{align}
 \bs{\Delta Y}_t=\bs{a}+\bs{B}_1\bs{\Delta Y}_{t-1}+\ldots+\bs{B}_{p}\bs{\Delta Y}_{t-p}+\bs{\alpha}\bs{\beta}^{'}\bs{Y}_{t-1}+\bs{u}_t.
 \end{align}
-$$ {#eq-eq24-11}
+$$ {#eq-chapter26-11}
 The intercept term provides a drift component for $\bs{\Delta Y}_t$ and a linear trend for $\bs{Y}_t$. Therefore, this model should be used for series that have a linear time trend.
 
 - **Model 4**: The VECM includes an intercept and the error correction term  includes a linear time trend:
@@ -551,7 +667,7 @@ $$
 \begin{align}
 \bs{\Delta Y}_t=\bs{a}+\bs{B}_1\bs{\Delta Y}_{t-1}+\ldots+\bs{B}_{p}\bs{\Delta Y}_{t-p}+\bs{\alpha}\bs{\beta}^{'}(\bs{Y}_{t-1}+\bs{\mu}t)+\bs{u}_t.
 \end{align}
-$$ {#eq-eq24-12}
+$$ {#eq-chapter26-12}
 This model should be used for series that have a linear time trend. In this model, the vector error correction term  contains a linear time trend and a stationary process.
 
 - **Model 5**: The VECM includes an intercept and a linear trend, and the error correction term includes none of them:
@@ -559,7 +675,7 @@ $$
 \begin{align}
 \bs{\Delta Y}_t=\bs{a}+\bs{b}t+\bs{B}_1\bs{\Delta Y}_{t-1}+\ldots+\bs{B}_{p}\bs{\Delta Y}_{t-p}+\bs{\alpha}\bs{\beta}^{'}\bs{Y}_{t-1}+\bs{u}_t.
 \end{align}
-$$ {#eq-eq24-13}
+$$ {#eq-chapter26-13}
 This model suggests that the level series have a quadratic linear time trend. According to @Hansen2022, this model is not a typical model for empirical applications.
 
 ### Johansen cointegration test
@@ -579,38 +695,67 @@ $$
 &H_0:\text{rank}(\bs{\Pi})=0,\,H_0:\text{rank}(\bs{\Pi})=1,\, \ldots\,, H_0:\text{rank}(\bs{\Pi})=m-1.
 \end{align}
 $$
+
 We test each null hypothesis sequentially and stop when we fail to reject the null hypothesis. The number of cointegrating relationships is then given by the last null hypothesis that we fail to reject.
 
 ### An empirical application
-As an example, we examine the relationship between short- and long-term interest rates: (i) the interest rate on 3-month Treasury bills and (ii) the interest rate on 10-year Treasury bonds. @fig-f24-2 displays the time series plots. Both interest rates were low during the 1960s, rose throughout the 1970s to peak in the early 1980s, and declined thereafter. However, the difference between long-term and short-term interest rates, known as the term spread (also shown in @fig-f24-2), does not appear to exhibit a trend. These patterns suggest that long-term and short-term interest rates are cointegrated, as both series share a common stochastic trend and exhibit similar long-run behavior.
+As an example, we examine the relationship between short- and long-term interest rates: (i) the interest rate on 3-month Treasury bills (`TB3MS`) and (ii) the interest rate on 10-year Treasury bonds (`GS10`). @fig-chapter26-5 displays the time series plots. Both interest rates were low during the 1960s, rose throughout the 1970s to peak in the early 1980s, and declined thereafter. However, the difference between long-term and short-term interest rates, known as the term spread (also shown in @fig-chapter26-5), does not appear to exhibit a trend. These patterns suggest that long-term and short-term interest rates are cointegrated, as both series share a common stochastic trend and exhibit similar long-run behavior.
 
-```{python}
-# Import data from FRED-QD.dta
-df = pd.read_stata('data/FRED-QD.dta')
-# Set time index
-df.index = pd.date_range(start = '1959-01-01', periods = len(df), freq = 'QS')
+```{r}
+# Import growth data
+mydata <- read_dta("data/FRED-QD.dta")
+
+# Create a ts object
+tsMydata <- ts(mydata, start = c(1959, 1), frequency = 4)
+# 3-month interest rate (short-term rate)
+TB3MS <- tsMydata[, "tb3ms"]
+# 10-year interest rate (long-term rate)
+GS10 <- tsMydata[, "gs10"]
+# Term spread
+RSPREAD <- GS10 - TB3MS
 ```
 
-```{python}
+```{r}
 #| fig-cap: "Interest rates and the term spread"
-#| label: fig-f24-2
+#| label: fig-chapter26-5
+#| fig-width: 8
+#| fig-height: 5
 # Plots of the interest rates and the term spread
-# Create a figure and a set of subplots
-fig, ax = plt.subplots(figsize=(6, 4))
+# Prepare data frame from ts object
+df <- data.frame(
+    Date = as.yearqtr(time(tsMydata)),
+    TB3MS = as.numeric(tsMydata[, "tb3ms"]),
+    GS10 = as.numeric(tsMydata[, "gs10"])
+)
+df$RSPREAD <- df$GS10 - df$TB3MS
 
-# Plot the interest rate on 3-month treasury bills
-ax.plot(df.index, df['tb3ms'], linestyle='-', color='steelblue', label='3-month Treasury bills')
-# Plot the interest rate on 10-year treasury bonds
-ax.plot(df.index, df['gs10'], linestyle='-', color='darkorange', label='10-year Treasury bonds')
-# Plot the term spread
-ax.plot(df.index, df['gs10']-df['tb3ms'], linestyle='-', color='green', label='Term spread')
+# Shaded area between GS10 and TB3MS
+df$ymin <- pmin(df$TB3MS, df$GS10)
+df$ymax <- pmax(df$TB3MS, df$GS10)
 
-ax.set_xlabel('Date', fontsize=10)
-ax.set_ylabel('Percentage rate', fontsize=10)
-ax.legend()
-
-plt.tight_layout()
-plt.show()
+# Plot directly without long format
+ggplot(df) +
+    # Shaded area
+    geom_ribbon(aes(x = Date, ymin = ymin, ymax = ymax),
+        fill = "steelblue", alpha = 0.5
+    ) +
+    # Lines
+    geom_line(aes(x = Date, y = TB3MS, color = "TB3MS"), linewidth = 1) +
+    geom_line(aes(x = Date, y = GS10, color = "GS10"), linewidth = 1) +
+    geom_line(aes(x = Date, y = RSPREAD, color = "RSPREAD"), linewidth = 1) +
+    # Horizontal line at 0
+    geom_hline(yintercept = 0, linetype = "solid") +
+    # Axis labels
+    labs(x = "Date", y = "Percent per annum", color = "") +
+    # Y-axis limits
+    ylim(-5, 17) +
+    # Colors
+    scale_color_manual(values = c(
+        "TB3MS" = "magenta",
+        "GS10" = "blue",
+        "RSPREAD" = "steelblue"
+    )) +
+    theme(legend.position = "top")
 ```
 
 We can use the two-step Engle-Granger test to check whether these interest rates  are cointegrated. In the first step, we estimate the cointegrating parameter $\theta$ by the OLS estimator from the following regression:
@@ -618,35 +763,64 @@ $$
 \begin{align}
 \text{tb3ms}_t = \mu + \theta \text{gs10}_t + v_t.
 \end{align}
-$${#eq-eq24-9}
+$${#eq-chapter26-14}
 
-```{python}
-# Estimate the cointegrating parameter
-results = smf.ols('tb3ms ~ gs10', data=df).fit()
+
+```{r}
+# Estimate cointegrating relationship: TB3MS ~ GS10
+results <- lm(TB3MS ~ GS10, data = df)
 ```
-The estimation results are presented in Table @tbl-t24-3. The estimated model is 
+
+The estimation results are presented in Table @tbl-chapter26-5. The estimated model is 
 $$
 \begin{align}
 \widehat{\text{tb3ms}}_{t}=-1.71+1.03\times\text{gs10}_t.
 \end{align}
 $$
+
 Thus, the estimated cointegrating parameter is $\hat{\theta}=1.03$.
 
-:::{layout-ncol=1}
-```{python}
+```{r}
 #| tbl-cap: "Cointegrating parameter"
-#| label: tbl-t24-3
+#| label: tbl-chapter26-5
 # Estimation results from Step 1
-summary_col(results, stars=True)
+# Display OLS results
+modelsummary(results,
+    fmt = 3, stars = TRUE,
+    gof_omit = "AIC|BIC|Log"
+)
 ```
-:::
 
-In the second step, we use the EG-ADF test to test whether $\hat{v}_t$ is stationary. The ADF test statistic given below is $-4.72$, which is less than the $5\%$ critical value $-3.41$ given in @tbl-t24-2. Thus, we can reject the null hypothesis of unit root. As a result, this two-step approach suggests that `gs10` and `tb3ms` are cointegrated.
+In the second step, we use the EG-ADF test to test whether $\hat{v}_t$ is stationary. The ADF test statistic given below is -4.52, which is less than the 5\% critical value -3.41 given in @tbl-chapter26-4. Thus, we can reject the null hypothesis of unit root. As a result, this two-step approach suggests that `gs10` and `tb3ms` are cointegrated.
 
-```{python}
-# ADF test for the error term
-adf_results = stt.adfuller(results.resid, regression='c', autolag='AIC')
-print(adf_results)
+```{r}
+# Residuals from the cointegration regression
+resid_ols <- residuals(results)
+
+# ADF test on residuals (with intercept only, like regression='c')
+adf_test <- ur.df(resid_ols, type = "drift", selectlags = "AIC")
+
+# View summary
+summary(adf_test)
+```
+
+Alternatively, we can resort to the dynamic OLS (DOLS) estimator to estimate the cointegrating coefficient. The estimation results are presented in @tbl-chapter26-6. The estimated cointegrating parameter is $\hat{\theta}\approx1$, which is close to the value obtained from the two-step approach.
+
+```{r}
+# Using DOLS to estimate theta
+m2 <- dynlm(TB3MS ~ GS10 + L(diff(GS10), k = -5:5))
+m2Var <- NeweyWest(m2, lag = 5, prewhite = F)
+m2Se <- sqrt(diag(m2Var))
+```
+
+```{r}
+#| tbl-cap: DOLS Estimation Results
+#| label: tbl-chapter26-6
+modelsummary(
+    models = list("Model" = m2),
+    stars = T,
+    vcov = m2Se
+)
 ```
 
 Since both `gs10` and `tb3ms` are cointegrated, we can estimate the VECM model for these two variables. Since these series are non-trended series, we consider the following VECM specification:
@@ -665,49 +839,65 @@ $$
 \end{align} 
 $$
 
-In the following code chunk, we use the `VECM()` function to estimate the VECM model for `tb3ms` and `gs10`. The option `k_ar_diff=3` specifies that the lag order for the differenced variables is 3. The option `coint_rank=1` indicates that there is one cointegrating relationship between the variables. The option `deterministic='ci'` ensures that the VECM includes an intercept term in the vector error correction term.
+We can use the `VECM` function from the `vars` package to estimate the VECM model for `tb3ms` and `gs10` as shown below. The `lag` argument specifies the number of lags in the VECM, the `r` argument specifies the number of cointegrating relationships, and the `include` argument specifies whether to include an intercept or a linear time trend in the VECM. The `beta` argument allows us to specify the cointegrating vector. Since we have already estimated the cointegrating parameter $\theta$ in the two-step approach, we can use this estimate to specify the cointegrating vector as $\bs{\beta} = (1, -\hat{\theta})^{'}$. The `estim` argument specifies the estimation method, and the `LRinclude` argument specifies whether to include an intercept or a linear time trend in the error correction term.
 
-```{python}
-mydata = df.copy()
-vecmData = mydata[['tb3ms', 'gs10']]
-vecm_model = VECM(vecmData, k_ar_diff=3, coint_rank=1, deterministic='ci')
-vecm_model_fit = vecm_model.fit()
-print(vecm_model_fit.summary())
+```{r}
+model <- VECM(
+    data = tsMydata[, c("tb3ms", "gs10")],
+    lag = 3,
+    r = 1,
+    include = "none",
+    beta = NULL,
+    estim = "ML",
+    LRinclude = "const",
+    exogen = NULL
+)
 ```
 
-The last block of the estimation output presents the estimated cointegrating vector, given by $\bs{\beta}=(\beta_1,\beta_2)^{'}=(1,-\theta)^{'}$. The estimated cointegrating parameter is $\hat{\theta}=-\hat{\beta}_2=1.01$, which is close to the value obtained from the two-step approach.
-
-The estimated coefficients for the lag terms appear in the first and second blocks of the estimation output. For $\Delta\text{tb3ms}$, only its own lag terms are statistically significant at the 5% level. For $\Delta\text{gs10}$, only the first lag of its own term is statistically significant at the $5\%$ level.
-
-The estimated coefficients for the error correction terms are provided in the third and fourth blocks of the estimation output. These coefficients are $\hat{\alpha}_1=-0.095$ and $\hat{\alpha}_2=0.069$, both statistically significant at the 5% level. The estimate $\hat{\alpha}_1=-0.095$ suggests that the error correction term $(\text{tb3ms}_{t-1}-\theta\text{gs10}_{t-1}-\mu)$ negatively affects $\Delta\text{tb3ms}_t$, while $\hat{\alpha}_2=0.069$ indicates a positive effect on $\Delta\text{gs10}_t$. These estimates imply that if the short-run interest rate exceeds the long-run interest rate by more than 1.6, the short-run interest rate will decrease while the long-run interest rate will increase, and vice versa.
-
-In the following code chunk, we use the `coint_johansen()` function to implement the Johansen cointegration test. The option `det_order=0` indicates that the error correction term includes a constant term, and the option `k_ar_diff=3` specifies that the lag order for the differenced variables is 3. The function returns the trace and maximum eigenvalue statistics and their critical values. 
-```{python}
-# Johansen cointegration test
-johansen_results = coint_johansen(vecmData, det_order=0, k_ar_diff=3)
-```	
-
-The trace statistic is returned in the `trace_stat` attribute, and the critical values at the $10\%$, $5\%$, and $1\%$ significance levels are returned in the `trace_stat_crit_vals` attribute. The trace statistics for $H_0:\text{rank}(\bs{\Pi})=0$ and $H_0:\text{rank}(\bs{\Pi})=1$ are $31.56$ and $2.77$, respectively. The corresponding critical values at the $5\%$ significance level are $15.49$ and $3.84$.
-Thus, we can reject $H_0:\text{rank}(\bs{\Pi})=0$ but fail to reject $H_0:\text{rank}(\bs{\Pi})=1$. As a result, we conclude that there is one cointegrating relationship according to the trace statistic.
-
-```{python}
-# Print trace statistic
-print(johansen_results.trace_stat)
+```{r}
+summary(model)
 ```
-```{python}
-# Print critical values for trace statistic at 10%, 5%, and 1% significance levels
-print(johansen_results.trace_stat_crit_vals)
-```	
 
-The maximum eigenvalue statistic is returned in the `max_eig_stat` attribute, and the critical values at the $10\%$, $5\%$, and $1\%$ significance levels are returned in the `max_eig_stat_crit_vals` attribute. The maximum eigenvalue statistics for $H_0:\text{rank}(\bs{\Pi})=0$ and $H_0:\text{rank}(\bs{\Pi})=1$ are $28.8$ and $2.77$, respectively. The corresponding critical values at the $5\%$ significance level are $14.26$ and $3.84$. Again, we can reject $H_0:\text{rank}(\bs{\Pi})=0$ but fail to reject $H_0:\text{rank}(\bs{\Pi})=1$. As a result, we conclude that there is also one cointegrating relationship according to the maximum eigenvalue statistic.
+The first block of the estimation output presents the estimated cointegrating vector: $\boldsymbol{\beta} = (\beta_1, \beta_2)^{'} = (1, -\theta)^{'}$. The estimated cointegrating parameter is $\hat{\theta} = -\hat{\beta}_2 = 1.007$, which is close to the value obtained from the two-step approach.
 
-```{python}
-# Print maximum eigenvalue statistic
-print(johansen_results.max_eig_stat)
+The estimated coefficients for the lag terms appear in the second block of the estimation output. For $\Delta\text{tb3ms}$, only its own lag terms are statistically significant at the 5% level. For $\Delta\text{gs10}$, only the first lag of its own term is statistically significant at the 5% level.
+
+The estimated coefficients for the error correction terms are provided under the ECT column. These coefficients are $\hat{\alpha}_1 = -0.0945$ and $\hat{\alpha}_2 = 0.0688$, both of which are statistically significant at the 5% level. The estimate $\hat{\alpha}_1 = -0.0945$ suggests that the error correction term $(\text{tb3ms}_{t-1} - \theta\times \text{gs10}_{t-1} - \mu)$ negatively affects $\Delta\text{tb3ms}_t$, while $\hat{\alpha}_2 = 0.0688$ indicates a positive effect on $\Delta\text{gs10}_t$. These estimates imply that if the short-term interest rate exceeds the long-term interest rate by more than 1.6, the short-term interest rate will decrease while the long-term interest rate will increase, and vice versa.
+
+We can use the `ca.jo` function from the `urca` package to perform the Johansen cointegration test. The `ca.jo` function requires the data to be in a `ts` object. The `type` argument specifies the type of test to be performed: `trace` for the trace statistic and `eigen` for the maximum eigenvalue statistic. The `K` argument specifies the number of lags in the VAR model, and the `ecdet` argument specifies the deterministic component to be included in the vector error correction term. 
+
+```{r}
+# Johansen test for cointegration: trace statistic
+trace_stat <- ca.jo(tsMydata[, c("tb3ms", "gs10")],
+    type = "trace",
+    ecdet = "const",
+    K = 3,
+    spec = "transitory"
+)
 ```
-```{python}
-# Print critical values for maximum eigenvalue statistic at 10%, 5%, and 1% significance levels
-print(johansen_results.max_eig_stat_crit_vals)
+
+```{r}
+# Trace statistic and critical values
+summary(trace_stat)
+```
+
+The trace statistics for $H_0:\text{rank}(\bs{\Pi})=0$ and $H_0:\text{rank}(\bs{\Pi})=1$ are 25.30 and 2.24, respectively. The corresponding critical values at the 5% significance level are 19.96 and 9.24. Thus, we can reject $H_0:\text{rank}(\bs{\Pi})=0$ but fail to reject $H_0:\text{rank}(\bs{\Pi})=1$. As a result, we conclude that there is one cointegrating relationship according to the trace statistic.
+
+The maximum eigenvalue statistics for $H_0:\text{rank}(\bs{\Pi})=0$ and $H_0:\text{rank}(\bs{\Pi})=1$ are 23.06 and 2.24, respectively. The corresponding critical values at the 5% significance level are 15.67 and 9.24. Again, we can reject $H_0:\text{rank}(\bs{\Pi})=0$ but fail to reject $H_0:\text{rank}(\bs{\Pi})=1$. As a result, the maximum eigenvalue statistic also suggests one cointegrating relationship.
+
+```{r}
+# Johansen test for cointegration: maximum eigenvalue statistic
+trace_eigen <- ca.jo(tsMydata[, c("tb3ms", "gs10")],
+    type = "eigen",
+    ecdet = "const",
+    K = 3,
+    spec = "transitory"
+)
+```
+
+```{r}
+# Maximum eigenvalue statistic and critical values
+summary(trace_eigen)
 ```
 
 ## Volatility clustering and autoregressive conditional heteroskedasticity
@@ -718,80 +908,102 @@ The conditional variance of financial asset returns is called **volatility**. Th
 A series exhibits **volatility clustering** if periods of high volatility are followed by high volatility, and periods of low volatility are followed by low volatility.
 :::
 
-As an example, we consider the daily Wilshire 5000 index, a broad stock market index that includes all actively traded U.S. stocks. @fig-f24-3 displays the time series plots of the index value, returns, squared returns, and absolute returns. The returns are calculated as the percentage change in the index value; squared returns are the square of the returns, and absolute returns are the absolute value of the returns. Although the index value shows an upward trend, there are periods where the value decreases. The returns exhibit volatility clustering, with periods of high volatility followed by high volatility and periods of low volatility followed by low volatility. This pattern is also observed in the squared and absolute returns.
+As an example, we consider the daily Wilshire 5000 index, a broad stock market index that includes all actively traded U.S. stocks. @fig-chapter26-6 displays the time series plots of the index value, returns, squared returns, and absolute returns. The returns are calculated as the percentage change in the index value; squared returns are the square of the returns, and absolute returns are the absolute value of the returns. Although the index value shows an upward trend, there are periods where the value decreases. The returns exhibit volatility clustering, with periods of high volatility followed by high volatility and periods of low volatility followed by low volatility. This pattern is also observed in the squared and absolute returns.
 
-```{python}
-# Load WILL500IND.csv data
-df = pd.read_csv('data/WILL500IND.csv')
 
-# Set the date as the index
-df['date'] = pd.to_datetime(df['date'])
-df.set_index('date', inplace=True)
+```{r}
+# Load the data
+df <- read.csv("data/WILL500IND.csv")
 
-# Calculate returns
-df['return'] = 100*(df['value'] - df['value'].shift(1)) / df['value'].shift(1)
+# Convert the date column to Date format
+df$date <- as.Date(df$date)
 
-# Calculate squared returns
-df['squared_return'] = df['return'] ** 2
+# Compute returns
+df$return <- 100 * (df$value - dplyr::lag(df$value)) / dplyr::lag(df$value)
 
-# Calculate absolute returns
-df['abs_return'] = df['return'].abs()
+# Compute squared returns
+df$squared_return <- df$return^2
+
+# Compute absolute returns
+df$abs_return <- abs(df$return)
+
+# Set the date as the index (convert to a time-series object if desired)
+df <- df[order(df$date), ]
+rownames(df) <- df$date
 ```
 
-```{python}
+
+```{r}
 #| fig-cap: "Wilshire 5000 index value, returns, squared returns, and absolute returns"
-#| label: fig-f24-3
-# Plots of the Wilshire 5000 index value, returns, squared returns, and absolute returns
-# Create a figure and a set of subplots
-fig, axes = plt.subplots(4, 1, figsize=(6, 10))
+#| label: fig-chapter26-6
+#| fig-width: 10
+#| fig-height: 12
+#| warning: false
+#| message: false
 
-# Plot the Wilshire 5000 index value
-axes[0].plot(df.index, df['value'], linestyle='-', color='steelblue')
-axes[0].set_title('Wilshire 5000 Index Value', fontsize=10)
-axes[0].set_xlabel('Date', fontsize=10)
-axes[0].set_ylabel('Value', fontsize=10)
+# Plot 1: Index value
+p1 <- ggplot(df, aes(x = date, y = value)) +
+    geom_line(color = "steelblue") +
+    labs(
+        title = "Wilshire 5000 Index Value",
+        x = "Date",
+        y = "Value"
+    )
 
-# Plot the returns
-axes[1].plot(df.index, df['return'], linestyle='-', color='steelblue')
-axes[1].set_title('Returns', fontsize=10)
-axes[1].set_xlabel('Date', fontsize=10)
-axes[1].set_ylabel('Return', fontsize=10)
+# Plot 2: Returns
+p2 <- ggplot(df, aes(x = date, y = return)) +
+    geom_line(color = "steelblue") +
+    labs(
+        title = "Returns",
+        x = "Date",
+        y = "Return"
+    )
 
-# Plot the squared returns
-axes[2].plot(df.index, df['squared_return'], linestyle='-', color='steelblue')
-axes[2].set_title('Squared Returns', fontsize=10)
-axes[2].set_xlabel('Date', fontsize=10)
-axes[2].set_ylabel('Squared Return', fontsize=10)
+# Plot 3: Squared returns
+p3 <- ggplot(df, aes(x = date, y = squared_return)) +
+    geom_line(color = "steelblue") +
+    labs(
+        title = "Squared Returns",
+        x = "Date",
+        y = "Squared Return"
+    )
 
-# Plot the absolute returns
-axes[3].plot(df.index, df['abs_return'], linestyle='-', color='steelblue')
-axes[3].set_title('Absolute Returns', fontsize=10)
-axes[3].set_xlabel('Date', fontsize=10)
-axes[3].set_ylabel('Absolute Return', fontsize=10)
+# Plot 4: Absolute returns
+p4 <- ggplot(df, aes(x = date, y = abs_return)) +
+    geom_line(color = "steelblue") +
+    labs(
+        title = "Absolute Returns",
+        x = "Date",
+        y = "Absolute Return"
+    )
 
-plt.tight_layout()
-plt.show()
-``` 
-
-The volatility clustering observed in the returns leads to autocorrelation in the squared returns. The correlograms of the returns and squared returns are shown in @fig-f24-4. While the autocorrelation of the returns is relatively small at all lags, the autocorrelation of the squared returns is significant at all lags and decays slowly.
-
-```{python}
-#| fig-cap: "Correlograms of returns and squared returns"
-#| label: fig-f24-4
-# Correlogram of returns and squared returns
-fig, axes = plt.subplots(1, 2, figsize=(8, 3))
-
-# Correlogram of returns
-sm.graphics.tsa.plot_acf(df['return'].dropna(), lags=40, zero=False, auto_ylims=True, ax=axes[0])
-axes[0].set_title('Correlogram of Returns')
-
-# Correlogram of squared returns
-sm.graphics.tsa.plot_acf(df['squared_return'].dropna(), lags=40, zero=False, auto_ylims=True, ax=axes[1])
-axes[1].set_title('Correlogram of Squared Returns')
-
-plt.tight_layout()
-plt.show()
+# Arrange plots in a single column
+grid.arrange(p1, p2, p3, p4, ncol = 1)
 ```
+
+The volatility clustering observed in the returns leads to autocorrelation in the squared returns. The correlograms of the returns and squared returns are shown in @fig-chapter26-7. While the autocorrelation of the returns is relatively small at all lags, the autocorrelation of the squared returns is significant at all lags and decays slowly.
+
+
+```{r}
+#| layout-ncol: 2
+#| layout-nrow: 2
+#| fig-cap: ACF of daily returns of the Wilshire index
+#| fig-subcap:
+#|   - "ACF of returns"
+#|   - "ACF of absolute value of returns"
+#|   - "ACF of squared returns"
+#| fig-height: 5
+#| label: fig-chapter26-7
+#  Autocorrelation of returns, absolute value of returns, and squared returns
+ggAcf(df$return[-1], lag.max = 30) +
+    labs(title = "ACF of returns")
+ggAcf(df$abs_return[-1], lag.max = 30) +
+    labs(title = "ACF of absolute value of returns")
+ggAcf(df$squared_return[-1], lag.max = 30) +
+    labs(title = "ACF of squared returns")
+```
+
+In @fig-chapter26-7, we observe that autocorrelations of returns are rather weak, making it difficult to predict future outcomes using, for example, an AR model. However, we observe strong and persistent autocorrelation in the absolute value of returns and the squared returns.
 
 In this section, we review two methods for estimating volatility: (i) the realized volatility approach and (ii) the model-based approach. Estimating volatility is important for several reasons. First, the volatility of an asset serves as a measure of its risk. A risk-averse investor will require a higher return for holding an asset with higher volatility. Second, volatility is used in the pricing of financial derivatives. For example, the Black-Scholes option pricing model uses the volatility of the underlying asset as an input. Third, volatility can be used to improve the accuracy of forecast intervals.
 
@@ -803,77 +1015,79 @@ $$
 \end{align}
 $$
 
-For the Wilshire 5000 index returns, we set $h=20$ and compute the 20-day realized volatility. In the following code chunk, we calculate the realized volatility using the `return` column in the `df` DataFrame. The realized volatility is calculated as the square root of the mean of the squared returns over the past 20 days.
+For the Wilshire 5000 index returns, we set $h=20$ and compute the 20-day realized volatility. In the following, we compute the realized volatility using the `return` column in the `df` DataFrame. 
 
-```{python}
-# Calculate realized volatility
-T = len(df)
-h = 20
-df['RV'] = 0.0
-for t in range(h, T):
-    df.at[df.index[t], 'RV'] = np.sqrt(np.mean(df.iloc[t-h+1:t]["return"]**2))
+```{r}
+h <- 20
+T <- nrow(df)
+
+df$RV <- 0
+
+for (t in (h + 1):T) {
+  df$RV[t] <- sqrt(mean(df$return[(t - h + 1):t]^2, na.rm = TRUE))
+}
 ```
 
-The time-series plot of the 20-day realized volatility estimates is shown in @fig-f24-5. In @fig-f24-6, we plot the returns along with the realized volatility bands ($\pm\text{RV}$). The figure shows that when returns are large, realized volatility is also high, and vice versa, suggesting that realized volatility effectively captures the volatility clustering observed in the returns. The width of the band can be used to identify periods of high volatility. For example, the realized volatility bands are wide during the 2008 financial crisis, indicating high volatility in the returns.
+The time-series plot of the 20-day realized volatility estimates is shown in @fig-chapter26-8. In @fig-chapter26-9, we plot the returns along with the realized volatility bands ($\pm\text{RV}$). The figure shows that when returns are large, realized volatility is also high, and vice versa, suggesting that realized volatility effectively captures the volatility clustering observed in the returns. The width of the band can be used to identify periods of high volatility. For example, the realized volatility bands are wide during the 2008 financial crisis, indicating high volatility in the returns.
 
-```{python}
+
+```{r}
 #| fig-cap: "Realized volatility"
-#| label: fig-f24-5
-# Time-series plot of the 20-day realized volatility
-# Create a figure and a set of subplots
-fig, ax = plt.subplots(figsize=(6, 4))
-
-# Plot the realized volatility
-ax.plot(df.index, df['RV'], linestyle='-', color='black',linewidth=1, label='Realized Volatility')
-# ax.set_title('Realized Volatility', fontsize=10)
-ax.set_xlabel('Date', fontsize=10)
-ax.set_ylabel('Volatility', fontsize=10)
-# Horizontal line at 0
-ax.axhline(0, color='black', linewidth=1, linestyle='--')
-
-plt.tight_layout()
-plt.show()      
+#| label: fig-chapter26-8
+#| fig-width: 8
+#| fig-height: 5
+# Time-series plot of the 20-day realized volatility estimates
+ggplot(df, aes(x = date, y = RV)) +
+    geom_line(color = "black", linewidth = 0.7) +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "black", linewidth = 0.6) +
+    labs(
+        x = "Date",
+        y = "Volatility"
+    )
 ```
 
-```{python}
+
+```{r}
 #| fig-cap: "Return and realized volatility bands"
-#| label: fig-f24-6
-# Return and realized volatility bands
-# Create a figure and a set of subplots
-fig, ax = plt.subplots(figsize=(6, 4))
-
-# Plot the returns
-ax.plot(df.index, df['return'], linestyle='-', color='steelblue', label='Return')
-
-# Plot the realized volatility
-ax.plot(df.index, df['RV'], linestyle='-', color='black', label='Realized Volatility',linewidth=1)
-ax.plot(df.index, -df['RV'], linestyle='-', color='black',linewidth=1)
-ax.set_xlabel('Date', fontsize=10)
-ax.set_ylabel('Percent', fontsize=10)
-ax.legend()
-# Horizontal line at 0
-ax.axhline(0, color='black', linewidth=1, linestyle='--')
-
-plt.tight_layout()
-plt.show()
+#| label: fig-chapter26-9
+#| fig-width: 8
+#| fig-height: 6
+#| warning: false
+#| message: false
+# Time-series plot of returns along with the realized volatility bands
+ggplot(df, aes(x = date)) +
+    geom_line(aes(y = return, color = "Return"), linewidth = 0.6) +
+    geom_line(aes(y = RV, color = "Realized Volatility"), linewidth = 0.7) +
+    geom_line(aes(y = -RV), color = "black", linewidth = 0.7) +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+    labs(
+        x = "Date",
+        y = "Percent",
+        color = ""
+    ) +
+    scale_color_manual(values = c(
+        "Return" = "steelblue",
+        "Realized Volatility" = "black"
+    )) +
+    theme(legend.position = "top")
 ```
 
 ### The model-based approach
-The model-based approach is used when the data are not available at high frequency. The most popular model for estimating volatility is the autoregressive conditional heteroskedasticity (ARCH) model proposed by @Engle1982 and its extension, the generalized autoregressive conditional heteroskedasticity (GARCH) model proposed by @Bollerslev1986. The ARCH model assumes that the conditional variance of the returns is a function of the past squared returns. The ARCH($p$) model is given by
+The model-based approach is used when the data are not available at high frequency. The most popular model for estimating volatility is the autoregressive conditional heteroskedasticity (ARCH) model proposed by @Engle1982 and its extension, the generalized autoregressive conditional heteroskedasticity (GARCH) model proposed by @Bollerslev1986. In the ARCH model, we assume that the conditional variance of the returns is a function of the past squared returns. The ARCH($p$) model is given by
 $$
-\begin{align}\label{eq11}
+\begin{align}
 &Y_t=\beta_0+\beta_1Y_{t-1}+\gamma_1X_{t-1}+u_t,\\
 &\sigma^2_t=\omega+\alpha_1u^2_{t-1}+\alpha_2u^2_{t-2}+\ldots+\alpha_pu^2_{t-p},
 \end{align}
-$${#eq-eq24-14}
-where $Y_t$ is the return, $X_t$ is a regressor, $u_t$ is the error term, which is independent over $t$ with mean zero and variance $\sigma^2_t$. The parameters $\beta_0,\beta_1,\gamma_1,\omega, \alpha_1,\ldots,\alpha_p$ are unknown coefficients. The first equation is the mean equation, where we assume an ADL($1,1$) model for the returns. The second equation is the variance equation, where the conditional variance $\sigma^2_t$ is a function of the past squared error terms.
+$${#eq-chapter26-15}
+where $Y_t$ is the return, $X_t$ is a regressor, $u_t$ is the error term, which is independent over $t$ with mean zero and variance $\sigma^2_t$. The parameters $\beta_0,\beta_1,\gamma_1,\omega, \alpha_1,\ldots,\alpha_p$ are unknown coefficients. The first equation is the mean equation, where we assume an ADL(1,1) model for the returns. The second equation is the variance equation, where the conditional variance $\sigma^2_t$ is a function of the past squared error terms.
 
-The GARCH($p,q$) model extends the ARCH model by including past conditional variances in the variance equation:
+The GARCH(p,q) model extends the ARCH model by including past conditional variances in the variance equation:
 $$
 \begin{align}
 \sigma^2_t=\omega+\sum_{i=1}^p\alpha_iu^2_{t-i}+\sum_{j=1}^q\beta_j\sigma^2_{t-j},
 \end{align}
-$${#eq-eq24-15}
+$${#eq-chapter26-16}
 where $\omega,\alpha_1,\ldots,\alpha_p,\beta_1,\ldots,\beta_q$ are unknown parameters.
 
 For both models, the mean equation can alternatively be specified as 
@@ -881,17 +1095,17 @@ $$
 \begin{align}
 &Y_t=\beta_0+\beta_1Y_{t-1}+\gamma_1X_{t-1}+\sigma_tv_t,
 \end{align}
-$${#eq-eq24-16}
-where $v_t$ is i.i.d over $t$ with mean zero and variance one. The error term $u_t$ in @eq-eq24-14 is then given by $u_t=\sigma_tv_t$. 
+$${#eq-chapter26-17}
+where $v_t$ is i.i.d over $t$ with mean zero and variance one. The error term $u_t$ in @eq-chapter26-15 is then given by $u_t=\sigma_tv_t$. 
 
-Consider the GARCH($1,1$) model and  let $\mathcal{F}_{t-1}$ be the information set available at time $t-1$. Then, the conditional mean and variance of $Y_t$ are
+Consider the GARCH(1,1) model and  let $\mathcal{F}_{t-1}$ be the information set available at time $t-1$. Then, the conditional mean and variance of $Y_t$ are
 $$
 \begin{align}
 \E(Y_t|\mathcal{F}_{t-1})&=\E(\beta_0+\beta_1Y_{t-1}+\gamma_1X_{t-1}+\sigma_tv_t|\mathcal{F}_{t-1})\\
 &=\beta_0+\beta_1Y_{t-1}+\gamma_1X_{t-1}+\sigma_t\E\left(v_t|\mathcal{F}_{t-1}\right)\\
 &=\beta_0+\beta_1Y_{t-1}+\gamma_1X_{t-1},
 \end{align}
-$${#eq-eq24-17}
+$${#eq-chapter26-18}
 and
 $$
 \begin{align}
@@ -900,7 +1114,7 @@ $$
 &=\sigma^2_t\E\left(v^2_t|\mathcal{F}_{t-1}\right)\\
 &=\sigma^2_t.
 \end{align}
-$${#eq-eq24-18}
+$${#eq-chapter26-19}
 
 Thus, the conditional standard deviation is $\sqrt{\text{Var}(Y_t|\mathcal{F}_{t-1})}=\sigma_t$.
 
@@ -915,25 +1129,25 @@ $$
 \begin{align}
 L(\theta)=\prod_{t=1}^T\frac{1}{\sqrt{2\pi\sigma^2_t}}\exp\left(-\frac{1}{2\sigma^2_t}(Y_t-\beta_0-\beta_1Y_{t-1}-\gamma_1X_{t-1})^2\right),
 \end{align}
-$${#eq-eq24-19}
+$${#eq-chapter26-20}
 where $\theta=(\beta_0,\beta_1,\gamma_1,\omega,\alpha_1,\ldots,\alpha_p,\phi_1,\ldots,\phi_q)^{'}$ is the vector of unknown parameters. The log-likelihood function is then given by
 $$
 \begin{align}
 \ln L(\theta)=-\frac{T}{2}\ln(2\pi)-\frac{1}{2}\sum_{t=1}^T\ln(\sigma^2_t)-\frac{1}{2}\sum_{t=1}^T\frac{1}{\sigma^2_t}(Y_t-\beta_0-\beta_1Y_{t-1}-\gamma_1X_{t-1})^2.
 \end{align}
-$${#eq-eq24-20}
+$${#eq-chapter26-21}
 
 Then, the maximum likelihood estimator (MLE) is defined by
 $$
 \begin{align}
 \hat{\theta}=\text{argmax}_{\theta} L(\theta).
 \end{align}
-$${#eq-eq24-21}
+$${#eq-chapter26-22}
 
-Under some standard assumptions, the MLE is consistent and asymptotically normal. For further details on the estimation of ARCH and GARCH models, see @Hamilton:1994 and @Francq2019.
+Under some standard assumptions, the MLE is a consistent estimator and has an asymptotic normal distribution. For further details on the estimation of ARCH and GARCH models, see @Hamilton:1994 and @Francq2019.
 
 ### Volatility forecasting
-We assume the following GARCH($1,1$) model for the returns:
+We assume the following GARCH(1,1) model for the returns:
 $$
 \begin{align}
 &Y_t=\beta_0+\sigma_tv_t,\\
@@ -983,7 +1197,7 @@ $$
 \end{align}
 $$
 
-Finally, the $95\%$ forecast interval for the $h$-step ahead forecast $Y_{T+h|T}=\beta_0$ is
+Finally, the $95\%$ forecast interval for the $h$-step ahead forecast $Y_{T+h|T}=\beta_0$ can be constructed as
 $$
 \begin{align}
 \hat{\beta}_0\pm1.96\times\widehat{\var}(e_h|\mathcal{F}_T)=
@@ -992,7 +1206,7 @@ $$
 $$
 
 ### Application
-The correlogram of the Wilshire 5000 index returns does not exhibit autocorrelation. Therefore, we consider the following GARCH($1,1$) model for the Wilshire 5000 index returns:
+The correlogram of the Wilshire 5000 index returns does not exhibit autocorrelation. Therefore, we consider the following GARCH(1,1) model for the Wilshire 5000 index returns:
 $$
 \begin{align}
 &Y_t=\beta_0+\sigma_tv_t,\\
@@ -1000,17 +1214,69 @@ $$
 \end{align}
 $$
 
-In Python, we can use the `arch` package to estimate a GARCH model. The following code chunk uses the `arch_model()` function from the `arch` package to estimate the model. The option `vol='Garch'` specifies that the model is a GARCH model. The options `p=1` and `q=1` indicate that the lag order for the squared residuals and the conditional variance is 1, respectively. The option `dist='Normal'` specifies that the error term $v_t$ follows the standard normal distribution. The fit method is used to estimate the model.
+In R, we can use either the `fGarch` package or the `rugarch` package to estimate the GARCH model. The `fGarch` package is an older package that provides functions for estimating ARCH and GARCH models, while the `rugarch` package is a more recent package that offers a wider range of GARCH models and more advanced features.
 
-```{python}
-# Estimate GARCH(1,1) model
-df= df.dropna()
-garch_model = arch_model(df['return'], vol='Garch', p=1, q=1, dist='Normal')
-results = garch_model.fit(disp='off')
-print(results.summary())
+In the `fGarch` package, we use the `garchFit` function to estimate the GARCH model. The `formula` argument specifies the model to be estimated. The `cond.dist` argument specifies the distribution of the error terms. The available options for `cond.dist` include `"norm"` for normal distribution, `"std"` for Student's t-distribution, and `"ged"` for generalized error distribution. 
+
+```{r}
+# estimate GARCH(1,1) model of daily percentage changes
+garch_model <- garchFit(
+    formula = ~ garch(1, 1),
+    data = df$return[-1],
+    cond.dist = "norm",
+    trace = F
+)
 ```
 
-All estimated coefficients are statistically significant at the 5% level. The estimated model can be expressed as 
+The `garchFit` function returns an S4 object of class `fGARCH` which has 10 slots. These slots can be returned by using `garch_model@SlotName`. The important slots are
+
+- `garch_model@data` is a list holding the empirical dataset, 
+- `garch_model@fit` is a list with all information and parameters from the estimation,
+- `garch_model@residuals` is vector of residuals ($\hat{u}_t$),
+- `garch_model@fitted.values` is vector of fitted values ($\hat{Y}_t$), 
+- `garch_model@@sigma.t` is the vector of estimated volatility ($\hat{\sigma}_t$),
+
+
+The estimation results can be returned by `summary(garch_model)`. The estimated model can be expressed as
+
+$$
+\begin{align}
+&\widehat{Return}_t=0.064,\\
+&\hat{\sigma}^2_t=0.013+0.088u^2_{t-1}+0.900\sigma^2_{t-1}
+\end{align}
+$$
+
+All estimated coefficients are statistically significant.
+
+```{r}
+# Print estimation results
+summary(garch_model)
+```
+
+Next, we use the `rugarch` package to estimate the GARCH(1,1) model. The `ugarchspec` function is used to specify the GARCH model. The `variance.model` argument specifies the type of GARCH model and the order of the GARCH terms. The `mean.model` argument specifies the mean equation, including the ARMA order and whether to include a mean term. The `distribution.model` argument specifies the distribution of the error terms. The `ugarchfit` function is then used to estimate the model based on the specified model and the data. The estimation results can be printed using the `show` function.
+
+```{r}
+# Remove missing values
+df <- na.omit(df)
+
+# Specify the GARCH(1,1) model
+spec <- ugarchspec(
+    variance.model = list(model = "sGARCH", garchOrder = c(1, 1)),
+    mean.model = list(armaOrder = c(0, 0), include.mean = TRUE),
+    distribution.model = "norm"
+)
+
+# Estimate the model
+garch_fit <- ugarchfit(
+    spec = spec,
+    data = df$return
+)
+
+# Print estimation results
+show(garch_fit)
+```
+
+Below, we state the estimated model. All estimated coefficients are statistically significant at the 5% level.  
 $$
 \begin{align}
 &\widehat{Y}_t=0.067,\\
@@ -1018,59 +1284,105 @@ $$
 \end{align}
 $$
 
-@fig-f24-7 shows the time-series plot of the GARCH volatility estimates. In @fig-f24-8, we plot returns along with the estimated volatility bands ($\pm\hat{\sigma}_t$). The figure shows that when returns are large, the estimated volatility is also high, and vice versa, suggesting that the GARCH model effectively captures the volatility clustering observed in the returns.
+@fig-chapter26-10 shows the time-series plot of the GARCH volatility estimates. In @fig-chapter26-11, we plot returns together with the estimated volatility bands ($\pm \hat{\sigma}_t$). The figure shows that when returns are large, the estimated volatility is also high, and vice versa, suggesting that the GARCH model effectively captures the volatility clustering observed in the returns. The estimated volatility bands $(\pm \hat{\sigma}_t)$ track the observed heteroskedasticity in the series quite well. This is useful for quantifying the time-varying volatility and the resulting risk for investors holding stocks summarized by the index:
 
-```{python}
-#| fig-cap: GARCH volatility estimates
-#| label: fig-f24-7
-# Plot GARCH volatility estimates
-fig, ax = plt.subplots(figsize=(6, 4))
-# Plot the returns
-volatility = results.conditional_volatility 
-ax.plot(df.index, volatility, linestyle='-', color='black', label='GARCH Volatility')
-#ax.plot(df.index, -volatility, linestyle='-', color='black')
-# Horizontal line at 0
-ax.axhline(0, color='black', linewidth=1, linestyle='--')
-ax.set_xlabel('Date', fontsize=10)
-ax.set_ylabel('Percent', fontsize=10)
-ax.legend()
-plt.tight_layout()
-plt.show()
+- During the 1990s, the estimated band is relatively narrow, indicating lower levels of risk for investors holding a portfolio of stocks in the Wilshire 5000 index.
+
+- The band becomes relatively wider during the 2000s, particularly around 2008, indicating greater daily stock price volatility. This suggests that the risk for investors holding stocks in the Wilshire 5000 index was higher during this period, especially during the 2008 financial crisis.
+
+```{r}
+#| fig-cap: "GARCH volatility estimates"
+#| label: fig-chapter26-10
+#| fig-width: 8
+#| fig-height: 5
+
+# Extract conditional volatility from the fitted GARCH model
+volatility <- sigma(garch_fit) # sigma() returns the conditional volatility
+
+# Create a data frame for plotting
+plot_df <- data.frame(
+    date = df$date,
+    volatility = volatility
+)
+
+# Plot
+ggplot(plot_df, aes(x = date, y = volatility)) +
+    geom_line(color = "steelblue", linewidth = 0.7) +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    labs(
+        x = "Date",
+        y = "Volatility"
+    )
 ```
 
-```{python}
+
+```{r}
 #| fig-cap: "Return and GARCH volatility bands"
-#| label: fig-f24-8
-# Return and GARCH volatility bands
-# Create a figure and a set of subplots
-fig, ax = plt.subplots(figsize=(6, 4))
+#| label: fig-chapter26-11
+#| fig-width: 8
+#| fig-height: 6
 
-# Plot the returns
-ax.plot(df.index, df['return'], linestyle='-', color='steelblue', label='Return', linewidth=1)
+# Extract conditional volatility from the fitted GARCH model
+volatility <- sigma(garch_fit)
 
-# Plot the GARCH volatility bands
-volatility = results.conditional_volatility
-ax.plot(df.index, volatility, linestyle='-', color='black', label='GARCH Volatility', linewidth=1)
-ax.plot(df.index, -volatility, linestyle='-', color='black', linewidth=1)
-# Horizontal line at 0
-ax.axhline(0, color='black', linewidth=1, linestyle='--')
-ax.set_xlabel('Date', fontsize=10)
-ax.set_ylabel('Percent', fontsize=10)
-ax.legend()
+# Create a data frame for plotting
+plot_df <- data.frame(
+    date = df$date,
+    return = df$return,
+    volatility = volatility
+)
 
-plt.tight_layout()
-plt.show()
-``` 
+# Plot returns and ± GARCH volatility bands
+ggplot(plot_df, aes(x = date)) +
+    # Returns
+    geom_line(aes(y = return, color = "Return"), linewidth = 0.7) +
+    # GARCH volatility bands
+    geom_line(aes(y = volatility, color = "GARCH Volatility"), linewidth = 0.7) +
+    geom_line(aes(y = -volatility), color = "black", linewidth = 0.7, show.legend = FALSE) +
+    # Horizontal line at zero
+    geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+    # Labels and legend
+    labs(
+        x = "Date",
+        y = "Percent",
+        color = ""
+    ) +
+    scale_color_manual(values = c(
+        "Return" = "steelblue",
+        "GARCH Volatility" = "black"
+    )) +
+    theme(legend.position = "top")
+```
 
-Next, we forecast the volatility for the next five periods using the `forecast` method. The option `horizon=5` specifies that we want to forecast the next five periods. The option `method='analytic'` indicates that we want to use the analytic method to forecast the volatility.
+Next, we forecast the volatility for the next five periods using the `ugarchforecast` function from the `rugarch` package. The option `n.ahead = 5` specifies that we want to forecast the next five periods. The option `method='analytic'` indicates that we want to use the analytic method to forecast the volatility. The results are presented in @tbl-chapter26-7, which shows the forecasted mean and variance for the next five periods. The forecasted mean is constant at 0.067, while the forecasted variance increases over time.
 
-```{python}
-# Forecast volatility
-forecasts = results.forecast(horizon=5, method='analytic')
 
-# Forecast
-print(forecasts.mean)
-print(forecasts.variance)
+```{r}
+# Forecast 5 steps ahead
+garch_forecast <- ugarchforecast(
+  fitORspec = garch_fit,   # the fitted GARCH model
+  n.ahead = 5,
+  method = "analytic"
+)
+
+# Forecasted conditional mean
+f_mean <- fitted(garch_forecast)  
+
+# Forecasted conditional variance
+f_var <- sigma(garch_forecast)^2  
+
+# Combine in a data frame for display
+forecast_df <- data.frame(
+  Forecasted_Mean = f_mean,
+  Forecasted_Variance = f_var
+)
+```
+
+```{r}
+#| tbl-cap: "Forecasted mean and variance for the next five periods"
+#| label: tbl-chapter26-7
+# Print the forecasted mean and variance
+kable(forecast_df, digits =3, col.names = c("Forecasted Mean", "Forecasted Variance")) 
 ```
 
 The forecasted variance for the next five periods can be used to construct the forecast interval for the returns based on $\hat{\beta}_0\pm1.96\times\sigma_{T+h|T}$.
@@ -1082,23 +1394,42 @@ $$
 &H_1: v_t \text{ is not normally distributed}.
 \end{align}
 $$
-The test statistic has a chi-squared distribution with two degrees of freedom. The following code chunk uses the `jarque_bera()` function from the `scipy.stats` package to perform the Jarque-Bera test on the standardized residuals. Since the p-value is less than 0.05, we reject the null hypothesis of normality.
 
-```{python}
-# Jarque-Bera test
-jb_results = stats.jarque_bera(results.std_resid)
-print(jb_results)
+The test statistic has a chi-squared distribution with two degrees of freedom. The following, we use the `jarque.bera.test` function from the `tseries` package to perform the Jarque-Bera test on the standardized residuals from the fitted GARCH model. The reported p-value is very small, which leads us to reject the null hypothesis of normality. 
+
+```{r}
+# Extract standardized residuals from the fitted GARCH model
+std_resid <- residuals(garch_fit, standardize = TRUE)
+
+# Perform Jarque-Bera test
+jb_results <- jarque.bera.test(std_resid)
+
+# Print results
+jb_results
 ```
 
-Since the assumption that $v_t \sim N(0,1)$ is rejected, we can use the `arch_model` function to estimate a GARCH model with a different distribution for the error term. In addition to the standard normal distribution, the arch package provides the following alternatives: the Student t-distribution (`t`), the skewed Student t-distribution (`skewt`), and the generalized error distribution (`ged`). 
+Since the assumption that $v_t \sim N(0,1)$ is rejected, we can consider alternative distributions for the error terms in the GARCH model. One common choice is the Student's t-distribution, which allows for heavier tails than the normal distribution. This can be particularly useful for financial data, which often exhibit excess kurtosis (fat tails) compared to the normal distribution. 
+In the following, the option ` distribution.model = "std"` specifies this distribution. The degrees of freedom parameter `shape` is estimated along with the other parameters. 
 
-In this example, we assume that the standardized error terms follow a standardized Student t-distribution with $\nu$ degrees of freedom, which is a common choice for financial data that exhibit heavy tails. In the following code chunk, the option `dist='t'` specifies this distribution. The degrees of freedom parameter $\nu$ is estimated along with the other parameters. 
+```{r}
+# Specify GARCH(1,1) with Student's t-distribution
+spec_t <- ugarchspec(
+  variance.model = list(model = "sGARCH", garchOrder = c(1, 1)),
+  mean.model = list(armaOrder = c(0, 0), include.mean = TRUE),
+  distribution.model = "std"  # Student's t-distribution
+)
 
-```{python}
-# Estimate GARCH(1,1) model with Student's t-distribution
-garch_model_t = arch_model(df['return'], vol='Garch', p=1, q=1, dist='t')
-results_t = garch_model_t.fit(disp='off')
-print(results_t.summary())
+# Estimate the model
+garch_fit_t <- ugarchfit(
+  spec = spec_t,
+  data = df$return
+)
+
+# Print estimation results
+show(garch_fit_t)
 ```
 
-The log-likelihood value of the GARCH model with the Student $t$-distribution is higher than that of the GARCH model with the normal distribution. The AIC and BIC values of the GARCH model with the Student $t$-distribution are lower than those of the GARCH model with the normal distribution. These observations suggest that the GARCH model with the Student $t$-distribution provides relatively a better fit for the sample data.
+The log-likelihood value of the GARCH model with the Student $t$-distribution is higher than that of the GARCH model with the normal distribution. The AIC and BIC values of the GARCH model with the Student $t$-distribution are lower than those of the GARCH model with the normal distribution. These observations suggest that the GARCH model with the Student $t$-distribution provides relatively a better fit for the sample data. The estimated degrees of freedom parameter $\nu$ is around 6, which indicates that the distribution of the standardized error terms has heavier tails than the normal distribution.
+
+
+
