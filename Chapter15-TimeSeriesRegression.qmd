@@ -2191,7 +2191,7 @@ The Dickey-Fuller test statistic is simply the OLS $t$-statistic for testing $H_
 Under the alternative hypothesis, we assume that the series is stationary. For the time series that have a time trend, it is more appropriate to assume that the series is stationary around a deterministic trend. In this case, the model is augmented with a time trend:
 $$
 \Delta Y_t = \beta_0+ \alpha t + \delta Y_{t-1} + \gamma_1 \Delta Y_{t-1} + \gamma_2 \Delta Y_{t-2} + \cdots + \gamma_{p-1}\Delta Y_{t-p+1}  + u_t,
-$${#eq-eq22-27}
+$${#eq-chapter24-27}
 
 where $\alpha$ is the coefficient of the time trend. In this case, the null hypothesis is $H_0:\delta = 0$ (unit root), and the alternative is $H_1:\delta < 0$ (stationary around a deterministic time trend). The augmented Dickey-Fuller test statistic for testing $H_0:\delta = 0$ in @eq-chapter24-27 is again the OLS t-statistic.
 
@@ -2323,7 +2323,7 @@ grid.arrange(p1, p2, ncol = 2)
 
 In the above simulation study, we use the `ur.df` function to compute the ADF statistic for each simulated random walk process. The `ur.df` function estimates the ADF regression and computes the test statistic. Its syntax is as follows:
 ```{r}
-#| echo=FALSE
+#| eval: false
 ur.df(
   y,
   type = c("none", "drift", "trend"),
