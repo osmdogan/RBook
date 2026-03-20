@@ -161,18 +161,27 @@ head(combineData[, c("tsData.GDPC96", "log_GDPC96")], 3)
 
 Note that the new column is added to the end of the `ts` object and the column name is `log_GDPC96`. The original column name of the real GDP variable is `tsData.GDPC96` because the `cbind` function adds the prefix `tsData.` to the original column name.
 
-In the following example, we use the `lag` and `diff` functions to compute the first lag and the first difference of the `GDPC96` variable in the `tsData` object.
+In the following example, we use the R base `lag` and `diff` functions to compute the first lag and the first difference of the `GDPC96` variable in the `tsData` object.
+
 ```{r}
 # Define the GDP variable as the GDPC96 column of the ts object
 GDP <- tsData[, "GDPC96"]
 # Compute the first lag of GDPC96
-lag_GDP <- stats::lag(GDP, k = 1)
+lag_GDP <- stats::lag(GDP, k = -1)
 # Compute the first difference of GDPC96
 diff_GDP <- diff(GDP, lag = 1)
 
 # Combine the original series, the lag, and the difference into a new ts object
 combineData <- cbind(GDP, lag_GDP, diff_GDP)
 head(combineData)
+```
+
+Alternatively, we can also use the `ts.union` function to combine the original series, the lag, and the difference into a new `ts` object.
+
+```{r}
+# Using ts.union to combine series
+combineData1 <- ts.union(GDP, lag_GDP, diff_GDP)
+head(combineData1)
 ```
 
 When we use the `ts` object in plots, the x-axis will automatically be set to the time period. In the following, we use the base R approach for plotting. 
@@ -294,10 +303,12 @@ Finally, in @tbl-chapter24-1, we collect some useful functions for the `ts` obje
 | `frequency`| Returns the frequency of the `ts` object.     |
 | `window`   | Extracts a subset of the `ts` object based on specified start and end times.   |
 | `time`     | Returns the time index of the `ts` object.   |
-| `cbind`    | Combines multiple `ts` objects together by concatenating their columns and aligning them based on their time indices. |
+| `cbind/ts.union`    | Combines multiple `ts` objects together by concatenating their columns and aligning them based on their time indices. |
 | `rbind`    | Combines multiple `ts` objects together by concatenating their rows and aligning them based on their time indices.   |
-| `lag`      | Returns a lagged version of the `ts` object.       |
+| `lag`      | Returns a lagged version of the `ts` object when `k` is negative and a lead version when `k` is positive. |
 | `diff`     | Returns the differences of the `ts` object. |
+| `colnames` | Returns the column names of the `ts` object. |
+| `summary`  | Provides summary statistics of the `ts` object. |
 : Some useful functions for the `ts` objects {#tbl-chapter24-1 .stripped .hover}
 :::
 
@@ -534,6 +545,7 @@ df_subset <- dfGrowth %>%
 ```{r}
 #| tbl-cap: "A subset of the U.S. real GDP data"
 #| label: tbl-chapter24-3
+# Display the subset of the data with custom column names
 colnames <- c(
   "Quarter",
   "GDP (billons of $ 2009)",
@@ -566,8 +578,8 @@ colnames(dfInflation)
 ```{r}
 #| fig-cap: "The U.S. quarterly consumer price index (CPI)"
 #| label: fig-chapter24-4
-#| fig-width: 6
-#| fig-heigth: 4
+#| fig-width: 5
+#| fig-height: 4
 # Plot of the U.S. CPI index
 ggplot(dfInflation, aes(x = date, y = cpi)) +
   geom_line(color = "steelblue", linewidth =1) +
@@ -623,7 +635,7 @@ Finally, in @fig-chapter24-5, we plot the U.S. quarterly inflation rate over 196
 ```{r}
 #| fig-cap: "The U.S. quarterly inflation rate"
 #| label: fig-chapter24-5
-#| fig-width: 6
+#| fig-width: 5
 #| fig-height: 4
 # Plot of U.S. quarterly inflation rate
 # Subset for 1960 Q1 to 2005 Q1
@@ -754,7 +766,7 @@ To forecast the future values of the time series $Y_t$, a natural starting point
 
 ::: {#def-chapter24-8}
 ### The AR($p$) model
-The $p$-th order autoregressive (AR($p$)) model represents the conditional expectation of $Y_t$ as a linear function of $p$ of its lagged values:
+The $p$-th order autoregressive (AR(p)) model represents the conditional expectation of $Y_t$ as a linear function of $p$ of its lagged values:
 $$
 Y_t = \beta_0+\beta_1 Y_{t-1}+\beta_2Y_{t-2}+\dots+\beta_p Y_{t-p}+u_t,
 $${#eq-eq22-7}
@@ -762,9 +774,9 @@ $${#eq-eq22-7}
 where $\E\left(u_t|Y_{t-1},Y_{t-2}, \dots\right)=0$. The number of lags $p$ is called the order, or the lag length, of the autoregression.
 :::
 
-The coefficients in the AR($p$) model do not have a causal interpretation. For example, if we fail to reject $H_0:\beta_1=0$, then we will conclude that $Y_{t-1}$ is not useful for forecasting $Y_t$. 
+The coefficients in the AR(p) model do not have a causal interpretation. For example, if we fail to reject $H_0:\beta_1=0$, then we will conclude that $Y_{t-1}$ is not useful for forecasting $Y_t$. 
 
-The condition $\E\left(u_t|Y_{t-1}, Y_{t-2}, \dots\right) = 0$ in @def-chapter24-8 has two important implications. The first implication is that the error terms $u_t$'s are uncorrelated, i.e., $\text{corr}(u_t,u_{t-k})=0$ for $k\geq 1$. To see this, we know that if $\E(u_t|u_{t-1})=0$, then $\corr(u_t,u_{t-1})=0$ by the law of iterated expectations. The AR($p$) model implies that
+The condition $\E\left(u_t|Y_{t-1}, Y_{t-2}, \dots\right) = 0$ in @def-chapter24-8 has two important implications. The first implication is that the error terms $u_t$'s are uncorrelated, i.e., $\text{corr}(u_t,u_{t-k})=0$ for $k\geq 1$. To see this, we know that if $\E(u_t|u_{t-1})=0$, then $\corr(u_t,u_{t-1})=0$ by the law of iterated expectations. The AR(p) model implies that
 $$
 u_{t-1}=Y_{t-1}-\beta_0-\beta_1 Y_{t-2}-\cdots-\beta_p Y_{t-p-1}=f(Y_{t-1},Y_{t-2},\dots,Y_{t-p-1}),
 $$
@@ -834,7 +846,7 @@ $$
 \end{align}
 $$
 
-Note that we use the sample data over the period 1962:Q1-2017:Q3 to estimate both models. Thus, the last time period in the sample is $T=2017:Q3$. We want to obtain the forecast of the growth rate in $T+1=2017:Q4$ based on the estimated AR($2$) model. The estimated model suggests that 
+Note that we use the sample data over the period 1962:Q1-2017:Q3 to estimate both models. Thus, the last time period in the sample is $T=2017:Q3$. We want to obtain the forecast of the growth rate in $T+1=2017:Q4$ based on the estimated AR(2) model. The estimated model suggests that 
 $$
 \begin{align*}
 \text{GDPGR}_{2017:Q4|2017:Q3} &= 1.61 + 0.28 \text{GDPGR}_{2017:Q3} + 0.18 \text{GDPGR}_{2017:Q2}\\
@@ -843,7 +855,7 @@ $$
 $$
 Since the actual growth rate in 2017:Q4 is $2.5\%$, the forecast error is $2.5\% - 3.0\% = -0.5$ percentage points.
 
-Note that we use the OLS estimator to estimate the AR models. In R, we can also use `arima` function from the `stats` package to estimate AR models. In the following, we use this function to estimate the AR($2$) model for the GDP growth rate.
+Note that we use the OLS estimator to estimate the AR models. In R, we can also use `arima` function from the `stats` package to estimate AR models. In the following, we use this function to estimate the AR(2) model for the GDP growth rate.
 
 ```{r}
 # Estimate the AR(2) model for the GDP growth rate
@@ -851,13 +863,13 @@ arima_model <- arima(tsGrowth[, "YGROWTH"], order = c(2, 0, 0))
 summary(arima_model)
 ```
 
-For forecasting, we can use either the `predict` function from the `stats` package or the `forecast` function from the `forecast` package. Below, we use the `forecast` function to obtain the forecast of the GDP growth rate in 2017:Q4 based on the estimated AR($2$) model. Note that the forecast is close to the forecast obtained from the `dynlm` function, which is approximately 3.0%.
+For forecasting, we can use either the `predict` function from the `stats` package or the `forecast` function from the `forecast` package. Below, we use the `forecast` function to obtain the forecast of the GDP growth rate in 2017:Q4 based on the estimated AR(2) model. Note that the forecast is close to the forecast obtained from the `dynlm` function, which is approximately 3.0%.
 
 ```{r}
 forecast::forecast(arima_model, h = 1, level = 95) 
 ```
 
-In the next example, we use the data set in `macroseries.csv` to estimate the AR($1$) and AR($4$) models for the change in the U.S. inflation rate. 
+In the next example, we use the data set in `macroseries.csv` to estimate the AR(1) and AR(4) models for the change in the U.S. inflation rate. 
 
 ```{r}
 # Convert dfInflation to a ts object
@@ -895,14 +907,14 @@ $$
 \widehat{\Delta \text{inf}}_t = 0.017 - 0.238 \Delta \text{inf}_{t-1}.
 $$
 
-The coefficient estimate for the lag of the change in inflation is $-0.238$ and it is statistically significant at the conventional levels. In the dataset, the inflation rate for 2004:Q3 is 1.6 and for 2004:Q4 is 3.5. Hence, $\Delta \text{inf}_{\text{2004:Q4}}=3.5-1.6=1.9$. Then, $\widehat{\Delta \text{inf}}_{\text{2005:Q1}}=0.017 - 0.238\times 1.9 = -0.4352$ and $\widehat{\text{inf}}_{\text{2005:Q1}}=-0.4352 + 3.5 = 3.0648$. 
+The coefficient estimate for the lag of the change in inflation is -0.238 and it is statistically significant at the conventional levels. In the dataset, the inflation rate for 2004:Q3 is 1.6 and for 2004:Q4 is 3.5. Hence, $\Delta \text{inf}_{\text{2004:Q4}}=3.5-1.6=1.9$. Then, $\widehat{\Delta \text{inf}}_{\text{2005:Q1}}=0.017 - 0.238\times 1.9 = -0.4352$ and $\widehat{\text{inf}}_{\text{2005:Q1}}=-0.4352 + 3.5 = 3.0648$. 
 
 The estimated AR(4) model for the change in inflation is
 $$
 \widehat{\Delta \text{inf}}_t = 0.022 - 0.258 \Delta \text{inf}_{t-1} - 0.322 \Delta \text{inf}_{t-2} + 0.158 \Delta \text{inf}_{t-3} - 0.030 \Delta \text{inf}_{t-4}. 
 $$
 
-We observe that the fit of the model improves significantly compared to the AR($1$) model, as indicated by an increase in the adjusted R-squared to 0.185. Furthermore, in the AR($4$) model, the additional time lag terms are jointly statistically significant, as shown by the $F$-test result below.
+We observe that the fit of the model improves significantly compared to the AR(1) model, as indicated by an increase in the adjusted R-squared to 0.185. Furthermore, in the AR(4) model, the additional time lag terms are jointly statistically significant, as shown by the $F$-test result below.
 
 ```{r}
 #| tbl-cap: "F-test for the joint significance of the lagged changes in inflation"
@@ -938,7 +950,7 @@ $${#eq-chapter24-10}
 
 where $q_1$ lags of the first predictor, $q_2$ lags of the second predictor, and so forth are included in the model. 
 
-In the following ADL($2,1$) and ADL($2,2$) models, we consider the U.S. term spread (TSpread) as an additional predictor for the GDP growth rate. 
+In the following ADL(2,1) and ADL(2,2) models, we consider the U.S. term spread (TSpread) as an additional predictor for the GDP growth rate. 
 $$
 \begin{align*}
 &\text{GDPGR}_t=\beta_0+\beta_1{\tt GDPGR}_{t-1}+\beta_2{\tt GDPGR}_{t-2}+\delta_1{\tt TSpread}_{t-1}+u_t,\\
@@ -1008,7 +1020,6 @@ ggplot(dfTermSpread, aes(x = Date)) +
   theme(legend.position = "top")
 ```
 
-
 ```{r}
 #| fig-cap: "The term spread in the US"
 #| label: fig-chapter24-8
@@ -1045,7 +1056,7 @@ ggplot(dfTermSpread, aes(x = Date)) +
   )
 ```
 
-To estimate the ADL($2,1$) and ADL($2,2$) models, we first merge the `tsGrowth` and `tsTermSpread` datasets to create a new dataset `ADLdata`. We keep only the relevant columns for the GDP growth rate and the term spread, and rename them as `GDPGR` and `TSpread`, respectively.
+To estimate the ADL(2,1) and ADL(2,2) models, we first merge the `tsGrowth` and `tsTermSpread` datasets to create a new dataset `ADLdata`. We keep only the relevant columns for the GDP growth rate and the term spread, and rename them as `GDPGR` and `TSpread`, respectively.
 
 
 ```{r}
@@ -1094,14 +1105,14 @@ modelsummary(
 )
 ```
 
-The estimated coefficients in the ADL($2,2$) model on the first and second lags of `TSpread` are statistically insignificant at the 5% level. The joint null hypothesis $H_0:\delta_1=\delta_2=0$ can be tested using the F-statistic. The $F$-test result below shows that the coefficients on the term spread are jointly statistically significant.
+The estimated coefficients in the ADL(2,2) model on the first and second lags of `TSpread` are statistically insignificant at the 5% level. The joint null hypothesis $H_0:\delta_1=\delta_2=0$ can be tested using the F-statistic. The $F$-test result below shows that the coefficients on the term spread are jointly statistically significant.
 
 ```{r}
 hypotheses = c('L(TSpread, 1)=0', 'L(TSpread, 2)=0')
 linearHypothesis(m2, hypotheses, white.adjust = "hc1")
 ```
 
-Finally, we use the ADL($2,2$) model to forecast the GDP growth rate in 2017:Q4. The forecasted GDP growth rate is
+Finally, we use the ADL(2,2) model to forecast the GDP growth rate in 2017:Q4. The forecasted GDP growth rate is
 $$
 \begin{align*}
 \widehat{\text{GDPGR}}_{2017:Q4|2017:Q3} &=0.95+0.24{\tt GDPGR}_{2017:Q3}+0.18{\tt GDPGR}_{2017:Q2}\\
@@ -1204,16 +1215,16 @@ Under the least squares assumptions, the large-sample properties of the OLS esti
 :::
 
 ## Lag order selection
-How should we choose the number of lags $p$ in an AR($p$) model? One approach to determining the number of lags is to use sequential downward $t$ or $F$ tests. However, this method may select a large number of lags. Alternatively, we can use information criteria to select the lag order. Information criteria balance bias (too few lags) against variance (too many lags). 
+How should we choose the number of lags $p$ in an AR(p) model? One approach to determining the number of lags is to use sequential downward $t$ or $F$ tests. However, this method may select a large number of lags. Alternatively, we can use information criteria to select the lag order. Information criteria balance bias (too few lags) against variance (too many lags). 
 
-Two widely used information criteria are the Bayesian information criterion (BIC) and the Akaike information criterion (AIC). For an AR($p$) model, the BIC and AIC are defined as
+Two widely used information criteria are the Bayesian information criterion (BIC) and the Akaike information criterion (AIC). For an AR(p) model, the BIC and AIC are defined as
 $$
 \begin{align*}
 \text{BIC}(p) &= \ln\frac{SSR(p)}{T} + (p+1)\frac{\ln T}{T}, \\
 \text{AIC}(p) &= \ln\frac{SSR(p)}{T} + (p+1)\frac{2}{T},
 \end{align*}
 $${#eq-eq22-14}
-where $SSR(p)$ is the sum of squared residuals from the AR($p$) model. The estimator of $p$ is the value that minimizes the BIC or AIC. That is, if $\hat{p}$ is the estimator of $p$, then it is defined as 
+where $SSR(p)$ is the sum of squared residuals from the AR(p) model. The estimator of $p$ is the value that minimizes the BIC or AIC. That is, if $\hat{p}$ is the estimator of $p$, then it is defined as 
 $$
 \hat{p} = \arg\min_{p} \text{BIC}(p) \quad \text{or} \quad \hat{p} = \arg\min_{p} \text{AIC}(p).
 $${#eq-eq22-15}
@@ -1230,13 +1241,14 @@ For simplicity, assume that true $p$ is $1$, then we need to show that (i) $P(\h
 $$
 \text{BIC}(0)-\text{BIC}(1)=\ln(SSR(0)/T)-\ln(SSR(1)/T) -\ln(T)/T.
 $$
+
 It follows that $SSR(0)/T=((T-1)/T)s_Y^2\to\sigma^2_Y$, where $\sigma^2_Y$ is the variance of the process $Y$ and $s_Y^2$ is its sample counterpart. Similarly, $SSR(1)/T=((T-2)/T)s^2_{\hat{u}}\to\sigma^2_{u}$, where $\sigma^2_u$ is the variance of the error term. Thus,
 $$
 \text{BIC}(0)-\text{BIC}(1)\to\ln(\sigma^2_Y)-\ln(\sigma^2_u),
 $$
 because $\ln(T)/T\to 0$. Since $\sigma^2_Y>\sigma^2_u$, it follows that $\text{BIC}(0)-\text{BIC}(1)>0$. This implies that $P(\hat{p}=0)\to 0$.
 
-Simlarly, to choose $\hat{p}=2$, it must be the case that $\text{BIC}(2)-\text{BIC}(1)<0$. Consider $T[\text{BIC}(2)-\text{BIC}(1)]$:
+Similarly, to choose $\hat{p}=2$, it must be the case that $\text{BIC}(2)-\text{BIC}(1)<0$. Consider $T[\text{BIC}(2)-\text{BIC}(1)]$:
 $$
 \begin{align*}
 &T[\text{BIC}(2)-\text{BIC}(1)]=
@@ -1244,7 +1256,7 @@ T[\ln(SSR(2)/T)-\ln(SSR(1)/T)] +\ln(T)\\
 &=T\ln(SSR(2)/SSR(1))+\ln(T)=-T\ln(1+F/(T-2))+\ln(T),
 \end{align*}
 $$
-where $F=(SSR(1)-SSR(2))/(SSR(2)/(T-2))$ is the homoskedasticity-only $F$-statistic for testing $H_0:\beta_2=0$ in the AR($2$) model. Then,
+where $F=(SSR(1)-SSR(2))/(SSR(2)/(T-2))$ is the homoskedasticity-only $F$-statistic for testing $H_0:\beta_2=0$ in the AR(2) model. Then,
 $$
 \begin{align*}
 P(\text{BIC}(2)-\text{BIC}(1)<0)&= P(T[\text{BIC}(2)-\text{BIC}(1)]<0)\\
@@ -1296,7 +1308,7 @@ For each value of $k$, the BIC (or AIC) can be computed, and the model with the 
 2. The final prediction error (FPE) estimator, and
 3. The pseudo out-of-sample (POOS) forecasting estimator.
 
-The first two estimators are derived from the expression for the MSFE and rely on the stationarity assumption. Under stationarity, the MSFE for an AR($p$) model can be expressed as:
+The first two estimators are derived from the expression for the MSFE and rely on the stationarity assumption. Under stationarity, the MSFE for an AR(p) model can be expressed as:
 $$
 \begin{align*}
 \text{MSFE}&=\E\left[\left(Y_{T+1}-\widehat{Y}_{T+1|T}\right)^2\right]\\
@@ -1319,6 +1331,7 @@ The FPE method incorporates both terms in the MSFE formula under the additional 
 $$
 \E\left(\left((\hat{\beta}_0-\beta_0)+(\hat{\beta}_1-\beta_1)Y_T+\ldots+(\beta_p-\hat{\beta}_p)Y_{T-p+1}\right)^2\right)\approx \sigma^2_u((p+1)/T).
 $$
+
 Then, the MSFE can be expressed as $\text{MSFE}=\sigma^2_u+\sigma^2_u((p+1)/T)=\sigma^2_u(T+p+1)/T$. Then, the FPE estimator is given by 
 $$
 \begin{align}
@@ -1546,7 +1559,7 @@ ggplot(df_plot, aes(x = Date)) +
   theme(legend.position = "top")
 ```
 
-In the next example, we consider the ADL($4,4$) model in @eq-chapter24-12 for the change in inflation. We set $t_1$ to 1990:Q1 and $T$ to 2004:Q4. The estimated values of the RMSFE using the SER, FPE, and POOS methods are presented in @tbl-chapter24-9. The results show that the FPE estimate is slightly larger than the SER estimate, which is consistent with the formulas given in @eq-chapter24-17 and @eq-chapter24-18. The POOS method provides the smallest estimate of the RMSFE.
+In the next example, we consider the ADL(4,4) model in @eq-chapter24-12 for the change in inflation. We set $t_1$ to 1990:Q1 and $T$ to 2004:Q4. The estimated values of the RMSFE using the SER, FPE, and POOS methods are presented in @tbl-chapter24-9. The results show that the FPE estimate is slightly larger than the SER estimate, which is consistent with the formulas given in @eq-chapter24-17 and @eq-chapter24-18. The POOS method provides the smallest estimate of the RMSFE.
 
 ```{r}
 # Data preparation
@@ -1624,7 +1637,7 @@ results <- data.frame(
 kable(results, digits = 3)
 ```
 
-Finally, we plot the one-step-ahead forecasted values obtained using the POOS method for the ADL($4,4$) model of the change in the inflation rate. In @fig-chapter24-11, we provide the plots of forecasts and the $95\%$ forecast interval.
+Finally, we plot the one-step-ahead forecasted values obtained using the POOS method for the ADL(4,4) model of the change in the inflation rate. In @fig-chapter24-11, we provide the plots of forecasts and the $95\%$ forecast interval.
 
 ```{r}
 #| fig-cap: Actual change in inflation rate and forecasts
@@ -2002,7 +2015,6 @@ for (n in sample_sizes) {
 }
 ```
 
-
 ```{r}
 #| tbl-cap: Simulation results for the AR(1) model
 #| label: tbl-chapter24-12
@@ -2092,7 +2104,6 @@ for (n in sample_sizes) {
 }
 ```
 
-
 ```{r}
 #| tbl-cap: Simulation results for spurious regression
 #| label: tbl-chapter24-13
@@ -2135,7 +2146,6 @@ grid.arrange(grobs = plot_list, nrow = 3, ncol = 2)
 ```
 
 ### How to detect stochastic trends? 
-
 The plot of time series data may help detecting a stochastic trend. We may look for persistent long-run movements. We can also use a regression-based test for a stochastic trend, e.g., the augmented Dickey-Fuller test.
 
 Consider the following AR(1) process: $Y_t = \beta_0 + \beta_1Y_{t-1} + u_t$. Subtracting $Y_{t-1}$ from both sides, we obtain
@@ -2192,7 +2202,6 @@ Under the alternative hypothesis, we assume that the series is stationary. For t
 $$
 \Delta Y_t = \beta_0+ \alpha t + \delta Y_{t-1} + \gamma_1 \Delta Y_{t-1} + \gamma_2 \Delta Y_{t-2} + \cdots + \gamma_{p-1}\Delta Y_{t-p+1}  + u_t,
 $${#eq-chapter24-27}
-
 where $\alpha$ is the coefficient of the time trend. In this case, the null hypothesis is $H_0:\delta = 0$ (unit root), and the alternative is $H_1:\delta < 0$ (stationary around a deterministic time trend). The augmented Dickey-Fuller test statistic for testing $H_0:\delta = 0$ in @eq-chapter24-27 is again the OLS t-statistic.
 
 In practice, we use either @eq-chapter24-26 or @eq-chapter24-27, depending on whether we suspect a deterministic trend in the series. In either case, the lag length $𝑝$ is selected based on information criteria. The econometric literature suggests that including too many lags is preferable to including too few. Therefore, it is recommended to use the AIC rather than the BIC when estimating $p$ for the ADF statistic. In conducting the test, we cannot resort to the critical values obtained from the standard normal distribution even in large samples. The reason is that under $H_0$, the augmented Dickey-Fuller statistic is not normally distributed. See Chapter 16 in @Hansen2022 for the distribution of the the Dickey-Fuller test. We need to resort to simulation methods to determine the critical values from the finite sample distribution of the t-statistic.
@@ -2334,7 +2343,6 @@ ur.df(
 
 The `type` argument specifies the type of ADF regression. The options are `none`, `drift`, and `trend`. The `none` option does not include any deterministic term in the ADF regression. The `drift` option includes only the intercept term, while the `trend` option includes both the intercept and the time trend. The `lags` argument specifies the number of lags to be included in the ADF regression. The `selectlags` argument specifies how to select the number of lags. We can use either `Fixed`, `AIC`, or `BIC`. The `Fixed` option uses a fixed number of lags, while the `AIC` and `BIC` options use the Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC) to select the number of lags.
 
-
 In the next example, we will implement the Dickey-Fuller test for a unit root in the log of the U.S. real GDP. Since the log real GDP has an upward trend, we include a time trend in the regression. The regression model is as follows:
 $$
 \Delta Y_t = \beta_0 + \alpha t + \delta Y_{t-1} + \gamma_1 \Delta Y_{t-1} + \gamma_2 \Delta Y_{t-2} + u_t,
@@ -2373,7 +2381,7 @@ $$
 \end{align*}
 $$
 
-We use only one lag term $\Delta{\tt GDPGR}_{t-1}$ because the AIC suggests only one lag term as shown below. Also, we use `type = "drift"` option because we do not have a time trend in the ADF regression. 
+We use only one lag term $\Delta\text{GDPGR}_{t-1}$ because the AIC suggests only one lag term as shown below. Also, we use `type = "drift"` option because we do not have a time trend in the ADF regression. 
 ```{r}
 ADFtest2 = ur.df(dfGrowth$YGROWTH, type = "drift", selectlags = "AIC")
 summary(ADFtest2)
@@ -2387,7 +2395,7 @@ $$
 \end{align}
 $$
 
-Thus, the first test statistic `-7.2824` is the one we are interested in. The reported critical values are `-3.46`, `-2.88`, and `-2.57` for 1\%, 5\%, and 10\% significance levels, respectively. The test statistic is `-7.2824`, which is less than the critical value `-2.88` at 5\% significance level. Therefore, we reject the null hypothesis that ${\tt GDPGR}_{t}$ has a unit root in favor of the alternative that it is stationary around a constant.
+Thus, the first test statistic `-7.2824` is the one we are interested in. The reported critical values are `-3.46`, `-2.88`, and `-2.57` for 1\%, 5\%, and 10\% significance levels, respectively. The test statistic is `-7.2824`, which is less than the critical value `-2.88` at 5\% significance level. Therefore, we reject the null hypothesis that $\text{GDPGR}_{t}$ has a unit root in favor of the alternative that it is stationary around a constant.
 
 In the next example, we use the Dickey-Fuller test for testing a unit root in the U.S. inflation series. Since this series does not have a deterministic trend, we will consider the ADF equation only with the intercept term:
 $$
@@ -2412,14 +2420,12 @@ summary(ADFtest3)
 
 
 ### Structural Breaks
-
 The second type of nonstationarity we consider is that the coefficients of the model may not remain constant over the full sample. Clearly, this poses a serious problem for forecasting. We consider testing approaches to detect changes in the coefficients. There are two such approaches:
 
 * a test for a *known* break date, and
 * a test for an *unknown* break date.
 
 ###  Test for a known break date
-
 Suppose the break is known to have occurred at date $\tau$. Then, the stability of the model can be tested by a fully interacted regression model. For example, consider the ADL(1,1) model and let $D_t(\tau)$ be the dummy variable for the periods after $\tau$, i.e., $D_t(\tau) = 0$ if $t\le\tau$ and $D_t(\tau) = 1$ if $t>\tau$. We can estimate the following fully interacted regression ADL(1,1) specification:
 $$
 Y_t = \beta_0 + \beta_1Y_{t-1} + \delta X_{t-1} + \gamma_0D_t(\tau) + \gamma_1 D_t(\tau)Y_{t-1}
@@ -2448,7 +2454,6 @@ $$
 $$
 
 where $D_t(\tau)$ is a dummy variable for the periods after $\tau$. We then test $H_0:\gamma_0 = \gamma_1 =\gamma_2=0$. In the following code chunk, the break date is allowed to vary between 1970:Q1 and 2005:Q4. For each break date, we estimate the regression model, compute the Chow test statistic using the `linearHypothesis` function from the `car` package, and store the result in the `savers` vector.
-
 
 ```{r}
 # Merge and convert to ts
@@ -2509,7 +2514,6 @@ cat("Break date:", break_date)
  The QLR test statistic is 6.29, and the break date is 1982:Q4. The critical value for the QLR test statistic is 6.02 at the 1% significance level (see Table 15.5 in @Stock2020). Therefore, we reject the null hypothesis that the coefficients are stable at the 1% significance level. 
 
 In @fig-chapter24-18, we plot all F-statistic values. The horizontal dashed lines represents the critical values for the QLR test statistic at the 1% and 5% significance levels. 
-
 
 ```{r}
 #| fig-cap: F-statistic values for a break in the intercept and the coefficients of the term spread
@@ -2758,7 +2762,7 @@ kable(rmsfe_results, digits = 3, col.names = column_names, align = "c")
 
 In @fig-chapter24-20, we plot the actual growth rate, the forecasted growth rate, and the forecast errors. The forecasted growth rate closely tracks the actual U.S. GDP growth rate, except for a single period in 2008:Q4, when the forecast error is notably large.
 
-Based on our results in @tbl-chapter24-15 and @fig-chapter24-20, we conclude that-aside from the large forecast error in 2008:Q4-the performance of the ADL($2,2$) forecasting model during the pseudo-out-of-sample period (2003:Q1–2017:Q4) is relatively better than its performance during the in-sample period (1981:Q1–2002:Q4).
+Based on our results in @tbl-chapter24-15 and @fig-chapter24-20, we conclude that-aside from the large forecast error in 2008:Q4-the performance of the ADL(2,2) forecasting model during the pseudo-out-of-sample period (2003:Q1–2017:Q4) is relatively better than its performance during the in-sample period (1981:Q1–2002:Q4).
 
 ```{r}
 #| fig-cap: Plot of the actual GDP growth rate, the forecasted GDP growth rate, and the forecast errors
