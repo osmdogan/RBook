@@ -27,7 +27,7 @@ We introduce two univariate time series models: the autoregressive (AR) model, a
 
 We introduce three method for the estimation of MSFE: (i)the standard error of the regression (SER) estimator, (ii) the final prediction error (FPE) estimator, and (iii) the pseudo out-of-sample (POOS) forecasting estimator. We explain how nonstationarity can arise from deterministic and stochastic trends, as well as from structural breaks. We then discuss how stochastic trends in a time series can be detected using unit root tests. We also discuss how structural breaks can be detected and how to mitigate the problems they cause.
 
-Finally, we conclude this chapter by introducing autoregressive moving average (ARMA) models.
+Finally, we conclude this chapter by introducing autoregressive-moving average (ARMA) and autoregressive-integrated-moving average (ARIMA) models.
 
 ## Time Series Data
 Time series data refer to data collected on a single entity at multiple points in time. Some examples are: (i) aggregate consumption and GDP for a country over time, (ii) annual cigarette consumption per capita in Florida, and (iii) the daily Euro/Dollar exchange rate. In @def-chapter24-1, we provide a formal definition of time series data.
@@ -2793,7 +2793,7 @@ ggplot(df_forecast, aes(x = Date)) +
 
 The best way to deal with the problems caused by a break depends on the source of the break. If there is a single break detected by the QLR test, we can simply adjust our regression by including the break dummy variable and the interaction terms between the break dummy variable and the other regressors. If we suspect that all coefficients break, we may also choose using only the post-break data to estimate our regression model.
 
-## ARMA models
+## ARMA and ARIMA models
 We can use the lag polynomials to extend the AR and ADL models to the **autoregressive–moving average (ARMA) model**. This type of model also allows for a distributed lag process for the error term. The ARMA(p,q) model is defined as
 $$
 Y_t = \beta_0 + \beta_1Y_{t-1} + \cdots + \beta_pY_{t-p} + u_t + \theta_1u_{t-1} + \cdots + \theta_qu_{t-q},
@@ -2807,6 +2807,24 @@ $$
 $$
 where $a(L)=(1 - \beta_1L - \cdots - \beta_pL^p)$ and $b(L)=(1 + \theta_1L + \cdots + \theta_qL^q)$.
 
+The process $Y_t$ follows an **autoregressive–integrated moving average model** of order (p,d,q), denoted by ARIMA(p,d,q), if the d-th difference of $Y_t$ follows an ARMA(p,q) process. In other words, $Y_t$ follows an ARIMA(p,d,q) process if
+$$
+a(L)(1-L)^dY_t = \beta_0 + b(L)u_t.
+$$
+
 According to @Stock2020, the AR and ARMA models are different ways we use to approximate the autocovariances of $Y_t$. Indeed, any weakly stationary process can be either written as an AR or MA process. The result that any weakly stationary process can be written in an MA form is known as the **Wold decomposition theorem**. For the details, see @Hamilton:1994 and @Hansen2022.
 
-In R, the ARMA(p,q) model can be estimated using the `arima` function from the `stats` package. The function requires the order of the AR and MA components as input, which can be specified through the `order` argument. 
+In R, the ARIMA(p,d,q) model can be estimated using the `arima` function from the `stats` package. The function requires the order of the AR, differencing, and MA components to be specified. The syntax is as follows:
+```{r}
+#| eval: false
+arima(x, order = c(0L, 0L, 0L),
+      seasonal = list(order = c(0L, 0L, 0L), period = NA),
+      xreg = NULL, include.mean = TRUE,
+      transform.pars = TRUE,
+      fixed = NULL, init = NULL,
+      method = c("CSS-ML", "ML", "CSS"), n.cond,
+      SSinit = c("Gardner1980", "Rossignol2011"),
+      optim.method = "BFGS",
+      optim.control = list(), kappa = 1e6)
+```
+where `x` is the univariate time series data, and `order = c(0L, 0L, 0L)` is the vector of three integers specifying the order of the AR, differencing, and MA components, respectively.

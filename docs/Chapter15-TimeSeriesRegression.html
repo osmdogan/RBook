@@ -533,7 +533,7 @@ window.Quarto = {
   <li><a href="#using-pseudo-out-of-sample-forecast-for-detecting-breaks" id="toc-using-pseudo-out-of-sample-forecast-for-detecting-breaks" class="nav-link" data-scroll-target="#using-pseudo-out-of-sample-forecast-for-detecting-breaks"><span class="header-section-number">24.12.8</span> Using pseudo out-of-sample forecast for detecting breaks</a></li>
   <li><a href="#avoiding-the-problems-caused-by-breaks" id="toc-avoiding-the-problems-caused-by-breaks" class="nav-link" data-scroll-target="#avoiding-the-problems-caused-by-breaks"><span class="header-section-number">24.12.9</span> Avoiding the problems caused by breaks</a></li>
   </ul></li>
-  <li><a href="#arma-models" id="toc-arma-models" class="nav-link" data-scroll-target="#arma-models"><span class="header-section-number">24.13</span> ARMA models</a></li>
+  <li><a href="#arma-and-arima-models" id="toc-arma-and-arima-models" class="nav-link" data-scroll-target="#arma-and-arima-models"><span class="header-section-number">24.13</span> ARMA and ARIMA models</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter15-TimeSeriesRegression.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -580,7 +580,7 @@ window.Quarto = {
 <p>In this chapter, we cover the basic concepts of univariate time series methods. We first show how the time series data can be handled in R. We then cover basic terminology and concepts, such as lags, leads, differences, growth rates, and annualized growth rates. We define autocorrelation, strict and weak stationarity, forecasting, forecast error, and mean squared forecast error (MSFE).</p>
 <p>We introduce two univariate time series models: the autoregressive (AR) model, and the autoregressive distributed lag (ARDL) model. For these models, we show how the number of lags can be selected by using information criteria. We specify assumptions under which we can use the OLS estimator for the estimation of these models.</p>
 <p>We introduce three method for the estimation of MSFE: (i)the standard error of the regression (SER) estimator, (ii) the final prediction error (FPE) estimator, and (iii) the pseudo out-of-sample (POOS) forecasting estimator. We explain how nonstationarity can arise from deterministic and stochastic trends, as well as from structural breaks. We then discuss how stochastic trends in a time series can be detected using unit root tests. We also discuss how structural breaks can be detected and how to mitigate the problems they cause.</p>
-<p>Finally, we conclude this chapter by introducing autoregressive moving average (ARMA) models.</p>
+<p>Finally, we conclude this chapter by introducing autoregressive-moving average (ARMA) and autoregressive-integrated-moving average (ARIMA) models.</p>
 </section>
 <section id="time-series-data" class="level2" data-number="24.2">
 <h2 data-number="24.2" class="anchored" data-anchor-id="time-series-data"><span class="header-section-number">24.2</span> Time Series Data</h2>
@@ -1780,23 +1780,23 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
 </figcaption>
 <div aria-describedby="tbl-chapter24-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="rtdwxnatbj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#rtdwxnatbj table {
+<div id="nbkfyqwguh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nbkfyqwguh table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#rtdwxnatbj thead, #rtdwxnatbj tbody, #rtdwxnatbj tfoot, #rtdwxnatbj tr, #rtdwxnatbj td, #rtdwxnatbj th {
+#nbkfyqwguh thead, #nbkfyqwguh tbody, #nbkfyqwguh tfoot, #nbkfyqwguh tr, #nbkfyqwguh td, #nbkfyqwguh th {
   border-style: none;
 }
 
-#rtdwxnatbj p {
+#nbkfyqwguh p {
   margin: 0;
   padding: 0;
 }
 
-#rtdwxnatbj .gt_table {
+#nbkfyqwguh .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1822,12 +1822,12 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   border-left-color: #D3D3D3;
 }
 
-#rtdwxnatbj .gt_caption {
+#nbkfyqwguh .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#rtdwxnatbj .gt_title {
+#nbkfyqwguh .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1839,7 +1839,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   border-bottom-width: 0;
 }
 
-#rtdwxnatbj .gt_subtitle {
+#nbkfyqwguh .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1851,7 +1851,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   border-top-width: 0;
 }
 
-#rtdwxnatbj .gt_heading {
+#nbkfyqwguh .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1863,13 +1863,13 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   border-right-color: #D3D3D3;
 }
 
-#rtdwxnatbj .gt_bottom_border {
+#nbkfyqwguh .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#rtdwxnatbj .gt_col_headings {
+#nbkfyqwguh .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1884,7 +1884,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   border-right-color: #D3D3D3;
 }
 
-#rtdwxnatbj .gt_col_heading {
+#nbkfyqwguh .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1904,7 +1904,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   overflow-x: hidden;
 }
 
-#rtdwxnatbj .gt_column_spanner_outer {
+#nbkfyqwguh .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1916,15 +1916,15 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   padding-right: 4px;
 }
 
-#rtdwxnatbj .gt_column_spanner_outer:first-child {
+#nbkfyqwguh .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#rtdwxnatbj .gt_column_spanner_outer:last-child {
+#nbkfyqwguh .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#rtdwxnatbj .gt_column_spanner {
+#nbkfyqwguh .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1936,11 +1936,11 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   width: 100%;
 }
 
-#rtdwxnatbj .gt_spanner_row {
+#nbkfyqwguh .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#rtdwxnatbj .gt_group_heading {
+#nbkfyqwguh .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1966,7 +1966,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   text-align: left;
 }
 
-#rtdwxnatbj .gt_empty_group_heading {
+#nbkfyqwguh .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1981,15 +1981,15 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   vertical-align: middle;
 }
 
-#rtdwxnatbj .gt_from_md > :first-child {
+#nbkfyqwguh .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#rtdwxnatbj .gt_from_md > :last-child {
+#nbkfyqwguh .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#rtdwxnatbj .gt_row {
+#nbkfyqwguh .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2008,7 +2008,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   overflow-x: hidden;
 }
 
-#rtdwxnatbj .gt_stub {
+#nbkfyqwguh .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2021,7 +2021,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   padding-right: 5px;
 }
 
-#rtdwxnatbj .gt_stub_row_group {
+#nbkfyqwguh .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2035,15 +2035,15 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   vertical-align: top;
 }
 
-#rtdwxnatbj .gt_row_group_first td {
+#nbkfyqwguh .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#rtdwxnatbj .gt_row_group_first th {
+#nbkfyqwguh .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#rtdwxnatbj .gt_summary_row {
+#nbkfyqwguh .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2053,16 +2053,16 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   padding-right: 5px;
 }
 
-#rtdwxnatbj .gt_first_summary_row {
+#nbkfyqwguh .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#rtdwxnatbj .gt_first_summary_row.thick {
+#nbkfyqwguh .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#rtdwxnatbj .gt_last_summary_row {
+#nbkfyqwguh .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2072,7 +2072,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   border-bottom-color: #D3D3D3;
 }
 
-#rtdwxnatbj .gt_grand_summary_row {
+#nbkfyqwguh .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2082,7 +2082,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   padding-right: 5px;
 }
 
-#rtdwxnatbj .gt_first_grand_summary_row {
+#nbkfyqwguh .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2092,7 +2092,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   border-top-color: #D3D3D3;
 }
 
-#rtdwxnatbj .gt_last_grand_summary_row_top {
+#nbkfyqwguh .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2102,11 +2102,11 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   border-bottom-color: #D3D3D3;
 }
 
-#rtdwxnatbj .gt_striped {
+#nbkfyqwguh .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#rtdwxnatbj .gt_table_body {
+#nbkfyqwguh .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2115,7 +2115,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   border-bottom-color: #D3D3D3;
 }
 
-#rtdwxnatbj .gt_footnotes {
+#nbkfyqwguh .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2129,7 +2129,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   border-right-color: #D3D3D3;
 }
 
-#rtdwxnatbj .gt_footnote {
+#nbkfyqwguh .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2138,7 +2138,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   padding-right: 5px;
 }
 
-#rtdwxnatbj .gt_sourcenotes {
+#nbkfyqwguh .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2152,7 +2152,7 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   border-right-color: #D3D3D3;
 }
 
-#rtdwxnatbj .gt_sourcenote {
+#nbkfyqwguh .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2160,72 +2160,72 @@ Table&nbsp;24.5: The AR(1) and AR(2) models for the U.S. GDP growth rate
   padding-right: 5px;
 }
 
-#rtdwxnatbj .gt_left {
+#nbkfyqwguh .gt_left {
   text-align: left;
 }
 
-#rtdwxnatbj .gt_center {
+#nbkfyqwguh .gt_center {
   text-align: center;
 }
 
-#rtdwxnatbj .gt_right {
+#nbkfyqwguh .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#rtdwxnatbj .gt_font_normal {
+#nbkfyqwguh .gt_font_normal {
   font-weight: normal;
 }
 
-#rtdwxnatbj .gt_font_bold {
+#nbkfyqwguh .gt_font_bold {
   font-weight: bold;
 }
 
-#rtdwxnatbj .gt_font_italic {
+#nbkfyqwguh .gt_font_italic {
   font-style: italic;
 }
 
-#rtdwxnatbj .gt_super {
+#nbkfyqwguh .gt_super {
   font-size: 65%;
 }
 
-#rtdwxnatbj .gt_footnote_marks {
+#nbkfyqwguh .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#rtdwxnatbj .gt_asterisk {
+#nbkfyqwguh .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#rtdwxnatbj .gt_indent_1 {
+#nbkfyqwguh .gt_indent_1 {
   text-indent: 5px;
 }
 
-#rtdwxnatbj .gt_indent_2 {
+#nbkfyqwguh .gt_indent_2 {
   text-indent: 10px;
 }
 
-#rtdwxnatbj .gt_indent_3 {
+#nbkfyqwguh .gt_indent_3 {
   text-indent: 15px;
 }
 
-#rtdwxnatbj .gt_indent_4 {
+#nbkfyqwguh .gt_indent_4 {
   text-indent: 20px;
 }
 
-#rtdwxnatbj .gt_indent_5 {
+#nbkfyqwguh .gt_indent_5 {
   text-indent: 25px;
 }
 
-#rtdwxnatbj .katex-display {
+#nbkfyqwguh .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#rtdwxnatbj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#nbkfyqwguh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2404,23 +2404,23 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
 </figcaption>
 <div aria-describedby="tbl-chapter24-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="vtnnfuwpmt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#vtnnfuwpmt table {
+<div id="aqraaqsxwn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#aqraaqsxwn table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#vtnnfuwpmt thead, #vtnnfuwpmt tbody, #vtnnfuwpmt tfoot, #vtnnfuwpmt tr, #vtnnfuwpmt td, #vtnnfuwpmt th {
+#aqraaqsxwn thead, #aqraaqsxwn tbody, #aqraaqsxwn tfoot, #aqraaqsxwn tr, #aqraaqsxwn td, #aqraaqsxwn th {
   border-style: none;
 }
 
-#vtnnfuwpmt p {
+#aqraaqsxwn p {
   margin: 0;
   padding: 0;
 }
 
-#vtnnfuwpmt .gt_table {
+#aqraaqsxwn .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2446,12 +2446,12 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   border-left-color: #D3D3D3;
 }
 
-#vtnnfuwpmt .gt_caption {
+#aqraaqsxwn .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#vtnnfuwpmt .gt_title {
+#aqraaqsxwn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2463,7 +2463,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   border-bottom-width: 0;
 }
 
-#vtnnfuwpmt .gt_subtitle {
+#aqraaqsxwn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2475,7 +2475,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   border-top-width: 0;
 }
 
-#vtnnfuwpmt .gt_heading {
+#aqraaqsxwn .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2487,13 +2487,13 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   border-right-color: #D3D3D3;
 }
 
-#vtnnfuwpmt .gt_bottom_border {
+#aqraaqsxwn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#vtnnfuwpmt .gt_col_headings {
+#aqraaqsxwn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2508,7 +2508,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   border-right-color: #D3D3D3;
 }
 
-#vtnnfuwpmt .gt_col_heading {
+#aqraaqsxwn .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2528,7 +2528,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   overflow-x: hidden;
 }
 
-#vtnnfuwpmt .gt_column_spanner_outer {
+#aqraaqsxwn .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2540,15 +2540,15 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   padding-right: 4px;
 }
 
-#vtnnfuwpmt .gt_column_spanner_outer:first-child {
+#aqraaqsxwn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#vtnnfuwpmt .gt_column_spanner_outer:last-child {
+#aqraaqsxwn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#vtnnfuwpmt .gt_column_spanner {
+#aqraaqsxwn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2560,11 +2560,11 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   width: 100%;
 }
 
-#vtnnfuwpmt .gt_spanner_row {
+#aqraaqsxwn .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#vtnnfuwpmt .gt_group_heading {
+#aqraaqsxwn .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2590,7 +2590,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   text-align: left;
 }
 
-#vtnnfuwpmt .gt_empty_group_heading {
+#aqraaqsxwn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2605,15 +2605,15 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   vertical-align: middle;
 }
 
-#vtnnfuwpmt .gt_from_md > :first-child {
+#aqraaqsxwn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#vtnnfuwpmt .gt_from_md > :last-child {
+#aqraaqsxwn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#vtnnfuwpmt .gt_row {
+#aqraaqsxwn .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2632,7 +2632,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   overflow-x: hidden;
 }
 
-#vtnnfuwpmt .gt_stub {
+#aqraaqsxwn .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2645,7 +2645,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   padding-right: 5px;
 }
 
-#vtnnfuwpmt .gt_stub_row_group {
+#aqraaqsxwn .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2659,15 +2659,15 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   vertical-align: top;
 }
 
-#vtnnfuwpmt .gt_row_group_first td {
+#aqraaqsxwn .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#vtnnfuwpmt .gt_row_group_first th {
+#aqraaqsxwn .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#vtnnfuwpmt .gt_summary_row {
+#aqraaqsxwn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2677,16 +2677,16 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   padding-right: 5px;
 }
 
-#vtnnfuwpmt .gt_first_summary_row {
+#aqraaqsxwn .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#vtnnfuwpmt .gt_first_summary_row.thick {
+#aqraaqsxwn .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#vtnnfuwpmt .gt_last_summary_row {
+#aqraaqsxwn .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2696,7 +2696,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   border-bottom-color: #D3D3D3;
 }
 
-#vtnnfuwpmt .gt_grand_summary_row {
+#aqraaqsxwn .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2706,7 +2706,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   padding-right: 5px;
 }
 
-#vtnnfuwpmt .gt_first_grand_summary_row {
+#aqraaqsxwn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2716,7 +2716,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   border-top-color: #D3D3D3;
 }
 
-#vtnnfuwpmt .gt_last_grand_summary_row_top {
+#aqraaqsxwn .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2726,11 +2726,11 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   border-bottom-color: #D3D3D3;
 }
 
-#vtnnfuwpmt .gt_striped {
+#aqraaqsxwn .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#vtnnfuwpmt .gt_table_body {
+#aqraaqsxwn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2739,7 +2739,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   border-bottom-color: #D3D3D3;
 }
 
-#vtnnfuwpmt .gt_footnotes {
+#aqraaqsxwn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2753,7 +2753,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   border-right-color: #D3D3D3;
 }
 
-#vtnnfuwpmt .gt_footnote {
+#aqraaqsxwn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2762,7 +2762,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   padding-right: 5px;
 }
 
-#vtnnfuwpmt .gt_sourcenotes {
+#aqraaqsxwn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2776,7 +2776,7 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   border-right-color: #D3D3D3;
 }
 
-#vtnnfuwpmt .gt_sourcenote {
+#aqraaqsxwn .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2784,72 +2784,72 @@ Table&nbsp;24.6: The AR(1) and AR(4) models for the U.S. inflation rate
   padding-right: 5px;
 }
 
-#vtnnfuwpmt .gt_left {
+#aqraaqsxwn .gt_left {
   text-align: left;
 }
 
-#vtnnfuwpmt .gt_center {
+#aqraaqsxwn .gt_center {
   text-align: center;
 }
 
-#vtnnfuwpmt .gt_right {
+#aqraaqsxwn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#vtnnfuwpmt .gt_font_normal {
+#aqraaqsxwn .gt_font_normal {
   font-weight: normal;
 }
 
-#vtnnfuwpmt .gt_font_bold {
+#aqraaqsxwn .gt_font_bold {
   font-weight: bold;
 }
 
-#vtnnfuwpmt .gt_font_italic {
+#aqraaqsxwn .gt_font_italic {
   font-style: italic;
 }
 
-#vtnnfuwpmt .gt_super {
+#aqraaqsxwn .gt_super {
   font-size: 65%;
 }
 
-#vtnnfuwpmt .gt_footnote_marks {
+#aqraaqsxwn .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#vtnnfuwpmt .gt_asterisk {
+#aqraaqsxwn .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#vtnnfuwpmt .gt_indent_1 {
+#aqraaqsxwn .gt_indent_1 {
   text-indent: 5px;
 }
 
-#vtnnfuwpmt .gt_indent_2 {
+#aqraaqsxwn .gt_indent_2 {
   text-indent: 10px;
 }
 
-#vtnnfuwpmt .gt_indent_3 {
+#aqraaqsxwn .gt_indent_3 {
   text-indent: 15px;
 }
 
-#vtnnfuwpmt .gt_indent_4 {
+#aqraaqsxwn .gt_indent_4 {
   text-indent: 20px;
 }
 
-#vtnnfuwpmt .gt_indent_5 {
+#aqraaqsxwn .gt_indent_5 {
   text-indent: 25px;
 }
 
-#vtnnfuwpmt .katex-display {
+#aqraaqsxwn .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#vtnnfuwpmt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#aqraaqsxwn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -3191,23 +3191,23 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
 </figcaption>
 <div aria-describedby="tbl-chapter24-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="asugeqbtjr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#asugeqbtjr table {
+<div id="vaftbnlhve" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vaftbnlhve table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#asugeqbtjr thead, #asugeqbtjr tbody, #asugeqbtjr tfoot, #asugeqbtjr tr, #asugeqbtjr td, #asugeqbtjr th {
+#vaftbnlhve thead, #vaftbnlhve tbody, #vaftbnlhve tfoot, #vaftbnlhve tr, #vaftbnlhve td, #vaftbnlhve th {
   border-style: none;
 }
 
-#asugeqbtjr p {
+#vaftbnlhve p {
   margin: 0;
   padding: 0;
 }
 
-#asugeqbtjr .gt_table {
+#vaftbnlhve .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -3233,12 +3233,12 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   border-left-color: #D3D3D3;
 }
 
-#asugeqbtjr .gt_caption {
+#vaftbnlhve .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#asugeqbtjr .gt_title {
+#vaftbnlhve .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3250,7 +3250,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   border-bottom-width: 0;
 }
 
-#asugeqbtjr .gt_subtitle {
+#vaftbnlhve .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3262,7 +3262,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   border-top-width: 0;
 }
 
-#asugeqbtjr .gt_heading {
+#vaftbnlhve .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3274,13 +3274,13 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   border-right-color: #D3D3D3;
 }
 
-#asugeqbtjr .gt_bottom_border {
+#vaftbnlhve .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#asugeqbtjr .gt_col_headings {
+#vaftbnlhve .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3295,7 +3295,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   border-right-color: #D3D3D3;
 }
 
-#asugeqbtjr .gt_col_heading {
+#vaftbnlhve .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3315,7 +3315,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   overflow-x: hidden;
 }
 
-#asugeqbtjr .gt_column_spanner_outer {
+#vaftbnlhve .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3327,15 +3327,15 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   padding-right: 4px;
 }
 
-#asugeqbtjr .gt_column_spanner_outer:first-child {
+#vaftbnlhve .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#asugeqbtjr .gt_column_spanner_outer:last-child {
+#vaftbnlhve .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#asugeqbtjr .gt_column_spanner {
+#vaftbnlhve .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3347,11 +3347,11 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   width: 100%;
 }
 
-#asugeqbtjr .gt_spanner_row {
+#vaftbnlhve .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#asugeqbtjr .gt_group_heading {
+#vaftbnlhve .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3377,7 +3377,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   text-align: left;
 }
 
-#asugeqbtjr .gt_empty_group_heading {
+#vaftbnlhve .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3392,15 +3392,15 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   vertical-align: middle;
 }
 
-#asugeqbtjr .gt_from_md > :first-child {
+#vaftbnlhve .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#asugeqbtjr .gt_from_md > :last-child {
+#vaftbnlhve .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#asugeqbtjr .gt_row {
+#vaftbnlhve .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3419,7 +3419,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   overflow-x: hidden;
 }
 
-#asugeqbtjr .gt_stub {
+#vaftbnlhve .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3432,7 +3432,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   padding-right: 5px;
 }
 
-#asugeqbtjr .gt_stub_row_group {
+#vaftbnlhve .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3446,15 +3446,15 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   vertical-align: top;
 }
 
-#asugeqbtjr .gt_row_group_first td {
+#vaftbnlhve .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#asugeqbtjr .gt_row_group_first th {
+#vaftbnlhve .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#asugeqbtjr .gt_summary_row {
+#vaftbnlhve .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3464,16 +3464,16 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   padding-right: 5px;
 }
 
-#asugeqbtjr .gt_first_summary_row {
+#vaftbnlhve .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#asugeqbtjr .gt_first_summary_row.thick {
+#vaftbnlhve .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#asugeqbtjr .gt_last_summary_row {
+#vaftbnlhve .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3483,7 +3483,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   border-bottom-color: #D3D3D3;
 }
 
-#asugeqbtjr .gt_grand_summary_row {
+#vaftbnlhve .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3493,7 +3493,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   padding-right: 5px;
 }
 
-#asugeqbtjr .gt_first_grand_summary_row {
+#vaftbnlhve .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3503,7 +3503,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   border-top-color: #D3D3D3;
 }
 
-#asugeqbtjr .gt_last_grand_summary_row_top {
+#vaftbnlhve .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3513,11 +3513,11 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   border-bottom-color: #D3D3D3;
 }
 
-#asugeqbtjr .gt_striped {
+#vaftbnlhve .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#asugeqbtjr .gt_table_body {
+#vaftbnlhve .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3526,7 +3526,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   border-bottom-color: #D3D3D3;
 }
 
-#asugeqbtjr .gt_footnotes {
+#vaftbnlhve .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3540,7 +3540,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   border-right-color: #D3D3D3;
 }
 
-#asugeqbtjr .gt_footnote {
+#vaftbnlhve .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3549,7 +3549,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   padding-right: 5px;
 }
 
-#asugeqbtjr .gt_sourcenotes {
+#vaftbnlhve .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3563,7 +3563,7 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   border-right-color: #D3D3D3;
 }
 
-#asugeqbtjr .gt_sourcenote {
+#vaftbnlhve .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -3571,72 +3571,72 @@ Table&nbsp;24.8: Estimation results for the ADL(2,1) and ADL(2,2) models
   padding-right: 5px;
 }
 
-#asugeqbtjr .gt_left {
+#vaftbnlhve .gt_left {
   text-align: left;
 }
 
-#asugeqbtjr .gt_center {
+#vaftbnlhve .gt_center {
   text-align: center;
 }
 
-#asugeqbtjr .gt_right {
+#vaftbnlhve .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#asugeqbtjr .gt_font_normal {
+#vaftbnlhve .gt_font_normal {
   font-weight: normal;
 }
 
-#asugeqbtjr .gt_font_bold {
+#vaftbnlhve .gt_font_bold {
   font-weight: bold;
 }
 
-#asugeqbtjr .gt_font_italic {
+#vaftbnlhve .gt_font_italic {
   font-style: italic;
 }
 
-#asugeqbtjr .gt_super {
+#vaftbnlhve .gt_super {
   font-size: 65%;
 }
 
-#asugeqbtjr .gt_footnote_marks {
+#vaftbnlhve .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#asugeqbtjr .gt_asterisk {
+#vaftbnlhve .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#asugeqbtjr .gt_indent_1 {
+#vaftbnlhve .gt_indent_1 {
   text-indent: 5px;
 }
 
-#asugeqbtjr .gt_indent_2 {
+#vaftbnlhve .gt_indent_2 {
   text-indent: 10px;
 }
 
-#asugeqbtjr .gt_indent_3 {
+#vaftbnlhve .gt_indent_3 {
   text-indent: 15px;
 }
 
-#asugeqbtjr .gt_indent_4 {
+#vaftbnlhve .gt_indent_4 {
   text-indent: 20px;
 }
 
-#asugeqbtjr .gt_indent_5 {
+#vaftbnlhve .gt_indent_5 {
   text-indent: 25px;
 }
 
-#asugeqbtjr .katex-display {
+#vaftbnlhve .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#asugeqbtjr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#vaftbnlhve div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -3850,23 +3850,23 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
 </figcaption>
 <div aria-describedby="tbl-chapter24-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="lfyabugvvy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#lfyabugvvy table {
+<div id="hwfakoiiyf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hwfakoiiyf table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#lfyabugvvy thead, #lfyabugvvy tbody, #lfyabugvvy tfoot, #lfyabugvvy tr, #lfyabugvvy td, #lfyabugvvy th {
+#hwfakoiiyf thead, #hwfakoiiyf tbody, #hwfakoiiyf tfoot, #hwfakoiiyf tr, #hwfakoiiyf td, #hwfakoiiyf th {
   border-style: none;
 }
 
-#lfyabugvvy p {
+#hwfakoiiyf p {
   margin: 0;
   padding: 0;
 }
 
-#lfyabugvvy .gt_table {
+#hwfakoiiyf .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -3892,12 +3892,12 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   border-left-color: #D3D3D3;
 }
 
-#lfyabugvvy .gt_caption {
+#hwfakoiiyf .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#lfyabugvvy .gt_title {
+#hwfakoiiyf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3909,7 +3909,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   border-bottom-width: 0;
 }
 
-#lfyabugvvy .gt_subtitle {
+#hwfakoiiyf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3921,7 +3921,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   border-top-width: 0;
 }
 
-#lfyabugvvy .gt_heading {
+#hwfakoiiyf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3933,13 +3933,13 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   border-right-color: #D3D3D3;
 }
 
-#lfyabugvvy .gt_bottom_border {
+#hwfakoiiyf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#lfyabugvvy .gt_col_headings {
+#hwfakoiiyf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3954,7 +3954,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   border-right-color: #D3D3D3;
 }
 
-#lfyabugvvy .gt_col_heading {
+#hwfakoiiyf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3974,7 +3974,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   overflow-x: hidden;
 }
 
-#lfyabugvvy .gt_column_spanner_outer {
+#hwfakoiiyf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3986,15 +3986,15 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   padding-right: 4px;
 }
 
-#lfyabugvvy .gt_column_spanner_outer:first-child {
+#hwfakoiiyf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#lfyabugvvy .gt_column_spanner_outer:last-child {
+#hwfakoiiyf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#lfyabugvvy .gt_column_spanner {
+#hwfakoiiyf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -4006,11 +4006,11 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   width: 100%;
 }
 
-#lfyabugvvy .gt_spanner_row {
+#hwfakoiiyf .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#lfyabugvvy .gt_group_heading {
+#hwfakoiiyf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4036,7 +4036,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   text-align: left;
 }
 
-#lfyabugvvy .gt_empty_group_heading {
+#hwfakoiiyf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -4051,15 +4051,15 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   vertical-align: middle;
 }
 
-#lfyabugvvy .gt_from_md > :first-child {
+#hwfakoiiyf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#lfyabugvvy .gt_from_md > :last-child {
+#hwfakoiiyf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#lfyabugvvy .gt_row {
+#hwfakoiiyf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4078,7 +4078,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   overflow-x: hidden;
 }
 
-#lfyabugvvy .gt_stub {
+#hwfakoiiyf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -4091,7 +4091,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   padding-right: 5px;
 }
 
-#lfyabugvvy .gt_stub_row_group {
+#hwfakoiiyf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -4105,15 +4105,15 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   vertical-align: top;
 }
 
-#lfyabugvvy .gt_row_group_first td {
+#hwfakoiiyf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#lfyabugvvy .gt_row_group_first th {
+#hwfakoiiyf .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#lfyabugvvy .gt_summary_row {
+#hwfakoiiyf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -4123,16 +4123,16 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   padding-right: 5px;
 }
 
-#lfyabugvvy .gt_first_summary_row {
+#hwfakoiiyf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#lfyabugvvy .gt_first_summary_row.thick {
+#hwfakoiiyf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#lfyabugvvy .gt_last_summary_row {
+#hwfakoiiyf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4142,7 +4142,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   border-bottom-color: #D3D3D3;
 }
 
-#lfyabugvvy .gt_grand_summary_row {
+#hwfakoiiyf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -4152,7 +4152,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   padding-right: 5px;
 }
 
-#lfyabugvvy .gt_first_grand_summary_row {
+#hwfakoiiyf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4162,7 +4162,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   border-top-color: #D3D3D3;
 }
 
-#lfyabugvvy .gt_last_grand_summary_row_top {
+#hwfakoiiyf .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4172,11 +4172,11 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   border-bottom-color: #D3D3D3;
 }
 
-#lfyabugvvy .gt_striped {
+#hwfakoiiyf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#lfyabugvvy .gt_table_body {
+#hwfakoiiyf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -4185,7 +4185,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   border-bottom-color: #D3D3D3;
 }
 
-#lfyabugvvy .gt_footnotes {
+#hwfakoiiyf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -4199,7 +4199,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   border-right-color: #D3D3D3;
 }
 
-#lfyabugvvy .gt_footnote {
+#hwfakoiiyf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -4208,7 +4208,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   padding-right: 5px;
 }
 
-#lfyabugvvy .gt_sourcenotes {
+#hwfakoiiyf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -4222,7 +4222,7 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   border-right-color: #D3D3D3;
 }
 
-#lfyabugvvy .gt_sourcenote {
+#hwfakoiiyf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -4230,72 +4230,72 @@ Table&nbsp;24.9: The ARDL(4,4) model for the change in inflation rate
   padding-right: 5px;
 }
 
-#lfyabugvvy .gt_left {
+#hwfakoiiyf .gt_left {
   text-align: left;
 }
 
-#lfyabugvvy .gt_center {
+#hwfakoiiyf .gt_center {
   text-align: center;
 }
 
-#lfyabugvvy .gt_right {
+#hwfakoiiyf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#lfyabugvvy .gt_font_normal {
+#hwfakoiiyf .gt_font_normal {
   font-weight: normal;
 }
 
-#lfyabugvvy .gt_font_bold {
+#hwfakoiiyf .gt_font_bold {
   font-weight: bold;
 }
 
-#lfyabugvvy .gt_font_italic {
+#hwfakoiiyf .gt_font_italic {
   font-style: italic;
 }
 
-#lfyabugvvy .gt_super {
+#hwfakoiiyf .gt_super {
   font-size: 65%;
 }
 
-#lfyabugvvy .gt_footnote_marks {
+#hwfakoiiyf .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#lfyabugvvy .gt_asterisk {
+#hwfakoiiyf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#lfyabugvvy .gt_indent_1 {
+#hwfakoiiyf .gt_indent_1 {
   text-indent: 5px;
 }
 
-#lfyabugvvy .gt_indent_2 {
+#hwfakoiiyf .gt_indent_2 {
   text-indent: 10px;
 }
 
-#lfyabugvvy .gt_indent_3 {
+#hwfakoiiyf .gt_indent_3 {
   text-indent: 15px;
 }
 
-#lfyabugvvy .gt_indent_4 {
+#hwfakoiiyf .gt_indent_4 {
   text-indent: 20px;
 }
 
-#lfyabugvvy .gt_indent_5 {
+#hwfakoiiyf .gt_indent_5 {
   text-indent: 25px;
 }
 
-#lfyabugvvy .katex-display {
+#hwfakoiiyf .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#lfyabugvvy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#hwfakoiiyf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -6328,8 +6328,8 @@ Figure&nbsp;24.20: Plot of the actual GDP growth rate, the forecasted GDP growth
 <p>The best way to deal with the problems caused by a break depends on the source of the break. If there is a single break detected by the QLR test, we can simply adjust our regression by including the break dummy variable and the interaction terms between the break dummy variable and the other regressors. If we suspect that all coefficients break, we may also choose using only the post-break data to estimate our regression model.</p>
 </section>
 </section>
-<section id="arma-models" class="level2" data-number="24.13">
-<h2 data-number="24.13" class="anchored" data-anchor-id="arma-models"><span class="header-section-number">24.13</span> ARMA models</h2>
+<section id="arma-and-arima-models" class="level2" data-number="24.13">
+<h2 data-number="24.13" class="anchored" data-anchor-id="arma-and-arima-models"><span class="header-section-number">24.13</span> ARMA and ARIMA models</h2>
 <p>We can use the lag polynomials to extend the AR and ADL models to the <strong>autoregressive–moving average (ARMA) model</strong>. This type of model also allows for a distributed lag process for the error term. The ARMA(p,q) model is defined as <span class="math display">\[
 Y_t = \beta_0 + \beta_1Y_{t-1} + \cdots + \beta_pY_{t-p} + u_t + \theta_1u_{t-1} + \cdots + \theta_qu_{t-q},
 \]</span> where <span class="math inline">\(\beta_1,\beta_2,\ldots,\beta_p\)</span> are the AR coefficients, <span class="math inline">\(\theta_1,\theta_2,\ldots,\theta_q\)</span> are the moving average (MA) coefficients, and <span class="math inline">\(u_t\)</span> is an i.i.d. error term with mean zero and variance <span class="math inline">\(\sigma^2_u\)</span>. We can express the ARMA(p,q) model as <span class="math display">\[
@@ -6338,8 +6338,23 @@ Y_t = \beta_0 + \beta_1Y_{t-1} + \cdots + \beta_pY_{t-p} + u_t + \theta_1u_{t-1}
 &amp;\implies a(L)Y_t = \beta_0 + b(L)u_t,
 \end{align*}
 \]</span> where <span class="math inline">\(a(L)=(1 - \beta_1L - \cdots - \beta_pL^p)\)</span> and <span class="math inline">\(b(L)=(1 + \theta_1L + \cdots + \theta_qL^q)\)</span>.</p>
+<p>The process <span class="math inline">\(Y_t\)</span> follows an <strong>autoregressive–integrated moving average model</strong> of order (p,d,q), denoted by ARIMA(p,d,q), if the d-th difference of <span class="math inline">\(Y_t\)</span> follows an ARMA(p,q) process. In other words, <span class="math inline">\(Y_t\)</span> follows an ARIMA(p,d,q) process if <span class="math display">\[
+a(L)(1-L)^dY_t = \beta_0 + b(L)u_t.
+\]</span></p>
 <p>According to <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span>, the AR and ARMA models are different ways we use to approximate the autocovariances of <span class="math inline">\(Y_t\)</span>. Indeed, any weakly stationary process can be either written as an AR or MA process. The result that any weakly stationary process can be written in an MA form is known as the <strong>Wold decomposition theorem</strong>. For the details, see <span class="citation" data-cites="Hamilton:1994">Hamilton (<a href="references.html#ref-Hamilton:1994" role="doc-biblioref">1994</a>)</span> and <span class="citation" data-cites="Hansen2022">Hansen (<a href="references.html#ref-Hansen2022" role="doc-biblioref">2022</a>)</span>.</p>
-<p>In R, the ARMA(p,q) model can be estimated using the <code>arima</code> function from the <code>stats</code> package. The function requires the order of the AR and MA components as input, which can be specified through the <code>order</code> argument.</p>
+<p>In R, the ARIMA(p,d,q) model can be estimated using the <code>arima</code> function from the <code>stats</code> package. The function requires the order of the AR, differencing, and MA components to be specified. The syntax is as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">arima</span>(x, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">0</span>L, <span class="dv">0</span>L, <span class="dv">0</span>L),</span>
+<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">seasonal =</span> <span class="fu">list</span>(<span class="at">order =</span> <span class="fu">c</span>(<span class="dv">0</span>L, <span class="dv">0</span>L, <span class="dv">0</span>L), <span class="at">period =</span> <span class="cn">NA</span>),</span>
+<span id="cb138-3"><a href="#cb138-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">xreg =</span> <span class="cn">NULL</span>, <span class="at">include.mean =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb138-4"><a href="#cb138-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">transform.pars =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb138-5"><a href="#cb138-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">fixed =</span> <span class="cn">NULL</span>, <span class="at">init =</span> <span class="cn">NULL</span>,</span>
+<span id="cb138-6"><a href="#cb138-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"CSS-ML"</span>, <span class="st">"ML"</span>, <span class="st">"CSS"</span>), n.cond,</span>
+<span id="cb138-7"><a href="#cb138-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">SSinit =</span> <span class="fu">c</span>(<span class="st">"Gardner1980"</span>, <span class="st">"Rossignol2011"</span>),</span>
+<span id="cb138-8"><a href="#cb138-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">optim.method =</span> <span class="st">"BFGS"</span>,</span>
+<span id="cb138-9"><a href="#cb138-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">optim.control =</span> <span class="fu">list</span>(), <span class="at">kappa =</span> <span class="fl">1e6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>where <code>x</code> is the univariate time series data, and <code>order = c(0L, 0L, 0L)</code> is the vector of three integers specifying the order of the AR, differencing, and MA components, respectively.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
