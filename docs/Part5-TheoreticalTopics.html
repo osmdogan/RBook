@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Theoretical Topics – Introduction to Econometrics with Python</title>
+<title>Theoretical Topics – Introduction to Econometrics with R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -68,6 +68,26 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script>
 
 
 </head>
@@ -96,7 +116,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Introduction to Econometrics with Python</a> 
+      <a href="./">Introduction to Econometrics with R</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
@@ -117,8 +137,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./Part0-Python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Python</span></a>
+            <a href="./Part0-RBasics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R Basics</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -126,14 +146,14 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Chapter0-IntroPython.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Python</span></span></a>
+  <a href="./Chapter0-IntroR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Chapter0-IntroNumpy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction to NumPy</span></span></a>
+  <a href="./Chapter0-DataStructures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Structures in R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -162,8 +182,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Chapter0-Pandas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Pandas</span></span></a>
+  <a href="./Chapter0-Dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Dataframes</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -174,14 +194,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./Chapter0-SymbolicMath.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Symbolic Computing</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
   </div>
 </li>
       </ul>
@@ -198,19 +212,19 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
   </div>
 </li>
       </ul>
@@ -227,37 +241,37 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
   </div>
 </li>
       </ul>
@@ -274,31 +288,31 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
   </div>
 </li>
       </ul>
@@ -315,19 +329,19 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
   </div>
 </li>
       </ul>
@@ -344,13 +358,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
   </div>
 </li>
       </ul>
@@ -367,25 +381,25 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 14</span></span></a>
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 13</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 24</span></span></a>
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 23</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 27</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 29</span></span></a>
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -428,14 +442,14 @@ ul.task-list li input[type="checkbox"] {
 
 <p>In this part, we present theoretical topics that are essential for understanding the concepts and techniques used in the previous chapters. This part consists of the following chapters:</p>
 <ul>
-<li><a href="Chapter18-TheoryRegression.html" class="quarto-xref">Chapter&nbsp;<span>28&nbsp; The Theory of Linear Regression with One Regressor</span></a></li>
-<li><a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref">Chapter&nbsp;<span>29&nbsp; The Theory of Multiple Regression</span></a></li>
+<li><a href="Chapter18-TheoryRegression.html" class="quarto-xref">Chapter&nbsp;<span>27&nbsp; The Theory of Linear Regression with One Regressor</span></a></li>
+<li><a href="Chapter19-TheoryMultipleRegression.html" class="quarto-xref">Chapter&nbsp;<span>28&nbsp; The Theory of Multiple Regression</span></a></li>
 </ul>
-<p>In Chapter 28, we cover the theoretical aspects of the simple linear regression model introduced in Chapters 14 and 15. We introduce fundamental concepts of asymptotic theory, including convergence in probability, convergence in distribution, the law of large numbers, and the central limit theorem. We then show how these tools can be used to derive the asymptotic properties of the OLS estimator. We consider extended least squares assumptions under which the OLS estimators and t-statistics have exact sampling distributions. This chapter is supplemented by <a href="AppendixC.html" class="quarto-xref"><span>Appendix C — Appendix for Chapter 28</span></a>, which provides further discussion on statistical distributions.</p>
-<p>Chapter 29 consists of three main sections. In the first section, we cover the theoretical aspects of the multiple linear regression model introduced in Chapters 16 and 17. We introduce matrix notation for the multiple linear regression model and show how to derive the OLS estimator using matrix algebra. We also discuss the asymptotic and exact sampling distributions of the OLS estimator. Finally, we introduce the generalized least squares (GLS) estimator that requires a strong form of the zero-conditional mean assumption.</p>
+<p>In Chapter 27, we cover the theoretical aspects of the simple linear regression model introduced in Chapters 14 and 15. We introduce fundamental concepts of asymptotic theory, including convergence in probability, convergence in distribution, the law of large numbers, and the central limit theorem. We then show how these tools can be used to derive the asymptotic properties of the OLS estimator. We consider extended least squares assumptions under which the OLS estimators and t-statistics have exact sampling distributions. This chapter is supplemented by <a href="AppendixC.html" class="quarto-xref"><span>Appendix C — Appendix for Chapter 27</span></a>, which provides further discussion on statistical distributions.</p>
+<p>Chapter 28 consists of three main sections. In the first section, we cover the theoretical aspects of the multiple linear regression model introduced in Chapters 16 and 17. We introduce matrix notation for the multiple linear regression model and show how to derive the OLS estimator using matrix algebra. We also discuss the asymptotic and exact sampling distributions of the OLS estimator. Finally, we introduce the generalized least squares (GLS) estimator that requires a strong form of the zero-conditional mean assumption.</p>
 <p>In the second section, we revisit the IV regression model and show how to derive the TSLS estimator using matrix algebra. We then discuss the asymptotic and exact sampling distribution of the IV estimator. In particular, we show that the TSLS estimator is efficient under the assumption of homoskedasticity.</p>
 <p>In the third section, we cover two classes of estimators: the IV and generalized method of moments (GMM) estimators. Both are based on minimizing a quadratic form that incorporates all moment conditions. For the linear IV regression model, these two classes of estimators are equivalent. We also show that the TSLS estimator is a special case of the GMM estimator. Furthermore, we derive an efficient GMM estimator by selecting an optimal weighting matrix for the quadratic form. This efficient GMM estimator is then used to formulate a heteroskedasticity-robust J-statistic for testing overidentifying restrictions.</p>
-<p>Chapter 29 is supplemented by <a href="AppendixD.html" class="quarto-xref"><span>Appendix D — Appendix for Chapter 29</span></a>, which reviews linear algebra, matrix calculus, and random vectors and their distributions. We recommend that readers review these materials before reading Chapter 29.</p>
+<p>Chapter 28 is supplemented by <a href="AppendixD.html" class="quarto-xref"><span>Appendix D — Appendix for Chapter 28</span></a>, which reviews linear algebra, matrix calculus, and random vectors and their distributions. We recommend that readers review these materials before reading Chapter 28.</p>
 
 
 
@@ -532,7 +546,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/Python_Book\/");
+      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/RBook\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -863,12 +877,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="pagination-link" aria-label="Additional Topics in Time Series Regression">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./Chapter18-TheoryRegression.html" class="pagination-link" aria-label="The Theory of Linear Regression with One Regressor">
-        <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -876,7 +890,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Introduction to Econometrics with Python was written by Osman Doğan and Süleyman Taşpınar.</p>
+<p>Introduction to Econometrics with R was written by Osman Doğan and Süleyman Taşpınar.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;
