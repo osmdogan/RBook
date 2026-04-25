@@ -37,6 +37,84 @@ I^2&=\frac{1}{2\pi}\int_{0}^{2\pi}\int_{0}^{\infty}e^{-r^2/2}rdrd\theta=\frac{1}
 \end{align*} 
 $$
 
+Let $X\sim N(0,1)$. Then, we can express $Y$ as $Y=\mu+\sigma X$.  Let us verify that $\E(X)=0$ and $\text{Var}(X)=1$. First, we have
+$$
+\begin{align*}
+\E(X)&=\int_{-\infty}^{\infty}x\frac{1}{\sqrt{2\pi}}e^{-x^2/2}dx=\frac{1}{\sqrt{2\pi}}\lim_{n\to\infty}\int_{-n}^{n}xe^{-x^2/2}dx\\
+&=\frac{1}{\sqrt{2\pi}}\lim_{n\to\infty}\left(-e^{-x^2/2}\bigg|_{-n}^{n}\right)=0.
+\end{align*}
+$$
+
+Next, using integration by parts, we have
+$$
+\begin{align*}
+\text{Var}(X)&=\E(X^2)-\E(X)^2=\int_{-\infty}^{\infty}x^2\frac{1}{\sqrt{2\pi}}e^{-x^2/2}dx\\
+&=\frac{1}{\sqrt{2\pi}}\lim_{n\to\infty}\int_{-n}^{n}x\cdot xe^{-x^2/2}dx\\
+&=\frac{1}{\sqrt{2\pi}}\lim_{n\to\infty}\left(-xe^{-x^2/2}\bigg|_{-n}^{n}+\int_{-n}^{n}e^{-x^2/2}dx\right)\\
+&=\int_{-\infty}^{\infty}\frac{1}{\sqrt{2\pi}}e^{-x^2/2}dx=1.
+\end{align*}
+$$
+
+Also, since $Y=\mu+\sigma X$, we have $\E(Y)=\mu+\sigma\E(X)=\mu$ and $\text{Var}(Y)=\sigma^2\text{Var}(X)=\sigma^2$.
+
+For higher-order moments of $X$, we can use the following result, known as [Stein's lemma](https://en.wikipedia.org/wiki/Stein%27s_lemma), to find the moments of $X$.
+$$
+\begin{align*}
+\E(X f(X))&=\E(f'(X)),
+\end{align*}
+$$
+where $f$ is a differentiable function such that $\E(|X f(X)|)<\infty$ and $\E(|f'(X)|)<\infty$. 
+
+:::{#exm-exmC-1}
+Let $X \sim N(0,1)$. Consider the third and fourth moments $\E(X^3)$ and $\E(X^4)$. Using Stein's lemma, we have
+$$
+\begin{align*}
+\E(X^3)&=\E(X\cdot X^2)=\E(2X)=0,
+\end{align*}
+$$
+where the second equality follows from Stein's lemma with $f(x)=x^2$. Similarly, we have
+$$
+\begin{align*}
+\E(X^4)&=\E(X\cdot X^3)=\E(3X^2)=3,
+\end{align*}
+$$
+where the second equality follows from Stein's lemma with $f(x)=x^3$.
+:::
+
+:::{#exm-exmC-2}
+Let $X \sim N(0,1)$. Then, using Stein's lemma, we can find that the odd and even moments of $X$ as
+$$
+\begin{align*}
+\E(X^k)=
+\begin{cases}
+0, & \text{if $k$ is odd},\\
+(k-1)!!, & \text{if $k$ is even},
+\end{cases}
+\end{align*}
+$$
+where $(k-1)!!$ is the double factorial defined as $(k-1)!!=(k-1)(k-3)(k-5)\cdots 3\cdot 1$.
+:::
+
+:::{#exm-exmC-3}
+In this example, we derive Stein's lemma for $Y\sim N(\mu,\sigma^2)$. Let $f$ be a differentiable function such that $\E(|Y f(Y)|)<\infty$ and $\E(|f'(Y)|)<\infty$. Then, we have
+$$
+\begin{align*}
+\E((Y-\mu)f(Y))&=\int_{-\infty}^{\infty}(y-\mu)f(y)\frac{1}{\sigma\sqrt{2\pi}}e^{-(y-\mu)^2/(2\sigma^2)}dy\\
+&=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^{\infty}f(y)\cdot(y-\mu)e^{-(y-\mu)^2/(2\sigma^2)}dy\\
+&=\sigma\int_{-\infty}^{\infty}f(\sigma x+\mu)\cdot x\cdot \frac{1}{\sqrt{2\pi}}e^{-x^2/2}dx\\
+&=\sigma\E(Xf(\sigma X+\mu))\\
+&=\sigma^2\E(f'(\sigma X+\mu))\\
+&=\sigma^2\E(f'(Y)),
+\end{align*}
+$$
+where the third equality follows from the change of variable $x=(y-\mu)/\sigma$ and the fifth equality follows from Stein's lemma for the standard normal distribution. Thus, we have
+$$
+\begin{align*}
+\E((Y-\mu)f(Y))&=\sigma^2\E(f'(Y)).
+\end{align*}
+$$
+:::
+
 ## Moment-generating function
 :::{#def-defC-1}
 ## Moments
