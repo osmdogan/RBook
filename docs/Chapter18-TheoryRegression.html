@@ -1022,6 +1022,11 @@ Figure&nbsp;27.3: Histograms of <span class="math inline">\(m_a\)</span>, <span 
 \left(\E(XY)\right)^2=4\leq\E(X^2)\E(Y^2)=5.
 \]</span></p>
 </div>
+<div id="exm-exm25-2-corr" class="theorem example">
+<p><span class="theorem-title"><strong>Example 27.4 (Cauchy-Schwarz Inequality and Correlation)</strong></span> In <a href="Chapter2-ReviewProbability.html" class="quarto-xref"><span>Chapter 11</span></a>, we define the correlation between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> by <span class="math inline">\(\text{corr}(X,Y)=\text{cov}(X,Y)/\sqrt{\text{var}(X)\text{var}(Y)}\)</span>. We can use the Cauchy-Schwarz inequality to show <span class="math inline">\(|\text{corr}(X,Y)|\leq 1\)</span>. To that end, let <span class="math inline">\(\tilde{X}=\left(X-\E(X)\right)\)</span> and <span class="math inline">\(\tilde{Y}=\left(Y-\E(Y)\right)\)</span>. Then, <span class="math inline">\(\text{cov}(X,Y)=\E(\tilde{X}\tilde{Y})\)</span>, <span class="math inline">\(\text{var}(X)=\E(\tilde{X}^2)\)</span>, and <span class="math inline">\(\text{var}(Y)=\E(\tilde{Y}^2)\)</span>. Applying the Cauchy-Schwarz inequality to <span class="math inline">\(\tilde{X}\)</span> and <span class="math inline">\(\tilde{Y}\)</span> gives <span class="math display">\[
+|\text{cov}(X,Y)|=|\E(\tilde{X}\tilde{Y})|\leq\sqrt{\E(\tilde{X}^2)\E(\tilde{Y}^2)}=\sqrt{\text{var}(X)\text{var}(Y)}.
+\]</span> Then, dividing both sides by <span class="math inline">\(\sqrt{\text{var}(X)\text{var}(Y)}\)</span> yields <span class="math inline">\(|\text{corr}(X,Y)|\leq 1\)</span>.</p>
+</div>
 <div id="thm-chapter27-12" class="theorem">
 <p><span class="theorem-title"><strong>Theorem 27.12 (Hölder’s Inequality)</strong></span> Let <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> be random variables. Then, for <span class="math inline">\(1\leq p,q&lt;\infty\)</span> with <span class="math inline">\(\frac{1}{p}+\frac{1}{q}=1\)</span>, we have <span class="math display">\[
 \E(|XY|)\leq \left(\E(|X|^p)\right)^{1/p}\left(\E(|Y|^q)\right)^{1/q}.
@@ -1031,7 +1036,7 @@ Figure&nbsp;27.3: Histograms of <span class="math inline">\(m_a\)</span>, <span 
 <p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-chapter27-12" class="quarto-xref">Theorem&nbsp;<span>27.12</span></a>). </span>See <span class="citation" data-cites="Hansen2022b">Hansen (<a href="references.html#ref-Hansen2022b" role="doc-biblioref">2022b</a>)</span>.</p>
 </div>
 <div id="exm-chapter27-4" class="theorem example">
-<p><span class="theorem-title"><strong>Example 27.4 (Hölder’s Inequality)</strong></span> Consider the following simple linear regression model <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span>. Assume that <span class="math inline">\(X\)</span> and <span class="math inline">\(u\)</span> has finite fourth order moments. Then, <span class="math inline">\(\E(|X_i|^3|u_i|)&lt;\infty\)</span>. This can be seen from <span class="math display">\[
+<p><span class="theorem-title"><strong>Example 27.5 (Hölder’s Inequality)</strong></span> Consider the following simple linear regression model <span class="math inline">\(Y_i=\beta_0+\beta_1X_i+u_i\)</span>. Assume that <span class="math inline">\(X\)</span> and <span class="math inline">\(u\)</span> has finite fourth order moments. Then, <span class="math inline">\(\E(|X_i|^3|u_i|)&lt;\infty\)</span>. This can be seen from <span class="math display">\[
 \begin{align*}
 \E(|X_i|^3|u_i|)&amp;\leq \left(\E\left((|X_i|^3)^{4/3}\right)\right)^{3/4}\left(\E(|u_i|^4)\right)^{1/4}\\
 &amp;=\left(\E\left(|X_i|^4\right)\right)^{3/4}\left(\E(|u_i|^4)\right)^{1/4}&lt;\infty,
@@ -1047,7 +1052,7 @@ Figure&nbsp;27.3: Histograms of <span class="math inline">\(m_a\)</span>, <span 
 <p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-chapter27-13" class="quarto-xref">Theorem&nbsp;<span>27.13</span></a>). </span>See <span class="citation" data-cites="Hansen2022b">Hansen (<a href="references.html#ref-Hansen2022b" role="doc-biblioref">2022b</a>)</span>.</p>
 </div>
 <div id="exm-chapter27-5" class="theorem example">
-<p><span class="theorem-title"><strong>Example 27.5 (Minkowski’s Inequality)</strong></span> Let <span class="math inline">\(Y=X\beta+u\)</span>, where <span class="math inline">\(\beta\)</span> is a scalar parameter. Then, we have <span class="math display">\[
+<p><span class="theorem-title"><strong>Example 27.6 (Minkowski’s Inequality)</strong></span> Let <span class="math inline">\(Y=X\beta+u\)</span>, where <span class="math inline">\(\beta\)</span> is a scalar parameter. Then, we have <span class="math display">\[
 \begin{align*}
 \left(\E(|Y|^p)\right)^{1/p} &amp;= \left(\E(|X\beta+u|^p)\right)^{1/p} \leq |\beta|\left(\E(|X|^p)\right)^{1/p} + \left(\E(|u|^p)\right)^{1/p}.
 \end{align*}
@@ -1066,7 +1071,7 @@ X_n\xrightarrow{d}X\iff \lim_{n\to\infty}F_n(t)=F(t),
 </div>
 <div>
 <div id="exm-chapter27-6" class="theorem example">
-<p><span class="theorem-title"><strong>Example 27.6</strong></span> Let <span class="math inline">\(X\)</span> be the poisson random variable with parameter <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(\{X_n\}\)</span> be a sequence of binomial random variables with parameters <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span>, i.e., <span class="math inline">\(X_n\sim\text{Binomial}(n,p)\)</span>. We show that <span class="math inline">\(X_n\)</span> converges in distribution to <span class="math inline">\(X\)</span>, i.e., <span class="math inline">\(X_n\xrightarrow{d}X\)</span>. The cumulative distribution function of <span class="math inline">\(X_n\)</span> is given by <span class="math display">\[
+<p><span class="theorem-title"><strong>Example 27.7</strong></span> Let <span class="math inline">\(X\)</span> be the poisson random variable with parameter <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(\{X_n\}\)</span> be a sequence of binomial random variables with parameters <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span>, i.e., <span class="math inline">\(X_n\sim\text{Binomial}(n,p)\)</span>. We show that <span class="math inline">\(X_n\)</span> converges in distribution to <span class="math inline">\(X\)</span>, i.e., <span class="math inline">\(X_n\xrightarrow{d}X\)</span>. The cumulative distribution function of <span class="math inline">\(X_n\)</span> is given by <span class="math display">\[
 F_n(t)=\sum_{k=0}^{\lfloor t\rfloor}\binom{n}{k}p^k(1-p)^{n-k},
 \]</span> where <span class="math inline">\(\lfloor t\rfloor\)</span> is the largest integer less than or equal to <span class="math inline">\(t\)</span>. The cumulative distribution function of <span class="math inline">\(S\)</span> is given by <span class="math display">\[
 F(t)=\sum_{k=0}^{\lfloor t\rfloor}\frac{\lambda^k}{k!}e^{-\lambda}.
@@ -1153,11 +1158,11 @@ Figure&nbsp;27.4: Illustrating the convergence in distribution
 \bar{Y}\sim N(\mu_Y,\sigma^2_Y/n).
 \]</span></p>
 <div id="exm-chapter27-7" class="theorem example">
-<p><span class="theorem-title"><strong>Example 27.7 (Central limit theorem)</strong></span> Let <span class="math inline">\(Y_i\sim U(0,1)\)</span> be i.i.d. random variables. Then, <span class="math inline">\(\E(Y_i)=1/2\)</span> and <span class="math inline">\(\text{Var}(Y_i)=1/12\)</span>. The sample mean <span class="math inline">\(\bar{Y}=\sum_{i=1}^nY_i/n\)</span> has mean <span class="math inline">\(\mu_{\bar{Y}}=1/2\)</span> and variance <span class="math inline">\(\sigma^2_{\bar{Y}}=1/(12n)\)</span>. Therefore, the asymptotic distribution of <span class="math inline">\((\bar{Y}-1/2)/\sqrt{1/12n}=\sqrt{12n}(\bar{Y}-1/2)\)</span> is <span class="math inline">\(N(0,1)\)</span>. We can write this as <span class="math display">\[
+<p><span class="theorem-title"><strong>Example 27.8 (Central limit theorem)</strong></span> Let <span class="math inline">\(Y_i\sim U(0,1)\)</span> be i.i.d. random variables. Then, <span class="math inline">\(\E(Y_i)=1/2\)</span> and <span class="math inline">\(\text{Var}(Y_i)=1/12\)</span>. The sample mean <span class="math inline">\(\bar{Y}=\sum_{i=1}^nY_i/n\)</span> has mean <span class="math inline">\(\mu_{\bar{Y}}=1/2\)</span> and variance <span class="math inline">\(\sigma^2_{\bar{Y}}=1/(12n)\)</span>. Therefore, the asymptotic distribution of <span class="math inline">\((\bar{Y}-1/2)/\sqrt{1/12n}=\sqrt{12n}(\bar{Y}-1/2)\)</span> is <span class="math inline">\(N(0,1)\)</span>. We can write this as <span class="math display">\[
 \sqrt{12n}(\bar{Y}-1/2)\xrightarrow{d}N(0,1),
 \]</span> which suggests that <span class="math inline">\(\bar{Y}\sim N(1/2,1/12n)\)</span> when <span class="math inline">\(n\)</span> is large.</p>
 </div>
-<p>In the following code chunk, we illustrate the central limit theorem using the uniform random variables defined in <a href="#exm-chapter27-7" class="quarto-xref">Example&nbsp;<span>27.7</span></a>. We set <span class="math inline">\(n = 10, 50, 100, 500, 1000, 5000\)</span> and generate 1000 samples for each sample size. We then compute the sample mean <span class="math inline">\(\bar{Y}\)</span> and plot the histograms of <span class="math inline">\(\sqrt{12n}(\bar{Y}-1/2)\)</span> for each sample size. <a href="#fig-chapter27-5" class="quarto-xref">Figure&nbsp;<span>27.5</span></a> shows the histograms of <span class="math inline">\(\sqrt{12n}(\bar{Y}-1/2)\)</span> along with the standard normal density plot. As the sample size increases, the deviations between the histograms and the standard normal density plot decrease, indicating that the sample mean converges to the standard normal distribution as the sample size grows.</p>
+<p>In the following code chunk, we illustrate the central limit theorem using the uniform random variables defined in <a href="#exm-chapter27-7" class="quarto-xref">Example&nbsp;<span>27.8</span></a>. We set <span class="math inline">\(n = 10, 50, 100, 500, 1000, 5000\)</span> and generate 1000 samples for each sample size. We then compute the sample mean <span class="math inline">\(\bar{Y}\)</span> and plot the histograms of <span class="math inline">\(\sqrt{12n}(\bar{Y}-1/2)\)</span> for each sample size. <a href="#fig-chapter27-5" class="quarto-xref">Figure&nbsp;<span>27.5</span></a> shows the histograms of <span class="math inline">\(\sqrt{12n}(\bar{Y}-1/2)\)</span> along with the standard normal density plot. As the sample size increases, the deviations between the histograms and the standard normal density plot decrease, indicating that the sample mean converges to the standard normal distribution as the sample size grows.</p>
 <div class="cell" data-messages="false">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrating the Central Limit Theorem</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
@@ -1200,7 +1205,7 @@ Figure&nbsp;27.5: Illustrating the central limit theorem
 </div>
 </div>
 <div id="exm-chapter27-8" class="theorem example">
-<p><span class="theorem-title"><strong>Example 27.8</strong></span> Suppose that, at a large public university, the time required for economics majors to complete their graduation thesis follows the <a href="https://en.wikipedia.org/wiki/Exponential_distribution">exponential distribution</a> with mean 6 months. Given a random sample of 100 students, the university wants to determine the probability that more than 40 students take longer than 6 months to finish their thesis.</p>
+<p><span class="theorem-title"><strong>Example 27.9</strong></span> Suppose that, at a large public university, the time required for economics majors to complete their graduation thesis follows the <a href="https://en.wikipedia.org/wiki/Exponential_distribution">exponential distribution</a> with mean 6 months. Given a random sample of 100 students, the university wants to determine the probability that more than 40 students take longer than 6 months to finish their thesis.</p>
 <p>Let <span class="math inline">\(X_i\)</span> denote the time required for the <span class="math inline">\(i\)</span>th student to complete the graduation thesis. Then, <span class="math inline">\(X_i\sim \text{Exponential}(\lambda)\)</span>, where <span class="math inline">\(\lambda=1/6\)</span>. The PDF and CDF of <span class="math inline">\(X_i\)</span> are given by <span class="math display">\[
 \begin{align*}
 f(x)=
@@ -1277,22 +1282,22 @@ P(S_n&gt;40)&amp;=P\left(\frac{S_n-np}{\sqrt{np(1-p)}}&gt;\frac{40-np}{\sqrt{np(
 <p><span class="proof-title"><em>Proof</em> (Proof of <a href="#thm-chapter27-16" class="quarto-xref">Theorem&nbsp;<span>27.16</span></a>). </span>See Theorem 2.3 in <span class="citation" data-cites="Vaart1998">Vaart (<a href="references.html#ref-Vaart1998" role="doc-biblioref">1998</a>)</span>.</p>
 </div>
 <div id="exm-chapter27-9" class="theorem example">
-<p><span class="theorem-title"><strong>Example 27.9</strong></span> Let <span class="math inline">\(g(x)=\sqrt{x}\)</span>. If <span class="math inline">\(s^2_Y\xrightarrow{p}\sigma^2_Y\)</span>, where <span class="math inline">\(s^2_Y\)</span> is the sample variance, then <span class="math display">\[
+<p><span class="theorem-title"><strong>Example 27.10</strong></span> Let <span class="math inline">\(g(x)=\sqrt{x}\)</span>. If <span class="math inline">\(s^2_Y\xrightarrow{p}\sigma^2_Y\)</span>, where <span class="math inline">\(s^2_Y\)</span> is the sample variance, then <span class="math display">\[
 g(s^2_Y)=s_Y\xrightarrow{p}g(\sigma^2_Y)=\sigma_Y,
 \]</span> by the first part of <a href="#thm-chapter27-16" class="quarto-xref">Theorem&nbsp;<span>27.16</span></a>. In other words, the sample standard deviation is a consistent estimator of the population standard deviation.</p>
 </div>
 <div id="exm-chapter27-10" class="theorem example">
-<p><span class="theorem-title"><strong>Example 27.10</strong></span> Let <span class="math inline">\(g(x)=x^2\)</span>. If <span class="math inline">\(S_n\xrightarrow{d}Z\)</span>, where <span class="math inline">\(Z\sim N(0,1)\)</span>, then we have <span class="math inline">\(g(S_n)\xrightarrow{d}g(Z)\)</span> by the second part of <a href="#thm-chapter27-16" class="quarto-xref">Theorem&nbsp;<span>27.16</span></a>. Thus, <span class="math display">\[
+<p><span class="theorem-title"><strong>Example 27.11</strong></span> Let <span class="math inline">\(g(x)=x^2\)</span>. If <span class="math inline">\(S_n\xrightarrow{d}Z\)</span>, where <span class="math inline">\(Z\sim N(0,1)\)</span>, then we have <span class="math inline">\(g(S_n)\xrightarrow{d}g(Z)\)</span> by the second part of <a href="#thm-chapter27-16" class="quarto-xref">Theorem&nbsp;<span>27.16</span></a>. Thus, <span class="math display">\[
 S^2_n\xrightarrow{d}Z^2.
 \]</span> In other words, the distribution of <span class="math inline">\(S^2_n\)</span> converges to the distribution of a squared standard normal random variable, which in turn has a <span class="math inline">\(\chi^2_1\)</span> distribution; that is, <span class="math inline">\(S^2_n\xrightarrow{d}\chi^2_1\)</span>.</p>
 </div>
 <div id="exm-chapter27-11" class="theorem example">
-<p><span class="theorem-title"><strong>Example 27.11</strong></span> Consider t-statistic for testing <span class="math inline">\(H_0:\E(Y_i)=\mu_0\)</span> based on <span class="math inline">\(\bar{Y}\)</span>. Then, by <a href="#exm-chapter27-8" class="quarto-xref">Example&nbsp;<span>27.8</span></a> and <a href="#thm-chapter27-15" class="quarto-xref">Theorem&nbsp;<span>27.15</span></a>, we have <span class="math display">\[
+<p><span class="theorem-title"><strong>Example 27.12</strong></span> Consider t-statistic for testing <span class="math inline">\(H_0:\E(Y_i)=\mu_0\)</span> based on <span class="math inline">\(\bar{Y}\)</span>. Then, by <a href="#exm-chapter27-8" class="quarto-xref">Example&nbsp;<span>27.9</span></a> and <a href="#thm-chapter27-15" class="quarto-xref">Theorem&nbsp;<span>27.15</span></a>, we have <span class="math display">\[
 t=\frac{\bar{Y}-\mu_0}{s_Y/\sqrt{n}}=\frac{\sqrt{n}(\bar{Y}-\mu_0)}{\sigma_Y}\div\frac{s_Y}{\sigma_Y}\xrightarrow{d}N(0,1).
 \]</span></p>
 </div>
 <div id="exm-chapter27-12" class="theorem example">
-<p><span class="theorem-title"><strong>Example 27.12</strong></span> Suppose that <span class="math inline">\(\{X_i,Y_i\}\)</span> is a sequence of i.i.d. random variables with finite fourth moments. We want to show that <span class="math inline">\(s_{XY}\xrightarrow{p}\sigma_{XY}\)</span>, where <span class="math inline">\(s_{XY}\)</span> is the sample covariance and <span class="math inline">\(\sigma_{XY}\)</span> is the population covariance.</p>
+<p><span class="theorem-title"><strong>Example 27.13</strong></span> Suppose that <span class="math inline">\(\{X_i,Y_i\}\)</span> is a sequence of i.i.d. random variables with finite fourth moments. We want to show that <span class="math inline">\(s_{XY}\xrightarrow{p}\sigma_{XY}\)</span>, where <span class="math inline">\(s_{XY}\)</span> is the sample covariance and <span class="math inline">\(\sigma_{XY}\)</span> is the population covariance.</p>
 <p>Note that <span class="math display">\[
 \begin{align*}
 &amp;s_{XY}=\frac{1}{n-1}\sum_{i=1}^n(X_i-\bar{X})(Y_i-\bar{Y})\\
