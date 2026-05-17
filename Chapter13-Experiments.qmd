@@ -908,7 +908,7 @@ theta_se <- c(theta_se[1:2], 0, theta_se[3:7])
 ```
 
 ```{r}
-# X-axis for plotting: -4,...,4
+# X-axis for plotting: -3:4
 xax <- -3:4
 
 # 95% confidence intervals
@@ -1201,7 +1201,7 @@ doubly_robust <- att_gt(
 summary(doubly_robust)
 ```
 
-We next use the `aggte` function from the `did` package to aggregate the ATT estimates across pre- and post-treatment periods to obtain dynamic ATT estimates. We set `biters = 25000` to use 25,000 bootstrap iterations to compute the standard errors for the dynamic ATT estimates. We then summarize the estimation results for the dynamic ATT estimates using `summary(dynamicATT)`. The overall ATT estimate, which is the average of the dynamic ATT estimates across post-treatment periods, is -0.122, which is slightly larger in magnitude than the estimate obtained from the fixed effects regression. 
+We next use the `aggte` function from the `did` package to aggregate the ATT estimates across pre- and post-treatment periods to obtain dynamic ATT estimates. We set `biters = 25000` to use 25,000 bootstrap iterations to compute the standard errors for the dynamic ATT estimates. We then summarize the estimation results for the dynamic ATT estimates using `summary(dynamicATT)`. The overall ATT estimate, which is the average of the dynamic ATT estimates across post-treatment periods, is -0.122, which is larger in absolute value than the estimate of -0.087 obtained from the standard DiD regression without covariates. 
 
 ```{r}
 dynamicATT <- aggte(doubly_robust, type = "dynamic", biters = 25000)
