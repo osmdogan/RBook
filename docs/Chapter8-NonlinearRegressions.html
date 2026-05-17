@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>17&nbsp; Nonlinear Regression Functions – Introduction to Econometrics with R</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -21,8 +24,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +37,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -58,7 +62,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -86,15 +89,16 @@ div.csl-indent {
 <meta name="quarto:offset" content="./">
 <link href="./Chapter9-AssessingStudies.html" rel="next">
 <link href="./Chapter7-MultipleRegressionInference.html" rel="prev">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-18d39954912aaa916c9eeb5465a75734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -144,7 +148,7 @@ window.MathJax = {
 </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -157,7 +161,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -175,7 +179,7 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -543,7 +547,7 @@ window.Quarto = {
 
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
@@ -552,13 +556,13 @@ window.Quarto = {
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="st">"modelsummary_factory_default"</span> <span class="ot">=</span> <span class="st">"gt"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="st">"modelsummary_factory_default"</span> <span class="ot">=</span> <span class="st">"gt"</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="introduction" class="level2" data-number="17.1">
 <h2 data-number="17.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">17.1</span> Introduction</h2>
 <p>We start our regression analysis in <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 13</span></a> by assuming a linear population function <span class="math inline">\(\E(Y|X_1)=\beta_0+\beta_1X_1\)</span>. However, in many cases, the relationship between <span class="math inline">\(Y\)</span> and <span class="math inline">\(X_1\)</span> is nonlinear. In this case, the effect of a change in <span class="math inline">\(X_1\)</span> on <span class="math inline">\(Y\)</span> is not constant. In <a href="#fig-f15-1" class="quarto-xref">Figure&nbsp;<span>17.1</span></a>, we illustrate population regression functions that have different slopes. In the linear case, as shown in the first plot of <a href="#fig-f15-1" class="quarto-xref">Figure&nbsp;<span>17.1</span></a>, the slope of the population regression function is constant. However, in the second plot, the slope of the population regression function depends on the value of another variable <span class="math inline">\(X_2\)</span>. In the third plot, the slope of the population regression function depends on the value of <span class="math inline">\(X_1\)</span>. In this chapter, we consider how to model nonlinear regression functions.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate data</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate data</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">50</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> <span class="fl">3.5</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> x)</span>
@@ -612,7 +616,7 @@ window.Quarto = {
 <span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Y"</span></span>
 <span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, p3, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2, p3, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-f15-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -653,7 +657,7 @@ Y_i=f(X_{1i},X_{2i},\dots,X_{ki})+u_i,\quad i=1,2,\dots,n,
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Key Concept 15.1: The expected change in <span class="math inline">\(Y\)</span> from a change in <span class="math inline">\(X_1\)</span> in the nonlinear regression model
+<span class="screen-reader-only">Note</span>Key Concept 15.1: The expected change in <span class="math inline">\(Y\)</span> from a change in <span class="math inline">\(X_1\)</span> in the nonlinear regression model
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -690,9 +694,9 @@ Y_i=\beta_0+\beta_1X_{i}+\beta_2X_{i}^2+\cdots+\beta_mX_{i}^m+u_i,\quad i=1,2,\d
 <p>The final model obtained through this sequential testing approach is the polynomial model of the highest degree for which the <span class="math inline">\(t\)</span>-statistic is statistically significant.</p>
 <p>As an example, we consider the test scores data available in the <code>caschool.xlsx</code> file. The following code chunk imports the data and displays the column names.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/caschool.xlsx"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mydata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mydata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Observation Number" "dist_cod"           "county"            
  [4] "district"           "gr_span"            "enrl_tot"          
@@ -703,7 +707,7 @@ Y_i=\beta_0+\beta_1X_{i}+\beta_2X_{i}^2+\cdots+\beta_mX_{i}^m+u_i,\quad i=1,2,\d
 </div>
 </div>
 <p>We consider the relationship between the test scores (<code>testscr</code>) and two other variables: the student-teacher ratio (<code>str</code>), and the average district income (<code>avginc</code>). The average district income is measured in thousands of 1998 dollars (i.e., one unit increase in <code>avginc</code> means 1000 dollars increase). In <a href="#fig-f15-2" class="quarto-xref">Figure&nbsp;<span>17.2</span></a>, we present scatter plots of test scores against the student-teacher ratio and average district income. The scatter plot of test scores against the student-teacher ratio suggests a linear relationship, whereas the scatter plot of test scores against average district income suggests a nonlinear relationship.</p>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test Score and STR</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test Score and STR</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mydata, <span class="fu">aes</span>(<span class="at">x =</span> str, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="fl">1.8</span>) <span class="sc">+</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(</span>
@@ -734,7 +738,7 @@ Y_i=\beta_0+\beta_1X_{i}+\beta_2X_{i}^2+\cdots+\beta_mX_{i}^m+u_i,\quad i=1,2,\d
 <span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>p1</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="fig-f15-2" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-f15-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -780,23 +784,23 @@ Figure&nbsp;17.2: Scatter plots
 \]</span></p>
 <p>We estimate these models using the OLS estimator. In the following code chunk, we use the <code>I()</code> function to create the quadratic and cubic terms directly within the regression formula. Otherwise, we would need to create these variables manually and add them to the data frame <code>mydata</code>. The estimation results are presented in <a href="#tbl-t15-1" class="quarto-xref">Table&nbsp;<span>17.1</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> avginc, <span class="at">data =</span> mydata)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Quadratic model</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> avginc <span class="sc">+</span> <span class="fu">I</span>(avginc<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> mydata)</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Cubic model</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> avginc <span class="sc">+</span> <span class="fu">I</span>(avginc<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(avginc<span class="sc">^</span><span class="dv">3</span>), <span class="at">data =</span> mydata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> avginc <span class="sc">+</span> <span class="fu">I</span>(avginc<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(avginc<span class="sc">^</span><span class="dv">3</span>), <span class="at">data =</span> mydata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="st">"Linear"</span> <span class="ot">=</span> model1, <span class="st">"Quadratic"</span> <span class="ot">=</span> model2, <span class="st">"Cubic"</span> <span class="ot">=</span> model3),</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="st">"HC1"</span>,</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span>,</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik"</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="quarto-layout-panel" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="cell quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
@@ -807,23 +811,23 @@ Table&nbsp;17.1: Polynomial regressions
 </figcaption>
 <div aria-describedby="tbl-t15-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="cgamtwiszk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#cgamtwiszk table {
+<div id="dhqpytgvck" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dhqpytgvck table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#cgamtwiszk thead, #cgamtwiszk tbody, #cgamtwiszk tfoot, #cgamtwiszk tr, #cgamtwiszk td, #cgamtwiszk th {
+#dhqpytgvck thead, #dhqpytgvck tbody, #dhqpytgvck tfoot, #dhqpytgvck tr, #dhqpytgvck td, #dhqpytgvck th {
   border-style: none;
 }
 
-#cgamtwiszk p {
+#dhqpytgvck p {
   margin: 0;
   padding: 0;
 }
 
-#cgamtwiszk .gt_table {
+#dhqpytgvck .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -849,12 +853,12 @@ Table&nbsp;17.1: Polynomial regressions
   border-left-color: #D3D3D3;
 }
 
-#cgamtwiszk .gt_caption {
+#dhqpytgvck .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#cgamtwiszk .gt_title {
+#dhqpytgvck .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -866,7 +870,7 @@ Table&nbsp;17.1: Polynomial regressions
   border-bottom-width: 0;
 }
 
-#cgamtwiszk .gt_subtitle {
+#dhqpytgvck .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -878,7 +882,7 @@ Table&nbsp;17.1: Polynomial regressions
   border-top-width: 0;
 }
 
-#cgamtwiszk .gt_heading {
+#dhqpytgvck .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -890,13 +894,13 @@ Table&nbsp;17.1: Polynomial regressions
   border-right-color: #D3D3D3;
 }
 
-#cgamtwiszk .gt_bottom_border {
+#dhqpytgvck .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#cgamtwiszk .gt_col_headings {
+#dhqpytgvck .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -911,7 +915,7 @@ Table&nbsp;17.1: Polynomial regressions
   border-right-color: #D3D3D3;
 }
 
-#cgamtwiszk .gt_col_heading {
+#dhqpytgvck .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -931,7 +935,7 @@ Table&nbsp;17.1: Polynomial regressions
   overflow-x: hidden;
 }
 
-#cgamtwiszk .gt_column_spanner_outer {
+#dhqpytgvck .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -943,15 +947,15 @@ Table&nbsp;17.1: Polynomial regressions
   padding-right: 4px;
 }
 
-#cgamtwiszk .gt_column_spanner_outer:first-child {
+#dhqpytgvck .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#cgamtwiszk .gt_column_spanner_outer:last-child {
+#dhqpytgvck .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#cgamtwiszk .gt_column_spanner {
+#dhqpytgvck .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -963,11 +967,11 @@ Table&nbsp;17.1: Polynomial regressions
   width: 100%;
 }
 
-#cgamtwiszk .gt_spanner_row {
+#dhqpytgvck .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#cgamtwiszk .gt_group_heading {
+#dhqpytgvck .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -993,7 +997,7 @@ Table&nbsp;17.1: Polynomial regressions
   text-align: left;
 }
 
-#cgamtwiszk .gt_empty_group_heading {
+#dhqpytgvck .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1008,15 +1012,15 @@ Table&nbsp;17.1: Polynomial regressions
   vertical-align: middle;
 }
 
-#cgamtwiszk .gt_from_md > :first-child {
+#dhqpytgvck .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#cgamtwiszk .gt_from_md > :last-child {
+#dhqpytgvck .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#cgamtwiszk .gt_row {
+#dhqpytgvck .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1035,7 +1039,7 @@ Table&nbsp;17.1: Polynomial regressions
   overflow-x: hidden;
 }
 
-#cgamtwiszk .gt_stub {
+#dhqpytgvck .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1048,7 +1052,7 @@ Table&nbsp;17.1: Polynomial regressions
   padding-right: 5px;
 }
 
-#cgamtwiszk .gt_stub_row_group {
+#dhqpytgvck .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1062,15 +1066,15 @@ Table&nbsp;17.1: Polynomial regressions
   vertical-align: top;
 }
 
-#cgamtwiszk .gt_row_group_first td {
+#dhqpytgvck .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#cgamtwiszk .gt_row_group_first th {
+#dhqpytgvck .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#cgamtwiszk .gt_summary_row {
+#dhqpytgvck .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1080,16 +1084,16 @@ Table&nbsp;17.1: Polynomial regressions
   padding-right: 5px;
 }
 
-#cgamtwiszk .gt_first_summary_row {
+#dhqpytgvck .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#cgamtwiszk .gt_first_summary_row.thick {
+#dhqpytgvck .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#cgamtwiszk .gt_last_summary_row {
+#dhqpytgvck .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1099,7 +1103,7 @@ Table&nbsp;17.1: Polynomial regressions
   border-bottom-color: #D3D3D3;
 }
 
-#cgamtwiszk .gt_grand_summary_row {
+#dhqpytgvck .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1109,7 +1113,7 @@ Table&nbsp;17.1: Polynomial regressions
   padding-right: 5px;
 }
 
-#cgamtwiszk .gt_first_grand_summary_row {
+#dhqpytgvck .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1119,7 +1123,7 @@ Table&nbsp;17.1: Polynomial regressions
   border-top-color: #D3D3D3;
 }
 
-#cgamtwiszk .gt_last_grand_summary_row_top {
+#dhqpytgvck .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1129,11 +1133,11 @@ Table&nbsp;17.1: Polynomial regressions
   border-bottom-color: #D3D3D3;
 }
 
-#cgamtwiszk .gt_striped {
+#dhqpytgvck .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#cgamtwiszk .gt_table_body {
+#dhqpytgvck .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1142,7 +1146,7 @@ Table&nbsp;17.1: Polynomial regressions
   border-bottom-color: #D3D3D3;
 }
 
-#cgamtwiszk .gt_footnotes {
+#dhqpytgvck .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1156,7 +1160,7 @@ Table&nbsp;17.1: Polynomial regressions
   border-right-color: #D3D3D3;
 }
 
-#cgamtwiszk .gt_footnote {
+#dhqpytgvck .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1165,7 +1169,7 @@ Table&nbsp;17.1: Polynomial regressions
   padding-right: 5px;
 }
 
-#cgamtwiszk .gt_sourcenotes {
+#dhqpytgvck .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1179,7 +1183,7 @@ Table&nbsp;17.1: Polynomial regressions
   border-right-color: #D3D3D3;
 }
 
-#cgamtwiszk .gt_sourcenote {
+#dhqpytgvck .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1187,79 +1191,79 @@ Table&nbsp;17.1: Polynomial regressions
   padding-right: 5px;
 }
 
-#cgamtwiszk .gt_left {
+#dhqpytgvck .gt_left {
   text-align: left;
 }
 
-#cgamtwiszk .gt_center {
+#dhqpytgvck .gt_center {
   text-align: center;
 }
 
-#cgamtwiszk .gt_right {
+#dhqpytgvck .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#cgamtwiszk .gt_font_normal {
+#dhqpytgvck .gt_font_normal {
   font-weight: normal;
 }
 
-#cgamtwiszk .gt_font_bold {
+#dhqpytgvck .gt_font_bold {
   font-weight: bold;
 }
 
-#cgamtwiszk .gt_font_italic {
+#dhqpytgvck .gt_font_italic {
   font-style: italic;
 }
 
-#cgamtwiszk .gt_super {
+#dhqpytgvck .gt_super {
   font-size: 65%;
 }
 
-#cgamtwiszk .gt_footnote_marks {
+#dhqpytgvck .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#cgamtwiszk .gt_asterisk {
+#dhqpytgvck .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#cgamtwiszk .gt_indent_1 {
+#dhqpytgvck .gt_indent_1 {
   text-indent: 5px;
 }
 
-#cgamtwiszk .gt_indent_2 {
+#dhqpytgvck .gt_indent_2 {
   text-indent: 10px;
 }
 
-#cgamtwiszk .gt_indent_3 {
+#dhqpytgvck .gt_indent_3 {
   text-indent: 15px;
 }
 
-#cgamtwiszk .gt_indent_4 {
+#dhqpytgvck .gt_indent_4 {
   text-indent: 20px;
 }
 
-#cgamtwiszk .gt_indent_5 {
+#dhqpytgvck .gt_indent_5 {
   text-indent: 25px;
 }
 
-#cgamtwiszk .katex-display {
+#dhqpytgvck .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#cgamtwiszk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#dhqpytgvck div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
-<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <thead>
-<tr class="header gt_col_headings">
+<tr class="gt_col_headings header">
 <th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" style="text-align: left;" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="Linear" class="gt_col_heading gt_columns_bottom_border gt_center" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">Linear</th>
 <th id="Quadratic" class="gt_col_heading gt_columns_bottom_border gt_center" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">Quadratic</th>
@@ -1352,7 +1356,7 @@ Table&nbsp;17.1: Polynomial regressions
 <td class="gt_row gt_center" style="text-align: left;" headers="Cubic">HC1</td>
 </tr>
 </tbody><tfoot>
-<tr class="odd gt_sourcenotes">
+<tr class="gt_sourcenotes odd">
 <td colspan="4" class="gt_sourcenote" style="text-align: left;">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
 </tr>
 </tfoot>
@@ -1369,7 +1373,7 @@ Table&nbsp;17.1: Polynomial regressions
 </div>
 <p>The estimated regression functions are plotted in <a href="#fig-f15-3" class="quarto-xref">Figure&nbsp;<span>17.3</span></a>, superimposed on the scatterplot of the data. As shown, the quadratic and cubic functions capture the curvature in the scatterplot, exhibiting steep slopes at low values of district income that gradually flatten as district income increases.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Polynomial regression models</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Polynomial regression models</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data </span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ord <span class="ot">&lt;-</span> <span class="fu">order</span>(mydata<span class="sc">$</span>avginc)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1401,7 +1405,7 @@ Table&nbsp;17.1: Polynomial regressions
 <span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
 <span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-f15-3" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1423,11 +1427,11 @@ Figure&nbsp;17.3: Scatter plot and polynomial regression functions
 \]</span></p>
 <p>To test <span class="math inline">\(H_0\)</span>, we use the <code>linearHypothesis</code> from the <code>car</code> package. The <span class="math inline">\(F\)</span>-statistic is around 37.7 with a <span class="math inline">\(p\)</span>-value of <code>9.043e-16</code>. Thus, we can reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  model3,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"I(avginc^2) = 0"</span>, <span class="st">"I(avginc^3) = 0"</span>),</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">white.adjust =</span> <span class="st">"hc1"</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Linear hypothesis test:
@@ -1457,7 +1461,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </ul>
 <p>In <a href="#fig-f15-2" class="quarto-xref">Figure&nbsp;<span>17.2</span></a>, we plot the exponential function <span class="math inline">\(y=e^x\)</span> and the natural logarithm function <span class="math inline">\(y=\ln(x)\)</span>. The exponential function is increasing and convex, while the natural logarithm function is increasing and concave.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exponential and logarithm functions</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exponential and logarithm functions</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate values</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x_exp <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">50</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>x_log <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.01</span>, <span class="dv">4</span>, <span class="at">length.out =</span> <span class="dv">50</span>)</span>
@@ -1509,7 +1513,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">expression</span>(x),</span>
 <span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">expression</span>(y)</span>
-<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-f15-4" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1590,7 +1594,7 @@ Figure&nbsp;17.4: Exponential and logarithm functions
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Key Concept 15.2: The three logarithmic regression models
+<span class="screen-reader-only">Note</span>Key Concept 15.2: The three logarithmic regression models
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1610,7 +1614,7 @@ Key Concept 15.2: The three logarithmic regression models
 <li>The log-log model: <span class="math inline">\(\ln(\text{TestScore})=\beta_0+\beta_1\ln(\text{Income})+u\)</span>.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>r1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> avginc, <span class="at">data =</span> mydata)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Quadratic model</span></span>
@@ -1623,9 +1627,9 @@ Key Concept 15.2: The three logarithmic regression models
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>r4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(testscr) <span class="sc">~</span> avginc, <span class="at">data =</span> mydata)</span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Log–log model</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>r5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(testscr) <span class="sc">~</span> <span class="fu">log</span>(avginc), <span class="at">data =</span> mydata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>r5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(testscr) <span class="sc">~</span> <span class="fu">log</span>(avginc), <span class="at">data =</span> mydata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in table form</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Linear"</span>       <span class="ot">=</span> r1,</span>
@@ -1637,7 +1641,7 @@ Key Concept 15.2: The three logarithmic regression models
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="st">"HC1"</span>,</span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik"</span>,</span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="quarto-layout-panel" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="cell quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
@@ -1648,23 +1652,23 @@ Table&nbsp;17.2: Logarithmic regression models
 </figcaption>
 <div aria-describedby="tbl-t15-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="goxgzapbhg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#goxgzapbhg table {
+<div id="dnjausjwki" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dnjausjwki table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#goxgzapbhg thead, #goxgzapbhg tbody, #goxgzapbhg tfoot, #goxgzapbhg tr, #goxgzapbhg td, #goxgzapbhg th {
+#dnjausjwki thead, #dnjausjwki tbody, #dnjausjwki tfoot, #dnjausjwki tr, #dnjausjwki td, #dnjausjwki th {
   border-style: none;
 }
 
-#goxgzapbhg p {
+#dnjausjwki p {
   margin: 0;
   padding: 0;
 }
 
-#goxgzapbhg .gt_table {
+#dnjausjwki .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1690,12 +1694,12 @@ Table&nbsp;17.2: Logarithmic regression models
   border-left-color: #D3D3D3;
 }
 
-#goxgzapbhg .gt_caption {
+#dnjausjwki .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#goxgzapbhg .gt_title {
+#dnjausjwki .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1707,7 +1711,7 @@ Table&nbsp;17.2: Logarithmic regression models
   border-bottom-width: 0;
 }
 
-#goxgzapbhg .gt_subtitle {
+#dnjausjwki .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1719,7 +1723,7 @@ Table&nbsp;17.2: Logarithmic regression models
   border-top-width: 0;
 }
 
-#goxgzapbhg .gt_heading {
+#dnjausjwki .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1731,13 +1735,13 @@ Table&nbsp;17.2: Logarithmic regression models
   border-right-color: #D3D3D3;
 }
 
-#goxgzapbhg .gt_bottom_border {
+#dnjausjwki .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#goxgzapbhg .gt_col_headings {
+#dnjausjwki .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1752,7 +1756,7 @@ Table&nbsp;17.2: Logarithmic regression models
   border-right-color: #D3D3D3;
 }
 
-#goxgzapbhg .gt_col_heading {
+#dnjausjwki .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1772,7 +1776,7 @@ Table&nbsp;17.2: Logarithmic regression models
   overflow-x: hidden;
 }
 
-#goxgzapbhg .gt_column_spanner_outer {
+#dnjausjwki .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1784,15 +1788,15 @@ Table&nbsp;17.2: Logarithmic regression models
   padding-right: 4px;
 }
 
-#goxgzapbhg .gt_column_spanner_outer:first-child {
+#dnjausjwki .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#goxgzapbhg .gt_column_spanner_outer:last-child {
+#dnjausjwki .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#goxgzapbhg .gt_column_spanner {
+#dnjausjwki .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1804,11 +1808,11 @@ Table&nbsp;17.2: Logarithmic regression models
   width: 100%;
 }
 
-#goxgzapbhg .gt_spanner_row {
+#dnjausjwki .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#goxgzapbhg .gt_group_heading {
+#dnjausjwki .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1834,7 +1838,7 @@ Table&nbsp;17.2: Logarithmic regression models
   text-align: left;
 }
 
-#goxgzapbhg .gt_empty_group_heading {
+#dnjausjwki .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1849,15 +1853,15 @@ Table&nbsp;17.2: Logarithmic regression models
   vertical-align: middle;
 }
 
-#goxgzapbhg .gt_from_md > :first-child {
+#dnjausjwki .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#goxgzapbhg .gt_from_md > :last-child {
+#dnjausjwki .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#goxgzapbhg .gt_row {
+#dnjausjwki .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1876,7 +1880,7 @@ Table&nbsp;17.2: Logarithmic regression models
   overflow-x: hidden;
 }
 
-#goxgzapbhg .gt_stub {
+#dnjausjwki .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1889,7 +1893,7 @@ Table&nbsp;17.2: Logarithmic regression models
   padding-right: 5px;
 }
 
-#goxgzapbhg .gt_stub_row_group {
+#dnjausjwki .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1903,15 +1907,15 @@ Table&nbsp;17.2: Logarithmic regression models
   vertical-align: top;
 }
 
-#goxgzapbhg .gt_row_group_first td {
+#dnjausjwki .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#goxgzapbhg .gt_row_group_first th {
+#dnjausjwki .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#goxgzapbhg .gt_summary_row {
+#dnjausjwki .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1921,16 +1925,16 @@ Table&nbsp;17.2: Logarithmic regression models
   padding-right: 5px;
 }
 
-#goxgzapbhg .gt_first_summary_row {
+#dnjausjwki .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#goxgzapbhg .gt_first_summary_row.thick {
+#dnjausjwki .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#goxgzapbhg .gt_last_summary_row {
+#dnjausjwki .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1940,7 +1944,7 @@ Table&nbsp;17.2: Logarithmic regression models
   border-bottom-color: #D3D3D3;
 }
 
-#goxgzapbhg .gt_grand_summary_row {
+#dnjausjwki .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1950,7 +1954,7 @@ Table&nbsp;17.2: Logarithmic regression models
   padding-right: 5px;
 }
 
-#goxgzapbhg .gt_first_grand_summary_row {
+#dnjausjwki .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1960,7 +1964,7 @@ Table&nbsp;17.2: Logarithmic regression models
   border-top-color: #D3D3D3;
 }
 
-#goxgzapbhg .gt_last_grand_summary_row_top {
+#dnjausjwki .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1970,11 +1974,11 @@ Table&nbsp;17.2: Logarithmic regression models
   border-bottom-color: #D3D3D3;
 }
 
-#goxgzapbhg .gt_striped {
+#dnjausjwki .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#goxgzapbhg .gt_table_body {
+#dnjausjwki .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1983,7 +1987,7 @@ Table&nbsp;17.2: Logarithmic regression models
   border-bottom-color: #D3D3D3;
 }
 
-#goxgzapbhg .gt_footnotes {
+#dnjausjwki .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1997,7 +2001,7 @@ Table&nbsp;17.2: Logarithmic regression models
   border-right-color: #D3D3D3;
 }
 
-#goxgzapbhg .gt_footnote {
+#dnjausjwki .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2006,7 +2010,7 @@ Table&nbsp;17.2: Logarithmic regression models
   padding-right: 5px;
 }
 
-#goxgzapbhg .gt_sourcenotes {
+#dnjausjwki .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2020,7 +2024,7 @@ Table&nbsp;17.2: Logarithmic regression models
   border-right-color: #D3D3D3;
 }
 
-#goxgzapbhg .gt_sourcenote {
+#dnjausjwki .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2028,79 +2032,79 @@ Table&nbsp;17.2: Logarithmic regression models
   padding-right: 5px;
 }
 
-#goxgzapbhg .gt_left {
+#dnjausjwki .gt_left {
   text-align: left;
 }
 
-#goxgzapbhg .gt_center {
+#dnjausjwki .gt_center {
   text-align: center;
 }
 
-#goxgzapbhg .gt_right {
+#dnjausjwki .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#goxgzapbhg .gt_font_normal {
+#dnjausjwki .gt_font_normal {
   font-weight: normal;
 }
 
-#goxgzapbhg .gt_font_bold {
+#dnjausjwki .gt_font_bold {
   font-weight: bold;
 }
 
-#goxgzapbhg .gt_font_italic {
+#dnjausjwki .gt_font_italic {
   font-style: italic;
 }
 
-#goxgzapbhg .gt_super {
+#dnjausjwki .gt_super {
   font-size: 65%;
 }
 
-#goxgzapbhg .gt_footnote_marks {
+#dnjausjwki .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#goxgzapbhg .gt_asterisk {
+#dnjausjwki .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#goxgzapbhg .gt_indent_1 {
+#dnjausjwki .gt_indent_1 {
   text-indent: 5px;
 }
 
-#goxgzapbhg .gt_indent_2 {
+#dnjausjwki .gt_indent_2 {
   text-indent: 10px;
 }
 
-#goxgzapbhg .gt_indent_3 {
+#dnjausjwki .gt_indent_3 {
   text-indent: 15px;
 }
 
-#goxgzapbhg .gt_indent_4 {
+#dnjausjwki .gt_indent_4 {
   text-indent: 20px;
 }
 
-#goxgzapbhg .gt_indent_5 {
+#dnjausjwki .gt_indent_5 {
   text-indent: 25px;
 }
 
-#goxgzapbhg .katex-display {
+#dnjausjwki .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#goxgzapbhg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#dnjausjwki div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
-<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <thead>
-<tr class="header gt_col_headings">
+<tr class="gt_col_headings header">
 <th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" style="text-align: left;" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="Linear" class="gt_col_heading gt_columns_bottom_border gt_center" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">Linear</th>
 <th id="Quadratic" class="gt_col_heading gt_columns_bottom_border gt_center" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">Quadratic</th>
@@ -2223,7 +2227,7 @@ Table&nbsp;17.2: Logarithmic regression models
 <td class="gt_row gt_center" style="text-align: left;" headers="Log–log">HC1</td>
 </tr>
 </tbody><tfoot>
-<tr class="odd gt_sourcenotes">
+<tr class="gt_sourcenotes odd">
 <td colspan="6" class="gt_sourcenote" style="text-align: left;">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
 </tr>
 </tfoot>
@@ -2254,7 +2258,7 @@ Table&nbsp;17.2: Logarithmic regression models
 <p>The results in <a href="#tbl-t15-3" class="quarto-xref">Table&nbsp;<span>17.2</span></a> indicates that the estimated coefficient of <code>avginc</code> in the log-linear model is around 0.003, which implies that a 1 unit increase in district income (one unit increase means 1000 dollars increase in average income) is associated with a <span class="math inline">\(0.3\%\)</span> increase in test scores. Finally, the estimated coefficient of <code>ln(avginc)</code> in the log-log model is around 0.055, which implies that a <span class="math inline">\(1\%\)</span> increase in district income is associated with a <span class="math inline">\(0.055\%\)</span> increase in test scores.</p>
 <p>We plot the estimated regression functions in <a href="#fig-f15-5" class="quarto-xref">Figure&nbsp;<span>17.5</span></a> and <a href="#fig-f15-6" class="quarto-xref">Figure&nbsp;<span>17.6</span></a>. In <a href="#fig-f15-5" class="quarto-xref">Figure&nbsp;<span>17.5</span></a>, the quadratic model appears to provide a better fit for the data, while in <a href="#fig-f15-6" class="quarto-xref">Figure&nbsp;<span>17.6</span></a>, the log-log model seems to fit the data more closely.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear, quadratic and linear-log models</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear, quadratic and linear-log models</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort data for smooth fitted curves</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>mydata_sorted <span class="ot">&lt;-</span> mydata[<span class="fu">order</span>(mydata<span class="sc">$</span>avginc), ]</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -2294,7 +2298,7 @@ Table&nbsp;17.2: Logarithmic regression models
 <span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Score (Y)"</span>,</span>
 <span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="cn">NULL</span></span>
 <span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-f15-5" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2309,7 +2313,7 @@ Figure&nbsp;17.5: Linear, quadratic and linear-log models
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Log-linear and log-log models</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Log-linear and log-log models</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort data for smooth fitted curves</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ord <span class="ot">&lt;-</span> <span class="fu">order</span>(mydata<span class="sc">$</span>avginc)</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>mydata_sorted <span class="ot">&lt;-</span> mydata[ord, ]</span>
@@ -2342,7 +2346,7 @@ Figure&nbsp;17.5: Linear, quadratic and linear-log models
 <span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"log(Test Score (Y))"</span>,</span>
 <span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="cn">NULL</span></span>
 <span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-f15-6" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2406,22 +2410,22 @@ Y_i=\beta_0+\beta_1D_{1i}+\beta_2D_{2i}+\beta_3\left(D_{1i}\times D_{2i}\right)+
 \]</span></p>
 <p>Here, <span class="math inline">\(\text{HiSTR}_i\)</span> is a binary variable equal to 1 if the student-teacher ratio is 20 or more, and 0 otherwise; <span class="math inline">\(\text{HiEL}_i\)</span> is another binary variable equal to 1 if the percentage of English learners is 10% or more, and 0 otherwise. We use the following code chunk to estimate the model and present the results in <a href="#tbl-t15-4" class="quarto-xref">Table&nbsp;<span>17.3</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate dummy variables</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate dummy variables</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>histr <span class="ot">=</span> <span class="fu">as.integer</span>(mydata<span class="sc">$</span>str <span class="sc">&gt;=</span> <span class="dv">20</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>hiel  <span class="ot">=</span> <span class="fu">as.integer</span>(mydata<span class="sc">$</span>el_pct <span class="sc">&gt;=</span> <span class="dv">10</span>)</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>r1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> histr <span class="sc">+</span> hiel <span class="sc">+</span> histr<span class="sc">:</span>hiel, <span class="at">data =</span> mydata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>r1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> histr <span class="sc">+</span> hiel <span class="sc">+</span> histr<span class="sc">:</span>hiel, <span class="at">data =</span> mydata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in a table form</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print results in a table form</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="st">"Model"</span> <span class="ot">=</span> r1),</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="st">"HC1"</span>,</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span>,</span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik"</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="tbl-t15-4" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t15-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2429,23 +2433,23 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
 </figcaption>
 <div aria-describedby="tbl-t15-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="cgglxbyzau" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#cgglxbyzau table {
+<div id="vdagwuoqxh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vdagwuoqxh table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#cgglxbyzau thead, #cgglxbyzau tbody, #cgglxbyzau tfoot, #cgglxbyzau tr, #cgglxbyzau td, #cgglxbyzau th {
+#vdagwuoqxh thead, #vdagwuoqxh tbody, #vdagwuoqxh tfoot, #vdagwuoqxh tr, #vdagwuoqxh td, #vdagwuoqxh th {
   border-style: none;
 }
 
-#cgglxbyzau p {
+#vdagwuoqxh p {
   margin: 0;
   padding: 0;
 }
 
-#cgglxbyzau .gt_table {
+#vdagwuoqxh .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2471,12 +2475,12 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   border-left-color: #D3D3D3;
 }
 
-#cgglxbyzau .gt_caption {
+#vdagwuoqxh .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#cgglxbyzau .gt_title {
+#vdagwuoqxh .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2488,7 +2492,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   border-bottom-width: 0;
 }
 
-#cgglxbyzau .gt_subtitle {
+#vdagwuoqxh .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2500,7 +2504,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   border-top-width: 0;
 }
 
-#cgglxbyzau .gt_heading {
+#vdagwuoqxh .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2512,13 +2516,13 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   border-right-color: #D3D3D3;
 }
 
-#cgglxbyzau .gt_bottom_border {
+#vdagwuoqxh .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#cgglxbyzau .gt_col_headings {
+#vdagwuoqxh .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2533,7 +2537,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   border-right-color: #D3D3D3;
 }
 
-#cgglxbyzau .gt_col_heading {
+#vdagwuoqxh .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2553,7 +2557,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   overflow-x: hidden;
 }
 
-#cgglxbyzau .gt_column_spanner_outer {
+#vdagwuoqxh .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2565,15 +2569,15 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   padding-right: 4px;
 }
 
-#cgglxbyzau .gt_column_spanner_outer:first-child {
+#vdagwuoqxh .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#cgglxbyzau .gt_column_spanner_outer:last-child {
+#vdagwuoqxh .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#cgglxbyzau .gt_column_spanner {
+#vdagwuoqxh .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2585,11 +2589,11 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   width: 100%;
 }
 
-#cgglxbyzau .gt_spanner_row {
+#vdagwuoqxh .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#cgglxbyzau .gt_group_heading {
+#vdagwuoqxh .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2615,7 +2619,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   text-align: left;
 }
 
-#cgglxbyzau .gt_empty_group_heading {
+#vdagwuoqxh .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2630,15 +2634,15 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   vertical-align: middle;
 }
 
-#cgglxbyzau .gt_from_md > :first-child {
+#vdagwuoqxh .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#cgglxbyzau .gt_from_md > :last-child {
+#vdagwuoqxh .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#cgglxbyzau .gt_row {
+#vdagwuoqxh .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2657,7 +2661,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   overflow-x: hidden;
 }
 
-#cgglxbyzau .gt_stub {
+#vdagwuoqxh .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2670,7 +2674,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   padding-right: 5px;
 }
 
-#cgglxbyzau .gt_stub_row_group {
+#vdagwuoqxh .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2684,15 +2688,15 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   vertical-align: top;
 }
 
-#cgglxbyzau .gt_row_group_first td {
+#vdagwuoqxh .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#cgglxbyzau .gt_row_group_first th {
+#vdagwuoqxh .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#cgglxbyzau .gt_summary_row {
+#vdagwuoqxh .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2702,16 +2706,16 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   padding-right: 5px;
 }
 
-#cgglxbyzau .gt_first_summary_row {
+#vdagwuoqxh .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#cgglxbyzau .gt_first_summary_row.thick {
+#vdagwuoqxh .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#cgglxbyzau .gt_last_summary_row {
+#vdagwuoqxh .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2721,7 +2725,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   border-bottom-color: #D3D3D3;
 }
 
-#cgglxbyzau .gt_grand_summary_row {
+#vdagwuoqxh .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2731,7 +2735,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   padding-right: 5px;
 }
 
-#cgglxbyzau .gt_first_grand_summary_row {
+#vdagwuoqxh .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2741,7 +2745,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   border-top-color: #D3D3D3;
 }
 
-#cgglxbyzau .gt_last_grand_summary_row_top {
+#vdagwuoqxh .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2751,11 +2755,11 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   border-bottom-color: #D3D3D3;
 }
 
-#cgglxbyzau .gt_striped {
+#vdagwuoqxh .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#cgglxbyzau .gt_table_body {
+#vdagwuoqxh .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2764,7 +2768,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   border-bottom-color: #D3D3D3;
 }
 
-#cgglxbyzau .gt_footnotes {
+#vdagwuoqxh .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2778,7 +2782,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   border-right-color: #D3D3D3;
 }
 
-#cgglxbyzau .gt_footnote {
+#vdagwuoqxh .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2787,7 +2791,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   padding-right: 5px;
 }
 
-#cgglxbyzau .gt_sourcenotes {
+#vdagwuoqxh .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2801,7 +2805,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   border-right-color: #D3D3D3;
 }
 
-#cgglxbyzau .gt_sourcenote {
+#vdagwuoqxh .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2809,79 +2813,79 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
   padding-right: 5px;
 }
 
-#cgglxbyzau .gt_left {
+#vdagwuoqxh .gt_left {
   text-align: left;
 }
 
-#cgglxbyzau .gt_center {
+#vdagwuoqxh .gt_center {
   text-align: center;
 }
 
-#cgglxbyzau .gt_right {
+#vdagwuoqxh .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#cgglxbyzau .gt_font_normal {
+#vdagwuoqxh .gt_font_normal {
   font-weight: normal;
 }
 
-#cgglxbyzau .gt_font_bold {
+#vdagwuoqxh .gt_font_bold {
   font-weight: bold;
 }
 
-#cgglxbyzau .gt_font_italic {
+#vdagwuoqxh .gt_font_italic {
   font-style: italic;
 }
 
-#cgglxbyzau .gt_super {
+#vdagwuoqxh .gt_super {
   font-size: 65%;
 }
 
-#cgglxbyzau .gt_footnote_marks {
+#vdagwuoqxh .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#cgglxbyzau .gt_asterisk {
+#vdagwuoqxh .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#cgglxbyzau .gt_indent_1 {
+#vdagwuoqxh .gt_indent_1 {
   text-indent: 5px;
 }
 
-#cgglxbyzau .gt_indent_2 {
+#vdagwuoqxh .gt_indent_2 {
   text-indent: 10px;
 }
 
-#cgglxbyzau .gt_indent_3 {
+#vdagwuoqxh .gt_indent_3 {
   text-indent: 15px;
 }
 
-#cgglxbyzau .gt_indent_4 {
+#vdagwuoqxh .gt_indent_4 {
   text-indent: 20px;
 }
 
-#cgglxbyzau .gt_indent_5 {
+#vdagwuoqxh .gt_indent_5 {
   text-indent: 25px;
 }
 
-#cgglxbyzau .katex-display {
+#vdagwuoqxh .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#cgglxbyzau div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#vdagwuoqxh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
-<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <thead>
-<tr class="header gt_col_headings">
+<tr class="gt_col_headings header">
 <th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="Model" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Model</th>
 </tr>
@@ -2944,7 +2948,7 @@ Table&nbsp;17.3: Interaction Between to Binary Variables
 <td class="gt_row gt_center" headers="Model">HC1</td>
 </tr>
 </tbody><tfoot>
-<tr class="odd gt_sourcenotes">
+<tr class="gt_sourcenotes odd">
 <td colspan="2" class="gt_sourcenote">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
 </tr>
 </tfoot>
@@ -2982,7 +2986,7 @@ Y_i=\beta_0+\beta_1X_{i}+\beta_2\left(D_i\times X_i\right)+u_i,\quad i=1,2,\cdot
 \end{align}
 \]</span> This case is illustrated in the third plot of <a href="#fig-f15-7" class="quarto-xref">Figure&nbsp;<span>17.7</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>beta_0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>beta_1 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>beta_2 <span class="ot">&lt;-</span> <span class="dv">3</span></span>
@@ -3068,7 +3072,7 @@ Y_i=\beta_0+\beta_1X_{i}+\beta_2\left(D_i\times X_i\right)+u_i,\quad i=1,2,\cdot
 <span id="cb18-84"><a href="#cb18-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span>
 <span id="cb18-85"><a href="#cb18-85" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-86"><a href="#cb18-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange 2×2 layout (bottom-right empty)</span></span>
-<span id="cb18-87"><a href="#cb18-87" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs =</span> <span class="fu">list</span>(p1, p2, p3), <span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-87"><a href="#cb18-87" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs =</span> <span class="fu">list</span>(p1, p2, p3), <span class="at">ncol =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-f15-7" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -3088,18 +3092,18 @@ Figure&nbsp;17.7: Regression functions using binary and continuous variables
 \end{align}
 \]</span> where <span class="math inline">\(\text{HiEL}_i\)</span> is a binary variable that equals <span class="math inline">\(1\)</span> if the percentage of English learners is 10% or more and 0 otherwise. The estimation results are presented in <a href="#tbl-t15-5" class="quarto-xref">Table&nbsp;<span>17.4</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>r2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">*</span> hiel, <span class="at">data =</span> mydata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>r2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">*</span> hiel, <span class="at">data =</span> mydata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Table output (HC1 robust SEs)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Table output (HC1 robust SEs)</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="st">"Model"</span> <span class="ot">=</span> r2),</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="st">"HC1"</span>,</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik"</span>,</span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="tbl-t15-5" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t15-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -3107,23 +3111,23 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
 </figcaption>
 <div aria-describedby="tbl-t15-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="lzvpmwatbz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#lzvpmwatbz table {
+<div id="kbamotkrby" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kbamotkrby table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#lzvpmwatbz thead, #lzvpmwatbz tbody, #lzvpmwatbz tfoot, #lzvpmwatbz tr, #lzvpmwatbz td, #lzvpmwatbz th {
+#kbamotkrby thead, #kbamotkrby tbody, #kbamotkrby tfoot, #kbamotkrby tr, #kbamotkrby td, #kbamotkrby th {
   border-style: none;
 }
 
-#lzvpmwatbz p {
+#kbamotkrby p {
   margin: 0;
   padding: 0;
 }
 
-#lzvpmwatbz .gt_table {
+#kbamotkrby .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -3149,12 +3153,12 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   border-left-color: #D3D3D3;
 }
 
-#lzvpmwatbz .gt_caption {
+#kbamotkrby .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#lzvpmwatbz .gt_title {
+#kbamotkrby .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3166,7 +3170,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   border-bottom-width: 0;
 }
 
-#lzvpmwatbz .gt_subtitle {
+#kbamotkrby .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3178,7 +3182,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   border-top-width: 0;
 }
 
-#lzvpmwatbz .gt_heading {
+#kbamotkrby .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3190,13 +3194,13 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   border-right-color: #D3D3D3;
 }
 
-#lzvpmwatbz .gt_bottom_border {
+#kbamotkrby .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#lzvpmwatbz .gt_col_headings {
+#kbamotkrby .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3211,7 +3215,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   border-right-color: #D3D3D3;
 }
 
-#lzvpmwatbz .gt_col_heading {
+#kbamotkrby .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3231,7 +3235,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   overflow-x: hidden;
 }
 
-#lzvpmwatbz .gt_column_spanner_outer {
+#kbamotkrby .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3243,15 +3247,15 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   padding-right: 4px;
 }
 
-#lzvpmwatbz .gt_column_spanner_outer:first-child {
+#kbamotkrby .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#lzvpmwatbz .gt_column_spanner_outer:last-child {
+#kbamotkrby .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#lzvpmwatbz .gt_column_spanner {
+#kbamotkrby .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3263,11 +3267,11 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   width: 100%;
 }
 
-#lzvpmwatbz .gt_spanner_row {
+#kbamotkrby .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#lzvpmwatbz .gt_group_heading {
+#kbamotkrby .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3293,7 +3297,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   text-align: left;
 }
 
-#lzvpmwatbz .gt_empty_group_heading {
+#kbamotkrby .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3308,15 +3312,15 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   vertical-align: middle;
 }
 
-#lzvpmwatbz .gt_from_md > :first-child {
+#kbamotkrby .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#lzvpmwatbz .gt_from_md > :last-child {
+#kbamotkrby .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#lzvpmwatbz .gt_row {
+#kbamotkrby .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3335,7 +3339,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   overflow-x: hidden;
 }
 
-#lzvpmwatbz .gt_stub {
+#kbamotkrby .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3348,7 +3352,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   padding-right: 5px;
 }
 
-#lzvpmwatbz .gt_stub_row_group {
+#kbamotkrby .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3362,15 +3366,15 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   vertical-align: top;
 }
 
-#lzvpmwatbz .gt_row_group_first td {
+#kbamotkrby .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#lzvpmwatbz .gt_row_group_first th {
+#kbamotkrby .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#lzvpmwatbz .gt_summary_row {
+#kbamotkrby .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3380,16 +3384,16 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   padding-right: 5px;
 }
 
-#lzvpmwatbz .gt_first_summary_row {
+#kbamotkrby .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#lzvpmwatbz .gt_first_summary_row.thick {
+#kbamotkrby .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#lzvpmwatbz .gt_last_summary_row {
+#kbamotkrby .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3399,7 +3403,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   border-bottom-color: #D3D3D3;
 }
 
-#lzvpmwatbz .gt_grand_summary_row {
+#kbamotkrby .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3409,7 +3413,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   padding-right: 5px;
 }
 
-#lzvpmwatbz .gt_first_grand_summary_row {
+#kbamotkrby .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3419,7 +3423,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   border-top-color: #D3D3D3;
 }
 
-#lzvpmwatbz .gt_last_grand_summary_row_top {
+#kbamotkrby .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3429,11 +3433,11 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   border-bottom-color: #D3D3D3;
 }
 
-#lzvpmwatbz .gt_striped {
+#kbamotkrby .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#lzvpmwatbz .gt_table_body {
+#kbamotkrby .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3442,7 +3446,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   border-bottom-color: #D3D3D3;
 }
 
-#lzvpmwatbz .gt_footnotes {
+#kbamotkrby .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3456,7 +3460,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   border-right-color: #D3D3D3;
 }
 
-#lzvpmwatbz .gt_footnote {
+#kbamotkrby .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3465,7 +3469,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   padding-right: 5px;
 }
 
-#lzvpmwatbz .gt_sourcenotes {
+#kbamotkrby .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3479,7 +3483,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   border-right-color: #D3D3D3;
 }
 
-#lzvpmwatbz .gt_sourcenote {
+#kbamotkrby .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -3487,79 +3491,79 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
   padding-right: 5px;
 }
 
-#lzvpmwatbz .gt_left {
+#kbamotkrby .gt_left {
   text-align: left;
 }
 
-#lzvpmwatbz .gt_center {
+#kbamotkrby .gt_center {
   text-align: center;
 }
 
-#lzvpmwatbz .gt_right {
+#kbamotkrby .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#lzvpmwatbz .gt_font_normal {
+#kbamotkrby .gt_font_normal {
   font-weight: normal;
 }
 
-#lzvpmwatbz .gt_font_bold {
+#kbamotkrby .gt_font_bold {
   font-weight: bold;
 }
 
-#lzvpmwatbz .gt_font_italic {
+#kbamotkrby .gt_font_italic {
   font-style: italic;
 }
 
-#lzvpmwatbz .gt_super {
+#kbamotkrby .gt_super {
   font-size: 65%;
 }
 
-#lzvpmwatbz .gt_footnote_marks {
+#kbamotkrby .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#lzvpmwatbz .gt_asterisk {
+#kbamotkrby .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#lzvpmwatbz .gt_indent_1 {
+#kbamotkrby .gt_indent_1 {
   text-indent: 5px;
 }
 
-#lzvpmwatbz .gt_indent_2 {
+#kbamotkrby .gt_indent_2 {
   text-indent: 10px;
 }
 
-#lzvpmwatbz .gt_indent_3 {
+#kbamotkrby .gt_indent_3 {
   text-indent: 15px;
 }
 
-#lzvpmwatbz .gt_indent_4 {
+#kbamotkrby .gt_indent_4 {
   text-indent: 20px;
 }
 
-#lzvpmwatbz .gt_indent_5 {
+#kbamotkrby .gt_indent_5 {
   text-indent: 25px;
 }
 
-#lzvpmwatbz .katex-display {
+#kbamotkrby .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#lzvpmwatbz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#kbamotkrby div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
-<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <thead>
-<tr class="header gt_col_headings">
+<tr class="gt_col_headings header">
 <th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="Model" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Model</th>
 </tr>
@@ -3622,7 +3626,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
 <td class="gt_row gt_center" headers="Model">HC1</td>
 </tr>
 </tbody><tfoot>
-<tr class="odd gt_sourcenotes">
+<tr class="gt_sourcenotes odd">
 <td colspan="2" class="gt_sourcenote">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
 </tr>
 </tfoot>
@@ -3642,7 +3646,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
 \]</span></p>
 <p>Thus, for districts with a low percentage of English learners (<span class="math inline">\(\text{HiEL}_i=0\)</span>), the estimated regression line is <span class="math inline">\(\widehat{\text{TestScore}}_i=682.2-0.97\text{STR}_i\)</span>. In contrast, for districts with a high percentage of English learners (<span class="math inline">\(\text{HiEL}_i=1\)</span>), the estimated regression line becomes <span class="math inline">\(\widehat{\text{TestScore}}_i=682.2+5.6-0.97\text{STR}_i-1.28\text{STR}_i=687.8-2.25\text{STR}_i\)</span>. These two regression lines are plotted in <a href="#fig-f15-8" class="quarto-xref">Figure&nbsp;<span>17.8</span></a>. According to these estimates, when STR increases by <span class="math inline">\(1\)</span>, the test score declines on average by <span class="math inline">\(0.97\)</span> points in districts with low percentage of English learners. On the other hand, when STR increases by <span class="math inline">\(1\)</span> student, the test score declines on average by <span class="math inline">\(2.25\)</span> points in districts with high percentage of English learners.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>beta_0 <span class="ot">&lt;-</span> <span class="fl">682.2</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>beta_1 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">0.97</span></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>beta_2 <span class="ot">&lt;-</span> <span class="fl">5.6</span></span>
@@ -3676,7 +3680,7 @@ Table&nbsp;17.4: Interaction between a continuous and a binary variable
 <span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
 <span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-f15-8" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -3697,12 +3701,12 @@ H_0: \beta_2=0,\,\beta_3=0\quad\text{versus}\quad H_1:\text{At least one is nonz
 \]</span></p>
 <p>We use the heteroskedasticity-robust <span class="math inline">\(F\)</span>-statistic to test this hypothesis. The <span class="math inline">\(F\)</span>-statistic is around 89.9 with a <span class="math inline">\(p\)</span>-value less than 0.05. Thus, we reject the null hypothesis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  r2,</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"hiel = 0"</span>, <span class="st">"str:hiel = 0"</span>),</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="fu">vcovHC</span>(r2, <span class="at">type =</span> <span class="st">"HC1"</span>),</span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">test =</span> <span class="st">"F"</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Linear hypothesis test:
@@ -3747,18 +3751,18 @@ Y+\Delta Y=\beta_0+\beta_1(X_1+\Delta X_1)+\beta_2X_2+\beta_3\left((X_1+\Delta X
 \]</span></p>
 <p>We use the following code chunk to estimate the model and present the results in <a href="#tbl-t15-6" class="quarto-xref">Table&nbsp;<span>17.5</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>r3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">*</span> el_pct, <span class="at">data =</span> mydata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimation</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>r3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">*</span> el_pct, <span class="at">data =</span> mydata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Table output with HC1 robust SEs</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Table output with HC1 robust SEs</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="st">"Model"</span> <span class="ot">=</span> r3),</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="fu">vcovHC</span>(r3, <span class="at">type =</span> <span class="st">"HC1"</span>),</span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik"</span>,</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="tbl-t15-6" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t15-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -3766,23 +3770,23 @@ Table&nbsp;17.5: Interaction between two continuous variables
 </figcaption>
 <div aria-describedby="tbl-t15-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="prkepzypad" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#prkepzypad table {
+<div id="dsiumcieyh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dsiumcieyh table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#prkepzypad thead, #prkepzypad tbody, #prkepzypad tfoot, #prkepzypad tr, #prkepzypad td, #prkepzypad th {
+#dsiumcieyh thead, #dsiumcieyh tbody, #dsiumcieyh tfoot, #dsiumcieyh tr, #dsiumcieyh td, #dsiumcieyh th {
   border-style: none;
 }
 
-#prkepzypad p {
+#dsiumcieyh p {
   margin: 0;
   padding: 0;
 }
 
-#prkepzypad .gt_table {
+#dsiumcieyh .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -3808,12 +3812,12 @@ Table&nbsp;17.5: Interaction between two continuous variables
   border-left-color: #D3D3D3;
 }
 
-#prkepzypad .gt_caption {
+#dsiumcieyh .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#prkepzypad .gt_title {
+#dsiumcieyh .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3825,7 +3829,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   border-bottom-width: 0;
 }
 
-#prkepzypad .gt_subtitle {
+#dsiumcieyh .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3837,7 +3841,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   border-top-width: 0;
 }
 
-#prkepzypad .gt_heading {
+#dsiumcieyh .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3849,13 +3853,13 @@ Table&nbsp;17.5: Interaction between two continuous variables
   border-right-color: #D3D3D3;
 }
 
-#prkepzypad .gt_bottom_border {
+#dsiumcieyh .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#prkepzypad .gt_col_headings {
+#dsiumcieyh .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3870,7 +3874,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   border-right-color: #D3D3D3;
 }
 
-#prkepzypad .gt_col_heading {
+#dsiumcieyh .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3890,7 +3894,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   overflow-x: hidden;
 }
 
-#prkepzypad .gt_column_spanner_outer {
+#dsiumcieyh .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3902,15 +3906,15 @@ Table&nbsp;17.5: Interaction between two continuous variables
   padding-right: 4px;
 }
 
-#prkepzypad .gt_column_spanner_outer:first-child {
+#dsiumcieyh .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#prkepzypad .gt_column_spanner_outer:last-child {
+#dsiumcieyh .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#prkepzypad .gt_column_spanner {
+#dsiumcieyh .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3922,11 +3926,11 @@ Table&nbsp;17.5: Interaction between two continuous variables
   width: 100%;
 }
 
-#prkepzypad .gt_spanner_row {
+#dsiumcieyh .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#prkepzypad .gt_group_heading {
+#dsiumcieyh .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3952,7 +3956,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   text-align: left;
 }
 
-#prkepzypad .gt_empty_group_heading {
+#dsiumcieyh .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3967,15 +3971,15 @@ Table&nbsp;17.5: Interaction between two continuous variables
   vertical-align: middle;
 }
 
-#prkepzypad .gt_from_md > :first-child {
+#dsiumcieyh .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#prkepzypad .gt_from_md > :last-child {
+#dsiumcieyh .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#prkepzypad .gt_row {
+#dsiumcieyh .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3994,7 +3998,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   overflow-x: hidden;
 }
 
-#prkepzypad .gt_stub {
+#dsiumcieyh .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -4007,7 +4011,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   padding-right: 5px;
 }
 
-#prkepzypad .gt_stub_row_group {
+#dsiumcieyh .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -4021,15 +4025,15 @@ Table&nbsp;17.5: Interaction between two continuous variables
   vertical-align: top;
 }
 
-#prkepzypad .gt_row_group_first td {
+#dsiumcieyh .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#prkepzypad .gt_row_group_first th {
+#dsiumcieyh .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#prkepzypad .gt_summary_row {
+#dsiumcieyh .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -4039,16 +4043,16 @@ Table&nbsp;17.5: Interaction between two continuous variables
   padding-right: 5px;
 }
 
-#prkepzypad .gt_first_summary_row {
+#dsiumcieyh .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#prkepzypad .gt_first_summary_row.thick {
+#dsiumcieyh .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#prkepzypad .gt_last_summary_row {
+#dsiumcieyh .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4058,7 +4062,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   border-bottom-color: #D3D3D3;
 }
 
-#prkepzypad .gt_grand_summary_row {
+#dsiumcieyh .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -4068,7 +4072,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   padding-right: 5px;
 }
 
-#prkepzypad .gt_first_grand_summary_row {
+#dsiumcieyh .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4078,7 +4082,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   border-top-color: #D3D3D3;
 }
 
-#prkepzypad .gt_last_grand_summary_row_top {
+#dsiumcieyh .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4088,11 +4092,11 @@ Table&nbsp;17.5: Interaction between two continuous variables
   border-bottom-color: #D3D3D3;
 }
 
-#prkepzypad .gt_striped {
+#dsiumcieyh .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#prkepzypad .gt_table_body {
+#dsiumcieyh .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -4101,7 +4105,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   border-bottom-color: #D3D3D3;
 }
 
-#prkepzypad .gt_footnotes {
+#dsiumcieyh .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -4115,7 +4119,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   border-right-color: #D3D3D3;
 }
 
-#prkepzypad .gt_footnote {
+#dsiumcieyh .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -4124,7 +4128,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   padding-right: 5px;
 }
 
-#prkepzypad .gt_sourcenotes {
+#dsiumcieyh .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -4138,7 +4142,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
   border-right-color: #D3D3D3;
 }
 
-#prkepzypad .gt_sourcenote {
+#dsiumcieyh .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -4146,79 +4150,79 @@ Table&nbsp;17.5: Interaction between two continuous variables
   padding-right: 5px;
 }
 
-#prkepzypad .gt_left {
+#dsiumcieyh .gt_left {
   text-align: left;
 }
 
-#prkepzypad .gt_center {
+#dsiumcieyh .gt_center {
   text-align: center;
 }
 
-#prkepzypad .gt_right {
+#dsiumcieyh .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#prkepzypad .gt_font_normal {
+#dsiumcieyh .gt_font_normal {
   font-weight: normal;
 }
 
-#prkepzypad .gt_font_bold {
+#dsiumcieyh .gt_font_bold {
   font-weight: bold;
 }
 
-#prkepzypad .gt_font_italic {
+#dsiumcieyh .gt_font_italic {
   font-style: italic;
 }
 
-#prkepzypad .gt_super {
+#dsiumcieyh .gt_super {
   font-size: 65%;
 }
 
-#prkepzypad .gt_footnote_marks {
+#dsiumcieyh .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#prkepzypad .gt_asterisk {
+#dsiumcieyh .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#prkepzypad .gt_indent_1 {
+#dsiumcieyh .gt_indent_1 {
   text-indent: 5px;
 }
 
-#prkepzypad .gt_indent_2 {
+#dsiumcieyh .gt_indent_2 {
   text-indent: 10px;
 }
 
-#prkepzypad .gt_indent_3 {
+#dsiumcieyh .gt_indent_3 {
   text-indent: 15px;
 }
 
-#prkepzypad .gt_indent_4 {
+#dsiumcieyh .gt_indent_4 {
   text-indent: 20px;
 }
 
-#prkepzypad .gt_indent_5 {
+#dsiumcieyh .gt_indent_5 {
   text-indent: 25px;
 }
 
-#prkepzypad .katex-display {
+#dsiumcieyh .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#prkepzypad div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#dsiumcieyh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
-<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <thead>
-<tr class="header gt_col_headings">
+<tr class="gt_col_headings header">
 <th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="Model" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Model</th>
 </tr>
@@ -4277,7 +4281,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
 <td class="gt_row gt_center" headers="Model">Custom</td>
 </tr>
 </tbody><tfoot>
-<tr class="even gt_sourcenotes">
+<tr class="gt_sourcenotes odd">
 <td colspan="2" class="gt_sourcenote">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
 </tr>
 </tfoot>
@@ -4334,7 +4338,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
 \]</span></p>
 <p>The following code chunks can be used to produce the estimation results given in <a href="#tbl-t15-7" class="quarto-xref">Table&nbsp;<span>17.6</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>r1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">+</span> el_pct <span class="sc">+</span> meal_pct, <span class="at">data =</span> mydata)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2</span></span>
@@ -4359,10 +4363,10 @@ Table&nbsp;17.5: Interaction between two continuous variables
 <span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 7</span></span>
 <span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>r7 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str <span class="sc">+</span> <span class="fu">I</span>(str<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(str<span class="sc">^</span><span class="dv">3</span>) <span class="sc">+</span></span>
 <span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>           el_pct <span class="sc">+</span> meal_pct <span class="sc">+</span> <span class="fu">log</span>(avginc),</span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> mydata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> mydata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model 1"</span> <span class="ot">=</span> r1,</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Model 2"</span> <span class="ot">=</span> r2,</span>
@@ -4376,7 +4380,7 @@ Table&nbsp;17.5: Interaction between two continuous variables
 <span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">gof_omit =</span> <span class="st">"AIC|BIC|Log.Lik"</span>,</span>
 <span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">fmt =</span> <span class="dv">3</span></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="tbl-t15-7" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t15-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -4384,23 +4388,23 @@ Table&nbsp;17.6: Estimation results for empirical application
 </figcaption>
 <div aria-describedby="tbl-t15-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="ciufndmvpc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ciufndmvpc table {
+<div id="aqaxezmruq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#aqaxezmruq table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ciufndmvpc thead, #ciufndmvpc tbody, #ciufndmvpc tfoot, #ciufndmvpc tr, #ciufndmvpc td, #ciufndmvpc th {
+#aqaxezmruq thead, #aqaxezmruq tbody, #aqaxezmruq tfoot, #aqaxezmruq tr, #aqaxezmruq td, #aqaxezmruq th {
   border-style: none;
 }
 
-#ciufndmvpc p {
+#aqaxezmruq p {
   margin: 0;
   padding: 0;
 }
 
-#ciufndmvpc .gt_table {
+#aqaxezmruq .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -4426,12 +4430,12 @@ Table&nbsp;17.6: Estimation results for empirical application
   border-left-color: #D3D3D3;
 }
 
-#ciufndmvpc .gt_caption {
+#aqaxezmruq .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ciufndmvpc .gt_title {
+#aqaxezmruq .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -4443,7 +4447,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   border-bottom-width: 0;
 }
 
-#ciufndmvpc .gt_subtitle {
+#aqaxezmruq .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -4455,7 +4459,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   border-top-width: 0;
 }
 
-#ciufndmvpc .gt_heading {
+#aqaxezmruq .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -4467,13 +4471,13 @@ Table&nbsp;17.6: Estimation results for empirical application
   border-right-color: #D3D3D3;
 }
 
-#ciufndmvpc .gt_bottom_border {
+#aqaxezmruq .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ciufndmvpc .gt_col_headings {
+#aqaxezmruq .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -4488,7 +4492,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   border-right-color: #D3D3D3;
 }
 
-#ciufndmvpc .gt_col_heading {
+#aqaxezmruq .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -4508,7 +4512,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   overflow-x: hidden;
 }
 
-#ciufndmvpc .gt_column_spanner_outer {
+#aqaxezmruq .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -4520,15 +4524,15 @@ Table&nbsp;17.6: Estimation results for empirical application
   padding-right: 4px;
 }
 
-#ciufndmvpc .gt_column_spanner_outer:first-child {
+#aqaxezmruq .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ciufndmvpc .gt_column_spanner_outer:last-child {
+#aqaxezmruq .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ciufndmvpc .gt_column_spanner {
+#aqaxezmruq .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -4540,11 +4544,11 @@ Table&nbsp;17.6: Estimation results for empirical application
   width: 100%;
 }
 
-#ciufndmvpc .gt_spanner_row {
+#aqaxezmruq .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ciufndmvpc .gt_group_heading {
+#aqaxezmruq .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4570,7 +4574,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   text-align: left;
 }
 
-#ciufndmvpc .gt_empty_group_heading {
+#aqaxezmruq .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -4585,15 +4589,15 @@ Table&nbsp;17.6: Estimation results for empirical application
   vertical-align: middle;
 }
 
-#ciufndmvpc .gt_from_md > :first-child {
+#aqaxezmruq .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ciufndmvpc .gt_from_md > :last-child {
+#aqaxezmruq .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ciufndmvpc .gt_row {
+#aqaxezmruq .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4612,7 +4616,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   overflow-x: hidden;
 }
 
-#ciufndmvpc .gt_stub {
+#aqaxezmruq .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -4625,7 +4629,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   padding-right: 5px;
 }
 
-#ciufndmvpc .gt_stub_row_group {
+#aqaxezmruq .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -4639,15 +4643,15 @@ Table&nbsp;17.6: Estimation results for empirical application
   vertical-align: top;
 }
 
-#ciufndmvpc .gt_row_group_first td {
+#aqaxezmruq .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ciufndmvpc .gt_row_group_first th {
+#aqaxezmruq .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ciufndmvpc .gt_summary_row {
+#aqaxezmruq .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -4657,16 +4661,16 @@ Table&nbsp;17.6: Estimation results for empirical application
   padding-right: 5px;
 }
 
-#ciufndmvpc .gt_first_summary_row {
+#aqaxezmruq .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ciufndmvpc .gt_first_summary_row.thick {
+#aqaxezmruq .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ciufndmvpc .gt_last_summary_row {
+#aqaxezmruq .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4676,7 +4680,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   border-bottom-color: #D3D3D3;
 }
 
-#ciufndmvpc .gt_grand_summary_row {
+#aqaxezmruq .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -4686,7 +4690,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   padding-right: 5px;
 }
 
-#ciufndmvpc .gt_first_grand_summary_row {
+#aqaxezmruq .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4696,7 +4700,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   border-top-color: #D3D3D3;
 }
 
-#ciufndmvpc .gt_last_grand_summary_row_top {
+#aqaxezmruq .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -4706,11 +4710,11 @@ Table&nbsp;17.6: Estimation results for empirical application
   border-bottom-color: #D3D3D3;
 }
 
-#ciufndmvpc .gt_striped {
+#aqaxezmruq .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ciufndmvpc .gt_table_body {
+#aqaxezmruq .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -4719,7 +4723,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   border-bottom-color: #D3D3D3;
 }
 
-#ciufndmvpc .gt_footnotes {
+#aqaxezmruq .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -4733,7 +4737,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   border-right-color: #D3D3D3;
 }
 
-#ciufndmvpc .gt_footnote {
+#aqaxezmruq .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -4742,7 +4746,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   padding-right: 5px;
 }
 
-#ciufndmvpc .gt_sourcenotes {
+#aqaxezmruq .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -4756,7 +4760,7 @@ Table&nbsp;17.6: Estimation results for empirical application
   border-right-color: #D3D3D3;
 }
 
-#ciufndmvpc .gt_sourcenote {
+#aqaxezmruq .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -4764,79 +4768,79 @@ Table&nbsp;17.6: Estimation results for empirical application
   padding-right: 5px;
 }
 
-#ciufndmvpc .gt_left {
+#aqaxezmruq .gt_left {
   text-align: left;
 }
 
-#ciufndmvpc .gt_center {
+#aqaxezmruq .gt_center {
   text-align: center;
 }
 
-#ciufndmvpc .gt_right {
+#aqaxezmruq .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ciufndmvpc .gt_font_normal {
+#aqaxezmruq .gt_font_normal {
   font-weight: normal;
 }
 
-#ciufndmvpc .gt_font_bold {
+#aqaxezmruq .gt_font_bold {
   font-weight: bold;
 }
 
-#ciufndmvpc .gt_font_italic {
+#aqaxezmruq .gt_font_italic {
   font-style: italic;
 }
 
-#ciufndmvpc .gt_super {
+#aqaxezmruq .gt_super {
   font-size: 65%;
 }
 
-#ciufndmvpc .gt_footnote_marks {
+#aqaxezmruq .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ciufndmvpc .gt_asterisk {
+#aqaxezmruq .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ciufndmvpc .gt_indent_1 {
+#aqaxezmruq .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ciufndmvpc .gt_indent_2 {
+#aqaxezmruq .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ciufndmvpc .gt_indent_3 {
+#aqaxezmruq .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ciufndmvpc .gt_indent_4 {
+#aqaxezmruq .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ciufndmvpc .gt_indent_5 {
+#aqaxezmruq .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ciufndmvpc .katex-display {
+#aqaxezmruq .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ciufndmvpc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#aqaxezmruq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
-<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <thead>
-<tr class="header gt_col_headings">
+<tr class="gt_col_headings header">
 <th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="Model-1" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Model 1</th>
 <th id="Model-2" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Model 2</th>
@@ -5129,7 +5133,7 @@ Table&nbsp;17.6: Estimation results for empirical application
 <td class="gt_row gt_center" headers="Model 7">HC1</td>
 </tr>
 </tbody><tfoot>
-<tr class="odd gt_sourcenotes">
+<tr class="gt_sourcenotes odd">
 <td colspan="8" class="gt_sourcenote">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
 </tr>
 </tfoot>
@@ -5145,12 +5149,12 @@ Table&nbsp;17.6: Estimation results for empirical application
 <p>Starting with the results for Model 1, we see that the estimated coefficient on <code>STR</code> is statistically significant. The results for Model 2 show that adding <code>ln(avginc)</code> reduces the estimated coefficient on <code>STR</code> to <code>-0.734</code>, though this estimate remains statistically significant. In Models 3 and 4, we aim to assess the effect of allowing for an interaction term, <code>STR × HiEL</code>, both without and with economic control variables. In both models, we observe that the coefficient on the interaction term and the coefficient on <code>HiEL</code> are not statistically significant. Thus, even with economic controls, we cannot reject the null hypothesis that the effect of the student-teacher ratio on test scores is the same for districts with high and low shares of English learners.</p>
 <p>Model 5 includes a cubic term for the student-teacher ratio and omits the interaction <code>STR × HiEL</code>. The results indicate that there is a nonlinear effect of <code>STR</code> on test scores. We can verify this non-linear relationship by testing the joint null hypothesis: <span class="math inline">\(H_0:\beta_2=0,\beta_3=0\)</span>. The F-statistic is around 5 with a <span class="math inline">\(p\)</span>-value less than 0.05. Thus, we reject the null hypothesis at the <span class="math inline">\(5\%\)</span> significance level.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  r5,</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"I(str^2) = 0"</span>, <span class="st">"I(str^3) = 0"</span>),</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="fu">vcovHC</span>(r5, <span class="at">type =</span> <span class="st">"HC3"</span>),</span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">test =</span> <span class="st">"F"</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Linear hypothesis test:
@@ -5171,7 +5175,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>Model 6 further examines whether the effect of <code>STR</code> depends not just on its value but also on the fraction of English learners. All individual t-statistics indicate that the estimated coefficients on <code>HiEL</code> and its interaction terms are statistically significant. We can further check this by using a robust <span class="math inline">\(F\)</span>-test for the joint null hypothesis: <span class="math inline">\(H_0:\beta_5=0,\beta_6=0,\beta_7=0\)</span>. The F-statistic is around 2.69 with a <span class="math inline">\(p\)</span>-value around 0.046. We reject the null hypothesis at the 5% significance level.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linearHypothesis</span>(</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  r6,</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"str:hiel = 0"</span>,</span>
@@ -5180,7 +5184,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="fu">vcovHC</span>(r6, <span class="at">type =</span> <span class="st">"HC1"</span>),</span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">test =</span> <span class="st">"F"</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Linear hypothesis test:
@@ -5203,7 +5207,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>Model 7 is a modification of Model 5, in which the continuous variable <code>PctEL</code> is used instead of the binary variable <code>HiEL</code> to control for the effect of the percentage of English learners. The coefficients on the other regressors do not change substantially when this modification is made, indicating that the results in Model 5 are not sensitive to whether we use <code>PctEL</code> or <code>HiEL</code>.</p>
 <p>The nonlinear specifications in <a href="#tbl-t15-7" class="quarto-xref">Table&nbsp;<span>17.6</span></a> are most easily interpreted graphically. In <a href="#fig-f15-9" class="quarto-xref">Figure&nbsp;<span>17.9</span></a>, we present plots of the estimated regression functions for Models 2, 5, and 7, along with a scatterplot of <code>testscr</code> and <code>str</code>. For each curve, we compute predicted values by setting each independent variable, other than <code>str</code>, to its sample average. These estimated regression functions show the predicted test scores as a function of <code>str</code>, with other independent variables fixed at their sample averages. The figure illustrates that the estimated regression functions are all quite similar to one another.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>hiel <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(mydata<span class="sc">$</span>hiel)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>hiel <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(mydata<span class="sc">$</span>hiel)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># New data for prediction</span></span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>str_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">14</span>, <span class="dv">26</span>, <span class="at">by =</span> <span class="fl">0.01</span>)</span>
@@ -5259,7 +5263,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb32-54"><a href="#cb32-54" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb32-55"><a href="#cb32-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
 <span id="cb32-56"><a href="#cb32-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"top"</span></span>
-<span id="cb32-57"><a href="#cb32-57" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-57"><a href="#cb32-57" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-f15-9" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -5275,7 +5279,7 @@ Figure&nbsp;17.9: Estimated regression functions for Models 2, 5 and 7
 </div>
 <p>In <a href="#fig-f15-10" class="quarto-xref">Figure&nbsp;<span>17.10</span></a>, we present the estimated regression functions for Model 6 when <code>HiEL = 0</code> and <code>HiEL = 1</code>. Although the two regression functions appear different, the slopes are nearly identical when <code>str</code> take values between 17 and 23. Since this range encompasses nearly all observations, we can reasonably conclude that nonlinear interactions between the fraction of English learners and the student-teacher ratio can be disregarded.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sequence of STR values</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sequence of STR values</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>str_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">14</span>, <span class="dv">26</span>, <span class="at">by =</span> <span class="fl">0.01</span>)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># New data for predictions</span></span>
@@ -5336,7 +5340,7 @@ Figure&nbsp;17.9: Estimated regression functions for Models 2, 5 and 7
 <span id="cb33-59"><a href="#cb33-59" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb33-60"><a href="#cb33-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
 <span id="cb33-61"><a href="#cb33-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"top"</span></span>
-<span id="cb33-62"><a href="#cb33-62" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-62"><a href="#cb33-62" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-f15-10" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -5364,7 +5368,7 @@ Figure&nbsp;17.10: Estimated regression functions for Model 6
 </ul>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-Stock2020" class="csl-entry" role="listitem">
 Stock, James H., and Mark W. Watson. 2020. <em>Introduction to Econometrics</em>. Fourth edition. Pearson.
 </div>
@@ -5373,239 +5377,243 @@ Stock, James H., and Mark W. Watson. 2020. <em>Introduction to Econometrics</em>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/RBook\/");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/RBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -5613,185 +5621,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./Chapter7-MultipleRegressionInference.html" class="pagination-link" aria-label="Hypothesis Tests and Confidence Intervals in Multiple Regression">
