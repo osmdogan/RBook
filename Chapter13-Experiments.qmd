@@ -876,7 +876,6 @@ modelsummary(model5_fixest,
 
 Alternatively, we can resort to the OLS estimator to estimate @eq-eq22.10. The following code chunk produces the same estimates as the fixed effects estimator. Note that we use the `factor(month)+factor(block)` to include month and block fixed effects, respectively.
 
-
 ```{r}
 # Fit the model with lm()
 model6_lm <- lm(
@@ -888,7 +887,6 @@ model6_lm <- lm(
 
 To generate the event study plot, we next extract the point estimates and standard errors. We then generate (pointwise) 95% confidence intervals.
 
-
 ```{r}
 # Vector of coefficients for the leads/lags
 theta <- coef(model6_lm)[c("lead4", "lead3", "lead0",
@@ -897,7 +895,6 @@ theta <- coef(model6_lm)[c("lead4", "lead3", "lead0",
 # Insert 0 at lead0 (baseline period)
 theta <- c(theta[1:2], 0, theta[3:7])
 ```
-
 
 ```{r}
 # Clustered SE at block level
@@ -909,7 +906,6 @@ theta_se <- se[c("lead4", "lead3", "lead0",
 # Insert 0 for baseline period
 theta_se <- c(theta_se[1:2], 0, theta_se[3:7])
 ```
-
 
 ```{r}
 # X-axis for plotting: -4,...,4
@@ -996,8 +992,8 @@ iplot(
 )
 ```
 
-
 ### Differences-in-differences with covariates
+
 We can consider including covariates in a DiD design mainly for two reasons: (i) to check for balance in covariates between treatment and control groups that are thought to influence the untreated potential outcomes, and (ii) to estimate heterogeneous treatment effects across subgroups defined by covariates (@baker2026difference).
 
 In this section, we focus on the first reason and discuss why we should check for balance in covariates between treatment and control groups in a DiD design. Checking covariate balance provides a way to assess the plausibility of the parallel trends assumption. Recall that the parallel trends assumption requires the average change in untreated potential outcomes to be the same for both treatment and control groups in the post-treatment periods. If there are covariates that are thought to influence untreated potential outcomes and these covariates are imbalanced between treatment and control groups in the pre-treatment period, this may suggest that the average change in untreated potential outcomes may differ between treatment and control groups in the post-treatment periods, thereby violating the parallel trends assumption. Therefore, checking for balance in covariates that are thought to influence untreated potential outcomes can provide some evidence for or against the plausibility of the parallel trends assumption. It is important to note that we should consider only covariates that are thought to influence untreated potential outcomes, as imbalance in covariates that do not influence untreated potential outcomes may not necessarily suggest a violation of the parallel trends assumption. In particular, covariates that are themselves affected by the treatment should not be considered when checking for balance, as imbalance in these covariates may be a consequence of the treatment rather than a cause of differences in untreated potential outcomes between treatment and control groups.
@@ -1128,9 +1124,10 @@ $$
 
 The doubly robust approach is appealing because it provides a consistent estimate of $\text{ATT}(t)$ if either the regression model for $\E[Y_{it}-Y_{i,t_0-1}\mid X_i, D_i=0]$ is correctly specified or the model for the propensity score $P(D_i=1\mid X_i)$ is correctly specified. @baker2026difference suggest using the doubly robust approach in practice, as it provides some protection against model misspecification.
 
-For a discussion of the inference properties of these three approaches, we recommend that the reader consult @Callaway2021 and @baker2026difference.
+For statistical inference, @Callaway2021 suggest using the multiplier bootstrap method to compute standard errors for these three approaches. Their method is implemented in the `did` package, which provides convenient tools for implementing these three approaches in DiD designs with covariates. For further details, see @Callaway2021 and @baker2026difference.
 
 For our example on the impact of policing on crime, we can use the `did` package to implement the regression-adjustment, inverse probability weighting, and doubly-robust approaches to estimate the ATT parameters in the pre- and post-treatment periods. We first need to prepare the data for the `did` package. We remove the data for July and recode the months as follows: April is coded as 1, May as 2, June as 3, August as 4, September as 5, October as 6, November as 7, and December as 8. We also create a variable `treat_month` that indicates the treatment timing for each block. Treated blocks receive treatment in month 4 (August), while control blocks never receive treatment (coded as 0).
+
 ```{r}
 # Remove data for July (treatment month) and recode months as April 1, May 2, June 3, August 4, September 5, October 6, November 7, December 8
 library(did)
@@ -1199,11 +1196,12 @@ doubly_robust <- att_gt(
   bstrap = TRUE,
   est_method = "doubly_robust"
 )
+
 # Summarize the results
 summary(doubly_robust)
 ```
 
-We next use the `aggte` function from the `did` package to aggregate the ATT estimates across pre- and post-treatment periods to obtain dynamic ATT estimates. We set `biters = 25000` to use 25,000 bootstrap iterations to compute the standard errors for the dynamic ATT estimates. We then summarize the estimation results for the dynamic ATT estimates using `summary(dynamicATT)`.
+We next use the `aggte` function from the `did` package to aggregate the ATT estimates across pre- and post-treatment periods to obtain dynamic ATT estimates. We set `biters = 25000` to use 25,000 bootstrap iterations to compute the standard errors for the dynamic ATT estimates. We then summarize the estimation results for the dynamic ATT estimates using `summary(dynamicATT)`. The overall ATT estimate, which is the average of the dynamic ATT estimates across post-treatment periods, is -0.122, which is slightly larger in magnitude than the estimate obtained from the fixed effects regression. 
 
 ```{r}
 dynamicATT <- aggte(doubly_robust, type = "dynamic", biters = 25000)
@@ -1231,7 +1229,6 @@ ggdid(dynamicATT,
       ylim = c(-0.4, 0.4)
 )
 ```
-
 
 ## Regression discontinuity designs
 Another example of quasi-experimental methods is the regression discontinuity design (RDD). In an RDD, the treatment and control groups are formed when a continuous variable $W$, known as the running variable, crosses a threshold $w_0$ (the cutoff level). The main idea of the RDD is that units with running variable values near the threshold are comparable in terms of characteristics, except for the receipt of treatment.^[The approach we presented in this section is called the continuity framework. A second approach, known as the local randomization framework, is based on the idea that the RDD can be viewed as a randomized experiment around the cutoff. See @Cattaneo2020 for details.] 
