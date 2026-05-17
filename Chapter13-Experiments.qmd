@@ -14,6 +14,8 @@ library(rdrobust)
 library(knitr)
 library(tidyverse)
 library(labelled)
+library(did)
+library(broom)
 ```
 
 ## Randomized controlled experiments
@@ -462,16 +464,15 @@ $$
 \Delta Y_i=\beta_0+\beta_1D_i+u_i,
 \end{align}
 $$ {#eq-eq22.6}
-where $\Delta Y_i$ represents the change in the post-treatment value of $Y_i$ minus the pre-treatment value for the $i$th individual, and $D_i$ is the treatment indicator. In this regression, the DiD estimator is the OLS estimator of $\beta_1=\E[\Delta Y_i|D_i=1]-\E[\Delta Y_i|D_i=0]$. 
+where $\Delta Y_i$ represents the change in the post-treatment value of $Y_i$ minus the pre-treatment value for the $i$th individual, and $D_i$ is the treatment indicator. Since $D_i$ is a binary variable, we have $\beta_1=\E[\Delta Y_i|D_i=1]-\E[\Delta Y_i|D_i=0]$. Thus, the OLS estimator of $\beta_1$ in @eq-eq22.6 is equivalent to the DiD estimator in @eq-eq22.5.
 
-The DiD estimator can be extended to include additional regressors $W_{1},\dots,W_{r}$. These variables can be pre-treatment individual characteristics, or they can be control variables:
+The advantage of using this regression approach is that we can rely on the standard regression tools to estimate the DiD estimator and its standard error. For example, we can easily compute the heteroskedasticity-robust standard error for the OLS estimator of $\beta_1$. Also, we can extend the regression in @eq-eq22.6 by including some pre-treatment characteristics of individuals as control variables to increase the efficiency of the OLS estimator:
 $$
 \begin{align}
-\Delta Y_i=\beta_0+\beta_1D_i+\beta_2W_{1i}+\dots+\beta_{r+1}W_{ri}+u_i.
+\Delta Y_i=\beta_0+\beta_1D_i+\beta_2W_{1i}+\dots+\beta_{r+1}W_{ri}+u_i,
 \end{align}
 $$ {#eq-eq22.7}
-
-The main reason for including additional regressors $W_{1},\dots,W_{r}$ in the DiD model is to ensure that the parallel trends assumption holds. 
+where $W_{1i},\dots,W_{ri}$ are pre-treatment characteristics of individuals. Again, the DiD estimator is the OLS estimator of $\beta_1$ in @eq-eq22.7.
 
 ::: {.callout-note icon=false}
 ## Key Concept 22.1: Key features of the DiD approach
@@ -642,7 +643,18 @@ modelsummary(model3,
 
 ### Identification of the differences-in-differences parameter
 
-In this section, we use the potential outcomes framework to define the DiD parameter and then state assumptions under which the DiD parameter is identified. We assume a setting with multiple time periods and a common treatment timing denoted by $t_0$, which is the time period when the treatment starts. Let $Y_{it}(0)$ and $Y_{it}(1)$ denote the untreated and treated potential outcomes for unit $i$ at period $t$. For example, $Y_{it_0}(1)$ represents the treated potential outcome for unit $i$ in period $t_0$, while $Y_{i,t_0-1}(0)$ represents the untreated potential outcome for unit $i$ in period $t_0-1$. Also, recall that $D_i$ denotes the treatment indicator, which takes the value 1 for the treated units and 0 for the units in the control group. The target parameter of interest in this DiD design is usually the **average treatment effect on the treated** at time $t$, which is defined as
+In this section, we use the potential outcomes framework to define the DiD parameter and then state assumptions under which the DiD parameter is identified. We assume a setting with multiple time periods and a common treatment timing denoted by $t_0$, which is the time period when the treatment starts. Let $Y_{it}(0)$ and $Y_{it}(1)$ denote the untreated and treated potential outcomes for unit $i$ at period $t$. For example, $Y_{it_0}(1)$ represents the treated potential outcome for unit $i$ in period $t_0$, while $Y_{i,t_0-1}(0)$ represents the untreated potential outcome for unit $i$ in period $t_0-1$. Also, recall that $D_i$ denotes the treatment indicator, which takes the value 1 for the treated units and 0 for the units in the control group. The observed outcome $Y_{it}$ for unit $i$ at period $t$ is related to the potential outcomes as follows:
+$$
+Y_{it}=
+\begin{cases}
+Y_{it}(0) & \text{if }\, t< t_0, \\
+D_iY_{it}(1)+(1-D_i)Y_{it}(0) & \text{if}\, t \ge t_0.
+\end{cases}
+$$
+
+That is, we observe the untreated potential outcome for both the control and treated groups in the pre-treatment periods, and the treated potential outcome for the treated group and the untreated potential outcome for the control group in the post-treatment periods.
+
+The target parameter of interest in this DiD design is usually the **average treatment effect on the treated at time $t$**, $\text{ATT}(t)$, which is defined as
 $$
 \text{ATT}(t)=\E[Y_{it}(1)-Y_{it}(0)|D_i=1].
 $$
@@ -662,17 +674,19 @@ $$
 for $t<t_0$.
 :::
 
-The parallel trends assumption requires the average change in the untreated potential outcomes to be the same for both treatment and control groups. The no anticipation assumption states that the untreated and treated potential outcomes of the treated units in the pre-treatment periods are on average equal. That is, receiving treatment in the post-treatment periods does not affect the average potential outcomes in the the pre-treatment periods on average. Hence, $\text{ATT}(t)=0$ for $t<t_0$.
+The parallel trends assumption requires the average change in the untreated potential outcomes to be the same for both treatment and control groups in the post-treatment periods. The no anticipation assumption states that the untreated and treated potential outcomes of the treated units in the pre-treatment periods are on average equal. That is, receiving treatment in the post-treatment periods does not affect the average potential outcomes in the the pre-treatment periods on average. Hence, under the no anticipation assumption, $\text{ATT}(t)=0$ for $t<t_0$.
 
-:::{#thm-th22.2}
+:::{#thm-chapter23.2}
 ## Identification of the ATT parameter
-Under the parallel trends and no anticipation assumptions, the average treatment effect on the treated at time $t\ge t_0$ is identified as
-$$\text{ATT}(t)=\E[\Delta Y_{it}|D_i=1]-\E[\Delta Y_{it}|D_i=0],$$
+Under the parallel trends and no anticipation assumptions, $\text{ATT}(t)$ for $t\ge t_0$ is identified as
+$$
+\text{ATT}(t)=\E[\Delta Y_{it}|D_i=1]-\E[\Delta Y_{it}|D_i=0],
+$$
 where $\Delta Y_{it}=Y_{it}-Y_{i,t_0-1}$ is the change in the observed outcome for unit $i$ from period $t_0-1$ to period $t$.
 :::
 
 :::{.proof}
-## Proof of @thm-th22.2
+## Proof of @thm-chapter23.2
 Under the two assumptions above, for $t\ge t_0$, we have
 $$
 \begin{align}
@@ -688,13 +702,29 @@ where the second equality follows by adding and substracting $\E[Y_{i,t_0-1}(0)|
 
 The identification result suggests that the ATT($t$) for $t\ge t_0$ can be estimated by the DiD estimator in the 2-period case. To this end, the DiD estimator in @eq-eq22.5 (or @eq-eq22.6 or @eq-eq22.7) can be used by considering $t_0-1$ as the first period and $t$ as the second period. 
 
-In the multiple time period case, we can consider the following two-way fixed effects specification for estimating the ATT parameters: 
+Alternatively, we can consider the following two-way fixed effects specification for estimating the ATT parameters: 
 $$
 Y_{it} = \alpha_i + \lambda_t + \sum_{s=1}^{t_0-2}\beta_s (D_i\times P_s) + \sum_{s=t_0}^{T}\beta_s (D_i\times P_s) + u_{it}
 $$ {#eq-eq22.10}
-where $P_s=1$ if $s=t$ and $P_s=0$ otherwise. The estimates of $\beta_s$ for $s\ge t_0$ correspond to the estimates of $\text{ATT}(t)$ for $t\ge t_0$. 
+where $P_s=1$ if $s=t$ and $P_s=0$ otherwise. The estimates of $\beta_s$ for $s\ge t_0$ correspond to the estimates of $\text{ATT}(t)$ for $t\ge t_0$, while the estimates of $\beta_s$ for $s<t_0$ correspond to the estimates of $\text{ATT}(t)$ for $t<t_0$.
 
-This approach allows us using t-statistics and confidence intervals based on clustered standard errors. We can then plot ATT estimates along (point-wise) confidence intervals to summarize our results. This is often referred to as an **event study analysis**. Note also that $\beta_s$ estimates for the pre-treatment periods can be utilized to assess the plausibility of the parallel trends assumption.  If the parallel trends assumption holds, then the estimates of $\beta_s$ for $s<t_0$ should be statistically insignificant.
+This approach allows us using $t$-statistics and confidence intervals based on clustered standard errors. We can then plot ATT estimates along (point-wise) confidence intervals to summarize our results. This is often referred to as an **event study**. 
+
+:::{#def-eventstudy}
+## Event Study 
+An event study is a method used to estimate $\text{ATT}(t)$ across a range of pre- and post-treatment periods and to visualize the resulting estimates together with their confidence intervals. 
+:::
+
+The event study can be implemented by estimating the two-way fixed effects regression in @eq-eq22.10 and then plotting the estimated coefficients $\beta_s$ along with their confidence intervals. Note that the event study approach allows us to examine the dynamic effects of treatment over time. For example, we can investigate whether the treatment effect increases, decreases, or remains constant in the post-treatment periods. 
+
+Under the no anticipation assumption, we expect the estimates of $\beta_s$ for $s<t_0$ to be close to zero. In the literature, the estimates of $\beta_s$ for $s<t_0$ are often referred to as **differential trends** or **pre-trends**. From the proof of @thm-chapter23.2, we can see that
+$$
+\begin{align}
+\beta_s&=\E[Y_{is}(1)-Y_{i,t_0-1}(0)|D_i=1]-\E[Y_{is}(0)-Y_{i,t_0-1}(0)|D_i=0]\\
+&=\E[Y_{is}(0)-Y_{i,t_0-1}(0)|D_i=1]-\E[Y_{is}(0)-Y_{i,t_0-1}(0)|D_i=0],
+\end{align}
+$$
+where the second equality follows from the no anticipation assumption. Thus, the estimates of $\beta_s$ for $s<t_0$ can be interpreted as the difference in the average change in untreated potential outcomes between the treatment and control groups in the pre-treatment periods. This is why these estimates are often referred to as differential trends or pre-trends. This interpretation also motivates the use of pre-treatment estimates of $\beta_s$ for $s < t_0$ to assess the plausibility of the parallel trends assumption. If the pre-treatment estimates of $\beta_s$ for $s<t_0$ are statistically insignificant, this may provide some evidence in favor of the parallel trends assumption. However, recall that the parallel trends assumption, $\E\left[Y_{it}(0)-Y_{i,t_0-1}(0)|D_i=1\right]=\E\left[Y_{it}(0)-Y_{i,t_0-1}(0)|D_i=0\right]$ for $t\ge t_0$, is about the counterfactual trend in the post-treatment periods. Therefore, in essence, it is not possible to directly test the parallel trends assumption. Nevertheless, if the pre-treatment estimates of $\beta_s$ for $s < t_0$ are statistically insignificant, this may suggest that the parallel trends assumption is more plausible than if they are statistically significant. For further discussion on the event study approach and the assessment of the parallel trends assumption, see @baker2026difference.
 
 ### Application: Impact of policing on crime
 
@@ -743,14 +773,44 @@ datasummary_skim(
 )
 ```
 
+In @fig-chapter23-trends, we plot the average number of car thefts for treated and control blocks over time. The vertical dashed line indicates the common treatment timing (August). In the pre-treatment period, the average number of car thefts is broadly similar between treated and control blocks, except in June, where the treated blocks have a higher average number of car thefts. In the post-treatment period, there is a clear divergence in the average number of car thefts between treated and control blocks, with the treated blocks having a lower average number of car thefts compared to the control blocks. This may suggest that the police presence has a deterrent effect on car thefts. 
+
+```{r}
+#| fig-cap: Average number of car thefts across months
+#| label: fig-chapter23-trends
+#| fig-width: 5
+#| fig-height: 4
+# Average number of car thefts across months
+df_grouped <- df %>%
+    group_by(month, D) %>%
+    summarise(thefts = mean(thefts), .groups = "drop")
+
+ggplot(df_grouped, aes(x = month, y = thefts, color = factor(D))) +
+    geom_line(linewidth = 1) +
+    geom_point(size = 2) +
+    geom_vline(xintercept = 8, linetype = "dashed", color = "black") +
+    labs(
+        x = "Month",
+        y = "Average number of car thefts",
+        color = NULL
+    ) +
+    scale_color_discrete(labels = c("D=0", "D=1")) +
+    theme(
+        legend.position = "right",
+        legend.key = element_blank()
+    )
+```
+
 We first consider estimating the average treatment effect in the post-treatment periods. To this end, we use @eq-eq22.9 as if we have only 2 periods, pre- and post-treament. We can use the `feols` function from `fixest` package to estimate the model. We use the clustered standard errors at the block level to account for correlation in the error terms within blocks.
 
 
 ```{r}
+# Remove data for July (treatment month)
+df_est <- df[df$month != 7, ]
 # Estimation of (22.9) using fixest
 model4_fixest <- feols(
   thefts ~ I(D*Period) | block + month,
-  data    = df,
+  data    = df_est,
   panel.id = ~block + month,
   cluster = ~ block
 )
@@ -768,23 +828,24 @@ modelsummary(model4_fixest,
 )
 ```
 
-The estimation results are presented in @tbl-t22-11. The estimate of the average treatment effect (on treated blocks) in the post-periods is -0.078, i.e., police presence, on average, reduced car thefts by 0.078 in the treated blocks. This estimate is almost the same as the one reported in the first column of Table 3 in @Tella:2004. Given that the average number of car theft is around 0.093, this estimate is not negligible.
+The estimation results are presented in @tbl-t22-11. The estimate of the average treatment effect (on treated blocks) in the post-periods is -0.087, i.e., police presence, on average, reduced car thefts by 0.087 in the treated blocks. This estimate is almost the same as the one reported in the first column of Table 3 in @Tella:2004. Given that the average number of car theft is around 0.093, this estimate is not negligible.
 
 Next, we will consider an event study analysis and estimate @eq-eq22.10. First, we need to generate the interactions of the treatment dummy with pre and post periods.
 
 
 
 ```{r}
+df_est <- df[df$month != 7, ]
 # Create lead and lag dummies
-df$lead4 <- as.integer(df$D == 1 & df$month == 4)   # April
-df$lead3 <- as.integer(df$D == 1 & df$month == 5)   # May
-df$lead2 <- as.integer(df$D == 1 & df$month == 6)   # June
-df$lead1 <- as.integer(df$D == 1 & df$month == 7)   # July
-df$lead0 <- as.integer(df$D == 1 & df$month == 8)   # August
-df$lag1  <- as.integer(df$D == 1 & df$month == 9)   # September
-df$lag2  <- as.integer(df$D == 1 & df$month == 10)  # October
-df$lag3  <- as.integer(df$D == 1 & df$month == 11)  # November
-df$lag4  <- as.integer(df$D == 1 & df$month == 12)  # December
+df_est$lead4 <- as.integer(df_est$D == 1 & df_est$month == 4)   # April
+df_est$lead3 <- as.integer(df_est$D == 1 & df_est$month == 5)   # May
+df_est$lead2 <- as.integer(df_est$D == 1 & df_est$month == 6)   # June
+# df_est$lead1 <- as.integer(df_est$D == 1 & df_est$month == 7)   # July
+df_est$lead0 <- as.integer(df_est$D == 1 & df_est$month == 8)   # August
+df_est$lag1  <- as.integer(df_est$D == 1 & df_est$month == 9)   # September
+df_est$lag2  <- as.integer(df_est$D == 1 & df_est$month == 10)  # October
+df_est$lag3  <- as.integer(df_est$D == 1 & df_est$month == 11)  # November
+df_est$lag4  <- as.integer(df_est$D == 1 & df_est$month == 12)  # December
 ```
 
 The common treatment timing $t_0$ is August and the $t_0-1$ period is July. Thus, in the event study analysis, July will be the baseline period (reference period) and $\beta_{\text{july}}=0$. We use the fixed effects estimator to estimate the event study regression in @eq-eq22.10.
@@ -793,9 +854,9 @@ The common treatment timing $t_0$ is August and the $t_0-1$ period is July. Thus
 ```{r}
 # Estimation of (22.10) using fixest
 model5_fixest <- feols(
-    thefts ~ lead4 + lead3 + lead2 + lead0 + lag1 + lag2 + lag3 + lag4 |
+    thefts ~ lead4 + lead3 + lead0 + lag1 + lag2 + lag3 + lag4 |
         block + month,
-    data = df,
+    data = df_est,
     panel.id = ~block + month,
     cluster = ~block
 )
@@ -819,9 +880,9 @@ Alternatively, we can resort to the OLS estimator to estimate @eq-eq22.10. The f
 ```{r}
 # Fit the model with lm()
 model6_lm <- lm(
-  thefts ~ lead4 + lead3 + lead2 + lead0 + lag1 + lag2 + lag3 + lag4
+  thefts ~ lead4 + lead3 + lead0 + lag1 + lag2 + lag3 + lag4
            + factor(month) + factor(block),
-  data = df
+  data = df_est
 )
 ```
 
@@ -830,29 +891,29 @@ To generate the event study plot, we next extract the point estimates and standa
 
 ```{r}
 # Vector of coefficients for the leads/lags
-theta <- coef(model6_lm)[c("lead4", "lead3", "lead2", "lead0",
+theta <- coef(model6_lm)[c("lead4", "lead3", "lead0",
                             "lag1", "lag2", "lag3", "lag4")]
 
 # Insert 0 at lead0 (baseline period)
-theta <- c(theta[1:3], 0, theta[4:8])
+theta <- c(theta[1:2], 0, theta[3:7])
 ```
 
 
 ```{r}
 # Clustered SE at block level
-vcov_block <- vcovCL(model6_lm, cluster = ~ df$block)
+vcov_block <- vcovCL(model6_lm, cluster = ~ df_est$block)
 se <- sqrt(diag(vcov_block))
-theta_se <- se[c("lead4", "lead3", "lead2", "lead0",
+theta_se <- se[c("lead4", "lead3", "lead0",
                  "lag1", "lag2", "lag3", "lag4")]
 
 # Insert 0 for baseline period
-theta_se <- c(theta_se[1:3], 0, theta_se[4:8])
+theta_se <- c(theta_se[1:2], 0, theta_se[3:7])
 ```
 
 
 ```{r}
 # X-axis for plotting: -4,...,4
-xax <- -4:4
+xax <- -3:4
 
 # 95% confidence intervals
 thetal <- theta - 1.96 * theta_se
@@ -890,6 +951,287 @@ ggplot(plot_df, aes(x = period, y = estimate)) +
     y = "ATT estimates"
   ) 
 ```
+
+The event study plot can also be generated using the `iplot` function from the `fixest` package, which provides a convenient way to generate event study plots directly from the fixed effects regression results. To use the `iplot` function, we need to create a relative period variable that indicates the time relative to the treatment period (August). For example, April corresponds to -3, May to -2, June to -1, August to 0, September to 1, and so on. We can then estimate the fixed effects regression using the `feols` function and use the `iplot` function to generate the event study plot. The `i(period_iplot, D, ref = -1)` term in the regression formula indicates that we want to estimate the interaction of the treatment indicator `D` with the relative period variable `period_iplot`, using -1 (June) as the reference period. The resulting plot is shown in @fig-fig22-f3-2.
+
+```{r}
+# Relative period used only for the fixest/iplot alternative
+df_est$period_iplot <- dplyr::case_when(
+  df_est$month == 4 ~ -3,
+  df_est$month == 5 ~ -2,
+  df_est$month == 6 ~ -1,
+  df_est$month == 8 ~ 0,
+  df_est$month == 9 ~ 1,
+  df_est$month == 10 ~ 2,
+  df_est$month == 11 ~ 3,
+  df_est$month == 12 ~ 4
+)
+
+# Estimate the fixed effects regression for iplot
+model5_fixest_iplot <- feols(
+  thefts ~ i(period_iplot, D, ref = -1) | block + month,
+  data = df_est,
+  panel.id = ~block + month,
+  cluster = ~block
+)
+```
+
+```{r}
+#| fig-cap: The pre- and post-treatment estimates of the ATT parameter using iplot
+#| label: fig-fig22-f3-2
+#| fig-width: 6
+#| fig-height: 4.5
+iplot(
+  model5_fixest_iplot,
+  xlab = "Period",
+  ylab = "ATT estimates",
+  main = "",
+  col = "steelblue",
+  pt.join = TRUE,
+  pt.join.par = list(col = "steelblue", lwd = 1),
+  ref.line = TRUE,
+  ref.line.par = list(col = "black", lty = 2),
+  zero.par = list(col = "black", lty = 2),
+  ylim = c(-0.4, 0.4)
+)
+```
+
+
+### Differences-in-differences with covariates
+We can consider including covariates in a DiD design mainly for two reasons: (i) to check for balance in covariates between treatment and control groups that are thought to influence the untreated potential outcomes, and (ii) to estimate heterogeneous treatment effects across subgroups defined by covariates (@baker2026difference).
+
+In this section, we focus on the first reason and discuss why we should check for balance in covariates between treatment and control groups in a DiD design. Checking covariate balance provides a way to assess the plausibility of the parallel trends assumption. Recall that the parallel trends assumption requires the average change in untreated potential outcomes to be the same for both treatment and control groups in the post-treatment periods. If there are covariates that are thought to influence untreated potential outcomes and these covariates are imbalanced between treatment and control groups in the pre-treatment period, this may suggest that the average change in untreated potential outcomes may differ between treatment and control groups in the post-treatment periods, thereby violating the parallel trends assumption. Therefore, checking for balance in covariates that are thought to influence untreated potential outcomes can provide some evidence for or against the plausibility of the parallel trends assumption. It is important to note that we should consider only covariates that are thought to influence untreated potential outcomes, as imbalance in covariates that do not influence untreated potential outcomes may not necessarily suggest a violation of the parallel trends assumption. In particular, covariates that are themselves affected by the treatment should not be considered when checking for balance, as imbalance in these covariates may be a consequence of the treatment rather than a cause of differences in untreated potential outcomes between treatment and control groups.
+
+One way to check for covariate balance is to compute the normalized differences in covariates between treatment and control groups (@Imbens2015). The normalized difference for a covariate $X$ is defined as
+$$
+\text{ND}=\frac{\bar{X}_1-\bar{X}_0}{\sqrt{(S_1^2+S_0^2)/2}},
+$$
+where $\bar{X}_1$ and $\bar{X}_0$ are the sample means of $X$ for the treatment and control groups, respectively, and $S_1^2$ and $S_0^2$ are the sample variances of $X$ for the treatment and control groups, respectively. A common rule of thumb is that a normalized difference larger than 0.25 in absolute value may indicate a significant imbalance in the covariate between treatment and control groups.
+
+In our application on the impact of policing on crime, there are three time-invariant covariates: `public`, `gasstation`, and `bank`. Recall that these covariates are dummy variables that indicate the presence of a public building, a gas station, and a bank on the block, respectively. If we think that these covariates influence the untreated potential outcomes because they may attract more people to the block and thus may increase the number of car thefts in the absence of police presence. Therefore, it is important to check for balance in these covariates between treated and control blocks to assess the plausibility of the parallel trends assumption. The results of the normalized differences for these covariates are provided in @tbl-chapter23-7. The normalized differences for all three covariates are smaller than 0.25 in absolute value, which provides some evidence in favor of the parallel trends assumption.
+
+```{r}
+#| tbl-cap: Normalized differences for covariates
+#| label: tbl-chapter23-7
+# Compute means, variances, and normalized differences for covariates
+covariates <- c("public", "gasstation", "bank")
+
+balance_df <- map_dfr(covariates, function(cov) {
+  
+  mean_treated <- df %>%
+    filter(D == 1) %>%
+    summarise(mean = mean(.data[[cov]], na.rm = TRUE)) %>%
+    pull(mean)
+  
+  mean_control <- df %>%
+    filter(D == 0) %>%
+    summarise(mean = mean(.data[[cov]], na.rm = TRUE)) %>%
+    pull(mean)
+  
+  var_treated <- df %>%
+    filter(D == 1) %>%
+    summarise(var = var(.data[[cov]], na.rm = TRUE)) %>%
+    pull(var)
+  
+  var_control <- df %>%
+    filter(D == 0) %>%
+    summarise(var = var(.data[[cov]], na.rm = TRUE)) %>%
+    pull(var)
+  
+  nd <- (mean_treated - mean_control) / 
+    sqrt((var_treated + var_control) / 2)
+  
+  tibble(
+    Covariate = cov,
+    `Mean Treated` = mean_treated,
+    `Mean Control` = mean_control,
+    `Variance Treated` = var_treated,
+    `Variance Control` = var_control,
+    `Normalized Difference` = nd
+  )
+})
+
+balance_df %>%
+  mutate(across(where(is.numeric), ~ round(.x, 3))) %>%
+  kable()
+
+```
+
+In the case of significant imbalance in covariates that are thought to influence untreated potential outcomes, we can update our unconditional parallel trends assumption to a conditional parallel trends assumption that incorporates covariates. Let $X_i$ be the vector of covariates for unit $i$. In our example on the impact of policing on crime, $X_i$ would include the `public`, `gasstation`, and `bank` covariates. Then, the conditional parallel trends assumption requires that the average change in untreated potential outcomes to be the same for both treatment and control groups in the post-treatment periods, conditional on covariates.
+
+::: {.callout-important icon=false title="Conditional parallel trends assumption"}
+The potential outcomes satisfy
+$$
+\E\left[Y_{it}(0)-Y_{i,t_0-1}(0)|X_i, D_i=1\right]=\E\left[Y_{it}(0)-Y_{i,t_0-1}(0)|X_i, D_i=0\right] 
+$$
+for $t\ge t_0$. 
+:::
+
+The conditional parallel trends assumption states that the average change in untreated potential outcomes is the same for treated and control units that share the same values of covariates in the post-treatment periods. In the case of our example on the impact of policing on crime, this assumption requires that, in the absence of police presence, the average change in the number of car thefts between August ($t_0$) and June ($t_0-1$) would be the same for treated and control blocks that have the same values of `public`, `gasstation`, and `bank`. This should also hold for the other post-treatment months, namely September, October, November, and December.
+
+Note that the conditional parallel trends assumption explicitly requires that we have both treated and control units in the population that have the same values of covariates. If there are covariate values that are only observed in the treated group or only observed in the control group, then the conditional parallel trends assumption cannot hold for these covariate values. In this case, we can restrict our analysis to the subset of the population that has common support in covariates between treatment and control groups, i.e., the subset of the population that has covariate values that are observed in both treatment and control groups. This common support condition is also known as the overlap assumption in the potential outcomes framework.
+
+::: {.callout-important icon=false title="Overlap assumption"}
+For any value of covariates $X$, the probability of being treated is strictly between 0 and 1, i.e., $0<P(D_i=1|X_i)<1$ for all $i$.
+:::
+
+The next theorem states that under the conditional parallel trends and overlap assumptions, the ATT($t$) for $t\ge t_0$ is identified.
+
+:::{#thm-identification-conditional-att}
+## Identification of the ATT parameter under conditional parallel trends
+Under the no anticipation, parallel trends, and overlap assumptions, $\text{ATT}(t)$ for $t\ge t_0$ is identified as
+$$
+\begin{align}
+\text{ATT}(t)&=\E[Y_{it}-Y_{i,t_0-1}|D_i=1]\\
+&-\E\left[\E[Y_{it}-Y_{i,t_0-1}|X_i, D_i=0]|D_i=1\right].
+\end{align}
+$$
+:::
+
+:::{.proof}
+## Proof of @thm-identification-conditional-att
+Under the no anticipation, parallel trends, and overlap assumptions, for $t\ge t_0$, we have
+$$
+\begin{align}
+\text{ATT}(t)&=\E[Y_{it}(1)-Y_{it}(0)|D_i=1]\\
+&=\E[Y_{it}(1)-Y_{i,t_0-1}(0)|D_i=1]-\E[Y_{it}(0)-Y_{i,t_0-1}(0)|D_i=1]\\
+&=\E[Y_{it}(1)-Y_{i,t_0-1}(0)|D_i=1]-\E\left[\E[Y_{it}(0)-Y_{i,t_0-1}(0)|X_i, D_i=1]|D_i=1\right]\\
+&=\E[Y_{it}(1)-Y_{i,t_0-1}(0)|D_i=1]-\E\left[\E[Y_{it}(0)-Y_{i,t_0-1}(0)|X_i, D_i=0]|D_i=1\right]\\
+&=\E[Y_{it}-Y_{i,t_0-1}|D_i=1]-\E\left[\E[Y_{it}-Y_{i,t_0-1}|X_i, D_i=0]|D_i=1\right],
+\end{align}
+$$
+where the second equality follows by adding and substracting $\E[Y_{i,t_0-1}(0)|D_i=1]$, the third equality follows from the iterated law of expectation, the fourth equality from the conditional parallel trends assumption, and the fifth equality holds because $Y_{it}(1)$ and $Y_{i,t_0-1}(0)$ are equal to the observed outcomes for the treatment group under no anticipation, while $\E[Y_{it}(0)-Y_{i,t_0-1}(0)|X_i, D_i=0]$ is equal to the observed change in outcomes for the control group conditional on covariates.
+:::
+
+@thm-identification-conditional-att indicates that under the conditional parallel trends and overlap assumptions, the ATT($t$) for $t\ge t_0$ can be identified by the difference between two terms: (i) the average change in observed outcomes for the treated group, and (ii) the average change in observed outcomes for the control group, where the average is taken over the distribution of covariates in the treated group. Thus, in the cas of the second term, we need to first compute the average change in observed outcomes for the control group conditional on covariates, and then take the average of this quantity over the distribution of covariates in the treated group. 
+
+We can obtain the estimate of the first term by simply taking the average of the change in observed outcomes ($Y_{it}-Y_{i,t_0-1}$) for the treated group. In the case of the second term, we can formulate an estimate in two steps. In the first step, we can obtain an estimate of $\E[Y_{it}-Y_{i,t_0-1}|X_i, D_i=0]$ by running a regression of $Y_{it}-Y_{i,t_0-1}$ on covariates $X_i$ using only the control group data, i.e., $\E[Y_{it}-Y_{i,t_0-1}|X_i, D_i=0]=m_{D=0}(X_i)=X^{'}_i\beta$. In the second step, we can take the average of the fitted values $X^{'}_i\hat{\beta}$ from this regression over the covariates in the treated group to obtain an estimate of $\E\left[\E[Y_{it}-Y_{i,t_0-1}|X_i, D_i=0]|D_i=1\right]$. In the literature, this approach is often referred to as the **regression-adjustment** approach.
+
+An alternative approach to estimate the second term is to use a weighting method (@Abadie2005). This approach is based on the following equality:
+$$
+\begin{align}
+&\E\left[\E[Y_{it}-Y_{i,t_0-1}|X_i, D_i=0]|D_i=1\right]=\E\left[\frac{D_i}{\E[D_i]}\E[\Delta Y_{it}|X_i,D_i=0]\right]\\
+&=\E\left[\frac{\frac{(1-D_i)P(D_i=1|X_i)}{1-P(D_i=1|X_i)}}{\E\left[\frac{(1-D_i)P(D_i=1|X_i)}{1-P(D_i=1|X_i)}|\right]}\times \Delta Y_{it}\right].
+\end{align}
+$$
+where $\Delta Y_{it}=Y_{it}-Y_{i,t_0-1}$ is the change in observed outcomes for unit $i$ from period $t_0-1$ to period $t$. To estimate the last term, we can first estimate the propensity score $P(D_i=1|X_i)$ by running a logistic regression of $D_i$ on covariates $X_i$ using the full sample data. We can then compute the weights $\frac{(1-D_i)P(D_i=1|X_i)}{1-P(D_i=1|X_i)}$ for each unit in the control group and take the average of $\Delta Y_{it}$ weighted by these weights to obtain an estimate of $\E\left[\E[Y_{it}-Y_{i,t_0-1}|X_i, D_i=0]|D_i=1\right]$. This approach is often referred to as the **inverse probability weighting** approach.
+
+Finally, there is another approach called the **doubly-robust** approach that combines the regression-adjustment and inverse probability weighting approaches. In this approach, $\text{ATT}(t)$ for $t\ge t_0$ is expressed as
+
+$$
+\begin{align}
+\text{ATT}(t)&=
+\E\bigg[\left(\frac{D_i}{\E[D_i]}-\frac{\frac{(1-D_i)P(D_i=1|X_i)}{1-P(D_i=1|X_i)}}{\E\left[\frac{(1-D_i)P(D_i=1|X_i)}{1-P(D_i=1|X_i)}|\right]}\right)\\
+&\times\left(\Delta Y_{it} -\E[\Delta Y_{it}|X_i, D_i=0]\right)\bigg].
+\end{align}
+$$
+
+The doubly robust approach is appealing because it provides a consistent estimate of $\text{ATT}(t)$ if either the regression model for $\E[Y_{it}-Y_{i,t_0-1}\mid X_i, D_i=0]$ is correctly specified or the model for the propensity score $P(D_i=1\mid X_i)$ is correctly specified. @baker2026difference suggest using the doubly robust approach in practice, as it provides some protection against model misspecification.
+
+For a discussion of the inference properties of these three approaches, we recommend that the reader consult @Callaway2021 and @baker2026difference.
+
+For our example on the impact of policing on crime, we can use the `did` package to implement the regression-adjustment, inverse probability weighting, and doubly-robust approaches to estimate the ATT parameters in the pre- and post-treatment periods. We first need to prepare the data for the `did` package. We remove the data for July and recode the months as follows: April is coded as 1, May as 2, June as 3, August as 4, September as 5, October as 6, November as 7, and December as 8. We also create a variable `treat_month` that indicates the treatment timing for each block. Treated blocks receive treatment in month 4 (August), while control blocks never receive treatment (coded as 0).
+```{r}
+# Remove data for July (treatment month) and recode months as April 1, May 2, June 3, August 4, September 5, October 6, November 7, December 8
+library(did)
+df_did <- df %>%
+  filter(month != 7) %>%
+  mutate(
+    time = case_when(
+      month == 4 ~ 1,
+      month == 5 ~ 2,
+      month == 6 ~ 3,
+      month == 8 ~ 4,
+      month == 9 ~ 5,
+      month == 10 ~ 6,
+      month == 11 ~ 7,
+      month == 12 ~ 8
+    )
+  )
+# Create the gname variable for the did package, which indicates the treatment timing for each unit
+df_did <- df_did %>%
+  mutate(
+    treat_month = case_when(
+      D == 1 ~ 4,  # Treated blocks receive treatment in month 4 (August)
+      TRUE ~ 0    # Control blocks never receive treatment
+    )
+  )
+```
+
+In the following, we use the `att_gt` function from the `did` package to estimate the ATT parameters in the pre- and post-treatment periods using the regression-adjustment, inverse probability weighting, and doubly-robust approaches. We then use `summary(doubly_robust)` to summarize the estimation results for the doubly-robust approach. 
+
+```{r}
+# Estimate the ATT parameters using the regression-adjustment approach
+reg_adj <- att_gt(
+  yname = "thefts",
+  tname = "time",
+  idname = "block",
+  gname = "treat_month",
+  xformla = ~ public + gasstation + bank,
+  data = df_did,
+  panel = TRUE,
+  bstrap = TRUE,
+  est_method = "reg"
+)
+
+# Estimate the ATT parameters using the inverse probability weighting approach
+ipw <- att_gt(
+  yname = "thefts",
+  tname = "time",
+  idname = "block",
+  gname = "treat_month",
+  xformla = ~ public + gasstation + bank,
+  data = df_did,
+  panel = TRUE,
+  bstrap = TRUE,
+  est_method = "ipw"
+)
+
+# Estimate the ATT parameters using the doubly robust approach
+doubly_robust <- att_gt(
+  yname = "thefts",
+  tname = "time",
+  idname = "block",
+  gname = "treat_month",
+  xformla = ~ public + gasstation + bank,
+  data = df_did,
+  panel = TRUE,
+  bstrap = TRUE,
+  est_method = "doubly_robust"
+)
+# Summarize the results
+summary(doubly_robust)
+```
+
+We next use the `aggte` function from the `did` package to aggregate the ATT estimates across pre- and post-treatment periods to obtain dynamic ATT estimates. We set `biters = 25000` to use 25,000 bootstrap iterations to compute the standard errors for the dynamic ATT estimates. We then summarize the estimation results for the dynamic ATT estimates using `summary(dynamicATT)`.
+
+```{r}
+dynamicATT <- aggte(doubly_robust, type = "dynamic", biters = 25000)
+summary(dynamicATT)
+```
+
+Finally, we use the `ggdid` function from the `did` package to plot the dynamic ATT estimates and confidence intervals. The resulting plot is shown in @fig-fig22-f4. The plot shows that the ATT estimates for the pre-treatment periods are statistically insignificant, which provides some evidence for the plausibility of the parallel trends assumption. The ATT estimates for the post-treatment periods are negative, suggesting that police presence reduces car thefts in the post-treatment periods.
+
+```{r}
+#| fig-cap: Dynamic ATT estimates with confidence intervals
+#| label: fig-fig22-f4
+#| fig-width: 6
+#| fig-height: 4.5
+# Use ggdid to plot the dynamic ATT estimates with confidence intervals
+ggdid(dynamicATT,
+      xlab = "Event Time",
+      ylab = "ATT Estimates",
+      main = "Dynamic ATT Estimates with Confidence Intervals",
+      col = "steelblue",
+      pt.join = TRUE,
+      pt.join.par = list(col = "steelblue", lwd = 1),
+      ref.line = TRUE,
+      ref.line.par = list(col = "black", lty = 2),
+      zero.par = list(col = "black", lty = 2),
+      ylim = c(-0.4, 0.4)
+)
+```
+
 
 ## Regression discontinuity designs
 Another example of quasi-experimental methods is the regression discontinuity design (RDD). In an RDD, the treatment and control groups are formed when a continuous variable $W$, known as the running variable, crosses a threshold $w_0$ (the cutoff level). The main idea of the RDD is that units with running variable values near the threshold are comparable in terms of characteristics, except for the receipt of treatment.^[The approach we presented in this section is called the continuity framework. A second approach, known as the local randomization framework, is based on the idea that the RDD can be viewed as a randomized experiment around the cutoff. See @Cattaneo2020 for details.] 
