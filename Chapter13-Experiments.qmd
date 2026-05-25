@@ -613,20 +613,21 @@ model2_se <- sqrt(diag(model2_vcov))
 #| tbl-cap: "OLS Estimates of the DiD Parameter"
 #| label: tbl-t22.56
 modelsummary(model2,
-  stars = TRUE,
-  vcov = list(model2_se),
-  fmt = 3,
-  gof_omit = "AIC|BIC|Log.Lik|F|RMSE")
+    stars = TRUE,
+    vcov = list(model2_se),
+    fmt = 3,
+    gof_omit = "AIC|BIC|Log.Lik|F|RMSE"
+)
 ```
 
 Finally, we use the two-way fixed effects model in @eq-eq22.9 to estimate the DiD parameter $\beta_3$. The following code chunk provides the same estimate as the previous methods.
 
 ```{r}
 model3 <- feols(
-    fte ~ I(D*Period) | store + time,
+    fte ~ I(D * Period) | store + time,
     data = df,
     panel.id = ~ store + time,
-    cluster = ~ store
+    cluster = ~store
 )
 ```
 
@@ -763,13 +764,13 @@ df$Period <- as.integer(df$month > 7)
 #| warning: false
 #| message: false
 # Summary statistics
-var_label(df$D)      <- "D"
+var_label(df$D) <- "D"
 var_label(df$Period) <- "Period"
 var_label(df$thefts) <- "Thefts"
 
 datasummary_skim(
-  df[, c("D", "Period", "thefts")],
-  fmt = 3
+    df[, c("D", "Period", "thefts")],
+    fmt = 3
 )
 ```
 
@@ -809,10 +810,10 @@ We first consider estimating the average treatment effect in the post-treatment 
 df_est <- df[df$month != 7, ]
 # Estimation of (22.9) using fixest
 model4_fixest <- feols(
-  thefts ~ I(D*Period) | block + month,
-  data    = df_est,
-  panel.id = ~block + month,
-  cluster = ~ block
+    thefts ~ I(D * Period) | block + month,
+    data = df_est,
+    panel.id = ~ block + month,
+    cluster = ~block
 )
 ```
 
@@ -837,15 +838,15 @@ Next, we will consider an event study analysis and estimate @eq-eq22.10. First, 
 ```{r}
 df_est <- df[df$month != 7, ]
 # Create lead and lag dummies
-df_est$lead4 <- as.integer(df_est$D == 1 & df_est$month == 4)   # April
-df_est$lead3 <- as.integer(df_est$D == 1 & df_est$month == 5)   # May
-df_est$lead2 <- as.integer(df_est$D == 1 & df_est$month == 6)   # June
+df_est$lead4 <- as.integer(df_est$D == 1 & df_est$month == 4) # April
+df_est$lead3 <- as.integer(df_est$D == 1 & df_est$month == 5) # May
+df_est$lead2 <- as.integer(df_est$D == 1 & df_est$month == 6) # June
 # df_est$lead1 <- as.integer(df_est$D == 1 & df_est$month == 7)   # July
-df_est$lead0 <- as.integer(df_est$D == 1 & df_est$month == 8)   # August
-df_est$lag1  <- as.integer(df_est$D == 1 & df_est$month == 9)   # September
-df_est$lag2  <- as.integer(df_est$D == 1 & df_est$month == 10)  # October
-df_est$lag3  <- as.integer(df_est$D == 1 & df_est$month == 11)  # November
-df_est$lag4  <- as.integer(df_est$D == 1 & df_est$month == 12)  # December
+df_est$lead0 <- as.integer(df_est$D == 1 & df_est$month == 8) # August
+df_est$lag1 <- as.integer(df_est$D == 1 & df_est$month == 9) # September
+df_est$lag2 <- as.integer(df_est$D == 1 & df_est$month == 10) # October
+df_est$lag3 <- as.integer(df_est$D == 1 & df_est$month == 11) # November
+df_est$lag4 <- as.integer(df_est$D == 1 & df_est$month == 12) # December
 ```
 
 The common treatment timing $t_0$ is August and the $t_0-1$ period is July. Thus, in the event study analysis, July will be the baseline period (reference period) and $\beta_{\text{july}}=0$. We use the fixed effects estimator to estimate the event study regression in @eq-eq22.10.
@@ -857,7 +858,7 @@ model5_fixest <- feols(
     thefts ~ lead4 + lead3 + lead0 + lag1 + lag2 + lag3 + lag4 |
         block + month,
     data = df_est,
-    panel.id = ~block + month,
+    panel.id = ~ block + month,
     cluster = ~block
 )
 ```
@@ -879,9 +880,9 @@ Alternatively, we can resort to the OLS estimator to estimate @eq-eq22.10. The f
 ```{r}
 # Fit the model with lm()
 model6_lm <- lm(
-  thefts ~ lead4 + lead3 + lead0 + lag1 + lag2 + lag3 + lag4
-           + factor(month) + factor(block),
-  data = df_est
+    thefts ~ lead4 + lead3 + lead0 + lag1 + lag2 + lag3 + lag4
+        + factor(month) + factor(block),
+    data = df_est
 )
 ```
 
@@ -889,8 +890,10 @@ To generate the event study plot, we next extract the point estimates and standa
 
 ```{r}
 # Vector of coefficients for the leads/lags
-theta <- coef(model6_lm)[c("lead4", "lead3", "lead0",
-                            "lag1", "lag2", "lag3", "lag4")]
+theta <- coef(model6_lm)[c(
+    "lead4", "lead3", "lead0",
+    "lag1", "lag2", "lag3", "lag4"
+)]
 
 # Insert 0 at lead0 (baseline period)
 theta <- c(theta[1:2], 0, theta[3:7])
@@ -900,8 +903,10 @@ theta <- c(theta[1:2], 0, theta[3:7])
 # Clustered SE at block level
 vcov_block <- vcovCL(model6_lm, cluster = ~ df_est$block)
 se <- sqrt(diag(vcov_block))
-theta_se <- se[c("lead4", "lead3", "lead0",
-                 "lag1", "lag2", "lag3", "lag4")]
+theta_se <- se[c(
+    "lead4", "lead3", "lead0",
+    "lag1", "lag2", "lag3", "lag4"
+)]
 
 # Insert 0 for baseline period
 theta_se <- c(theta_se[1:2], 0, theta_se[3:7])
@@ -927,25 +932,25 @@ Finally, we plot the event study estimates and confidence intervals. The plot is
 # The event study plot
 # Prepare a data frame for plotting
 plot_df <- data.frame(
-  period = xax,
-  estimate = theta,
-  lower = thetal,
-  upper = thetau
+    period = xax,
+    estimate = theta,
+    lower = thetal,
+    upper = thetau
 )
 
-# Event-study plot 
+# Event-study plot
 ggplot(plot_df, aes(x = period, y = estimate)) +
-  geom_line(color = "steelblue") +
-  geom_point(color = "steelblue", size = 2) +
-  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2, color = "steelblue") +
-  geom_vline(xintercept = -1, linetype = "dashed", color = "black") +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-  scale_x_continuous(breaks = xax) +
-  ylim(-0.4, 0.4) +
-  labs(
-    x = "Period",
-    y = "ATT estimates"
-  ) 
+    geom_line(color = "steelblue") +
+    geom_point(color = "steelblue", size = 2) +
+    geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2, color = "steelblue") +
+    geom_vline(xintercept = -1, linetype = "dashed", color = "black") +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+    scale_x_continuous(breaks = xax) +
+    ylim(-0.4, 0.4) +
+    labs(
+        x = "Period",
+        y = "ATT estimates"
+    )
 ```
 
 The event study plot can also be generated using the `iplot` function from the `fixest` package, which provides a convenient way to generate event study plots directly from the fixed effects regression results. To use the `iplot` function, we need to create a relative period variable that indicates the time relative to the treatment period (August). For example, April corresponds to -3, May to -2, June to -1, August to 0, September to 1, and so on. We can then estimate the fixed effects regression using the `feols` function and use the `iplot` function to generate the event study plot. The `i(period_iplot, D, ref = -1)` term in the regression formula indicates that we want to estimate the interaction of the treatment indicator `D` with the relative period variable `period_iplot`, using -1 (June) as the reference period. The resulting plot is shown in @fig-fig22-f3-2.
@@ -953,22 +958,22 @@ The event study plot can also be generated using the `iplot` function from the `
 ```{r}
 # Relative period used only for the fixest/iplot alternative
 df_est$period_iplot <- dplyr::case_when(
-  df_est$month == 4 ~ -3,
-  df_est$month == 5 ~ -2,
-  df_est$month == 6 ~ -1,
-  df_est$month == 8 ~ 0,
-  df_est$month == 9 ~ 1,
-  df_est$month == 10 ~ 2,
-  df_est$month == 11 ~ 3,
-  df_est$month == 12 ~ 4
+    df_est$month == 4 ~ -3,
+    df_est$month == 5 ~ -2,
+    df_est$month == 6 ~ -1,
+    df_est$month == 8 ~ 0,
+    df_est$month == 9 ~ 1,
+    df_est$month == 10 ~ 2,
+    df_est$month == 11 ~ 3,
+    df_est$month == 12 ~ 4
 )
 
 # Estimate the fixed effects regression for iplot
 model5_fixest_iplot <- feols(
-  thefts ~ i(period_iplot, D, ref = -1) | block + month,
-  data = df_est,
-  panel.id = ~block + month,
-  cluster = ~block
+    thefts ~ i(period_iplot, D, ref = -1) | block + month,
+    data = df_est,
+    panel.id = ~ block + month,
+    cluster = ~block
 )
 ```
 
@@ -978,17 +983,17 @@ model5_fixest_iplot <- feols(
 #| fig-width: 6
 #| fig-height: 4.5
 iplot(
-  model5_fixest_iplot,
-  xlab = "Period",
-  ylab = "ATT estimates",
-  main = "",
-  col = "steelblue",
-  pt.join = TRUE,
-  pt.join.par = list(col = "steelblue", lwd = 1),
-  ref.line = TRUE,
-  ref.line.par = list(col = "black", lty = 2),
-  zero.par = list(col = "black", lty = 2),
-  ylim = c(-0.4, 0.4)
+    model5_fixest_iplot,
+    xlab = "Period",
+    ylab = "ATT estimates",
+    main = "",
+    col = "steelblue",
+    pt.join = TRUE,
+    pt.join.par = list(col = "steelblue", lwd = 1),
+    ref.line = TRUE,
+    ref.line.par = list(col = "black", lty = 2),
+    zero.par = list(col = "black", lty = 2),
+    ylim = c(-0.4, 0.4)
 )
 ```
 
@@ -1013,44 +1018,42 @@ In our application on the impact of policing on crime, there are three time-inva
 covariates <- c("public", "gasstation", "bank")
 
 balance_df <- map_dfr(covariates, function(cov) {
-  
-  mean_treated <- df %>%
-    filter(D == 1) %>%
-    summarise(mean = mean(.data[[cov]], na.rm = TRUE)) %>%
-    pull(mean)
-  
-  mean_control <- df %>%
-    filter(D == 0) %>%
-    summarise(mean = mean(.data[[cov]], na.rm = TRUE)) %>%
-    pull(mean)
-  
-  var_treated <- df %>%
-    filter(D == 1) %>%
-    summarise(var = var(.data[[cov]], na.rm = TRUE)) %>%
-    pull(var)
-  
-  var_control <- df %>%
-    filter(D == 0) %>%
-    summarise(var = var(.data[[cov]], na.rm = TRUE)) %>%
-    pull(var)
-  
-  nd <- (mean_treated - mean_control) / 
-    sqrt((var_treated + var_control) / 2)
-  
-  tibble(
-    Covariate = cov,
-    `Mean Treated` = mean_treated,
-    `Mean Control` = mean_control,
-    `Variance Treated` = var_treated,
-    `Variance Control` = var_control,
-    `Normalized Difference` = nd
-  )
+    mean_treated <- df %>%
+        filter(D == 1) %>%
+        summarise(mean = mean(.data[[cov]], na.rm = TRUE)) %>%
+        pull(mean)
+
+    mean_control <- df %>%
+        filter(D == 0) %>%
+        summarise(mean = mean(.data[[cov]], na.rm = TRUE)) %>%
+        pull(mean)
+
+    var_treated <- df %>%
+        filter(D == 1) %>%
+        summarise(var = var(.data[[cov]], na.rm = TRUE)) %>%
+        pull(var)
+
+    var_control <- df %>%
+        filter(D == 0) %>%
+        summarise(var = var(.data[[cov]], na.rm = TRUE)) %>%
+        pull(var)
+
+    nd <- (mean_treated - mean_control) /
+        sqrt((var_treated + var_control) / 2)
+
+    tibble(
+        Covariate = cov,
+        `Mean Treated` = mean_treated,
+        `Mean Control` = mean_control,
+        `Variance Treated` = var_treated,
+        `Variance Control` = var_control,
+        `Normalized Difference` = nd
+    )
 })
 
 balance_df %>%
-  mutate(across(where(is.numeric), ~ round(.x, 3))) %>%
-  kable()
-
+    mutate(across(where(is.numeric), ~ round(.x, 3))) %>%
+    kable()
 ```
 
 In the case of significant imbalance in covariates that are thought to influence untreated potential outcomes, we can update our unconditional parallel trends assumption to a conditional parallel trends assumption that incorporates covariates. Let $X_i$ be the vector of covariates for unit $i$. In our example on the impact of policing on crime, $X_i$ would include the `public`, `gasstation`, and `bank` covariates. Then, the conditional parallel trends assumption requires that the average change in untreated potential outcomes to be the same for both treatment and control groups in the post-treatment periods, conditional on covariates.
@@ -1132,27 +1135,27 @@ For our example on the impact of policing on crime, we can use the `did` package
 # Remove data for July (treatment month) and recode months as April 1, May 2, June 3, August 4, September 5, October 6, November 7, December 8
 library(did)
 df_did <- df %>%
-  filter(month != 7) %>%
-  mutate(
-    time = case_when(
-      month == 4 ~ 1,
-      month == 5 ~ 2,
-      month == 6 ~ 3,
-      month == 8 ~ 4,
-      month == 9 ~ 5,
-      month == 10 ~ 6,
-      month == 11 ~ 7,
-      month == 12 ~ 8
+    filter(month != 7) %>%
+    mutate(
+        time = case_when(
+            month == 4 ~ 1,
+            month == 5 ~ 2,
+            month == 6 ~ 3,
+            month == 8 ~ 4,
+            month == 9 ~ 5,
+            month == 10 ~ 6,
+            month == 11 ~ 7,
+            month == 12 ~ 8
+        )
     )
-  )
 # Create the gname variable for the did package, which indicates the treatment timing for each unit
 df_did <- df_did %>%
-  mutate(
-    treat_month = case_when(
-      D == 1 ~ 4,  # Treated blocks receive treatment in month 4 (August)
-      TRUE ~ 0    # Control blocks never receive treatment
+    mutate(
+        treat_month = case_when(
+            D == 1 ~ 4, # Treated blocks receive treatment in month 4 (August)
+            TRUE ~ 0 # Control blocks never receive treatment
+        )
     )
-  )
 ```
 
 In the following, we use the `att_gt` function from the `did` package to estimate the ATT parameters in the pre- and post-treatment periods using the regression-adjustment, inverse probability weighting, and doubly-robust approaches. We then use `summary(doubly_robust)` to summarize the estimation results for the doubly-robust approach. 
@@ -1220,16 +1223,10 @@ Finally, we use the `ggdid` function from the `did` package to plot the dynamic 
 #| fig-height: 4.5
 # Use ggdid to plot the dynamic ATT estimates with confidence intervals
 ggdid(dynamicATT,
-      xlab = "Event Time",
-      ylab = "ATT Estimates",
-      main = "Dynamic ATT Estimates with Confidence Intervals",
-      col = "steelblue",
-      pt.join = TRUE,
-      pt.join.par = list(col = "steelblue", lwd = 1),
-      ref.line = TRUE,
-      ref.line.par = list(col = "black", lty = 2),
-      zero.par = list(col = "black", lty = 2),
-      ylim = c(-0.4, 0.4)
+    xlab = "Event Time",
+    ylab = "ATT Estimates",
+    col = "steelblue",
+    ylim = c(-0.4, 0.4)
 )
 ```
 

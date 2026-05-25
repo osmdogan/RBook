@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Appendix B — Appendix for Chapter 22 – Introduction to Econometrics with R</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./AppendixB.html" rel="next">
+<link href="./AppendixA.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-18d39954912aaa916c9eeb5465a75734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script>
+window.MathJax = {
+  tex: {
+    macros: {
+      cov: "\\operatorname{cov}",
+      corr: "\\operatorname{corr}",
+      var: "\\operatorname{var}",
+      SE: "\\operatorname{SE}",
+      E: "\\operatorname{E}",
+      A: "\\boldsymbol{A}",
+      x: "\\boldsymbol{x}",
+      sgn: "\\operatorname{sgn}",
+      argmin: "\\operatorname{argmin}",
+      tr: "\\text{tr}",
+      bs: ["\\boldsymbol{#1}", 1],
+      mb: ["\\mathbb{#1}", 1]
+    }
+  }
+};
+</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+</head>
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./AppendixA.html">Appendices</a></li><li class="breadcrumb-item"><a href="./AppendixA1.html"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 22</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Econometrics with R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/osmdogan/datasets.git" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part0-RBasics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-IntroR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-DataStructures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Structures in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-ControlStructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Control Structures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-CustomFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Custom Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-StatFunctions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Statistical Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Graphics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-Dataframes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Dataframes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-NumericalAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Applications in Numerical Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter0-OOP.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Object-Oriented Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction and Review</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter2-ReviewProbability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Review of Probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter3-ReviewStatistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Review of Statistics</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentals of Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter5-LinearRegressionOneRegressorInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter6-MultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear Regression with Multiple Regressors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter7-MultipleRegressionInference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Hypothesis Tests and Confidence Intervals in Multiple Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter8-NonlinearRegressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Nonlinear Regression Functions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter9-AssessingStudies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Assessing Studies Based on Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Further Topics in Regression Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter11-BinaryDependentVariable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Regression with a Binary Dependent Variable</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter12-IVRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Instrumental Variables Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter13-Experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Experiments and Quasi-Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter14-BigData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Prediction with Many Regressors and Big Data</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Regression Analysis of Economic Time Series Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter16-DynamicCausalEffects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Estimation of Dynamic Causal Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter17-AdditionalTopicsTimeSeries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Additional Topics in Time Series Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Theoretical Topics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Chapter19-TheoryMultipleRegression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">The Theory of Multiple Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 13</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixA1.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 22</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 23</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 27</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+<li>
+<a href="#staggered-treatment-designs" id="toc-staggered-treatment-designs" class="nav-link active" data-scroll-target="#staggered-treatment-designs"><span class="header-section-number">B.1</span> Staggered treatment designs</a>
+  <ul class="collapse">
+<li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">B.1.1</span> Introduction</a></li>
+  <li><a href="#identification-and-estimation-without-covariates" id="toc-identification-and-estimation-without-covariates" class="nav-link" data-scroll-target="#identification-and-estimation-without-covariates"><span class="header-section-number">B.1.2</span> Identification and estimation without covariates</a></li>
+  <li><a href="#aggregating-group-time-average-treatment-effects" id="toc-aggregating-group-time-average-treatment-effects" class="nav-link" data-scroll-target="#aggregating-group-time-average-treatment-effects"><span class="header-section-number">B.1.3</span> Aggregating group-time average treatment effects</a></li>
+  <li><a href="#application-the-effect-of-walmart-entry-on-local-labor-markets" id="toc-application-the-effect-of-walmart-entry-on-local-labor-markets" class="nav-link" data-scroll-target="#application-the-effect-of-walmart-entry-on-local-labor-markets"><span class="header-section-number">B.1.4</span> Application: The effect of Walmart entry on local labor markets</a></li>
+  <li><a href="#identification-and-estimation-with-covariates" id="toc-identification-and-estimation-with-covariates" class="nav-link" data-scroll-target="#identification-and-estimation-with-covariates"><span class="header-section-number">B.1.5</span> Identification and estimation with covariates</a></li>
+  </ul>
+</li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/AppendixA1.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./AppendixA.html">Appendices</a></li><li class="breadcrumb-item"><a href="./AppendixA1.html"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 22</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-experiments-appendix" class="quarto-section-identifier">Appendix B — Appendix for Chapter 22</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Load the necessary libraries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://haven.tidyverse.org">haven</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://bcallaway11.github.io/did/">did</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://larmarange.github.io/labelled/">labelled</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yiqingxu.org/packages/panelview/">panelView</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span><span class="st">"modelsummary_factory_default"</span> <span class="op">=</span> <span class="st">"gt"</span><span class="op">)</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="staggered-treatment-designs" class="level2" data-number="B.1"><h2 data-number="B.1" class="anchored" data-anchor-id="staggered-treatment-designs">
+<span class="header-section-number">B.1</span> Staggered treatment designs</h2>
+<section id="introduction" class="level3" data-number="B.1.1"><h3 data-number="B.1.1" class="anchored" data-anchor-id="introduction">
+<span class="header-section-number">B.1.1</span> Introduction</h3>
+<p>In this section, we consider a staggered treatment design in which units receive treatment at different time periods. In this design, treatment timing varies across units, such that some units may receive treatment in the first period, while others may receive treatment in the second period, and so on. This design is particularly useful for evaluating the effects of policies or interventions implemented at different times across units, such as states or countries. This setting allows us to define distinct treatment groups (cohorts) based on treatment timing. For example, we can define one cohort consisting of units that receive treatment in the first period, another cohort consisting of units that receive treatment in the second period, and so on, and then compare these cohorts to a control group that never receives treatment.</p>
+<p>We use <span class="math inline">\(Y_{it}\)</span> to denote the observed outcome for unit <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>, for <span class="math inline">\(i=1, \ldots, n\)</span> and <span class="math inline">\(t = 1, \ldots, T\)</span>. We use <span class="math inline">\(Y_{it}(\infty)\)</span> to denote the never-treated potential outcome for unit <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>, and <span class="math inline">\(Y_{it}(g)\)</span> to denote the potential outcome for unit <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span> if it receives treatment in period <span class="math inline">\(g\)</span>. Let <span class="math inline">\(G_i\)</span> denote the period in which unit <span class="math inline">\(i\)</span> receives treatment, with <span class="math inline">\(G_i = \infty\)</span> if unit <span class="math inline">\(i\)</span> never receives treatment, and let <span class="math inline">\(\mathcal{G}\)</span> denote the set of all possible treatment periods. Thus, the set <span class="math inline">\(\mathcal{G}\)</span> defines the cohorts of treated units and untreated units in the staggered treatment design. Each element of <span class="math inline">\(\mathcal{G}\)</span> corresponds to a specific treatment period, and the control group corresponds to the element <span class="math inline">\(\infty\)</span>.</p>
+<p>For example, suppose there are three time periods: 2020, 2021, and 2022. Further, suppose that some units receive treatment in 2020, some receive treatment in 2021, some receive treatment in 2022, and some never receive treatment. In this case, we can define three cohorts of treated units: the first cohort consists of units that receive treatment in 2020, the second cohort consists of units that receive treatment in 2021, and the third cohort consists of units that receive treatment in 2022. The never-treated group consists of units that never receive treatment (i.e., <span class="math inline">\(G_i = \infty\)</span>). Thus, in this example, we have <span class="math inline">\(\mathcal{G} = \{2020, 2021, 2022, \infty\}\)</span>.</p>
+<p>Using this notation, for the <span class="math inline">\(i\)</span>th unit that belongs to cohort <span class="math inline">\(g\)</span>, we can express its observed outcome as <span class="math display">\[
+Y_{it} =
+\begin{cases}
+Y_{it}(g) &amp; \text{if } t \geq g,\\
+Y_{it}(\infty) &amp; \text{if } t &lt; g.
+\end{cases}
+\]</span></p>
+<p>In our example, where <span class="math inline">\(\mathcal{G} = \{2020, 2021, 2022, \infty\}\)</span>, the observed outcome for unit <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span> can be expressed as follows: <span class="math display">\[
+Y_{it} =
+\begin{cases}
+Y_{it}(2020) &amp; \text{if } t \geq 2020 \text{ and } G_i = 2020,\\
+Y_{it}(2021) &amp; \text{if } t \geq 2021 \text{ and } G_i = 2021,\\
+Y_{it}(2022) &amp; \text{if } t \geq 2022 \text{ and } G_i = 2022,\\
+Y_{it}(\infty) &amp; \text{if } t &lt; G_i.
+\end{cases}
+\]</span></p>
+<p>In the staggered treatment design, the parameter of interest is often the group-time average treatment effect, which is defined as the average treatment effect for units in cohort <span class="math inline">\(g\)</span> at time <span class="math inline">\(t\)</span>, and is given by <span class="math display">\[
+ATT(g,t) = \mathbb{E}[Y_{it}(g) - Y_{it}(\infty) | G_i = g].
+\]</span> This parameter captures the average effect of treatment for units in cohort <span class="math inline">\(g\)</span> at time <span class="math inline">\(t\)</span>, relative to the never-treated potential outcome.</p>
+</section><section id="identification-and-estimation-without-covariates" class="level3" data-number="B.1.2"><h3 data-number="B.1.2" class="anchored" data-anchor-id="identification-and-estimation-without-covariates">
+<span class="header-section-number">B.1.2</span> Identification and estimation without covariates</h3>
+<p>To identify and estimate the group-time average treatment effect <span class="math inline">\(ATT(g,t)\)</span>, we assume the following assumptions.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled" title="No anticipation">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>No anticipation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For all <span class="math inline">\(i\)</span> and <span class="math inline">\(t &lt; g\)</span>, we have <span class="math inline">\(\E[Y_{it}(g)|G_i = g] = \E[Y_{it}(\infty)|G_i = g]\)</span> for all <span class="math inline">\(g \in \mathcal{G}\)</span>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important no-icon callout-titled" title="Parallel trends assumptions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Parallel trends assumptions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>Parallel Trends based on the never-treated group</strong>: For all treated groups <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we have <span class="math display">\[
+\E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = g] = \E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = \infty].
+\]</span></p></li>
+<li><p><strong>Parallel Trends based on the not-yet-treated groups</strong>: For all treated groups <span class="math inline">\(g \in \mathcal{G}\)</span>, not-yet-treated groups <span class="math inline">\(g' \in \mathcal{G}\)</span> such that <span class="math inline">\(g' &gt; t\)</span> and <span class="math inline">\(t \geq g\)</span>, we have <span class="math display">\[
+\E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = g] = \E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = g'].
+\]</span></p></li>
+<li><p><strong>Parallel Trends for every period and group</strong>: For all treated groups <span class="math inline">\(g, g' \in \mathcal{G}\)</span> and time periods <span class="math inline">\(t\)</span>, we have <span class="math display">\[
+\E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = g] = \E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = g'].
+\]</span></p></li>
+</ol>
+</div>
+</div>
+<p>The no anticipation assumption states that units do not anticipate future treatment and thus their potential outcomes before treatment are the same as if they were never treated. As in the case of common treatment timing, this assumption suggests that <span class="math inline">\(ATT(g,t)=0\)</span> for all <span class="math inline">\(t &lt; g\)</span>. Due to the staggered nature of the treatment, we can have different comparison groups at each time period, yielding different parallel trends assumptions.</p>
+<p>The first assumption, based on the never-treated group, states that in the post-treatment period, the average change in the never-treated potential outcome from period <span class="math inline">\(t-1\)</span> to period <span class="math inline">\(t\)</span> is the same for units in cohort <span class="math inline">\(g\)</span> and units in the never-treated group. The second assumption, based on the not-yet-treated groups, states that the average change in the never-treated potential outcome from period <span class="math inline">\(t-1\)</span> to period <span class="math inline">\(t\)</span> is the same for units in cohort <span class="math inline">\(g\)</span> and units in the not-yet-treated cohorts. Finally, the parallel trends assumption for every period and group states that the average change in the never-treated potential outcome from period <span class="math inline">\(t-1\)</span> to period <span class="math inline">\(t\)</span> is the same for units in cohort <span class="math inline">\(g\)</span> and units in any other cohort.</p>
+<div id="thm-identification-staggered" class="theorem">
+<p><span class="theorem-title"><strong>Theorem B.1 (Identification of the group-time average treatment effects)</strong></span> &nbsp;</p>
+<ol type="1">
+<li>Under the no anticipation assumption and the parallel trends assumption based on the never-treated group, for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we have <span class="math display">\[
+ATT(g,t) = \E[Y_{it} - Y_{i,g-1}|G_i = g] - \E[Y_{it} - Y_{i,g-1}|G_i = \infty].
+\]</span>
+</li>
+<li>Under the no anticipation assumption and the parallel trends assumption based on the not-yet-treated groups, for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we have <span class="math display">\[
+ATT(g,t) = \E[Y_{it} - Y_{i,g-1}|G_i = g] - \E[Y_{it} - Y_{i,g-1}|G_i &gt; \max\{g,t\}].
+\]</span>
+</li>
+<li>Under the no anticipation assumption and the parallel trends assumption for every period and group, for all <span class="math inline">\(g, g' \in \mathcal{G}\)</span> and time periods <span class="math inline">\(t\)</span> such that <span class="math inline">\(g'&gt; t\)</span> and <span class="math inline">\(t \geq g\)</span>, we have <span class="math display">\[
+ATT(g,t) = \E[Y_{it} - Y_{i,t_0}|G_i = g] - \E[Y_{it} - Y_{i,t_0}|G_i = g'],
+\]</span> where <span class="math inline">\(t_0\)</span> is any time period such that <span class="math inline">\(t_0 &lt; g\)</span>.</li>
+</ol>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of Theorem <a href="#thm-identification-staggered" class="quarto-xref">Theorem&nbsp;<span>B.1</span></a>). </span>This theorem can be proved as in the case of common treatment timing, by adding and subtracting the appropriate never-treated potential outcomes, and then applying the no anticipation and the appropriate parallel trends assumption. We provide the proof of the first result, and the proofs of the second and third results are similar.</p>
+<p>For the first result, we assume that the no anticipation assumption and the parallel trends assumption based on the never-treated group hold. Then, for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we have <span class="math display">\[\begin{align*}
+ATT(g,t) &amp;= \E[Y_{it}(g) - Y_{it}(\infty)|G_i = g]\\
+&amp;= \E[Y_{it}(g) - Y_{i,g-1}(\infty)|G_i = g] - \E[Y_{it}(\infty) - Y_{i,g-1}(\infty)|G_i = g]\\
+&amp;= \E[Y_{it}(g) - Y_{i,g-1}(\infty)|G_i = g] - \E[Y_{it}(\infty) - Y_{i,g-1}(\infty)|G_i = \infty]\\
+&amp;= \E[Y_{it} - Y_{i,g-1}|G_i = g] - \E[Y_{it} - Y_{i,g-1}|G_i = \infty],
+\end{align*}\]</span> where the second equality follows from adding and subtracting <span class="math inline">\(Y_{i,g-1}(\infty)\)</span>, the third equality follows from the parallel trends assumption based on the never-treated group, and the last equality follows from the no anticipation assumption and the definition of the observed outcome.</p>
+</div>
+<p>Given a random sample of <span class="math inline">\(n\)</span> units, we can estimate the group-time average treatment effect <span class="math inline">\(ATT(g,t)\)</span> using the sample analog of the identification results in Theorem <a href="#thm-identification-staggered" class="quarto-xref">Theorem&nbsp;<span>B.1</span></a>. Under the no anticipation assumption and the parallel trends assumption based on the never-treated group, for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we can estimate <span class="math inline">\(ATT(g,t)\)</span> as <span class="math display">\[
+\begin{align}
+\widehat{ATT}(g,t) &amp;= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i = g\} \\
+&amp;- \frac{1}{n_\infty}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i = \infty\},
+\end{align}
+\]</span> where <span class="math inline">\(n_g = \sum_{i=1}^n \mathbf{1}\{G_i = g\}\)</span> and <span class="math inline">\(n_\infty = \sum_{i=1}^n \mathbf{1}\{G_i = \infty\}\)</span> are the number of units in cohort <span class="math inline">\(g\)</span> and the never-treated group, respectively. Under the no anticipation assumption and the parallel trends assumption based on the not-yet-treated groups, for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we can estimate <span class="math inline">\(ATT(g,t)\)</span> as <span class="math display">\[
+\begin{align}
+\widehat{ATT}(g,t) &amp;= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i = g\} \\
+&amp;- \frac{1}{n_{\max\{g,t\}}}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i &gt; \max\{g,t\}\},
+\end{align}
+\]</span> where <span class="math inline">\(n_{\max\{g,t\}} = \sum_{i=1}^n \mathbf{1}\{G_i &gt; \max\{g,t\}\}=\sum_{i=1}^n \mathbf{1}\{G_i &gt; t\}\)</span> is the number of units in the not-yet-treated cohorts. Finally, under the no anticipation assumption and the parallel trends assumption for every period and group, for all <span class="math inline">\(g, g' \in \mathcal{G}\)</span> and time periods <span class="math inline">\(t\)</span> such that <span class="math inline">\(g'&gt; t\)</span> and <span class="math inline">\(t \geq g\)</span>, we can estimate <span class="math inline">\(ATT(g,t)\)</span> as <span class="math display">\[
+\begin{align}
+\widehat{ATT}(g,t) &amp;= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - Y_{i,t_0})\mathbf{1}\{G_i = g\} \\
+&amp;- \frac{1}{n_{g'}}\sum_{i=1}^n (Y_{it} - Y_{i,t_0})\mathbf{1}\{G_i = g'\},
+\end{align}
+\]</span> where <span class="math inline">\(n_{g'} = \sum_{i=1}^n \mathbf{1}\{G_i = g'\}\)</span> is the number of units in cohort <span class="math inline">\(g'\)</span>, and <span class="math inline">\(t_0\)</span> is any time period such that <span class="math inline">\(t_0 &lt; g\)</span>. An alternative estimator of <span class="math inline">\(ATT(g,t)\)</span> under the parallel trends assumption for every period and group is given by (<span class="citation" data-cites="baker2026difference">Baker et al. (<a href="references.html#ref-baker2026difference" role="doc-biblioref">2026</a>)</span>) <span class="math display">\[
+\begin{align}
+\widehat{ATT}(g,t) &amp;= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - \bar{Y}_{i,t\leq g-1})\mathbf{1}\{G_i = g\} \\
+&amp;- \frac{1}{n_{g'}}\sum_{i=1}^n (Y_{it} - \bar{Y}_{i,t\leq g-1})\mathbf{1}\{G_i&gt;t\},
+\end{align}
+\]</span> where <span class="math inline">\(\bar{Y}_{i,t\leq g-1} = \frac{1}{g-1}\sum_{t=1}^{g-1} Y_{it}\)</span> is the average observed outcome for unit <span class="math inline">\(i\)</span> in the pre-treatment periods.</p>
+<p>For statistical inference, <span class="citation" data-cites="Callaway2021">Callaway and Sant’Anna (<a href="references.html#ref-Callaway2021" role="doc-biblioref">2021</a>)</span> suggest using the multiplier bootstrap method to compute standard errors for <span class="math inline">\(\widehat{ATT}(g,t)\)</span>. We will use the <code>did</code> package to implement these estimation and inference procedures in the application below.</p>
+</section><section id="aggregating-group-time-average-treatment-effects" class="level3" data-number="B.1.3"><h3 data-number="B.1.3" class="anchored" data-anchor-id="aggregating-group-time-average-treatment-effects">
+<span class="header-section-number">B.1.3</span> Aggregating group-time average treatment effects</h3>
+<p>In the staggered treatment design, for a cohort <span class="math inline">\(g \in \mathcal{G}\)</span>, we can have different group-time average treatment effects across time periods. For example, for cohort <span class="math inline">\(g\)</span>, we can have <span class="math inline">\(ATT(g,g)\)</span>, which is the average treatment effect for units in cohort <span class="math inline">\(g\)</span> in the first period after they receive treatment; <span class="math inline">\(ATT(g,g+1)\)</span>, which is the average treatment effect for units in cohort <span class="math inline">\(g\)</span> in the second period after they receive treatment; and so on. Across all cohorts and time periods, there may be a large number of group-time average treatment effects, which can be difficult to summarize and interpret. There are several ways to aggregate the group-time average treatment effects into summary measures. See Table 1 in <span class="citation" data-cites="Callaway2021">Callaway and Sant’Anna (<a href="references.html#ref-Callaway2021" role="doc-biblioref">2021</a>)</span> for a summary of the different aggregation methods proposed in the literature. One popular summary measure is an event-study parameter showing the average effect of treatment by the length of exposure to the treatment: <span class="math display">\[
+\begin{align}
+\widehat{ATT}(e) &amp;= \sum_{g \in \mathcal{G}} w_{g,e} \widehat{ATT}(g, g+ e),
+\end{align}
+\]</span> where <span class="math inline">\(e\)</span> is the length of exposure to the treatment, and <span class="math inline">\(w_{g,e}\)</span> is a weight that depends on the number of units in cohort <span class="math inline">\(g\)</span> and the number of time periods in which we can observe the effect of treatment for cohort <span class="math inline">\(g\)</span> at length of exposure <span class="math inline">\(e\)</span>. It is given by <span class="math display">\[
+w_{g,e} = \mathbf{1}\{g + e \leq T\} P(G=g|G+e \leq T, G\leq T).
+\]</span></p>
+</section><section id="application-the-effect-of-walmart-entry-on-local-labor-markets" class="level3" data-number="B.1.4"><h3 data-number="B.1.4" class="anchored" data-anchor-id="application-the-effect-of-walmart-entry-on-local-labor-markets">
+<span class="header-section-number">B.1.4</span> Application: The effect of Walmart entry on local labor markets</h3>
+<p>In this section, we study the effect of Walmart’s opening on local labor markets using the dataset collected by <span class="citation" data-cites="Butts2025dynamic">Brown and Butts (<a href="references.html#ref-Butts2025dynamic" role="doc-biblioref">2025</a>)</span>. The dataset contains information on the opening dates of Walmart stores across different counties in the United States, as well as information on local labor market conditions. The dataset is a balanced panel of 1277 counties over the period 1977–1999. The dataset is contained in the lw_walmart.dta file and includes the following variables:</p>
+<ul>
+<li>
+<code>fips</code>: County FIPS code.</li>
+<li>
+<code>year</code>: Year of observation.</li>
+<li>
+<code>cid</code> : County identifier (numeric).</li>
+<li>
+<code>first_year</code>: Year of the first Walmart opening in the county.</li>
+<li>
+<code>log_wholesale_emp</code>: Log of wholesale employment level in the county.</li>
+<li>
+<code>log_retail_emp</code>: Log of retail employment level in the county.</li>
+<li>
+<code>x1</code>, <code>x2</code>, <code>x3</code>: Share of population above poverty line, share of employment in manufacturing, and share of population with high school degree or higher, respectively.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Load the dataset</span></span>
+<span><span class="va">walmart_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://haven.tidyverse.org/reference/read_dta.html">read_dta</a></span><span class="op">(</span><span class="st">"data/lw_walmart.dta"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">walmart_data</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "year"              "fips"              "cid"              
+[4] "first_year"        "log_retail_emp"    "log_wholesale_emp"
+[7] "x3"                "x1"                "x2"               </code></pre>
+</div>
+</div>
+<p>In the following, we provide a table of summary statistics using the <code>datasummary_skim</code> function from the <code>modelsummary</code> package. We also add variable labels to the dataset using the <code>set_variable_labels</code> function from the <code>labelled</code> package, so that the summary statistics table has more informative variable names.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Add variable labels</span></span>
+<span><span class="va">walmart_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html">set_variable_labels</a></span><span class="op">(</span></span>
+<span>    <span class="va">walmart_data</span>,</span>
+<span>    year <span class="op">=</span> <span class="st">"Year"</span>,</span>
+<span>    cid <span class="op">=</span> <span class="st">"County ID"</span>,</span>
+<span>    first_year <span class="op">=</span> <span class="st">"First opening"</span>,</span>
+<span>    log_wholesale_emp <span class="op">=</span> <span class="st">"log(WholesaleEmp)"</span>,</span>
+<span>    log_retail_emp <span class="op">=</span> <span class="st">"log(RetailEmp)"</span>,</span>
+<span>    x1 <span class="op">=</span> <span class="st">"x1"</span>,</span>
+<span>    x2 <span class="op">=</span> <span class="st">"x2"</span>,</span>
+<span>    x3 <span class="op">=</span> <span class="st">"x3"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Summary statistics</span></span>
+<span><span class="fu"><a href="https://modelsummary.com/man/datasummary_skim.html">datasummary_skim</a></span><span class="op">(</span></span>
+<span>    <span class="va">walmart_data</span>,</span>
+<span>    fmt <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>    type <span class="op">=</span> <span class="st">"numeric"</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-walmart-summary-stats" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-walmart-summary-stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;B.1: Summary statistics for the variables in the dataset
+</figcaption><div aria-describedby="tbl-walmart-summary-stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="ywhqrthtde" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ywhqrthtde table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ywhqrthtde thead, #ywhqrthtde tbody, #ywhqrthtde tfoot, #ywhqrthtde tr, #ywhqrthtde td, #ywhqrthtde th {
+  border-style: none;
+}
+
+#ywhqrthtde p {
+  margin: 0;
+  padding: 0;
+}
+
+#ywhqrthtde .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ywhqrthtde .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ywhqrthtde .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ywhqrthtde .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ywhqrthtde .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ywhqrthtde .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ywhqrthtde .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ywhqrthtde .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ywhqrthtde .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ywhqrthtde .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ywhqrthtde .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ywhqrthtde .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ywhqrthtde .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ywhqrthtde .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ywhqrthtde .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ywhqrthtde .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ywhqrthtde .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ywhqrthtde .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ywhqrthtde .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ywhqrthtde .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ywhqrthtde .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ywhqrthtde .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ywhqrthtde .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ywhqrthtde .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ywhqrthtde .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ywhqrthtde .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ywhqrthtde .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ywhqrthtde .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ywhqrthtde .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ywhqrthtde .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ywhqrthtde .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ywhqrthtde .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ywhqrthtde .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ywhqrthtde .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ywhqrthtde .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ywhqrthtde .gt_left {
+  text-align: left;
+}
+
+#ywhqrthtde .gt_center {
+  text-align: center;
+}
+
+#ywhqrthtde .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ywhqrthtde .gt_font_normal {
+  font-weight: normal;
+}
+
+#ywhqrthtde .gt_font_bold {
+  font-weight: bold;
+}
+
+#ywhqrthtde .gt_font_italic {
+  font-style: italic;
+}
+
+#ywhqrthtde .gt_super {
+  font-size: 65%;
+}
+
+#ywhqrthtde .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ywhqrthtde .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ywhqrthtde .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ywhqrthtde .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ywhqrthtde .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ywhqrthtde .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ywhqrthtde .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ywhqrthtde .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ywhqrthtde div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead><tr class="gt_col_headings header">
+<th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th id="Unique" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Unique</th>
+<th id="Missing-Pct." class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Missing Pct.</th>
+<th id="Mean" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Mean</th>
+<th id="SD" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">SD</th>
+<th id="Min" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Min</th>
+<th id="Median" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Median</th>
+<th id="Max" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Max</th>
+</tr></thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">Year</td>
+<td class="gt_row gt_left" headers="Unique">23</td>
+<td class="gt_row gt_left" headers="Missing Pct.">0</td>
+<td class="gt_row gt_left" headers="Mean">1988.00</td>
+<td class="gt_row gt_left" headers="SD">6.63</td>
+<td class="gt_row gt_left" headers="Min">1977.00</td>
+<td class="gt_row gt_left" headers="Median">1988.00</td>
+<td class="gt_row gt_left" headers="Max">1999.00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">County ID</td>
+<td class="gt_row gt_left" headers="Unique">1277</td>
+<td class="gt_row gt_left" headers="Missing Pct.">0</td>
+<td class="gt_row gt_left" headers="Mean">640.23</td>
+<td class="gt_row gt_left" headers="SD">369.06</td>
+<td class="gt_row gt_left" headers="Min">1.00</td>
+<td class="gt_row gt_left" headers="Median">640.00</td>
+<td class="gt_row gt_left" headers="Max">1280.00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">First opening</td>
+<td class="gt_row gt_left" headers="Unique">15</td>
+<td class="gt_row gt_left" headers="Missing Pct.">0</td>
+<td class="gt_row gt_left" headers="Mean">1381.48</td>
+<td class="gt_row gt_left" headers="SD">917.75</td>
+<td class="gt_row gt_left" headers="Min">0.00</td>
+<td class="gt_row gt_left" headers="Median">1989.00</td>
+<td class="gt_row gt_left" headers="Max">1999.00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">log(RetailEmp)</td>
+<td class="gt_row gt_left" headers="Unique">29161</td>
+<td class="gt_row gt_left" headers="Missing Pct.">0</td>
+<td class="gt_row gt_left" headers="Mean">7.76</td>
+<td class="gt_row gt_left" headers="SD">1.28</td>
+<td class="gt_row gt_left" headers="Min">4.58</td>
+<td class="gt_row gt_left" headers="Median">7.50</td>
+<td class="gt_row gt_left" headers="Max">12.92</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">log(WholesaleEmp)</td>
+<td class="gt_row gt_left" headers="Unique">29093</td>
+<td class="gt_row gt_left" headers="Missing Pct.">0</td>
+<td class="gt_row gt_left" headers="Mean">6.42</td>
+<td class="gt_row gt_left" headers="SD">1.47</td>
+<td class="gt_row gt_left" headers="Min">0.41</td>
+<td class="gt_row gt_left" headers="Median">6.17</td>
+<td class="gt_row gt_left" headers="Max">12.49</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">x3</td>
+<td class="gt_row gt_left" headers="Unique">1277</td>
+<td class="gt_row gt_left" headers="Missing Pct.">0</td>
+<td class="gt_row gt_left" headers="Mean">0.09</td>
+<td class="gt_row gt_left" headers="SD">0.03</td>
+<td class="gt_row gt_left" headers="Min">0.02</td>
+<td class="gt_row gt_left" headers="Median">0.09</td>
+<td class="gt_row gt_left" headers="Max">0.19</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers=" ">x1</td>
+<td class="gt_row gt_left" headers="Unique">1277</td>
+<td class="gt_row gt_left" headers="Missing Pct.">0</td>
+<td class="gt_row gt_left" headers="Mean">0.85</td>
+<td class="gt_row gt_left" headers="SD">0.06</td>
+<td class="gt_row gt_left" headers="Min">0.52</td>
+<td class="gt_row gt_left" headers="Median">0.86</td>
+<td class="gt_row gt_left" headers="Max">0.96</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers=" ">x2</td>
+<td class="gt_row gt_left" headers="Unique">1277</td>
+<td class="gt_row gt_left" headers="Missing Pct.">0</td>
+<td class="gt_row gt_left" headers="Mean">0.10</td>
+<td class="gt_row gt_left" headers="SD">0.05</td>
+<td class="gt_row gt_left" headers="Min">0.01</td>
+<td class="gt_row gt_left" headers="Median">0.10</td>
+<td class="gt_row gt_left" headers="Max">0.29</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-walmart-summary-stats" class="quarto-xref">Table&nbsp;<span>B.1</span></a> shows that the first Walmart opening in the dataset occurred in 1989, and the last Walmart opening occurred in 1999. Thus, there are 14 cohorts of treated units, corresponding to the years 1989–1999, and a never-treated group consisting of counties that never had a Walmart opening during the sample period. <a href="#tbl-walmart-openings" class="quarto-xref">Table&nbsp;<span>B.2</span></a> shows the number of counties that had their first Walmart opening in each year from 1989 to 1999, as well as the number of counties that never had a Walmart opening (never-treated counties) during the sample period. The table shows that the never-treated group consists of 391 counties. The number of counties in the treated cohorts ranges from 21 to 118, with the largest number of counties having their first Walmart opening in 1990 (110 counties) and the smallest number of counties having their first Walmart opening in 1999 (12 counties). In <a href="#fig-AppendixA1-1" class="quarto-xref">Figure&nbsp;<span>B.1</span></a>, we show the distribution of the year of the first Walmart opening across counties.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Number of counties with first Walmart opening by year</span></span>
+<span><span class="va">walmart_openings</span> <span class="op">&lt;-</span> <span class="va">walmart_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">first_year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>num_counties <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">n_distinct</a></span><span class="op">(</span><span class="va">cid</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">first_year</span><span class="op">)</span></span>
+<span><span class="va">cnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Year of first opening"</span>, <span class="st">"Number of counties"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">walmart_openings</span>, col.names <span class="op">=</span> <span class="va">cnames</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-walmart-openings" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-walmart-openings-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;B.2: Number of counties with first Walmart opening by year
+</figcaption><div aria-describedby="tbl-walmart-openings-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: right;">Year of first opening</th>
+<th style="text-align: right;">Number of counties</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">391</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1986</td>
+<td style="text-align: right;">69</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1987</td>
+<td style="text-align: right;">74</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1988</td>
+<td style="text-align: right;">60</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1989</td>
+<td style="text-align: right;">77</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1990</td>
+<td style="text-align: right;">118</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1991</td>
+<td style="text-align: right;">113</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1992</td>
+<td style="text-align: right;">88</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1993</td>
+<td style="text-align: right;">97</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1994</td>
+<td style="text-align: right;">46</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1995</td>
+<td style="text-align: right;">53</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1996</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1997</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1998</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1999</td>
+<td style="text-align: right;">21</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div id="fig-AppendixA1-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-AppendixA1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figures/walmart_openings.png" class="img-fluid figure-img" width="800">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AppendixA1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;B.1: Year of the first Walmart opening
+</figcaption></figure>
+</div>
+<p>In the following, we generate the indicator <code>D</code>, which takes the value 1 if the county has a Walmart store in that year and in all subsequent periods, and 0 otherwise. We use this variable in the <code>panelview</code> function from the <code>panelView</code> package to visualize the treatment timing across counties and over time, as shown in <a href="#fig-AppendixA1-2" class="quarto-xref">Figure&nbsp;<span>B.2</span></a>. This figure shows the timing of Walmart openings across counties over time, with treated units shown in red and untreated units shown in gray. The height of the red bars indicates the number of treated units in each year, and the width of the red bars indicates the duration of treatment for each cohort. The figure shows that there is a staggered pattern of treatment timing, where the first Walmart openings occur in 1986 and the last Walmart openings occur in 1999. The figure also shows that there are some counties that never receive treatment (i.e., never have a Walmart opening during the sample period), which are shown in gray. Finally, in <a href="#fig-AppendixA1-3" class="quarto-xref">Figure&nbsp;<span>B.3</span></a>, we show the time series of the outcome variable <code>log_retail_emp</code> across counties and over time using the <code>panelview</code> function with <code>type = "outcome"</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Generate D variable</span></span>
+<span><span class="va">walmart_data</span><span class="op">$</span><span class="va">D</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">walmart_data</span><span class="op">$</span><span class="va">first_year</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">walmart_data</span><span class="op">$</span><span class="va">year</span> <span class="op">&gt;=</span> <span class="va">walmart_data</span><span class="op">$</span><span class="va">first_year</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create a panel view plot to visualize the timing of Walmart openings</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/panelView/man/panelView.html">panelview</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">walmart_data</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">log_retail_emp</span> <span class="op">~</span> <span class="va">D</span>,          </span>
+<span>  index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cid"</span>, <span class="st">"year"</span><span class="op">)</span>, </span>
+<span>  main <span class="op">=</span> <span class="st">""</span>,       </span>
+<span>  xlab <span class="op">=</span> <span class="st">"Year"</span>,</span>
+<span>  ylab <span class="op">=</span> <span class="st">"Counties"</span>,</span>
+<span>  display.all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  by.timing <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  pre.post <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  theme <span class="op">=</span> <span class="st">"red"</span>,</span>
+<span>  gridOff <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-AppendixA1-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-AppendixA1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="AppendixA1_files/figure-html/fig-AppendixA1-2-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AppendixA1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;B.2: Panel view plot showing the timing of Walmart openings across counties and over time.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create a panel view plot to visualize the timing of Walmart openings</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/panelView/man/panelView.html">panelview</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">walmart_data</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">log_retail_emp</span> <span class="op">~</span> <span class="va">D</span>,          </span>
+<span>  index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cid"</span>, <span class="st">"year"</span><span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"outcome"</span>,        </span>
+<span>  xlab <span class="op">=</span> <span class="st">"Year"</span>,</span>
+<span>  ylab <span class="op">=</span> <span class="st">"Counties"</span>,</span>
+<span>  main <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  display.all <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  by.timing <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  pre.post <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-AppendixA1-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-AppendixA1-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="AppendixA1_files/figure-html/fig-AppendixA1-3-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AppendixA1-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;B.3: Time series plot of outcome variable
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>We only consider the effects of Walmart openings on retail employment without including any covariates in the estimation. To estimate the group-time average treatment effects, we use the <code>att_gt</code> function from the <code>did</code> package. This function implements the estimation procedure described in the previous section, and it allows us to compute standard errors using the multiplier bootstrap method. In our estimation, we use the never-treated group as the control group.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_no_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bcallaway11.github.io/did/reference/att_gt.html">att_gt</a></span><span class="op">(</span></span>
+<span>  yname <span class="op">=</span> <span class="st">"log_retail_emp"</span>,</span>
+<span>  tname <span class="op">=</span> <span class="st">"year"</span>,</span>
+<span>  idname <span class="op">=</span> <span class="st">"cid"</span>,</span>
+<span>  gname <span class="op">=</span> <span class="st">"first_year"</span>,</span>
+<span>  xformla <span class="op">=</span>  <span class="cn">NULL</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">walmart_data</span>,</span>
+<span>  panel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  control_group <span class="op">=</span> <span class="st">"notyettreated"</span>,</span>
+<span>  bstrap <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  biters <span class="op">=</span> <span class="fl">25000</span>,</span>
+<span>  cband <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  base_period <span class="op">=</span> <span class="st">"universal"</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>All estimated group-time average treatment effects are contained in the <code>model_no_x</code> object. We can summarize these estimates using the <code>summary</code> function. However, since there are 14 cohorts and multiple time periods, there are many group-time average treatment effects, which can be difficult to summarize and interpret. Therefore, we will focus on summarizing these estimates using event-study parameters <span class="math inline">\(ATT(e)\)</span> introduced in the previous section. To that end, we use the <code>aggte</code> function from the <code>did</code> package with <code>type = "dynamic"</code>. This function takes the estimated group-time average treatment effects <span class="math inline">\(ATT(g,t)\)</span> from the <code>model_no_x</code> object and aggregates them into event-study parameters showing the average effect of treatment by the length of exposure to the treatment.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">event_study_no_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bcallaway11.github.io/did/reference/aggte.html">aggte</a></span><span class="op">(</span><span class="va">model_no_x</span>, type <span class="op">=</span> <span class="st">"dynamic"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">event_study_no_x</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+aggte(MP = model_no_x, type = "dynamic")
+
+Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differences with Multiple Time Periods." Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt; 
+
+
+Overall summary of ATT's based on event-study/dynamic aggregation:  
+    ATT    Std. Error     [ 95%  Conf. Int.]  
+ 0.0888          0.01     0.0693      0.1084 *
+
+
+Dynamic Effects:
+ Event time Estimate Std. Error [95% Simult.  Conf. Band]  
+        -22  -0.1885     0.0867       -0.4430      0.0660  
+        -21  -0.1765     0.0502       -0.3239     -0.0292 *
+        -20  -0.1770     0.0367       -0.2847     -0.0692 *
+        -19  -0.1707     0.0316       -0.2634     -0.0780 *
+        -18  -0.1224     0.0230       -0.1898     -0.0550 *
+        -17  -0.1175     0.0182       -0.1709     -0.0641 *
+        -16  -0.0928     0.0143       -0.1349     -0.0508 *
+        -15  -0.0778     0.0126       -0.1148     -0.0409 *
+        -14  -0.0652     0.0110       -0.0975     -0.0328 *
+        -13  -0.0504     0.0101       -0.0801     -0.0208 *
+        -12  -0.0434     0.0091       -0.0700     -0.0167 *
+        -11  -0.0389     0.0082       -0.0629     -0.0149 *
+        -10  -0.0294     0.0077       -0.0520     -0.0069 *
+         -9  -0.0255     0.0070       -0.0460     -0.0049 *
+         -8  -0.0182     0.0063       -0.0367      0.0004  
+         -7  -0.0114     0.0059       -0.0287      0.0059  
+         -6  -0.0089     0.0051       -0.0238      0.0061  
+         -5  -0.0033     0.0045       -0.0166      0.0100  
+         -4   0.0019     0.0039       -0.0094      0.0132  
+         -3   0.0012     0.0029       -0.0074      0.0098  
+         -2   0.0009     0.0021       -0.0052      0.0069  
+         -1   0.0000         NA            NA          NA  
+          0   0.0224     0.0026        0.0146      0.0301 *
+          1   0.0523     0.0037        0.0415      0.0631 *
+          2   0.0512     0.0044        0.0384      0.0640 *
+          3   0.0507     0.0053        0.0351      0.0663 *
+          4   0.0549     0.0063        0.0365      0.0734 *
+          5   0.0631     0.0074        0.0413      0.0850 *
+          6   0.0748     0.0086        0.0496      0.1001 *
+          7   0.0923     0.0098        0.0634      0.1211 *
+          8   0.1062     0.0110        0.0739      0.1385 *
+          9   0.1133     0.0127        0.0760      0.1506 *
+         10   0.1246     0.0152        0.0799      0.1694 *
+         11   0.1294     0.0189        0.0738      0.1850 *
+         12   0.1367     0.0242        0.0655      0.2079 *
+         13   0.1718     0.0349        0.0694      0.2743 *
+---
+Signif. codes: `*' confidence band does not cover 0
+
+Control Group:  Not Yet Treated,  Anticipation Periods:  0
+Estimation Method:  Doubly Robust</code></pre>
+</div>
+</div>
+<p>Finally, we plot the event-study parameters using the <code>ggdid</code> function from the <code>did</code> package. This function creates a plot of the estimated event-study parameters along with their confidence intervals. <a href="#fig-AppendixA1-4" class="quarto-xref">Figure&nbsp;<span>B.4</span></a> shows the plot of the estimated event-study parameters. The figure indicates there are statistically significant pre-treatment effects, which suggests that the parallel trends assumption based on the never-treated group may not hold in this application. The post-treatment effects show a positive and statistically significant effect of Walmart openings on retail employment, suggesting that Walmart openings may have led to an increase in retail employment in the treated counties. However, given the presence of pre-treatment effects, these post-treatment effects should be interpreted with caution, as they may be driven by factors other than the treatment effect of Walmart openings.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Event-study plot of the estimated event-study parameters</span></span>
+<span><span class="fu"><a href="https://bcallaway11.github.io/did/reference/ggdid.html">ggdid</a></span><span class="op">(</span><span class="va">event_study_no_x</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Length of exposure to treatment"</span>, y <span class="op">=</span> <span class="st">"Event-study parameter"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-AppendixA1-4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-AppendixA1-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="AppendixA1_files/figure-html/fig-AppendixA1-4-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AppendixA1-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;B.4: Effects of Walmart Opening on log(Retail Employment)
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section><section id="identification-and-estimation-with-covariates" class="level3" data-number="B.1.5"><h3 data-number="B.1.5" class="anchored" data-anchor-id="identification-and-estimation-with-covariates">
+<span class="header-section-number">B.1.5</span> Identification and estimation with covariates</h3>
+<p>The event-study plot in <a href="#fig-AppendixA1-4" class="quarto-xref">Figure&nbsp;<span>B.4</span></a> suggests that the parallel trends assumption based on the never-treated group may not hold in our application. If we have covariates that are unbalanced across cohorts and if we beileve that these covariates are determinants of the unterated potential outcomes, then we should update our unconditional parallel trends assumptions to conditional parallel trends assumptions. In our application, we have three covariates: <code>x1</code>, <code>x2</code>, and <code>x3</code>. In the following table, we compare the average values of these covariates across treated cohorts and the not-yet-treated group at each time period.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">covariate_balance</span> <span class="op">&lt;-</span> <span class="va">walmart_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
+<span>    meanx1_treated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x1</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    stdx1_treated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">x1</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    meanx1_notyettreated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x1</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    sdx1_notyettreated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">x1</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    normalized_diffx1 <span class="op">=</span> <span class="op">(</span><span class="va">meanx1_treated</span> <span class="op">-</span> <span class="va">meanx1_notyettreated</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="op">(</span><span class="va">stdx1_treated</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="va">sdx1_notyettreated</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>    meanx2_treated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x2</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    stdx2_treated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">x2</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    meanx2_notyettreated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x2</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    sdx2_notyettreated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">x2</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    normalized_diffx2 <span class="op">=</span> <span class="op">(</span><span class="va">meanx2_treated</span> <span class="op">-</span> <span class="va">meanx2_notyettreated</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="op">(</span><span class="va">stdx2_treated</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="va">sdx2_notyettreated</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>    meanx3_treated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x3</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    stdx3_treated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">x3</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    meanx3_notyettreated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x3</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    sdx3_notyettreated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">x3</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    normalized_diffx3 <span class="op">=</span> <span class="op">(</span><span class="va">meanx3_treated</span> <span class="op">-</span> <span class="va">meanx3_notyettreated</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="op">(</span><span class="va">stdx3_treated</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="va">sdx3_notyettreated</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;=</span> <span class="fl">1986</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">normalized_diffx1</span>, <span class="va">normalized_diffx2</span>, <span class="va">normalized_diffx3</span><span class="op">)</span></span>
+<span><span class="va">cnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Year"</span>, <span class="st">"x1 (Normalized Diff.)"</span>, <span class="st">"x2 (Normalized Diff.)"</span>, <span class="st">"x3 (Normalized Diff.)"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">covariate_balance</span>, col.names <span class="op">=</span> <span class="va">cnames</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-covariate-balance" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-covariate-balance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;B.3: Normalized differences in covariate means across treated cohorts and the not-yet-treated groups at each time period
+</figcaption><div aria-describedby="tbl-covariate-balance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: right;">Year</th>
+<th style="text-align: right;">x1 (Normalized Diff.)</th>
+<th style="text-align: right;">x2 (Normalized Diff.)</th>
+<th style="text-align: right;">x3 (Normalized Diff.)</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1986</td>
+<td style="text-align: right;">-0.34</td>
+<td style="text-align: right;">-0.40</td>
+<td style="text-align: right;">-0.02</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1987</td>
+<td style="text-align: right;">-0.40</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1988</td>
+<td style="text-align: right;">-0.45</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.32</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1989</td>
+<td style="text-align: right;">-0.37</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1990</td>
+<td style="text-align: right;">-0.23</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.16</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1991</td>
+<td style="text-align: right;">-0.17</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.08</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1992</td>
+<td style="text-align: right;">-0.07</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1993</td>
+<td style="text-align: right;">0.03</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">-0.04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1994</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">-0.05</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1995</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">-0.03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1996</td>
+<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">-0.05</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1997</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">-0.08</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1998</td>
+<td style="text-align: right;">0.16</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">-0.08</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1999</td>
+<td style="text-align: right;">0.18</td>
+<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">-0.08</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-covariate-balance" class="quarto-xref">Table&nbsp;<span>B.3</span></a> shows that there are some normalized differences that are larger than 0.25 in absolute value, which suggests that there may be some imbalance in the covariates across treated cohorts and the not-yet-treated group at some time periods. Therefore, we consider the conditional parallel trends assumptions for the identification of the group-time average treatment effects. Let <span class="math inline">\(X\)</span> be the vector of time invariant covariates. In our example on the effect of Walmart openings on retail employment, we can take <code>X = (x1, x2, x3)</code> to be the vector of covariates. As in the case of unconditional parallel trends assumptions, we can have different versions of conditional parallel trends assumptions depending on the choice of the comparison group. We state these assumptions below.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled" title="Conditional parallel trends assumptions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Conditional parallel trends assumptions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>
+<strong>Conditional Parallel Trends based on the never-treated group</strong>: For all treated groups <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we have <span class="math display">\[
+\E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = g, X_i] = \E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = \infty, X_i].
+\]</span>
+</li>
+<li>
+<strong>Conditional Parallel Trends based on the not-yet-treated groups</strong>: For all treated groups <span class="math inline">\(g \in \mathcal{G}\)</span>, not-yet-treated groups <span class="math inline">\(g' \in \mathcal{G}\)</span> such that <span class="math inline">\(g' &gt; t\)</span> and <span class="math inline">\(t \geq g\)</span>, we have <span class="math display">\[
+\E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = g, X_i] = \E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = g', X_i].
+\]</span>
+</li>
+<li>
+<strong>Conditional Parallel Trends for every period and group</strong>: For all treated groups <span class="math inline">\(g, g' \in \mathcal{G}\)</span> and time periods <span class="math inline">\(t\)</span>, we have <span class="math display">\[
+\E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = g, X_i] = \E[Y_{it}(\infty) - Y_{i,t-1}(\infty)|G_i = g', X_i].
+\]</span>
+</li>
+</ol>
+</div>
+</div>
+<p>The next assumption is the conditional version of the strong overlap assumptionthat we adapter for the common treatment timing case.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled" title="Strong overlap with staggered adoption">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Strong overlap with staggered adoption
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(X_i\)</span>, we have <span class="math inline">\(\epsilon&lt;P(G_i = g|X_i)&lt;1-\epsilon\)</span> for some <span class="math inline">\(\epsilon &gt; 0\)</span>.</p>
+</div>
+</div>
+<p>In the next theorem, we show that under the no anticipation assumption, the conditional parallel trends assumptions, and the strong overlap assumption, we can identify the group-time average treatment effects <span class="math inline">\(ATT(g,t)\)</span> for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>.</p>
+<div id="thm-identification-staggered-covariates" class="theorem">
+<p><span class="theorem-title"><strong>Theorem B.2 (Identification of the group-time average treatment effects with covariates)</strong></span> Assume that the no anticipation and the strong overlap assumptions hold.</p>
+<ol type="1">
+<li>Under the conditional parallel trends assumption based on the never-treated group, for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we have <span class="math display">\[
+ATT(g,t) = \E[Y_{it} - Y_{i,g-1}|G_i = g, X_i] - \E[\E[Y_{it} - Y_{i,g-1}|G_i = \infty, X_i]|G_i = g].
+\]</span>
+</li>
+<li>Under the conditional parallel trends assumption based on the not-yet-treated groups, for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we have <span class="math display">\[
+ATT(g,t) = \E[Y_{it} - Y_{i,g-1}|G_i = g, X_i] - \E[\E[Y_{it} - Y_{i,g-1}|G_i &gt; \max\{g,t\}, X_i]|G_i = g].
+\]</span>
+</li>
+<li>Under the conditional parallel trends assumption for every period and group, for all <span class="math inline">\(g, g' \in \mathcal{G}\)</span> and time periods <span class="math inline">\(t\)</span> such that <span class="math inline">\(g'&gt; t\)</span> and <span class="math inline">\(t \geq g\)</span>, we have <span class="math display">\[
+ATT(g,t) = \E[Y_{it} - Y_{i,t_0}|G_i = g, X_i] - \E[\E[Y_{it} - Y_{i,t_0}|G_i = g', X_i]|G_i = g],
+\]</span> where <span class="math inline">\(t_0\)</span> is any time period such that <span class="math inline">\(t_0 &lt; g\)</span>.</li>
+</ol>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em> (Proof of Theorem <a href="#thm-identification-staggered-covariates" class="quarto-xref">Theorem&nbsp;<span>B.2</span></a>). </span>The proof of this theorem is similar to the proof of Theorem <a href="Chapter13-Experiments.html#thm-identification-conditional-att" class="quarto-xref">Theorem&nbsp;<span>22.3</span></a>, by adding and subtracting the appropriate never-treated potential outcomes, and then applying the no anticipation and the appropriate conditional parallel trends assumption. We provide the proof of the first result, and the proofs of the second and third results are similar. <span class="math display">\[
+\begin{align}
+&amp;ATT(g,t) = \E[Y_{it}(g) - Y_{it}(\infty)|G_i = g]\\
+&amp;= \E[Y_{it}(g) - Y_{i,g-1}(\infty)|G_i = g] - \E[Y_{it}(\infty) - Y_{i,g-1}(\infty)|G_i = g]\\
+&amp;= \E[Y_{it}(g) - Y_{i,g-1}(\infty)|G_i = g] - \E\left[\E[Y_{it}(\infty) - Y_{i,g-1}(\infty)|G_i = g, X_i]|G_i = g\right]\\
+&amp;= \E[Y_{it}(g) - Y_{i,g-1}(\infty)|G_i = g] - \E\left[\E[Y_{it}(\infty) - Y_{i,g-1}(\infty)|G_i = \infty, X_i]|G_i = g\right]\\
+&amp;= \E[Y_{it} - Y_{i,g-1}|G_i = g] - \E\left[\E[Y_{it} - Y_{i,g-1}|G_i = \infty, X_i]|G_i = g\right]
+\end{align}
+\]</span> where the second equality follows from adding and subtracting <span class="math inline">\(Y_{i,g-1}(\infty)\)</span>, the third equality follows from the law of iterated expectations, the fourth equality follows from the conditional parallel trends assumption based on the never-treated group, and the last equality follows from the no anticipation assumption and the definition of the observed outcome.</p>
+</div>
+<p>As in the case of common treatment timing dicussed in Chapter 22, we can estimate the group-time average treatment effects <span class="math inline">\(ATT(g,t)\)</span> using the sample analog of the identification results in Theorem <a href="#thm-identification-staggered-covariates" class="quarto-xref">Theorem&nbsp;<span>B.2</span></a>. The first term in these identification results <span class="math inline">\(\E[Y_{it} - Y_{i,g-1}|G_i = g]\)</span> can be estimated using the sample average of <span class="math inline">\(Y_{it} - Y_{i,g-1}\)</span> for units in cohort <span class="math inline">\(g\)</span>. The second term in these identification results can be estimated using a regression adjustment method, the inverse probability weighting method, or the doubly robust method discussed in Chapter 22. The <code>att_gt</code> function from the <code>did</code> package allows us to implement these estimation methods in the staggered treatment design with covariates.</p>
+<p>In our application on the effect of Walmart openings on retail employment, we can estimate the group-time average treatment effects using the <code>att_gt</code> function with <code>xformla = ~ x1 + x2 + x3</code> to include the covariates in the estimation. We can then summarize these estimates using event-study parameters and plot them as we did in the case without covariates.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_with_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bcallaway11.github.io/did/reference/att_gt.html">att_gt</a></span><span class="op">(</span></span>
+<span>  yname <span class="op">=</span> <span class="st">"log_retail_emp"</span>,</span>
+<span>  tname <span class="op">=</span> <span class="st">"year"</span>,</span>
+<span>  idname <span class="op">=</span> <span class="st">"cid"</span>,</span>
+<span>  gname <span class="op">=</span> <span class="st">"first_year"</span>,</span>
+<span>  xformla <span class="op">=</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">walmart_data</span>,</span>
+<span>  panel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  control_group <span class="op">=</span> <span class="st">"notyettreated"</span>,</span>
+<span>  bstrap <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  biters <span class="op">=</span> <span class="fl">25000</span>,</span>
+<span>  cband <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  base_period <span class="op">=</span> <span class="st">"universal"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">event_study_with_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bcallaway11.github.io/did/reference/aggte.html">aggte</a></span><span class="op">(</span><span class="va">model_with_x</span>, type <span class="op">=</span> <span class="st">"dynamic"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">event_study_with_x</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+aggte(MP = model_with_x, type = "dynamic")
+
+Reference: Callaway, Brantly and Pedro H.C. Sant'Anna.  "Difference-in-Differences with Multiple Time Periods." Journal of Econometrics, Vol. 225, No. 2, pp. 200-230, 2021. &lt;https://doi.org/10.1016/j.jeconom.2020.12.001&gt;, &lt;https://arxiv.org/abs/1803.09015&gt; 
+
+
+Overall summary of ATT's based on event-study/dynamic aggregation:  
+    ATT    Std. Error     [ 95%  Conf. Int.]  
+ 0.0913        0.0096     0.0725      0.1102 *
+
+
+Dynamic Effects:
+ Event time Estimate Std. Error [95% Simult.  Conf. Band]  
+        -22  -0.1670     0.0803       -0.4036      0.0696  
+        -21  -0.1639     0.0498       -0.3108     -0.0171 *
+        -20  -0.1661     0.0371       -0.2753     -0.0569 *
+        -19  -0.1571     0.0325       -0.2527     -0.0614 *
+        -18  -0.1071     0.0239       -0.1777     -0.0365 *
+        -17  -0.1048     0.0192       -0.1613     -0.0483 *
+        -16  -0.0799     0.0149       -0.1239     -0.0359 *
+        -15  -0.0648     0.0130       -0.1031     -0.0265 *
+        -14  -0.0543     0.0114       -0.0878     -0.0208 *
+        -13  -0.0414     0.0103       -0.0717     -0.0112 *
+        -12  -0.0361     0.0092       -0.0631     -0.0091 *
+        -11  -0.0323     0.0083       -0.0566     -0.0080 *
+        -10  -0.0241     0.0077       -0.0468     -0.0015 *
+         -9  -0.0205     0.0070       -0.0412      0.0002  
+         -8  -0.0136     0.0064       -0.0323      0.0052  
+         -7  -0.0074     0.0058       -0.0244      0.0097  
+         -6  -0.0064     0.0051       -0.0214      0.0087  
+         -5  -0.0006     0.0045       -0.0138      0.0125  
+         -4   0.0037     0.0038       -0.0075      0.0149  
+         -3   0.0030     0.0029       -0.0055      0.0116  
+         -2   0.0015     0.0021       -0.0046      0.0076  
+         -1   0.0000         NA            NA          NA  
+          0   0.0219     0.0027        0.0141      0.0297 *
+          1   0.0518     0.0036        0.0411      0.0625 *
+          2   0.0506     0.0044        0.0374      0.0637 *
+          3   0.0509     0.0055        0.0348      0.0670 *
+          4   0.0545     0.0064        0.0357      0.0733 *
+          5   0.0613     0.0076        0.0390      0.0836 *
+          6   0.0707     0.0089        0.0444      0.0970 *
+          7   0.0892     0.0099        0.0601      0.1182 *
+          8   0.1038     0.0110        0.0713      0.1363 *
+          9   0.1139     0.0127        0.0765      0.1513 *
+         10   0.1314     0.0154        0.0860      0.1769 *
+         11   0.1407     0.0189        0.0850      0.1963 *
+         12   0.1497     0.0237        0.0799      0.2195 *
+         13   0.1882     0.0337        0.0888      0.2876 *
+---
+Signif. codes: `*' confidence band does not cover 0
+
+Control Group:  Not Yet Treated,  Anticipation Periods:  0
+Estimation Method:  Doubly Robust</code></pre>
+</div>
+</div>
+<p>The event-study plot in <a href="#fig-AppendixA1-5" class="quarto-xref">Figure&nbsp;<span>B.5</span></a> is similar to the event-study plot in <a href="#fig-AppendixA1-4" class="quarto-xref">Figure&nbsp;<span>B.4</span></a>. The figure indicates that there are still some statistically significant pre-treatment effects, suggesting that the conditional parallel trends assumption based on the never-treated group may not hold in this application. Therefore, given the presence of these pre-treatment effects, the positive post-treatment effects should be interpreted with caution.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Event-study plot of the estimated event-study parameters with covariates</span></span>
+<span><span class="fu"><a href="https://bcallaway11.github.io/did/reference/ggdid.html">ggdid</a></span><span class="op">(</span><span class="va">event_study_with_x</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Length of exposure to treatment"</span>, y <span class="op">=</span> <span class="st">"Event-study parameter"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-AppendixA1-5" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-AppendixA1-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="AppendixA1_files/figure-html/fig-AppendixA1-5-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AppendixA1-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;B.5: Effects of Walmart Opening on log(Retail Employment) with covariates
+</figcaption></figure>
+</div>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-baker2026difference" class="csl-entry" role="listitem">
+Baker, Andrew, Brantly Callaway, Scott Cunningham, Andrew Goodman-Bacon, and Pedro H. C. Sant’Anna. 2026. <span>“Difference-in-Differences Designs: A Practitioner’s Guide.”</span> <em>Journal of Economic Literature</em>, ahead of print. <a href="https://doi.org/10.1257/jel.20251650">https://doi.org/10.1257/jel.20251650</a>.
+</div>
+<div id="ref-Butts2025dynamic" class="csl-entry" role="listitem">
+Brown, Nicholas L., and Kyle Butts. 2025. <span>“Dynamic Treatment Effect Estimation with Interactive Fixed Effects and Short Panels.”</span> <em>Journal of Econometrics</em> 250 (C): 106013.
+</div>
+<div id="ref-Callaway2021" class="csl-entry" role="listitem">
+Callaway, Brantly, and Pedro H. C. Sant’Anna. 2021. <span>“Difference-in-Differences with Multiple Time Periods.”</span> <em>Journal of Econometrics</em> 225 (2): 200–230.
+</div>
+</div>
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/osmdogan\.github\.io\/RBook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./AppendixA.html" class="pagination-link" aria-label="Appendix for Chapter 13">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 13</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./AppendixB.html" class="pagination-link" aria-label="Appendix for Chapter 23">
+        <span class="nav-page-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 23</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Introduction to Econometrics with R was written by Osman Doğan and Süleyman Taşpınar.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/AppendixA1.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+</body></html>
