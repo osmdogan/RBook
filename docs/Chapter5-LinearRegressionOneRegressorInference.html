@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.37">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
 <title>14&nbsp; Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals – Introduction to Econometrics with R</title>
 <style>
 /* Default styles provided by pandoc.
@@ -79,7 +76,6 @@ div.csl-indent {
   margin-left: 2em;
 }</style>
 
-
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
@@ -98,8 +94,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-18d39954912aaa916c9eeb5465a75734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-18d39954912aaa916c9eeb5465a75734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -125,8 +120,7 @@ div.csl-indent {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script>
-<script>
+}</script><script>
 window.MathJax = {
   tex: {
     macros: {
@@ -145,12 +139,7 @@ window.MathJax = {
     }
   }
 };
-</script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
+</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -176,15 +165,11 @@ window.Quarto = {
   typesetMath
 };
 </script>
-
 </head>
-
 <body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -195,13 +180,9 @@ window.Quarto = {
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Introduction to Econometrics with R</a> 
         <div class="sidebar-tools-main">
@@ -216,7 +197,7 @@ window.Quarto = {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Preface</span></a>
@@ -230,8 +211,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter0-IntroR.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
@@ -286,7 +267,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./Part1-IntroductionReview.html" class="sidebar-item-text sidebar-link">
@@ -295,8 +276,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter1-EconomicQuestion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Economic Questions and Data</span></span></a>
@@ -315,7 +296,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./Part2-FundamentalRegressionAnalysis.html" class="sidebar-item-text sidebar-link">
@@ -324,8 +305,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter4-LinearRegressionOneRegressor.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span></a>
@@ -362,7 +343,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./Part3-FurtherTopics.html" class="sidebar-item-text sidebar-link">
@@ -371,8 +352,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter10-RegressionPanelData.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Regression with Panel Data</span></span></a>
@@ -403,7 +384,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./Part4-TimeSeriesData.html" class="sidebar-item-text sidebar-link">
@@ -412,8 +393,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter15-TimeSeriesRegression.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Introduction to Time Series Regression and Forecasting</span></span></a>
@@ -432,7 +413,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./Part5-TheoreticalTopics.html" class="sidebar-item-text sidebar-link">
@@ -441,8 +422,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Chapter18-TheoryRegression.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">The Theory of Linear Regression with One Regressor</span></span></a>
@@ -455,7 +436,7 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
@@ -464,8 +445,8 @@ window.Quarto = {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./AppendixA.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Appendix for Chapter 13</span></span></a>
@@ -473,20 +454,26 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./AppendixA1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 22</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./AppendixB.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Appendix for Chapter 23</span></span></a>
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 23</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./AppendixC.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Appendix for Chapter 27</span></span></a>
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 27</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./AppendixD.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Appendix for Chapter 28</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -496,31 +483,25 @@ window.Quarto = {
   </div>
 </li>
       </ul>
-  </li>
+</li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of Contents</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of Contents</h2>
    
   <ul>
-  <li><a href="#testing-hypotheses-about-one-of-the-regression-parameters" id="toc-testing-hypotheses-about-one-of-the-regression-parameters" class="nav-link active" data-scroll-target="#testing-hypotheses-about-one-of-the-regression-parameters"><span class="header-section-number">14.1</span> Testing hypotheses about one of the regression parameters</a></li>
+<li><a href="#testing-hypotheses-about-one-of-the-regression-parameters" id="toc-testing-hypotheses-about-one-of-the-regression-parameters" class="nav-link active" data-scroll-target="#testing-hypotheses-about-one-of-the-regression-parameters"><span class="header-section-number">14.1</span> Testing hypotheses about one of the regression parameters</a></li>
   <li><a href="#application-to-the-test-score-example" id="toc-application-to-the-test-score-example" class="nav-link" data-scroll-target="#application-to-the-test-score-example"><span class="header-section-number">14.2</span> Application to the test score example</a></li>
   <li><a href="#confidence-intervals-for-a-regression-parameter" id="toc-confidence-intervals-for-a-regression-parameter" class="nav-link" data-scroll-target="#confidence-intervals-for-a-regression-parameter"><span class="header-section-number">14.3</span> Confidence intervals for a regression parameter</a></li>
   <li><a href="#regression-when-x-is-a-binary-variable" id="toc-regression-when-x-is-a-binary-variable" class="nav-link" data-scroll-target="#regression-when-x-is-a-binary-variable"><span class="header-section-number">14.4</span> Regression when <span class="math inline">\(X\)</span> is a binary variable</a></li>
   <li><a href="#heteroskedasticity-versus-homoskedasticity" id="toc-heteroskedasticity-versus-homoskedasticity" class="nav-link" data-scroll-target="#heteroskedasticity-versus-homoskedasticity"><span class="header-section-number">14.5</span> Heteroskedasticity versus Homoskedasticity</a></li>
   <li><a href="#the-theoretical-foundation-of-the-ordinary-least-squares-method" id="toc-the-theoretical-foundation-of-the-ordinary-least-squares-method" class="nav-link" data-scroll-target="#the-theoretical-foundation-of-the-ordinary-least-squares-method"><span class="header-section-number">14.6</span> The theoretical foundation of the ordinary least squares method</a></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter5-LinearRegressionOneRegressorInference.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/osmdogan/datasets.git/edit/main/Chapter5-LinearRegressionOneRegressorInference.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osmdogan/datasets.git/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part2-FundamentalRegressionAnalysis.html">Fundamentals of Regression Analysis</a></li><li class="breadcrumb-item"><a href="./Chapter5-LinearRegressionOneRegressorInference.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></a></li></ol></nav>
-<div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Part2-FundamentalRegressionAnalysis.html">Fundamentals of Regression Analysis</a></li><li class="breadcrumb-item"><a href="./Chapter5-LinearRegressionOneRegressorInference.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title"><span id="sec-inference1" class="quarto-section-identifier"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Regression with a Single Regressor: Hypothesis Tests and Confidence Intervals</span></span></h1>
 </div>
 
@@ -535,19 +516,16 @@ window.Quarto = {
   
 
 
-</header>
-
-
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="st">"modelsummary_factory_default"</span> <span class="ot">=</span> <span class="st">"gt"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</header><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Load necessary libraries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readxl.tidyverse.org">readxl</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://sandwich.R-Forge.R-project.org/">sandwich</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span><span class="st">"modelsummary_factory_default"</span> <span class="op">=</span> <span class="st">"gt"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="testing-hypotheses-about-one-of-the-regression-parameters" class="level2" data-number="14.1">
-<h2 data-number="14.1" class="anchored" data-anchor-id="testing-hypotheses-about-one-of-the-regression-parameters"><span class="header-section-number">14.1</span> Testing hypotheses about one of the regression parameters</h2>
+<section id="testing-hypotheses-about-one-of-the-regression-parameters" class="level2" data-number="14.1"><h2 data-number="14.1" class="anchored" data-anchor-id="testing-hypotheses-about-one-of-the-regression-parameters">
+<span class="header-section-number">14.1</span> Testing hypotheses about one of the regression parameters</h2>
 <p>A hypothesis is a claim about the true value of a parameter. We are interested in formulating hypotheses about the slope parameter <span class="math inline">\(\beta_1\)</span> in the simple linear regression model. The <strong>null hypothesis</strong> states our claim about <span class="math inline">\(\beta_1\)</span> and is denoted by <span class="math inline">\(H_0\)</span>. For example, the null hypothesis: <span class="math inline">\(H_0: \beta_{1} = c\)</span> states that <span class="math inline">\(\beta_1\)</span> is equal to the hypothesized value <span class="math inline">\(c\)</span>. The <strong>alternative hypothesis</strong> states the scenario in which the null hypothesis does not hold. There are three types of alternative hypotheses:</p>
 <ul>
 <li>Two-sided alternative hypothesis: <span class="math inline">\(H_1: \beta_{1} \ne c\)</span>,</li>
@@ -588,71 +566,66 @@ t\stackrel{A}{\sim} N(0,1).
 \]</span></p>
 <p>Let <span class="math inline">\(\alpha\)</span> be the significance level, i.e., the probability of Type-I error. We can use the asymptotic distribution of <span class="math inline">\(t\)</span>, <span class="math inline">\(\alpha\)</span> and the type of the alternative hypothesis to determine the critical values. In <a href="#fig-critical_points" class="quarto-xref">Figure&nbsp;<span>14.1</span></a>, depending on the type of alternative hypothesis, we determine the critical values as <span class="math inline">\(z_{\alpha}\)</span>, <span class="math inline">\(-z_{\alpha}\)</span>, <span class="math inline">\(z_{\alpha/2}\)</span>, and <span class="math inline">\(-z_{\alpha/2}\)</span>. These values suggest the following rejection regions:</p>
 <ol type="1">
-<li><span class="math inline">\(\{z:z&gt;z_{\alpha}\}\)</span> when <span class="math inline">\(H_1:\beta_1&gt;c\)</span>,</li>
-<li><span class="math inline">\(\{z:z&lt;-z_{\alpha}\}\)</span> when <span class="math inline">\(H_1:\beta_1&lt;c\)</span>, and</li>
-<li><span class="math inline">\(\{z:|z|&gt;z_{\alpha/2}\}\)</span> when <span class="math inline">\(H_1:\beta_1\ne c\)</span>.</li>
+<li>
+<span class="math inline">\(\{z:z&gt;z_{\alpha}\}\)</span> when <span class="math inline">\(H_1:\beta_1&gt;c\)</span>,</li>
+<li>
+<span class="math inline">\(\{z:z&lt;-z_{\alpha}\}\)</span> when <span class="math inline">\(H_1:\beta_1&lt;c\)</span>, and</li>
+<li>
+<span class="math inline">\(\{z:|z|&gt;z_{\alpha/2}\}\)</span> when <span class="math inline">\(H_1:\beta_1\ne c\)</span>.</li>
 </ol>
 <p>If the realized value of <span class="math inline">\(t\)</span> falls within a rejection region, then we reject the null hypothesis at the <span class="math inline">\(\alpha\%\)</span> significance level; otherwise, we fail to reject the null hypothesis.</p>
 <div id="fig-critical_points" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-critical_points-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-critical_points-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-critical_points" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div id="fig-f12c1" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-f12c1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-f12c1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="figures/critical_point1.png" class="img-fluid figure-img" style="width:3in" data-ref-parent="fig-critical_points">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-f12c1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (a) Right-sided alternative hypothesis
-</figcaption>
-</figure>
+</figcaption></figure>
 </div>
 </div>
 <div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-critical_points" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div id="fig-f12c2" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-f12c2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-f12c2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="figures/critical_point2.png" class="img-fluid figure-img" style="width:3in" data-ref-parent="fig-critical_points">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-f12c2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (b) Left-sided alternative hypothesis
-</figcaption>
-</figure>
+</figcaption></figure>
 </div>
 </div>
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-critical_points" style="flex-basis: 100.0%;justify-content: flex-start;">
 <div id="fig-f12c3" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-f12c3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-f12c3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="figures/critical_point3.png" class="img-fluid figure-img" style="width:3in" data-ref-parent="fig-critical_points">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-f12c3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 (c) Two-sided alternative hypothesis
-</figcaption>
-</figure>
+</figcaption></figure>
 </div>
 </div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-critical_points-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.1: Rejection regions and critical points
-</figcaption>
-</figure>
+</figcaption></figure>
 </div>
 <div id="exm-exm12-1" class="theorem example">
 <p><span class="theorem-title"><strong>Example 14.1</strong></span> Assume that <span class="math inline">\(\alpha=5\%\)</span> and <span class="math inline">\(H_1:\beta_1\ne c\)</span>. Then, the critical value on the left tail is the <span class="math inline">\(2.5\)</span>th percentile of <span class="math inline">\(N(0,1)\)</span>, which is <span class="math inline">\(-z_{\alpha/2}=-1.96\)</span>, and the critical value on the right tail is the <span class="math inline">\(97.5\)</span>th percentile of <span class="math inline">\(N(0,1)\)</span>, which is <span class="math inline">\(z_{\alpha/2}=1.96\)</span>. In R, we can compute these critical values as follows:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>left_critical  <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="fl">0.025</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>right_critical <span class="ot">&lt;-</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Left critical value:"</span>, <span class="fu">round</span>(left_critical, <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">left_critical</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="fl">0.025</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">right_critical</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="fl">0.975</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Left critical value:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">left_critical</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Left critical value: -1.96</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Right critical value:"</span>, <span class="fu">round</span>(right_critical, <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Right critical value:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">right_critical</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Right critical value: 1.96</code></pre>
 </div>
@@ -677,10 +650,10 @@ P_{H_0}\left(|t| &gt; |t_{\text{calc}}|\right)=2\times\Phi(-|t_{\text{calc}}|)\,
 \]</span></p>
 <p>We can compute the <span class="math inline">\(p\)</span>-value in R as follows:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute p-value</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>t_calc <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">2.5</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">abs</span>(t_calc), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"p-value:"</span>, <span class="fu">round</span>(p_value, <span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Compute p-value</span></span>
+<span><span class="va">t_calc</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2.5</span></span>
+<span><span class="va">p_value</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">t_calc</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"p-value:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">p_value</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>p-value: 0.0124</code></pre>
 </div>
@@ -704,9 +677,8 @@ P_{H_0}\left(|t| &gt; |t_{\text{calc}}|\right)=2\times\Phi(-|t_{\text{calc}}|)\,
 </ul>
 </div>
 </div>
-</section>
-<section id="application-to-the-test-score-example" class="level2" data-number="14.2">
-<h2 data-number="14.2" class="anchored" data-anchor-id="application-to-the-test-score-example"><span class="header-section-number">14.2</span> Application to the test score example</h2>
+</section><section id="application-to-the-test-score-example" class="level2" data-number="14.2"><h2 data-number="14.2" class="anchored" data-anchor-id="application-to-the-test-score-example">
+<span class="header-section-number">14.2</span> Application to the test score example</h2>
 <p>We use the data set contained in the <code>caschool.xlsx</code> file to estimate the following model: <span class="math display">\[
 \begin{align}
 \text{TestScore}_i = \beta_0 + \beta_1 \text{STR}_i + u_i,
@@ -714,10 +686,10 @@ P_{H_0}\left(|t| &gt; |t_{\text{calc}}|\right)=2\times\Phi(-|t_{\text{calc}}|)\,
 \]</span></p>
 <p>In the data set, the test scores are denoted by <code>testscr</code> and the student-teacher ratio by <code>str</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import data</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>CAschool <span class="ot">=</span> <span class="fu">read_excel</span>(<span class="st">"data/caschool.xlsx"</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Column names</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(CAschool)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Import data</span></span>
+<span><span class="va">CAschool</span> <span class="op">=</span> <span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="st">"data/caschool.xlsx"</span><span class="op">)</span></span>
+<span><span class="co"># Column names</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">CAschool</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Observation Number" "dist_cod"           "county"            
  [4] "district"           "gr_span"            "enrl_tot"          
@@ -729,12 +701,12 @@ P_{H_0}\left(|t| &gt; |t_{\text{calc}}|\right)=2\times\Phi(-|t_{\text{calc}}|)\,
 </div>
 <p>Consider <span class="math inline">\(H_0: \beta_1 = 0\)</span> against <span class="math inline">\(H_1: \beta_1 \neq 0\)</span>. We use the <code>lm</code> function to estimate the model.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify the model</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str, <span class="at">data =</span> CAschool)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the fit method to obtain parameter estimates</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">=</span> <span class="fu">summary</span>(model1)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the estimation results</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Specify the model</span></span>
+<span><span class="va">model1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">testscr</span> <span class="op">~</span> <span class="va">str</span>, data <span class="op">=</span> <span class="va">CAschool</span><span class="op">)</span></span>
+<span><span class="co"># Use the fit method to obtain parameter estimates</span></span>
+<span><span class="va">result1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model1</span><span class="op">)</span></span>
+<span><span class="co"># Print the estimation results</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">result1</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -763,8 +735,8 @@ t = \frac{\hat{\beta}_1-0}{SE(\hat{\beta}_1)} \approx \frac{-2.28}{0.48} \approx
 \]</span></p>
 <p>Note that the <code>summary</code> function also returns the <span class="math inline">\(t\)</span>-statistics. The column named <code>t value</code> in the output includes the <span class="math inline">\(t\)</span>-statistics. Also note that we can return <span class="math inline">\(t\)</span>-statistics through <code>result1$coefficients</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># t-statistics</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>result1<span class="sc">$</span>coefficients[, <span class="st">"t value"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># t-statistics</span></span>
+<span><span class="va">result1</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span>, <span class="st">"t value"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)         str 
   73.824514   -4.751327 </code></pre>
@@ -772,9 +744,9 @@ t = \frac{\hat{\beta}_1-0}{SE(\hat{\beta}_1)} \approx \frac{-2.28}{0.48} \approx
 </div>
 <p>Assume that the significance level is <span class="math inline">\(\alpha = 0.05\)</span>. Then, the corresponding critical value can be determined in the following way.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Critical value for 5 percent significance level</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>critical <span class="ot">=</span> <span class="fu">qnorm</span>(<span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(critical, <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Critical value for 5 percent significance level</span></span>
+<span><span class="va">critical</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="fl">0.975</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">critical</span>, <span class="fl">2</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.96</code></pre>
 </div>
@@ -787,17 +759,17 @@ t = \frac{\hat{\beta}_1-0}{SE(\hat{\beta}_1)} \approx \frac{-2.28}{0.48} \approx
 \]</span></p>
 <p>where <span class="math inline">\(t_{\text{calc}}\)</span> is the actual <span class="math inline">\(t\)</span>-statistic computed, which is <span class="math inline">\(t\approx -4.75\)</span>. Then, we can compute the <span class="math inline">\(p\)</span>-value in the following way:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p-value for the two-sided alternative hypothesis</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> result1<span class="sc">$</span>coefficients[<span class="st">"str"</span>, <span class="st">"t value"</span>]</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># p-value for the two-sided alternative hypothesis</span></span>
+<span><span class="va">t</span> <span class="op">=</span> <span class="va">result1</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="st">"str"</span>, <span class="st">"t value"</span><span class="op">]</span></span>
+<span><span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">t</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.020858e-06</code></pre>
 </div>
 </div>
 <p>Alternatively, we can extract <span class="math inline">\(p\)</span>-values from <code>result1$coefficients</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># p-values</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>result1<span class="sc">$</span>coefficients[, <span class="st">"Pr(&gt;|t|)"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># p-values</span></span>
+<span><span class="va">result1</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span>, <span class="st">"Pr(&gt;|t|)"</span><span class="op">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept)           str 
 6.569925e-242  2.783307e-06 </code></pre>
@@ -805,17 +777,16 @@ t = \frac{\hat{\beta}_1-0}{SE(\hat{\beta}_1)} \approx \frac{-2.28}{0.48} \approx
 </div>
 <p>Note that this value is slightly different from the one that we computed above by <code>2 * pnorm(-abs(t), mean = 0, sd = 1)</code>. By default, the <code>lm</code> function uses the <span class="math inline">\(t\)</span> distribution for the computation. Thus, we need to use the t distribution to get the same result:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> result1<span class="sc">$</span>coefficients[<span class="st">"str"</span>, <span class="st">"t value"</span>]</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">=</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t), <span class="at">df=</span><span class="dv">418</span>)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>p_value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">t</span> <span class="op">=</span> <span class="va">result1</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="st">"str"</span>, <span class="st">"t value"</span><span class="op">]</span></span>
+<span><span class="va">p_value</span> <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html">pt</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">t</span><span class="op">)</span>, df<span class="op">=</span><span class="fl">418</span><span class="op">)</span></span>
+<span><span class="va">p_value</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.783307e-06</code></pre>
 </div>
 </div>
 <p>Again, since <span class="math inline">\(p\text{-value} &lt; 0.05\)</span>, we reject <span class="math inline">\(H_0\)</span> at the <span class="math inline">\(5\%\)</span> significance level.</p>
-</section>
-<section id="confidence-intervals-for-a-regression-parameter" class="level2" data-number="14.3">
-<h2 data-number="14.3" class="anchored" data-anchor-id="confidence-intervals-for-a-regression-parameter"><span class="header-section-number">14.3</span> Confidence intervals for a regression parameter</h2>
+</section><section id="confidence-intervals-for-a-regression-parameter" class="level2" data-number="14.3"><h2 data-number="14.3" class="anchored" data-anchor-id="confidence-intervals-for-a-regression-parameter">
+<span class="header-section-number">14.3</span> Confidence intervals for a regression parameter</h2>
 <p>Recall that the <span class="math inline">\(95\%\)</span> two-sided confidence interval can be equivalently defined in the following ways:</p>
 <ul>
 <li>It is the set of points that cannot be rejected in a two-sided hypothesis testing problem with the <span class="math inline">\(5\%\)</span> significance level.</li>
@@ -831,18 +802,18 @@ t = \frac{\hat{\beta}_1-0}{SE(\hat{\beta}_1)} \approx \frac{-2.28}{0.48} \approx
 \]</span></p>
 <p>In our test score example, the <span class="math inline">\(95\%\)</span> confidence interval is computed in the following way:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Confidence interval for beta_1</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>lower_bound <span class="ot">=</span> result1<span class="sc">$</span>coefficients[<span class="st">"str"</span>, <span class="st">"Estimate"</span>] <span class="sc">-</span> critical<span class="sc">*</span>result1<span class="sc">$</span>coefficients[<span class="st">"str"</span>, <span class="st">"Std. Error"</span>]</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>upper_bound <span class="ot">=</span> result1<span class="sc">$</span>coefficients[<span class="st">"str"</span>, <span class="st">"Estimate"</span>] <span class="sc">+</span> critical<span class="sc">*</span>result1<span class="sc">$</span>coefficients[<span class="st">"str"</span>, <span class="st">"Std. Error"</span>]</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(lower_bound, upper_bound), <span class="dv">6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Confidence interval for beta_1</span></span>
+<span><span class="va">lower_bound</span> <span class="op">=</span> <span class="va">result1</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="st">"str"</span>, <span class="st">"Estimate"</span><span class="op">]</span> <span class="op">-</span> <span class="va">critical</span><span class="op">*</span><span class="va">result1</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="st">"str"</span>, <span class="st">"Std. Error"</span><span class="op">]</span></span>
+<span><span class="va">upper_bound</span> <span class="op">=</span> <span class="va">result1</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="st">"str"</span>, <span class="st">"Estimate"</span><span class="op">]</span> <span class="op">+</span> <span class="va">critical</span><span class="op">*</span><span class="va">result1</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[</span><span class="st">"str"</span>, <span class="st">"Std. Error"</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lower_bound</span>, <span class="va">upper_bound</span><span class="op">)</span>, <span class="fl">6</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -3.220249 -1.339367</code></pre>
 </div>
 </div>
 <p>Alternatively, we can use the <code>confint</code> function to compute the confidence interval:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Confidence interval</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(model1, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Confidence interval</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html">confint</a></span><span class="op">(</span><span class="va">model1</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                2.5 %     97.5 %
 (Intercept) 680.32313 717.542779
@@ -868,9 +839,8 @@ str          -3.22298  -1.336637</code></pre>
 </ul>
 </div>
 </div>
-</section>
-<section id="regression-when-x-is-a-binary-variable" class="level2" data-number="14.4">
-<h2 data-number="14.4" class="anchored" data-anchor-id="regression-when-x-is-a-binary-variable"><span class="header-section-number">14.4</span> Regression when <span class="math inline">\(X\)</span> is a binary variable</h2>
+</section><section id="regression-when-x-is-a-binary-variable" class="level2" data-number="14.4"><h2 data-number="14.4" class="anchored" data-anchor-id="regression-when-x-is-a-binary-variable">
+<span class="header-section-number">14.4</span> Regression when <span class="math inline">\(X\)</span> is a binary variable</h2>
 <p>In this section, we consider the following regression model: <span class="math display">\[
 \begin{align}
 Y_i &amp;= \beta_0 + \beta_1 D_i + u_i, \quad i = 1,2,\dots,n,
@@ -892,11 +862,11 @@ D_i &amp;= \left\{\begin{array}{ll}
 <p>That is, <span class="math inline">\(\beta_1\)</span> gives the difference between the mean test score in districts with low student-teacher ratios and the mean test score in districts with high student-teacher ratios.</p>
 <p>The dummy variable can be created by using a logical operator. The command <code>mydata$str &lt; 20</code> will return <span class="math inline">\(1\)</span> if <span class="math inline">\(STR &lt; 20\)</span>, otherwise <span class="math inline">\(0\)</span>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the dummy variable D</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>CAschool<span class="sc">$</span>D <span class="ot">&lt;-</span> CAschool<span class="sc">$</span>str <span class="sc">&lt;</span> <span class="dv">20</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Display first rows of selected columns</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(CAschool[, <span class="fu">c</span>(<span class="st">"testscr"</span>, <span class="st">"str"</span>, <span class="st">"D"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create the dummy variable D</span></span>
+<span><span class="va">CAschool</span><span class="op">$</span><span class="va">D</span> <span class="op">&lt;-</span> <span class="va">CAschool</span><span class="op">$</span><span class="va">str</span> <span class="op">&lt;</span> <span class="fl">20</span></span>
+<span></span>
+<span><span class="co"># Display first rows of selected columns</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">CAschool</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"testscr"</span>, <span class="st">"str"</span>, <span class="st">"D"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
   testscr   str D    
@@ -911,56 +881,52 @@ D_i &amp;= \left\{\begin{array}{ll}
 </div>
 <p><a href="#fig-fig12-2" class="quarto-xref">Figure&nbsp;<span>14.2</span></a> shows the scatter plot of <code>TestScore</code> and <code>D</code>. Since <code>D</code> takes only two values, namely <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>, we observe that the data points are clustered at <code>x=0</code> and <code>x=1</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplot without jitter</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(CAschool, <span class="fu">aes</span>(<span class="at">x =</span> D, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"D"</span>, <span class="at">y =</span> <span class="st">"Test Score"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Scatterplot without jitter</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">CAschool</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">D</span>, y <span class="op">=</span> <span class="va">testscr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"steelblue"</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"D"</span>, y <span class="op">=</span> <span class="st">"Test Score"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-fig12-2" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig12-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-fig12-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="Chapter5-LinearRegressionOneRegressorInference_files/figure-html/fig-fig12-2-1.png" class="img-fluid figure-img" width="480">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig12-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.2: Scatterplot of D and Test Score.
-</figcaption>
-</figure>
+</figcaption></figure>
 </div>
 </div>
 </div>
 <p>In <a href="#fig-fig12-3" class="quarto-xref">Figure&nbsp;<span>14.3</span></a>, we create a jittered version of <code>D</code> by adding some random noise: <code>jittered_D = CAschool['D'] + np.random.normal(0, 0.02, size=len(CAschool['D']))</code>, and construct a scatter plot between <code>TestScore</code> and <code>jittered_D</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplot with jitter</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(CAschool, <span class="fu">aes</span>(<span class="at">x =</span> D, <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.02</span>,   <span class="co"># jitter scale (matches np.random.normal(0, 0.02))</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"steelblue"</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"D"</span>, <span class="at">y =</span> <span class="st">"Test Score"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Scatterplot with jitter</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">CAschool</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">D</span>, y <span class="op">=</span> <span class="va">testscr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">geom_jitter</a></span><span class="op">(</span></span>
+<span>    width <span class="op">=</span> <span class="fl">0.02</span>,   <span class="co"># jitter scale (matches np.random.normal(0, 0.02))</span></span>
+<span>    size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"steelblue"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"D"</span>, y <span class="op">=</span> <span class="st">"Test Score"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-fig12-3" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig12-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-fig12-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="Chapter5-LinearRegressionOneRegressorInference_files/figure-html/fig-fig12-3-1.png" class="img-fluid figure-img" width="480">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig12-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.3: Scatterplot of D and Test Score.
-</figcaption>
-</figure>
+</figcaption></figure>
 </div>
 </div>
 </div>
 <p>As in the case of a continuous regressor, we can use the <code>lm</code> function to estimate a dummy variable regression model.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify the model</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> D, <span class="at">data =</span> CAschool)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain parameter estimates</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">summary</span>(model2)</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the estimation results</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Specify the model</span></span>
+<span><span class="va">model2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">testscr</span> <span class="op">~</span> <span class="va">D</span>, data <span class="op">=</span> <span class="va">CAschool</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Obtain parameter estimates</span></span>
+<span><span class="va">result2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Print the estimation results</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">result2</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -990,30 +956,27 @@ F-statistic: 15.99 on 1 and 418 DF,  p-value: 7.515e-05</code></pre>
 <p>The estimate of <span class="math inline">\(\beta_1\)</span> is <span class="math inline">\(7.38\)</span>, which indicates that students in the districts with <code>STR &lt; 20</code> have on average <span class="math inline">\(7.38\)</span> more points than students in other districts.</p>
 <p><a href="#fig-fig12-4" class="quarto-xref">Figure&nbsp;<span>14.4</span></a> shows the scatter plot along with the estimated regression function. Since <span class="math inline">\(\beta_1=7.38\)</span>, the estimated regression line is upward sloping, which indicates that the test scores are higher in districts with low student-teacher ratios.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dummy variable regression plot</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(CAschool, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.numeric</span>(D), <span class="at">y =</span> testscr)) <span class="sc">+</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.02</span>, <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"D"</span>,</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Test Score"</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Dummy variable regression plot</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">CAschool</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">D</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">testscr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">geom_jitter</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.02</span>, size <span class="op">=</span> <span class="fl">0.8</span>, color <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, color <span class="op">=</span> <span class="st">"black"</span>, linewidth <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"D"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Test Score"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-fig12-4" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig12-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-fig12-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="Chapter5-LinearRegressionOneRegressorInference_files/figure-html/fig-fig12-4-1.png" class="img-fluid figure-img" width="480">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig12-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;14.4: The dummy variable regression model
-</figcaption>
-</figure>
+</figcaption></figure>
 </div>
 </div>
 </div>
-</section>
-<section id="heteroskedasticity-versus-homoskedasticity" class="level2" data-number="14.5">
-<h2 data-number="14.5" class="anchored" data-anchor-id="heteroskedasticity-versus-homoskedasticity"><span class="header-section-number">14.5</span> Heteroskedasticity versus Homoskedasticity</h2>
+</section><section id="heteroskedasticity-versus-homoskedasticity" class="level2" data-number="14.5"><h2 data-number="14.5" class="anchored" data-anchor-id="heteroskedasticity-versus-homoskedasticity">
+<span class="header-section-number">14.5</span> Heteroskedasticity versus Homoskedasticity</h2>
 <p>In the least squares assumptions introduced in <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 13</span></a>, we only assume the zero-conditional mean assumption about the error terms. Other than this assumption, we do not impose any structure on the error term <span class="math inline">\(u_i\)</span>. In this section, we introduce two concepts about the conditional variance of the error term <span class="math inline">\(u_i\)</span> given <span class="math inline">\(X_i\)</span>: homoskedasticity and heteroskedasticity. We say that the error term <span class="math inline">\(u_i\)</span> is <strong>homoskedastic</strong> if the variance of <span class="math inline">\(u_i\)</span> given <span class="math inline">\(X_i\)</span> is constant for all <span class="math inline">\(i = 1,2,\dots,n\)</span>. In particular, this means that the variance does not depend on <span class="math inline">\(X_i\)</span>. On the other hand, if the variance does depend on <span class="math inline">\(X_i\)</span>, we say that the error term <span class="math inline">\(u_i\)</span> is <strong>heteroskedastic</strong>.</p>
 <p>Homoskedasticity and heteroskedasticity do not affect the unbiasedness and consistency of the OLS estimators of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>. However, they do affect the variance formulas of the OLS estimators as shown in <a href="Chapter4-LinearRegressionOneRegressor.html" class="quarto-xref"><span>Chapter 13</span></a>. Under homoskedasticity, let <span class="math inline">\(\var(u_i|X_i)=\sigma^2_u\)</span>, where <span class="math inline">\(\sigma^2_u\)</span> is an unknown scalar parameter. Then, the variance formulas of <span class="math inline">\(\hat{\beta}_1\)</span> and <span class="math inline">\(\hat{\beta}_0\)</span> simplify to <span class="math display">\[
 \begin{align*}
@@ -1029,27 +992,25 @@ Figure&nbsp;14.4: The dummy variable regression model
 \]</span></p>
 <p>The <code>lm</code> function uses these formulas to compute the standard errors, i.e., it only reports the homoskedasticity-only standard errors. To get heteroskedasticity-robust standard errors, we use the <code>vcovHC</code> function from the <code>sandwich</code> package.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>result3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(testscr <span class="sc">~</span> str,</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> CAschool)</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>vcov <span class="ot">&lt;-</span> <span class="fu">vcovHC</span>(result3, <span class="at">type =</span> <span class="st">"HC1"</span>)</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>robust_se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(vcov))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">result3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">testscr</span> <span class="op">~</span> <span class="va">str</span>,</span>
+<span>         data <span class="op">=</span> <span class="va">CAschool</span><span class="op">)</span></span>
+<span><span class="va">vcov</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://sandwich.R-Forge.R-project.org/reference/vcovHC.html">vcovHC</a></span><span class="op">(</span><span class="va">result3</span>, type <span class="op">=</span> <span class="st">"HC1"</span><span class="op">)</span></span>
+<span><span class="va">robust_se</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">vcov</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In the following, we use the <code>modelsummary</code> function to present results side by side. Note that we use the <code>vcov = list(NULL, robust_se)</code> option to specify the standard errors for each model. Alternatively, we can also use <code>vcov=c("classical", "HC1")</code> to obtain the same result. Note that in this alternative approach, we do not need to compute the robust standard errors manually through the <code>vcovHC</code> function. The estimation results are presented in <a href="#tbl-t12-1" class="quarto-xref">Table&nbsp;<span>14.1</span></a>. The estimation results in this table indicate that the heteroskedasticity-robust standard errors are relatively large.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Homoskedastic"</span>   <span class="ot">=</span> result3,</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Heteroskedastic"</span> <span class="ot">=</span> result3</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">vcov =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, robust_se),</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://modelsummary.com/man/modelsummary.html">modelsummary</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Homoskedastic"</span>   <span class="op">=</span> <span class="va">result3</span>,</span>
+<span>    <span class="st">"Heteroskedastic"</span> <span class="op">=</span> <span class="va">result3</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  vcov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="va">robust_se</span><span class="op">)</span>,</span>
+<span>  stars <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="tbl-t12-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t12-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-t12-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;14.1: The estimation results for the test scores regressions
-</figcaption>
-<div aria-describedby="tbl-t12-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+</figcaption><div aria-describedby="tbl-t12-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div id="fbbuvauwok" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#fbbuvauwok table {
@@ -1500,15 +1461,12 @@ Table&nbsp;14.1: The estimation results for the test scores regressions
   height: 0px !important;
 }
 </style>
-
 <table class="gt_table cell caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
-<thead>
-<tr class="gt_col_headings header">
+<thead><tr class="gt_col_headings header">
 <th id="a-" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
 <th id="Homoskedastic" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Homoskedastic</th>
 <th id="Heteroskedastic" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Heteroskedastic</th>
-</tr>
-</thead>
+</tr></thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers=" ">(Intercept)</td>
@@ -1575,14 +1533,11 @@ Table&nbsp;14.1: The estimation results for the test scores regressions
 <td class="gt_row gt_center" headers="Homoskedastic"></td>
 <td class="gt_row gt_center" headers="Heteroskedastic">Custom</td>
 </tr>
-</tbody><tfoot>
-<tr class="gt_sourcenotes odd">
+</tbody>
+<tfoot><tr class="gt_sourcenotes odd">
 <td colspan="3" class="gt_sourcenote">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td>
-</tr>
-</tfoot>
-
+</tr></tfoot>
 </table>
-
 </div>
 </div>
 </div>
@@ -1608,9 +1563,8 @@ Table&nbsp;14.1: The estimation results for the test scores regressions
 </div>
 </div>
 <p>In practice, which standard errors should we use? <span class="citation" data-cites="Stock2020">Stock and Watson (<a href="references.html#ref-Stock2020" role="doc-biblioref">2020</a>)</span> write that “At a general level, economic theory rarely gives any reason to believe that the errors are homoskedastic. It therefore is prudent to assume that the errors might be heteroskedastic unless you have compelling reasons to believe otherwise.” Therefore, we recommend using heteroskedasticity-robust standard errors in practice.</p>
-</section>
-<section id="the-theoretical-foundation-of-the-ordinary-least-squares-method" class="level2" data-number="14.6">
-<h2 data-number="14.6" class="anchored" data-anchor-id="the-theoretical-foundation-of-the-ordinary-least-squares-method"><span class="header-section-number">14.6</span> The theoretical foundation of the ordinary least squares method</h2>
+</section><section id="the-theoretical-foundation-of-the-ordinary-least-squares-method" class="level2" data-number="14.6"><h2 data-number="14.6" class="anchored" data-anchor-id="the-theoretical-foundation-of-the-ordinary-least-squares-method">
+<span class="header-section-number">14.6</span> The theoretical foundation of the ordinary least squares method</h2>
 <p>In this section, we consider the OLS estimator of <span class="math inline">\(\beta_1\)</span> under the following assumptions.</p>
 <div class="callout callout-style-default callout-important no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1643,10 +1597,7 @@ Table&nbsp;14.1: The estimation results for the test scores regressions
 Stock, James H., and Mark W. Watson. 2020. <em>Introduction to Econometrics</em>. Fourth edition. Pearson.
 </div>
 </div>
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
     const anchorJS = new window.AnchorJS();
@@ -2045,9 +1996,7 @@ Stock, James H., and Mark W. Watson. 2020. <em>Introduction to Econometrics</em>
       }
     }
   });
-  </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./Chapter4-LinearRegressionOneRegressor.html" class="pagination-link" aria-label="Linear Regression with One Regressor">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Linear Regression with One Regressor</span></span>
       </a>          
@@ -2059,8 +2008,7 @@ Stock, James H., and Mark W. Watson. 2020. <em>Introduction to Econometrics</em>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
+<footer class="footer"><div class="nav-footer">
     <div class="nav-footer-left">
 <p>Introduction to Econometrics with R was written by Osman Doğan and Süleyman Taşpınar.</p>
 </div>   
@@ -2072,8 +2020,6 @@ Stock, James H., and Mark W. Watson. 2020. <em>Introduction to Econometrics</em>
 </div>
   </div>
 </footer>
-
-
 
 
 </body></html>
