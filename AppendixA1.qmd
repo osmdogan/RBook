@@ -20,7 +20,7 @@ In this section, we consider a staggered treatment design in which units receive
 
 We use $Y_{it}$ to denote the observed outcome for unit $i$ at time $t$, for $i=1, \ldots, n$ and $t = 1, \ldots, T$. We use $Y_{it}(\infty)$ to denote the never-treated potential outcome for unit $i$ at time $t$, and $Y_{it}(g)$ to denote the potential outcome for unit $i$ at time $t$ if it receives treatment in period $g$. Let $G_i$ denote the period in which unit $i$ receives treatment, with $G_i = \infty$ if unit $i$ never receives treatment, and let $\mathcal{G}$ denote the set of all possible treatment periods. Thus, the set $\mathcal{G}$ defines the cohorts of treated units and untreated units in the staggered treatment design. Each element of $\mathcal{G}$ corresponds to a specific treatment period, and the control group corresponds to the element $\infty$.
 
-For example, suppose there are three time periods: 2020, 2021, and 2022. Further, suppose that some units receive treatment in 2020, some receive treatment in 2021, some receive treatment in 2022, and some never receive treatment. In this case, we can define three cohorts of treated units: the first cohort consists of units that receive treatment in 2020, the second cohort consists of units that receive treatment in 2021, and the third cohort consists of units that receive treatment in 2022. The never-treated group consists of units that never receive treatment (i.e., $G_i = \infty$). Thus, in this example, we have $\mathcal{G} = \{2020, 2021, 2022, \infty\}$.
+For example, suppose there are three time periods: 2019, 2020, 2021, and 2022. Further, suppose that some units receive treatment in 2020, some in 2021, some in 2022, and some never receive treatment. In this case, we can define three cohorts of treated units: the first, second, and third cohorts consist of units treated in 2020, 2021, and 2022, respectively. The never-treated group consists of units that never receive treatment (i.e., $G_i = \infty$). Thus, in this example, we have $\mathcal{G} = {2020, 2021, 2022, \infty}$.
 
 Using this notation, for the $i$th unit that belongs to cohort $g$, we can express its observed outcome as 
 $$
@@ -42,6 +42,39 @@ Y_{it}(\infty) & \text{if } t < G_i.
 \end{cases}
 $$
 
+For our example with $\mathcal{G} = {2020, 2021, 2022, \infty}$, suppose that the first, second, and third treated cohorts consist of 5, 3, and 8 units, respectively, while the never-treated group consists of 4 units. In the following example, we use the `panelview` function from the `panelView` package to visualize treatment timing across units and over time. In @fig-AppendixA1-0, the first 5 rows, the next 3 rows, and the following 8 rows correspond to the first, second, and third treated cohorts, respectively, while the last 4 rows correspond to the never-treated group. In addition, the not-yet-treated group at each time period corresponds to the rows associated with treated cohorts that have not yet received treatment by that period. For example, in 2020, the not-yet-treated group consists of the units in rows 1 to 16; in 2021, it consists of the units in rows 6 to 16; and in 2022, it consists of the units in rows 9 to 16.
+
+```{r}
+#| fig-cap: "Panel view plot showing the timing of treatment across units and over time in a staggered treatment design."
+#| label: fig-AppendixA1-0
+#| fig-width: 5
+#| fig-height: 5
+set.seed(123)
+n <- 20
+G <- c(rep(2020, 5), rep(2021, 3), rep(2022, 8), rep(Inf, 4))
+time <- 2019:2022
+data_example <- expand.grid(id = 1:n, time = time) %>%
+    mutate(G = G[id]) %>%
+    mutate(D = ifelse(time >= G, 1, 0))
+# Define the outcome variable
+data_example <- data_example %>%
+    mutate(Y = rnorm(nrow(data_example), mean = 0, sd = 1))
+# Create a panel view plot 
+panelview(
+    data = data_example,
+    formula = Y ~ D,
+    index = c("id", "time"),
+    main = "",
+    xlab = "Year",
+    ylab = "Units",
+    display.all = FALSE,
+    by.timing = TRUE,
+    pre.post = TRUE,
+    theme = "red",
+    cex.legend = 9
+)
+```
+
 In the staggered treatment design, the parameter of interest is often the group-time average treatment effect, which is defined as the average treatment effect for units in cohort $g$ at time $t$, and is given by
 $$
 ATT(g,t) = \mathbb{E}[Y_{it}(g) - Y_{it}(\infty) | G_i = g].
@@ -49,7 +82,7 @@ $$
 This parameter captures the average effect of treatment for units in cohort $g$ at time $t$, relative to the never-treated potential outcome. 
 
 ### Identification and estimation without covariates
-To identify and estimate the group-time average treatment effect $ATT(g,t)$, we assume the following assumptions.
+To identify and estimate $ATT(g,t)$, we assume the following assumptions.
 
 :::{.callout-important icon=false title="No anticipation"}
 For all $i$ and $t < g$, we have $\E[Y_{it}(g)|G_i = g] = \E[Y_{it}(\infty)|G_i = g]$ for all $g \in \mathcal{G}$.
@@ -74,7 +107,7 @@ $$
 
 The no anticipation assumption states that units do not anticipate future treatment and thus their potential outcomes before treatment are the same as if they were never treated. As in the case of common treatment timing, this assumption suggests that $ATT(g,t)=0$ for all $t < g$. Due to the staggered nature of the treatment, we can have different comparison groups at each time period, yielding different parallel trends assumptions. 
 
-The first assumption, based on the never-treated group, states that in the post-treatment period, the average change in the never-treated potential outcome from period $t-1$ to period $t$ is the same for units in cohort $g$ and units in the never-treated group. The second assumption, based on the not-yet-treated groups, states that the average change in the never-treated potential outcome from period $t-1$ to period $t$ is the same for units in cohort $g$ and units in the not-yet-treated cohorts. Finally, the parallel trends assumption for every period and group states that the average change in the never-treated potential outcome from period $t-1$ to period $t$ is the same for units in cohort $g$ and units in any other cohort.
+The first assumption, based on the never-treated group, states that in the post-treatment period, the average change in the never-treated potential outcome from period $t-1$ to period $t$ is the same for units in cohort $g$ and units in the never-treated group. The second assumption, based on the not-yet-treated groups, states that the average change in the never-treated potential outcome is the same for units in cohort $g$ and units in the not-yet-treated cohorts. Finally, the parallel trends assumption for every period and group states that the average change in the never-treated potential outcome is the same for units in cohort $g$ and units in any other cohort.
 
 :::{#thm-identification-staggered}
 ## Identification of the group-time average treatment effects
@@ -107,40 +140,35 @@ ATT(g,t) &= \E[Y_{it}(g) - Y_{it}(\infty)|G_i = g]\\
 where the second equality follows from adding and subtracting $Y_{i,g-1}(\infty)$, the third equality follows from the parallel trends assumption based on the never-treated group, and the last equality follows from the no anticipation assumption and the definition of the observed outcome.
 :::
 
-Given a random sample of $n$ units, we can estimate the group-time average treatment effect $ATT(g,t)$ using the sample analog of the identification results in Theorem @thm-identification-staggered. Under the no anticipation assumption and the parallel trends assumption based on the never-treated group, for all $g \in \mathcal{G}$ and $t \geq g$, we can estimate $ATT(g,t)$ as
+Given a random sample of $n$ units, we can estimate $ATT(g,t)$ using the sample analog of the identification results in Theorem @thm-identification-staggered. Under the no anticipation assumption and the parallel trends assumption based on the never-treated group, for all $g \in \mathcal{G}$ and $t \geq g$, we can estimate $ATT(g,t)$ as
 $$
 \begin{align}
 \widehat{ATT}(g,t) &= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i = g\} \\
 &- \frac{1}{n_\infty}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i = \infty\},
 \end{align}
 $$
-where $n_g = \sum_{i=1}^n \mathbf{1}\{G_i = g\}$ and $n_\infty = \sum_{i=1}^n \mathbf{1}\{G_i = \infty\}$ are the number of units in cohort $g$ and the never-treated group, respectively. Under the no anticipation assumption and the parallel trends assumption based on the not-yet-treated groups, for all $g \in \mathcal{G}$ and $t \geq g$, we can estimate $ATT(g,t)$ as
+where $n_g = \sum_{i=1}^n \mathbf{1}\{G_i = g\}$ and $n_\infty = \sum_{i=1}^n \mathbf{1}\{G_i = \infty\}$ are the number of units in cohort $g$ and the never-treated group, respectively. The second result in @thm-identification-staggered, for all $g \in \mathcal{G}$ and $t \geq g$, we can estimate $ATT(g,t)$ as
 $$
 \begin{align}
 \widehat{ATT}(g,t) &= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i = g\} \\
 &- \frac{1}{n_{\max\{g,t\}}}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i > \max\{g,t\}\},
 \end{align}
 $$
-where $n_{\max\{g,t\}} = \sum_{i=1}^n \mathbf{1}\{G_i > \max\{g,t\}\}=\sum_{i=1}^n \mathbf{1}\{G_i > t\}$ is the number of units in the not-yet-treated cohorts. Finally, under the no anticipation assumption and the parallel trends assumption for every period and group, for all $g, g' \in \mathcal{G}$ and time periods $t$ such that $g'> t$ and $t \geq g$, we can estimate $ATT(g,t)$ as
+where $n_{\max\{g,t\}} = \sum_{i=1}^n \mathbf{1}\{G_i > \max\{g,t\}\}=\sum_{i=1}^n \mathbf{1}\{G_i > t\}$ is the number of units in the not-yet-treated cohorts. Finally, under the parallel trends assumption for every period and group, for all $g, g' \in \mathcal{G}$ and time periods $t$ such that $g'> t$ and $t \geq g$, we can estimate $ATT(g,t)$ as
 $$
 \begin{align}
 \widehat{ATT}(g,t) &= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - Y_{i,t_0})\mathbf{1}\{G_i = g\} \\
 &- \frac{1}{n_{g'}}\sum_{i=1}^n (Y_{it} - Y_{i,t_0})\mathbf{1}\{G_i = g'\},
 \end{align}
 $$
-where $n_{g'} = \sum_{i=1}^n \mathbf{1}\{G_i = g'\}$ is the number of units in cohort $g'$, and $t_0$ is any time period such that $t_0 < g$. An alternative estimator of $ATT(g,t)$ under the parallel trends assumption for every period and group is given by (@baker2026difference)
-$$
-\begin{align}
-\widehat{ATT}(g,t) &= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - \bar{Y}_{i,t\leq g-1})\mathbf{1}\{G_i = g\} \\
-&- \frac{1}{n_{g'}}\sum_{i=1}^n (Y_{it} - \bar{Y}_{i,t\leq g-1})\mathbf{1}\{G_i>t\},
-\end{align}
-$$
-where $\bar{Y}_{i,t\leq g-1} = \frac{1}{g-1}\sum_{t=1}^{g-1} Y_{it}$ is the average observed outcome for unit $i$ in the pre-treatment periods.
+where $n_{g'} = \sum_{i=1}^n \mathbf{1}\{G_i = g'\}$ is the number of units in cohort $g'$, and $t_0$ is any time period such that $t_0 < g$. 
 
 For statistical inference, @Callaway2021 suggest using the multiplier bootstrap method to compute standard errors for $\widehat{ATT}(g,t)$. We will use the `did` package to implement these estimation and inference procedures in the application below.
 
 ### Aggregating group-time average treatment effects
-In the staggered treatment design, for a cohort $g \in \mathcal{G}$, we can have different group-time average treatment effects across time periods. For example, for cohort $g$, we can have $ATT(g,g)$, which is the average treatment effect for units in cohort $g$ in the first period after they receive treatment; $ATT(g,g+1)$, which is the average treatment effect for units in cohort $g$ in the second period after they receive treatment; and so on. Across all cohorts and time periods, there may be a large number of group-time average treatment effects, which can be difficult to summarize and interpret. There are several ways to aggregate the group-time average treatment effects into summary measures. See Table 1 in @Callaway2021 for a summary of the different aggregation methods proposed in the literature. One popular summary measure is an event-study parameter showing the average effect of treatment by the length of exposure to the treatment:
+In the staggered treatment design, for a cohort $g \in \mathcal{G}$, we can have different group-time average treatment effects across time periods. For example, for cohort $g$, we can have $ATT(g,g)$, which is the average treatment effect for units in cohort $g$ in the first period after they receive treatment; $ATT(g,g+1)$, which is the average treatment effect for units in cohort $g$ in the second period after they receive treatment; and so on. Across all cohorts and time periods, there may be a large number of group-time average treatment effects, which can be difficult to summarize and interpret. There can be several ways to aggregate the group-time average treatment effects into summary measures. See Table 1 in @Callaway2021 for a summary of the different aggregation methods proposed in the literature. 
+
+One popular summary measure is an event-study parameter showing the average effect of treatment by the length of exposure to the treatment:
 $$
 \begin{align}
 \widehat{ATT}(e) &= \sum_{g \in \mathcal{G}} w_{g,e} \widehat{ATT}(g, g+ e),

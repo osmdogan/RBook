@@ -537,7 +537,7 @@ window.Quarto = {
 <span class="header-section-number">B.1.1</span> Introduction</h3>
 <p>In this section, we consider a staggered treatment design in which units receive treatment at different time periods. In this design, treatment timing varies across units, such that some units may receive treatment in the first period, while others may receive treatment in the second period, and so on. This design is particularly useful for evaluating the effects of policies or interventions implemented at different times across units, such as states or countries. This setting allows us to define distinct treatment groups (cohorts) based on treatment timing. For example, we can define one cohort consisting of units that receive treatment in the first period, another cohort consisting of units that receive treatment in the second period, and so on, and then compare these cohorts to a control group that never receives treatment.</p>
 <p>We use <span class="math inline">\(Y_{it}\)</span> to denote the observed outcome for unit <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>, for <span class="math inline">\(i=1, \ldots, n\)</span> and <span class="math inline">\(t = 1, \ldots, T\)</span>. We use <span class="math inline">\(Y_{it}(\infty)\)</span> to denote the never-treated potential outcome for unit <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>, and <span class="math inline">\(Y_{it}(g)\)</span> to denote the potential outcome for unit <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span> if it receives treatment in period <span class="math inline">\(g\)</span>. Let <span class="math inline">\(G_i\)</span> denote the period in which unit <span class="math inline">\(i\)</span> receives treatment, with <span class="math inline">\(G_i = \infty\)</span> if unit <span class="math inline">\(i\)</span> never receives treatment, and let <span class="math inline">\(\mathcal{G}\)</span> denote the set of all possible treatment periods. Thus, the set <span class="math inline">\(\mathcal{G}\)</span> defines the cohorts of treated units and untreated units in the staggered treatment design. Each element of <span class="math inline">\(\mathcal{G}\)</span> corresponds to a specific treatment period, and the control group corresponds to the element <span class="math inline">\(\infty\)</span>.</p>
-<p>For example, suppose there are three time periods: 2020, 2021, and 2022. Further, suppose that some units receive treatment in 2020, some receive treatment in 2021, some receive treatment in 2022, and some never receive treatment. In this case, we can define three cohorts of treated units: the first cohort consists of units that receive treatment in 2020, the second cohort consists of units that receive treatment in 2021, and the third cohort consists of units that receive treatment in 2022. The never-treated group consists of units that never receive treatment (i.e., <span class="math inline">\(G_i = \infty\)</span>). Thus, in this example, we have <span class="math inline">\(\mathcal{G} = \{2020, 2021, 2022, \infty\}\)</span>.</p>
+<p>For example, suppose there are three time periods: 2019, 2020, 2021, and 2022. Further, suppose that some units receive treatment in 2020, some in 2021, some in 2022, and some never receive treatment. In this case, we can define three cohorts of treated units: the first, second, and third cohorts consist of units treated in 2020, 2021, and 2022, respectively. The never-treated group consists of units that never receive treatment (i.e., <span class="math inline">\(G_i = \infty\)</span>). Thus, in this example, we have <span class="math inline">\(\mathcal{G} = {2020, 2021, 2022, \infty}\)</span>.</p>
 <p>Using this notation, for the <span class="math inline">\(i\)</span>th unit that belongs to cohort <span class="math inline">\(g\)</span>, we can express its observed outcome as <span class="math display">\[
 Y_{it} =
 \begin{cases}
@@ -554,12 +554,49 @@ Y_{it}(2022) &amp; \text{if } t \geq 2022 \text{ and } G_i = 2022,\\
 Y_{it}(\infty) &amp; \text{if } t &lt; G_i.
 \end{cases}
 \]</span></p>
+<p>For our example with <span class="math inline">\(\mathcal{G} = {2020, 2021, 2022, \infty}\)</span>, suppose that the first, second, and third treated cohorts consist of 5, 3, and 8 units, respectively, while the never-treated group consists of 4 units. In the following example, we use the <code>panelview</code> function from the <code>panelView</code> package to visualize treatment timing across units and over time. In <a href="#fig-AppendixA1-0" class="quarto-xref">Figure&nbsp;<span>B.1</span></a>, the first 5 rows, the next 3 rows, and the following 8 rows correspond to the first, second, and third treated cohorts, respectively, while the last 4 rows correspond to the never-treated group. In addition, the not-yet-treated group at each time period corresponds to the rows associated with treated cohorts that have not yet received treatment by that period. For example, in 2020, the not-yet-treated group consists of the units in rows 1 to 16; in 2021, it consists of the units in rows 6 to 16; and in 2022, it consists of the units in rows 9 to 16.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
+<span><span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">2020</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">2021</span>, <span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">2022</span>, <span class="fl">8</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">Inf</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">time</span> <span class="op">&lt;-</span> <span class="fl">2019</span><span class="op">:</span><span class="fl">2022</span></span>
+<span><span class="va">data_example</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span>, time <span class="op">=</span> <span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>G <span class="op">=</span> <span class="va">G</span><span class="op">[</span><span class="va">id</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>D <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">time</span> <span class="op">&gt;=</span> <span class="va">G</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Define the outcome variable</span></span>
+<span><span class="va">data_example</span> <span class="op">&lt;-</span> <span class="va">data_example</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">data_example</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Create a panel view plot </span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/panelView/man/panelView.html">panelview</a></span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="va">data_example</span>,</span>
+<span>    formula <span class="op">=</span> <span class="va">Y</span> <span class="op">~</span> <span class="va">D</span>,</span>
+<span>    index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"time"</span><span class="op">)</span>,</span>
+<span>    main <span class="op">=</span> <span class="st">""</span>,</span>
+<span>    xlab <span class="op">=</span> <span class="st">"Year"</span>,</span>
+<span>    ylab <span class="op">=</span> <span class="st">"Units"</span>,</span>
+<span>    display.all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    by.timing <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    pre.post <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    theme <span class="op">=</span> <span class="st">"red"</span>,</span>
+<span>    cex.legend <span class="op">=</span> <span class="fl">9</span></span>
+<span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-AppendixA1-0" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-AppendixA1-0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="AppendixA1_files/figure-html/fig-AppendixA1-0-1.png" class="img-fluid figure-img" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AppendixA1-0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;B.1: Panel view plot showing the timing of treatment across units and over time in a staggered treatment design.
+</figcaption></figure>
+</div>
+</div>
+</div>
 <p>In the staggered treatment design, the parameter of interest is often the group-time average treatment effect, which is defined as the average treatment effect for units in cohort <span class="math inline">\(g\)</span> at time <span class="math inline">\(t\)</span>, and is given by <span class="math display">\[
 ATT(g,t) = \mathbb{E}[Y_{it}(g) - Y_{it}(\infty) | G_i = g].
 \]</span> This parameter captures the average effect of treatment for units in cohort <span class="math inline">\(g\)</span> at time <span class="math inline">\(t\)</span>, relative to the never-treated potential outcome.</p>
 </section><section id="identification-and-estimation-without-covariates" class="level3" data-number="B.1.2"><h3 data-number="B.1.2" class="anchored" data-anchor-id="identification-and-estimation-without-covariates">
 <span class="header-section-number">B.1.2</span> Identification and estimation without covariates</h3>
-<p>To identify and estimate the group-time average treatment effect <span class="math inline">\(ATT(g,t)\)</span>, we assume the following assumptions.</p>
+<p>To identify and estimate <span class="math inline">\(ATT(g,t)\)</span>, we assume the following assumptions.</p>
 <div class="callout callout-style-default callout-important no-icon callout-titled" title="No anticipation">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -597,7 +634,7 @@ ATT(g,t) = \mathbb{E}[Y_{it}(g) - Y_{it}(\infty) | G_i = g].
 </div>
 </div>
 <p>The no anticipation assumption states that units do not anticipate future treatment and thus their potential outcomes before treatment are the same as if they were never treated. As in the case of common treatment timing, this assumption suggests that <span class="math inline">\(ATT(g,t)=0\)</span> for all <span class="math inline">\(t &lt; g\)</span>. Due to the staggered nature of the treatment, we can have different comparison groups at each time period, yielding different parallel trends assumptions.</p>
-<p>The first assumption, based on the never-treated group, states that in the post-treatment period, the average change in the never-treated potential outcome from period <span class="math inline">\(t-1\)</span> to period <span class="math inline">\(t\)</span> is the same for units in cohort <span class="math inline">\(g\)</span> and units in the never-treated group. The second assumption, based on the not-yet-treated groups, states that the average change in the never-treated potential outcome from period <span class="math inline">\(t-1\)</span> to period <span class="math inline">\(t\)</span> is the same for units in cohort <span class="math inline">\(g\)</span> and units in the not-yet-treated cohorts. Finally, the parallel trends assumption for every period and group states that the average change in the never-treated potential outcome from period <span class="math inline">\(t-1\)</span> to period <span class="math inline">\(t\)</span> is the same for units in cohort <span class="math inline">\(g\)</span> and units in any other cohort.</p>
+<p>The first assumption, based on the never-treated group, states that in the post-treatment period, the average change in the never-treated potential outcome from period <span class="math inline">\(t-1\)</span> to period <span class="math inline">\(t\)</span> is the same for units in cohort <span class="math inline">\(g\)</span> and units in the never-treated group. The second assumption, based on the not-yet-treated groups, states that the average change in the never-treated potential outcome is the same for units in cohort <span class="math inline">\(g\)</span> and units in the not-yet-treated cohorts. Finally, the parallel trends assumption for every period and group states that the average change in the never-treated potential outcome is the same for units in cohort <span class="math inline">\(g\)</span> and units in any other cohort.</p>
 <div id="thm-identification-staggered" class="theorem">
 <p><span class="theorem-title"><strong>Theorem B.1 (Identification of the group-time average treatment effects)</strong></span> &nbsp;</p>
 <ol type="1">
@@ -623,31 +660,27 @@ ATT(g,t) &amp;= \E[Y_{it}(g) - Y_{it}(\infty)|G_i = g]\\
 &amp;= \E[Y_{it} - Y_{i,g-1}|G_i = g] - \E[Y_{it} - Y_{i,g-1}|G_i = \infty],
 \end{align*}\]</span> where the second equality follows from adding and subtracting <span class="math inline">\(Y_{i,g-1}(\infty)\)</span>, the third equality follows from the parallel trends assumption based on the never-treated group, and the last equality follows from the no anticipation assumption and the definition of the observed outcome.</p>
 </div>
-<p>Given a random sample of <span class="math inline">\(n\)</span> units, we can estimate the group-time average treatment effect <span class="math inline">\(ATT(g,t)\)</span> using the sample analog of the identification results in Theorem <a href="#thm-identification-staggered" class="quarto-xref">Theorem&nbsp;<span>B.1</span></a>. Under the no anticipation assumption and the parallel trends assumption based on the never-treated group, for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we can estimate <span class="math inline">\(ATT(g,t)\)</span> as <span class="math display">\[
+<p>Given a random sample of <span class="math inline">\(n\)</span> units, we can estimate <span class="math inline">\(ATT(g,t)\)</span> using the sample analog of the identification results in Theorem <a href="#thm-identification-staggered" class="quarto-xref">Theorem&nbsp;<span>B.1</span></a>. Under the no anticipation assumption and the parallel trends assumption based on the never-treated group, for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we can estimate <span class="math inline">\(ATT(g,t)\)</span> as <span class="math display">\[
 \begin{align}
 \widehat{ATT}(g,t) &amp;= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i = g\} \\
 &amp;- \frac{1}{n_\infty}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i = \infty\},
 \end{align}
-\]</span> where <span class="math inline">\(n_g = \sum_{i=1}^n \mathbf{1}\{G_i = g\}\)</span> and <span class="math inline">\(n_\infty = \sum_{i=1}^n \mathbf{1}\{G_i = \infty\}\)</span> are the number of units in cohort <span class="math inline">\(g\)</span> and the never-treated group, respectively. Under the no anticipation assumption and the parallel trends assumption based on the not-yet-treated groups, for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we can estimate <span class="math inline">\(ATT(g,t)\)</span> as <span class="math display">\[
+\]</span> where <span class="math inline">\(n_g = \sum_{i=1}^n \mathbf{1}\{G_i = g\}\)</span> and <span class="math inline">\(n_\infty = \sum_{i=1}^n \mathbf{1}\{G_i = \infty\}\)</span> are the number of units in cohort <span class="math inline">\(g\)</span> and the never-treated group, respectively. The second result in <a href="#thm-identification-staggered" class="quarto-xref">Theorem&nbsp;<span>B.1</span></a>, for all <span class="math inline">\(g \in \mathcal{G}\)</span> and <span class="math inline">\(t \geq g\)</span>, we can estimate <span class="math inline">\(ATT(g,t)\)</span> as <span class="math display">\[
 \begin{align}
 \widehat{ATT}(g,t) &amp;= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i = g\} \\
 &amp;- \frac{1}{n_{\max\{g,t\}}}\sum_{i=1}^n (Y_{it} - Y_{i,g-1})\mathbf{1}\{G_i &gt; \max\{g,t\}\},
 \end{align}
-\]</span> where <span class="math inline">\(n_{\max\{g,t\}} = \sum_{i=1}^n \mathbf{1}\{G_i &gt; \max\{g,t\}\}=\sum_{i=1}^n \mathbf{1}\{G_i &gt; t\}\)</span> is the number of units in the not-yet-treated cohorts. Finally, under the no anticipation assumption and the parallel trends assumption for every period and group, for all <span class="math inline">\(g, g' \in \mathcal{G}\)</span> and time periods <span class="math inline">\(t\)</span> such that <span class="math inline">\(g'&gt; t\)</span> and <span class="math inline">\(t \geq g\)</span>, we can estimate <span class="math inline">\(ATT(g,t)\)</span> as <span class="math display">\[
+\]</span> where <span class="math inline">\(n_{\max\{g,t\}} = \sum_{i=1}^n \mathbf{1}\{G_i &gt; \max\{g,t\}\}=\sum_{i=1}^n \mathbf{1}\{G_i &gt; t\}\)</span> is the number of units in the not-yet-treated cohorts. Finally, under the parallel trends assumption for every period and group, for all <span class="math inline">\(g, g' \in \mathcal{G}\)</span> and time periods <span class="math inline">\(t\)</span> such that <span class="math inline">\(g'&gt; t\)</span> and <span class="math inline">\(t \geq g\)</span>, we can estimate <span class="math inline">\(ATT(g,t)\)</span> as <span class="math display">\[
 \begin{align}
 \widehat{ATT}(g,t) &amp;= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - Y_{i,t_0})\mathbf{1}\{G_i = g\} \\
 &amp;- \frac{1}{n_{g'}}\sum_{i=1}^n (Y_{it} - Y_{i,t_0})\mathbf{1}\{G_i = g'\},
 \end{align}
-\]</span> where <span class="math inline">\(n_{g'} = \sum_{i=1}^n \mathbf{1}\{G_i = g'\}\)</span> is the number of units in cohort <span class="math inline">\(g'\)</span>, and <span class="math inline">\(t_0\)</span> is any time period such that <span class="math inline">\(t_0 &lt; g\)</span>. An alternative estimator of <span class="math inline">\(ATT(g,t)\)</span> under the parallel trends assumption for every period and group is given by (<span class="citation" data-cites="baker2026difference">Baker et al. (<a href="references.html#ref-baker2026difference" role="doc-biblioref">2026</a>)</span>) <span class="math display">\[
-\begin{align}
-\widehat{ATT}(g,t) &amp;= \frac{1}{n_g}\sum_{i=1}^n (Y_{it} - \bar{Y}_{i,t\leq g-1})\mathbf{1}\{G_i = g\} \\
-&amp;- \frac{1}{n_{g'}}\sum_{i=1}^n (Y_{it} - \bar{Y}_{i,t\leq g-1})\mathbf{1}\{G_i&gt;t\},
-\end{align}
-\]</span> where <span class="math inline">\(\bar{Y}_{i,t\leq g-1} = \frac{1}{g-1}\sum_{t=1}^{g-1} Y_{it}\)</span> is the average observed outcome for unit <span class="math inline">\(i\)</span> in the pre-treatment periods.</p>
+\]</span> where <span class="math inline">\(n_{g'} = \sum_{i=1}^n \mathbf{1}\{G_i = g'\}\)</span> is the number of units in cohort <span class="math inline">\(g'\)</span>, and <span class="math inline">\(t_0\)</span> is any time period such that <span class="math inline">\(t_0 &lt; g\)</span>.</p>
 <p>For statistical inference, <span class="citation" data-cites="Callaway2021">Callaway and Sant’Anna (<a href="references.html#ref-Callaway2021" role="doc-biblioref">2021</a>)</span> suggest using the multiplier bootstrap method to compute standard errors for <span class="math inline">\(\widehat{ATT}(g,t)\)</span>. We will use the <code>did</code> package to implement these estimation and inference procedures in the application below.</p>
 </section><section id="aggregating-group-time-average-treatment-effects" class="level3" data-number="B.1.3"><h3 data-number="B.1.3" class="anchored" data-anchor-id="aggregating-group-time-average-treatment-effects">
 <span class="header-section-number">B.1.3</span> Aggregating group-time average treatment effects</h3>
-<p>In the staggered treatment design, for a cohort <span class="math inline">\(g \in \mathcal{G}\)</span>, we can have different group-time average treatment effects across time periods. For example, for cohort <span class="math inline">\(g\)</span>, we can have <span class="math inline">\(ATT(g,g)\)</span>, which is the average treatment effect for units in cohort <span class="math inline">\(g\)</span> in the first period after they receive treatment; <span class="math inline">\(ATT(g,g+1)\)</span>, which is the average treatment effect for units in cohort <span class="math inline">\(g\)</span> in the second period after they receive treatment; and so on. Across all cohorts and time periods, there may be a large number of group-time average treatment effects, which can be difficult to summarize and interpret. There are several ways to aggregate the group-time average treatment effects into summary measures. See Table 1 in <span class="citation" data-cites="Callaway2021">Callaway and Sant’Anna (<a href="references.html#ref-Callaway2021" role="doc-biblioref">2021</a>)</span> for a summary of the different aggregation methods proposed in the literature. One popular summary measure is an event-study parameter showing the average effect of treatment by the length of exposure to the treatment: <span class="math display">\[
+<p>In the staggered treatment design, for a cohort <span class="math inline">\(g \in \mathcal{G}\)</span>, we can have different group-time average treatment effects across time periods. For example, for cohort <span class="math inline">\(g\)</span>, we can have <span class="math inline">\(ATT(g,g)\)</span>, which is the average treatment effect for units in cohort <span class="math inline">\(g\)</span> in the first period after they receive treatment; <span class="math inline">\(ATT(g,g+1)\)</span>, which is the average treatment effect for units in cohort <span class="math inline">\(g\)</span> in the second period after they receive treatment; and so on. Across all cohorts and time periods, there may be a large number of group-time average treatment effects, which can be difficult to summarize and interpret. There can be several ways to aggregate the group-time average treatment effects into summary measures. See Table 1 in <span class="citation" data-cites="Callaway2021">Callaway and Sant’Anna (<a href="references.html#ref-Callaway2021" role="doc-biblioref">2021</a>)</span> for a summary of the different aggregation methods proposed in the literature.</p>
+<p>One popular summary measure is an event-study parameter showing the average effect of treatment by the length of exposure to the treatment: <span class="math display">\[
 \begin{align}
 \widehat{ATT}(e) &amp;= \sum_{g \in \mathcal{G}} w_{g,e} \widehat{ATT}(g, g+ e),
 \end{align}
@@ -674,7 +707,7 @@ w_{g,e} = \mathbf{1}\{g + e \leq T\} P(G=g|G+e \leq T, G\leq T).
 <code>x1</code>, <code>x2</code>, <code>x3</code>: Share of population above poverty line, share of employment in manufacturing, and share of population with high school degree or higher, respectively.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Load the dataset</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Load the dataset</span></span>
 <span><span class="va">walmart_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://haven.tidyverse.org/reference/read_dta.html">read_dta</a></span><span class="op">(</span><span class="st">"data/lw_walmart.dta"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">walmart_data</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -685,7 +718,7 @@ w_{g,e} = \mathbf{1}\{g + e \leq T\} P(G=g|G+e \leq T, G\leq T).
 </div>
 <p>In the following, we provide a table of summary statistics using the <code>datasummary_skim</code> function from the <code>modelsummary</code> package. We also add variable labels to the dataset using the <code>set_variable_labels</code> function from the <code>labelled</code> package, so that the summary statistics table has more informative variable names.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Add variable labels</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Add variable labels</span></span>
 <span><span class="va">walmart_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html">set_variable_labels</a></span><span class="op">(</span></span>
 <span>    <span class="va">walmart_data</span>,</span>
 <span>    year <span class="op">=</span> <span class="st">"Year"</span>,</span>
@@ -709,23 +742,23 @@ w_{g,e} = \mathbf{1}\{g + e \leq T\} P(G=g|G+e \leq T, G\leq T).
 Table&nbsp;B.1: Summary statistics for the variables in the dataset
 </figcaption><div aria-describedby="tbl-walmart-summary-stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="gxslvqajcu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#gxslvqajcu table {
+<div id="wzfngjefpx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wzfngjefpx table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#gxslvqajcu thead, #gxslvqajcu tbody, #gxslvqajcu tfoot, #gxslvqajcu tr, #gxslvqajcu td, #gxslvqajcu th {
+#wzfngjefpx thead, #wzfngjefpx tbody, #wzfngjefpx tfoot, #wzfngjefpx tr, #wzfngjefpx td, #wzfngjefpx th {
   border-style: none;
 }
 
-#gxslvqajcu p {
+#wzfngjefpx p {
   margin: 0;
   padding: 0;
 }
 
-#gxslvqajcu .gt_table {
+#wzfngjefpx .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -751,12 +784,12 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   border-left-color: #D3D3D3;
 }
 
-#gxslvqajcu .gt_caption {
+#wzfngjefpx .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#gxslvqajcu .gt_title {
+#wzfngjefpx .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -768,7 +801,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   border-bottom-width: 0;
 }
 
-#gxslvqajcu .gt_subtitle {
+#wzfngjefpx .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -780,7 +813,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   border-top-width: 0;
 }
 
-#gxslvqajcu .gt_heading {
+#wzfngjefpx .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -792,13 +825,13 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   border-right-color: #D3D3D3;
 }
 
-#gxslvqajcu .gt_bottom_border {
+#wzfngjefpx .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gxslvqajcu .gt_col_headings {
+#wzfngjefpx .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -813,7 +846,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   border-right-color: #D3D3D3;
 }
 
-#gxslvqajcu .gt_col_heading {
+#wzfngjefpx .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -833,7 +866,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   overflow-x: hidden;
 }
 
-#gxslvqajcu .gt_column_spanner_outer {
+#wzfngjefpx .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -845,15 +878,15 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   padding-right: 4px;
 }
 
-#gxslvqajcu .gt_column_spanner_outer:first-child {
+#wzfngjefpx .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gxslvqajcu .gt_column_spanner_outer:last-child {
+#wzfngjefpx .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gxslvqajcu .gt_column_spanner {
+#wzfngjefpx .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -865,11 +898,11 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   width: 100%;
 }
 
-#gxslvqajcu .gt_spanner_row {
+#wzfngjefpx .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#gxslvqajcu .gt_group_heading {
+#wzfngjefpx .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -895,7 +928,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   text-align: left;
 }
 
-#gxslvqajcu .gt_empty_group_heading {
+#wzfngjefpx .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -910,15 +943,15 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   vertical-align: middle;
 }
 
-#gxslvqajcu .gt_from_md > :first-child {
+#wzfngjefpx .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gxslvqajcu .gt_from_md > :last-child {
+#wzfngjefpx .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gxslvqajcu .gt_row {
+#wzfngjefpx .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -937,7 +970,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   overflow-x: hidden;
 }
 
-#gxslvqajcu .gt_stub {
+#wzfngjefpx .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -950,7 +983,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   padding-right: 5px;
 }
 
-#gxslvqajcu .gt_stub_row_group {
+#wzfngjefpx .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -964,15 +997,15 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   vertical-align: top;
 }
 
-#gxslvqajcu .gt_row_group_first td {
+#wzfngjefpx .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#gxslvqajcu .gt_row_group_first th {
+#wzfngjefpx .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#gxslvqajcu .gt_summary_row {
+#wzfngjefpx .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -982,16 +1015,16 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   padding-right: 5px;
 }
 
-#gxslvqajcu .gt_first_summary_row {
+#wzfngjefpx .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#gxslvqajcu .gt_first_summary_row.thick {
+#wzfngjefpx .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#gxslvqajcu .gt_last_summary_row {
+#wzfngjefpx .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1001,7 +1034,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   border-bottom-color: #D3D3D3;
 }
 
-#gxslvqajcu .gt_grand_summary_row {
+#wzfngjefpx .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1011,7 +1044,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   padding-right: 5px;
 }
 
-#gxslvqajcu .gt_first_grand_summary_row {
+#wzfngjefpx .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1021,7 +1054,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   border-top-color: #D3D3D3;
 }
 
-#gxslvqajcu .gt_last_grand_summary_row_top {
+#wzfngjefpx .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1031,11 +1064,11 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   border-bottom-color: #D3D3D3;
 }
 
-#gxslvqajcu .gt_striped {
+#wzfngjefpx .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gxslvqajcu .gt_table_body {
+#wzfngjefpx .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1044,7 +1077,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   border-bottom-color: #D3D3D3;
 }
 
-#gxslvqajcu .gt_footnotes {
+#wzfngjefpx .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1058,7 +1091,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   border-right-color: #D3D3D3;
 }
 
-#gxslvqajcu .gt_footnote {
+#wzfngjefpx .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1067,7 +1100,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   padding-right: 5px;
 }
 
-#gxslvqajcu .gt_sourcenotes {
+#wzfngjefpx .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1081,7 +1114,7 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   border-right-color: #D3D3D3;
 }
 
-#gxslvqajcu .gt_sourcenote {
+#wzfngjefpx .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1089,72 +1122,72 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
   padding-right: 5px;
 }
 
-#gxslvqajcu .gt_left {
+#wzfngjefpx .gt_left {
   text-align: left;
 }
 
-#gxslvqajcu .gt_center {
+#wzfngjefpx .gt_center {
   text-align: center;
 }
 
-#gxslvqajcu .gt_right {
+#wzfngjefpx .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gxslvqajcu .gt_font_normal {
+#wzfngjefpx .gt_font_normal {
   font-weight: normal;
 }
 
-#gxslvqajcu .gt_font_bold {
+#wzfngjefpx .gt_font_bold {
   font-weight: bold;
 }
 
-#gxslvqajcu .gt_font_italic {
+#wzfngjefpx .gt_font_italic {
   font-style: italic;
 }
 
-#gxslvqajcu .gt_super {
+#wzfngjefpx .gt_super {
   font-size: 65%;
 }
 
-#gxslvqajcu .gt_footnote_marks {
+#wzfngjefpx .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#gxslvqajcu .gt_asterisk {
+#wzfngjefpx .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#gxslvqajcu .gt_indent_1 {
+#wzfngjefpx .gt_indent_1 {
   text-indent: 5px;
 }
 
-#gxslvqajcu .gt_indent_2 {
+#wzfngjefpx .gt_indent_2 {
   text-indent: 10px;
 }
 
-#gxslvqajcu .gt_indent_3 {
+#wzfngjefpx .gt_indent_3 {
   text-indent: 15px;
 }
 
-#gxslvqajcu .gt_indent_4 {
+#wzfngjefpx .gt_indent_4 {
   text-indent: 20px;
 }
 
-#gxslvqajcu .gt_indent_5 {
+#wzfngjefpx .gt_indent_5 {
   text-indent: 25px;
 }
 
-#gxslvqajcu .katex-display {
+#wzfngjefpx .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#gxslvqajcu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#wzfngjefpx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1258,9 +1291,9 @@ Table&nbsp;B.1: Summary statistics for the variables in the dataset
 </figure>
 </div>
 </div>
-<p><a href="#tbl-walmart-summary-stats" class="quarto-xref">Table&nbsp;<span>B.1</span></a> shows that the first Walmart opening in the dataset occurred in 1989, and the last Walmart opening occurred in 1999. Thus, there are 14 cohorts of treated units, corresponding to the years 1989–1999, and a never-treated group consisting of counties that never had a Walmart opening during the sample period. <a href="#tbl-walmart-openings" class="quarto-xref">Table&nbsp;<span>B.2</span></a> shows the number of counties that had their first Walmart opening in each year from 1989 to 1999, as well as the number of counties that never had a Walmart opening (never-treated counties) during the sample period. The table shows that the never-treated group consists of 391 counties. The number of counties in the treated cohorts ranges from 21 to 118, with the largest number of counties having their first Walmart opening in 1990 (110 counties) and the smallest number of counties having their first Walmart opening in 1999 (12 counties). In <a href="#fig-AppendixA1-1" class="quarto-xref">Figure&nbsp;<span>B.1</span></a>, we show the distribution of the year of the first Walmart opening across counties.</p>
+<p><a href="#tbl-walmart-summary-stats" class="quarto-xref">Table&nbsp;<span>B.1</span></a> shows that the first Walmart opening in the dataset occurred in 1989, and the last Walmart opening occurred in 1999. Thus, there are 14 cohorts of treated units, corresponding to the years 1989–1999, and a never-treated group consisting of counties that never had a Walmart opening during the sample period. <a href="#tbl-walmart-openings" class="quarto-xref">Table&nbsp;<span>B.2</span></a> shows the number of counties that had their first Walmart opening in each year from 1989 to 1999, as well as the number of counties that never had a Walmart opening (never-treated counties) during the sample period. The table shows that the never-treated group consists of 391 counties. The number of counties in the treated cohorts ranges from 21 to 118, with the largest number of counties having their first Walmart opening in 1990 (110 counties) and the smallest number of counties having their first Walmart opening in 1999 (12 counties). In <a href="#fig-AppendixA1-1" class="quarto-xref">Figure&nbsp;<span>B.2</span></a>, we show the distribution of the year of the first Walmart opening across counties.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Number of counties with first Walmart opening by year</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Number of counties with first Walmart opening by year</span></span>
 <span><span class="va">walmart_openings</span> <span class="op">&lt;-</span> <span class="va">walmart_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">first_year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>num_counties <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html">n_distinct</a></span><span class="op">(</span><span class="va">cid</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
@@ -1350,16 +1383,16 @@ Table&nbsp;B.2: Number of counties with first Walmart opening by year
 <img src="figures/walmart_openings.png" class="img-fluid figure-img" width="800">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AppendixA1-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;B.1: Year of the first Walmart opening
+Figure&nbsp;B.2: Year of the first Walmart opening
 </figcaption></figure>
 </div>
-<p>In the following, we generate the indicator <code>D</code>, which takes the value 1 if the county has a Walmart store in that year and in all subsequent periods, and 0 otherwise. We use this variable in the <code>panelview</code> function from the <code>panelView</code> package to visualize the treatment timing across counties and over time, as shown in <a href="#fig-AppendixA1-2" class="quarto-xref">Figure&nbsp;<span>B.2</span></a>. This figure shows the timing of Walmart openings across counties over time, with treated units shown in red and untreated units shown in gray. The height of the red bars indicates the number of treated units in each year, and the width of the red bars indicates the duration of treatment for each cohort. The figure shows that there is a staggered pattern of treatment timing, where the first Walmart openings occur in 1986 and the last Walmart openings occur in 1999. The figure also shows that there are some counties that never receive treatment (i.e., never have a Walmart opening during the sample period), which are shown in gray. Finally, in <a href="#fig-AppendixA1-3" class="quarto-xref">Figure&nbsp;<span>B.3</span></a>, we show the time series of the outcome variable <code>log_retail_emp</code> across counties and over time using the <code>panelview</code> function with <code>type = "outcome"</code>.</p>
+<p>In the following, we generate the indicator <code>D</code>, which takes the value 1 if the county has a Walmart store in that year and in all subsequent periods, and 0 otherwise. We use this variable in the <code>panelview</code> function from the <code>panelView</code> package to visualize the treatment timing across counties and over time, as shown in <a href="#fig-AppendixA1-2" class="quarto-xref">Figure&nbsp;<span>B.3</span></a>. This figure shows the timing of Walmart openings across counties over time, with treated units shown in red and untreated units shown in gray. The height of the red bars indicates the number of treated units in each year, and the width of the red bars indicates the duration of treatment for each cohort. The figure shows that there is a staggered pattern of treatment timing, where the first Walmart openings occur in 1986 and the last Walmart openings occur in 1999. The figure also shows that there are some counties that never receive treatment (i.e., never have a Walmart opening during the sample period), which are shown in gray. Finally, in <a href="#fig-AppendixA1-3" class="quarto-xref">Figure&nbsp;<span>B.4</span></a>, we show the time series of the outcome variable <code>log_retail_emp</code> across counties and over time using the <code>panelview</code> function with <code>type = "outcome"</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Generate D variable</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Generate D variable</span></span>
 <span><span class="va">walmart_data</span><span class="op">$</span><span class="va">D</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">walmart_data</span><span class="op">$</span><span class="va">first_year</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="va">walmart_data</span><span class="op">$</span><span class="va">year</span> <span class="op">&gt;=</span> <span class="va">walmart_data</span><span class="op">$</span><span class="va">first_year</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create a panel view plot to visualize the timing of Walmart openings</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create a panel view plot to visualize the timing of Walmart openings</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/panelView/man/panelView.html">panelview</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">walmart_data</span>,</span>
 <span>  formula <span class="op">=</span> <span class="va">log_retail_emp</span> <span class="op">~</span> <span class="va">D</span>,          </span>
@@ -1379,13 +1412,13 @@ Figure&nbsp;B.1: Year of the first Walmart opening
 <img src="AppendixA1_files/figure-html/fig-AppendixA1-2-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AppendixA1-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;B.2: Panel view plot showing the timing of Walmart openings across counties and over time.
+Figure&nbsp;B.3: Panel view plot showing the timing of Walmart openings across counties and over time.
 </figcaption></figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create a panel view plot to visualize the timing of Walmart openings</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create a panel view plot to visualize the timing of Walmart openings</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/panelView/man/panelView.html">panelview</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">walmart_data</span>,</span>
 <span>  formula <span class="op">=</span> <span class="va">log_retail_emp</span> <span class="op">~</span> <span class="va">D</span>,          </span>
@@ -1404,14 +1437,14 @@ Figure&nbsp;B.2: Panel view plot showing the timing of Walmart openings across c
 <img src="AppendixA1_files/figure-html/fig-AppendixA1-3-1.png" class="img-fluid figure-img" width="576">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AppendixA1-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;B.3: Time series plot of outcome variable
+Figure&nbsp;B.4: Time series plot of outcome variable
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>We only consider the effects of Walmart openings on retail employment without including any covariates in the estimation. To estimate the group-time average treatment effects, we use the <code>att_gt</code> function from the <code>did</code> package. This function implements the estimation procedure described in the previous section, and it allows us to compute standard errors using the multiplier bootstrap method. In our estimation, we use the never-treated group as the control group.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_no_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bcallaway11.github.io/did/reference/att_gt.html">att_gt</a></span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_no_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bcallaway11.github.io/did/reference/att_gt.html">att_gt</a></span><span class="op">(</span></span>
 <span>  yname <span class="op">=</span> <span class="st">"log_retail_emp"</span>,</span>
 <span>  tname <span class="op">=</span> <span class="st">"year"</span>,</span>
 <span>  idname <span class="op">=</span> <span class="st">"cid"</span>,</span>
@@ -1428,7 +1461,7 @@ Figure&nbsp;B.3: Time series plot of outcome variable
 </div>
 <p>All estimated group-time average treatment effects are contained in the <code>model_no_x</code> object. We can summarize these estimates using the <code>summary</code> function. However, since there are 14 cohorts and multiple time periods, there are many group-time average treatment effects, which can be difficult to summarize and interpret. Therefore, we will focus on summarizing these estimates using event-study parameters <span class="math inline">\(ATT(e)\)</span> introduced in the previous section. To that end, we use the <code>aggte</code> function from the <code>did</code> package with <code>type = "dynamic"</code>. This function takes the estimated group-time average treatment effects <span class="math inline">\(ATT(g,t)\)</span> from the <code>model_no_x</code> object and aggregates them into event-study parameters showing the average effect of treatment by the length of exposure to the treatment.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">event_study_no_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bcallaway11.github.io/did/reference/aggte.html">aggte</a></span><span class="op">(</span><span class="va">model_no_x</span>, type <span class="op">=</span> <span class="st">"dynamic"</span><span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">event_study_no_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bcallaway11.github.io/did/reference/aggte.html">aggte</a></span><span class="op">(</span><span class="va">model_no_x</span>, type <span class="op">=</span> <span class="st">"dynamic"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">event_study_no_x</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -1488,9 +1521,9 @@ Control Group:  Not Yet Treated,  Anticipation Periods:  0
 Estimation Method:  Doubly Robust</code></pre>
 </div>
 </div>
-<p>Finally, we plot the event-study parameters using the <code>ggdid</code> function from the <code>did</code> package. This function creates a plot of the estimated event-study parameters along with their confidence intervals. <a href="#fig-AppendixA1-4" class="quarto-xref">Figure&nbsp;<span>B.4</span></a> shows the plot of the estimated event-study parameters. The figure indicates there are statistically significant pre-treatment effects, which suggests that the parallel trends assumption based on the never-treated group may not hold in this application. The post-treatment effects show a positive and statistically significant effect of Walmart openings on retail employment, suggesting that Walmart openings may have led to an increase in retail employment in the treated counties. However, given the presence of pre-treatment effects, these post-treatment effects should be interpreted with caution, as they may be driven by factors other than the treatment effect of Walmart openings.</p>
+<p>Finally, we plot the event-study parameters using the <code>ggdid</code> function from the <code>did</code> package. This function creates a plot of the estimated event-study parameters along with their confidence intervals. <a href="#fig-AppendixA1-4" class="quarto-xref">Figure&nbsp;<span>B.5</span></a> shows the plot of the estimated event-study parameters. The figure indicates there are statistically significant pre-treatment effects, which suggests that the parallel trends assumption based on the never-treated group may not hold in this application. The post-treatment effects show a positive and statistically significant effect of Walmart openings on retail employment, suggesting that Walmart openings may have led to an increase in retail employment in the treated counties. However, given the presence of pre-treatment effects, these post-treatment effects should be interpreted with caution, as they may be driven by factors other than the treatment effect of Walmart openings.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Event-study plot of the estimated event-study parameters</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Event-study plot of the estimated event-study parameters</span></span>
 <span><span class="fu"><a href="https://bcallaway11.github.io/did/reference/ggdid.html">ggdid</a></span><span class="op">(</span><span class="va">event_study_no_x</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Length of exposure to treatment"</span>, y <span class="op">=</span> <span class="st">"Event-study parameter"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -1499,16 +1532,16 @@ Estimation Method:  Doubly Robust</code></pre>
 <img src="AppendixA1_files/figure-html/fig-AppendixA1-4-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AppendixA1-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;B.4: Effects of Walmart Opening on log(Retail Employment)
+Figure&nbsp;B.5: Effects of Walmart Opening on log(Retail Employment)
 </figcaption></figure>
 </div>
 </div>
 </div>
 </section><section id="identification-and-estimation-with-covariates" class="level3" data-number="B.1.5"><h3 data-number="B.1.5" class="anchored" data-anchor-id="identification-and-estimation-with-covariates">
 <span class="header-section-number">B.1.5</span> Identification and estimation with covariates</h3>
-<p>The event-study plot in <a href="#fig-AppendixA1-4" class="quarto-xref">Figure&nbsp;<span>B.4</span></a> suggests that the parallel trends assumption based on the never-treated group may not hold in our application. If we have covariates that are unbalanced across cohorts and if we beileve that these covariates are determinants of the unterated potential outcomes, then we should update our unconditional parallel trends assumptions to conditional parallel trends assumptions. In our application, we have three covariates: <code>x1</code>, <code>x2</code>, and <code>x3</code>. In the following table, we compare the average values of these covariates across treated cohorts and the not-yet-treated group at each time period.</p>
+<p>The event-study plot in <a href="#fig-AppendixA1-4" class="quarto-xref">Figure&nbsp;<span>B.5</span></a> suggests that the parallel trends assumption based on the never-treated group may not hold in our application. If we have covariates that are unbalanced across cohorts and if we beileve that these covariates are determinants of the unterated potential outcomes, then we should update our unconditional parallel trends assumptions to conditional parallel trends assumptions. In our application, we have three covariates: <code>x1</code>, <code>x2</code>, and <code>x3</code>. In the following table, we compare the average values of these covariates across treated cohorts and the not-yet-treated group at each time period.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">covariate_balance</span> <span class="op">&lt;-</span> <span class="va">walmart_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">covariate_balance</span> <span class="op">&lt;-</span> <span class="va">walmart_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span></span>
 <span>    meanx1_treated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x1</span><span class="op">[</span><span class="va">D</span> <span class="op">==</span> <span class="fl">1</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
@@ -1716,7 +1749,7 @@ ATT(g,t) = \E[Y_{it} - Y_{i,t_0}|G_i = g] - \E[\E[Y_{it} - Y_{i,t_0}|G_i = g', X
 <p>As in the case of common treatment timing dicussed in Chapter 22, we can estimate the group-time average treatment effects <span class="math inline">\(ATT(g,t)\)</span> using the sample analog of the identification results in Theorem <a href="#thm-identification-staggered-covariates" class="quarto-xref">Theorem&nbsp;<span>B.2</span></a>. The first term in these identification results <span class="math inline">\(\E[Y_{it} - Y_{i,g-1}|G_i = g]\)</span> can be estimated using the sample average of <span class="math inline">\(Y_{it} - Y_{i,g-1}\)</span> for units in cohort <span class="math inline">\(g\)</span>. The second term in these identification results can be estimated using a regression adjustment method, the inverse probability weighting method, or the doubly robust method discussed in Chapter 22. The <code>att_gt</code> function from the <code>did</code> package allows us to implement these estimation methods in the staggered treatment design with covariates.</p>
 <p>In our application on the effect of Walmart openings on retail employment, we can estimate the group-time average treatment effects using the <code>att_gt</code> function with <code>xformla = ~ x1 + x2 + x3</code> to include the covariates in the estimation. We can then summarize these estimates using event-study parameters and plot them as we did in the case without covariates.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_with_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bcallaway11.github.io/did/reference/att_gt.html">att_gt</a></span><span class="op">(</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_with_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bcallaway11.github.io/did/reference/att_gt.html">att_gt</a></span><span class="op">(</span></span>
 <span>  yname <span class="op">=</span> <span class="st">"log_retail_emp"</span>,</span>
 <span>  tname <span class="op">=</span> <span class="st">"year"</span>,</span>
 <span>  idname <span class="op">=</span> <span class="st">"cid"</span>,</span>
@@ -1790,9 +1823,9 @@ Control Group:  Not Yet Treated,  Anticipation Periods:  0
 Estimation Method:  Doubly Robust</code></pre>
 </div>
 </div>
-<p>The event-study plot in <a href="#fig-AppendixA1-5" class="quarto-xref">Figure&nbsp;<span>B.5</span></a> is similar to the event-study plot in <a href="#fig-AppendixA1-4" class="quarto-xref">Figure&nbsp;<span>B.4</span></a>. The figure indicates that there are still some statistically significant pre-treatment effects, suggesting that the conditional parallel trends assumption based on the never-treated group may not hold in this application. Therefore, given the presence of these pre-treatment effects, the positive post-treatment effects should be interpreted with caution.</p>
+<p>The event-study plot in <a href="#fig-AppendixA1-5" class="quarto-xref">Figure&nbsp;<span>B.6</span></a> is similar to the event-study plot in <a href="#fig-AppendixA1-4" class="quarto-xref">Figure&nbsp;<span>B.5</span></a>. The figure indicates that there are still some statistically significant pre-treatment effects, suggesting that the conditional parallel trends assumption based on the never-treated group may not hold in this application. Therefore, given the presence of these pre-treatment effects, the positive post-treatment effects should be interpreted with caution.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Event-study plot of the estimated event-study parameters with covariates</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Event-study plot of the estimated event-study parameters with covariates</span></span>
 <span><span class="fu"><a href="https://bcallaway11.github.io/did/reference/ggdid.html">ggdid</a></span><span class="op">(</span><span class="va">event_study_with_x</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Length of exposure to treatment"</span>, y <span class="op">=</span> <span class="st">"Event-study parameter"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -1801,7 +1834,7 @@ Estimation Method:  Doubly Robust</code></pre>
 <img src="AppendixA1_files/figure-html/fig-AppendixA1-5-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-AppendixA1-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;B.5: Effects of Walmart Opening on log(Retail Employment) with covariates
+Figure&nbsp;B.6: Effects of Walmart Opening on log(Retail Employment) with covariates
 </figcaption></figure>
 </div>
 </div>
@@ -1809,9 +1842,6 @@ Figure&nbsp;B.5: Effects of Walmart Opening on log(Retail Employment) with covar
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
-<div id="ref-baker2026difference" class="csl-entry" role="listitem">
-Baker, Andrew, Brantly Callaway, Scott Cunningham, Andrew Goodman-Bacon, and Pedro H. C. Sant’Anna. 2026. <span>“Difference-in-Differences Designs: A Practitioner’s Guide.”</span> <em>Journal of Economic Literature</em>, ahead of print. <a href="https://doi.org/10.1257/jel.20251650">https://doi.org/10.1257/jel.20251650</a>.
-</div>
 <div id="ref-Butts2025dynamic" class="csl-entry" role="listitem">
 Brown, Nicholas L., and Kyle Butts. 2025. <span>“Dynamic Treatment Effect Estimation with Interactive Fixed Effects and Short Panels.”</span> <em>Journal of Econometrics</em> 250 (C): 106013.
 </div>
