@@ -180,7 +180,7 @@ w_{g,e} = \mathbf{1}\{g + e \leq T\} P(G=g|G+e \leq T, G\leq T).
 $$
 
 ### Application: The effect of Walmart entry on local labor markets
-In this section, we study the effect of Walmart's opening on local labor markets using the dataset collected by @Butts2025dynamic. The dataset contains information on the opening dates of Walmart stores across different counties in the United States, as well as information on local labor market conditions. The dataset is a balanced panel of 1277 counties over the period 1977--1999. The dataset is contained in the lw_walmart.dta file and includes the following variables:
+In this section, we study the effect of Walmart's opening on local labor markets using the dataset collected by @Butts2025dynamic. The dataset contains information on the opening dates of Walmart stores across different counties in the United States, as well as information on local labor market conditions. The dataset is a balanced panel of 1277 counties over the period 1977--1999. The dataset is contained in the `lw_walmart.dta` file and includes the following variables:
 
 - `fips`: County FIPS code.
 - `year`: Year of observation.
@@ -223,7 +223,7 @@ datasummary_skim(
 )
 ```
 
-@tbl-walmart-summary-stats shows that the first Walmart opening in the dataset occurred in 1989, and the last Walmart opening occurred in 1999. Thus, there are 14 cohorts of treated units, corresponding to the years 1989--1999, and a never-treated group consisting of counties that never had a Walmart opening during the sample period. @tbl-walmart-openings shows the number of counties that had their first Walmart opening in each year from 1989 to 1999, as well as the number of counties that never had a Walmart opening (never-treated counties) during the sample period. The table shows that the never-treated group consists of 391 counties. The number of counties in the treated cohorts ranges from 21 to 118, with the largest number of counties having their first Walmart opening in 1990 (110 counties) and the smallest number of counties having their first Walmart opening in 1999 (12 counties). In @fig-AppendixA1-1, we show the distribution of the year of the first Walmart opening across counties.
+@tbl-walmart-summary-stats shows that the first Walmart opening in the dataset occurred in 1986, and the last Walmart opening occurred in 1999. Thus, there are 14 cohorts of treated units, corresponding to the years 1989--1999, and a never-treated group consisting of counties that never had a Walmart opening during the sample period. @tbl-walmart-openings shows the number of counties that had their first Walmart opening in each year from 1986 to 1999, as well as the number of counties that never had a Walmart opening (never-treated counties) during the sample period. The table shows that the never-treated group consists of 391 counties. The number of counties in the treated cohorts ranges from 21 to 118, with the largest number of counties having their first Walmart opening in 1990 (118 counties) and the smallest number of counties having their first Walmart opening in 1999 (21 counties). In @fig-AppendixA1-1, we show the distribution of the year of the first Walmart opening across counties.
 
 ```{r}
 #| tbl-cap: "Number of counties with first Walmart opening by year"
@@ -291,7 +291,7 @@ panelview(
 )
 ```
 
-We only consider the effects of Walmart openings on retail employment without including any covariates in the estimation. To estimate the group-time average treatment effects, we use the `att_gt` function from the `did` package. This function implements the estimation procedure described in the previous section, and it allows us to compute standard errors using the multiplier bootstrap method. In our estimation, we use the never-treated group as the control group.
+We only consider the effects of Walmart openings on retail employment without including any covariates in the estimation. To estimate the group-time average treatment effects, we use the `att_gt` function from the `did` package. This function implements the estimation procedure described in the previous section, and it allows us to compute standard errors using the multiplier bootstrap method. In our estimation, we use the not-yet-treated group as the control group.
 
 ```{r}
 model_no_x <- att_gt(
@@ -310,14 +310,14 @@ model_no_x <- att_gt(
 )
 ```
 
-All estimated group-time average treatment effects are contained in the `model_no_x` object. We can summarize these estimates using the `summary` function. However, since there are 14 cohorts and multiple time periods, there are many group-time average treatment effects, which can be difficult to summarize and interpret. Therefore, we will focus on summarizing these estimates using event-study parameters $ATT(e)$ introduced in the previous section. To that end, we use the `aggte` function from the `did` package with `type = "dynamic"`. This function takes the estimated group-time average treatment effects $ATT(g,t)$ from the `model_no_x` object and aggregates them into event-study parameters showing the average effect of treatment by the length of exposure to the treatment.
+All estimated group-time average treatment effects are contained in the `model_no_x` object. We can summarize these estimates using the `summary` function. However, since there are 14 cohorts and multiple time periods, there are many group-time average treatment effects, which can be difficult to summarize and interpret. Therefore, we will focus on summarizing these estimates using event-study parameters $ATT(e)$ introduced in the previous section. To that end, we use the `aggte` function from the `did` package with `type = "dynamic"`. This function takes the estimated $ATT(g,t)$ from the `model_no_x` object and aggregates them into event-study parameters showing the average effect of treatment by the length of exposure to the treatment.
 
 ```{r}
 event_study_no_x <- aggte(model_no_x, type = "dynamic")
 summary(event_study_no_x)
 ```
 
-Finally, we plot the event-study parameters using the `ggdid` function from the `did` package. This function creates a plot of the estimated event-study parameters along with their confidence intervals. @fig-AppendixA1-4 shows the plot of the estimated event-study parameters. The figure indicates there are statistically significant pre-treatment effects, which suggests that the parallel trends assumption based on the never-treated group may not hold in this application. The post-treatment effects show a positive and statistically significant effect of Walmart openings on retail employment, suggesting that Walmart openings may have led to an increase in retail employment in the treated counties. However, given the presence of pre-treatment effects, these post-treatment effects should be interpreted with caution, as they may be driven by factors other than the treatment effect of Walmart openings.
+Finally, we plot the event-study parameters using the `ggdid` function from the `did` package. This function creates a plot of the estimated event-study parameters along with their confidence intervals. @fig-AppendixA1-4 shows the plot of the estimated event-study parameters. The figure indicates there are statistically significant pre-treatment effects, which suggests that the parallel trends assumption based on the not-yet-treated group may not hold for this application. The post-treatment effects show a positive and statistically significant effect of Walmart openings on retail employment, suggesting that Walmart openings may have led to an increase in retail employment in the treated counties. However, given the presence of pre-treatment effects, these post-treatment effects should be interpreted with caution, as they may be driven by factors other than the treatment effect of Walmart openings.
 ```{r}
 #| fig-cap: "Effects of Walmart Opening on log(Retail Employment)"
 #| label: fig-AppendixA1-4
@@ -329,7 +329,7 @@ ggdid(event_study_no_x) +
 ```
 
 ###  Identification and estimation with covariates
-The event-study plot in @fig-AppendixA1-4 suggests that the parallel trends assumption based on the never-treated group may not hold in our application. If we have covariates that are unbalanced across cohorts and if we beileve that these covariates are determinants of the unterated potential outcomes, then we should update our unconditional parallel trends assumptions to conditional parallel trends assumptions. In our application, we have three covariates: `x1`, `x2`, and `x3`. In the following table, we compare the average values of these covariates across treated cohorts and the not-yet-treated group at each time period. 
+The event-study plot in @fig-AppendixA1-4 suggests that the parallel trends assumption based on the not-yet-treated group may not hold for this application. If we have covariates that are unbalanced across cohorts and if we beileve that these covariates are determinants of the unterated potential outcomes, then we should update our unconditional parallel trends assumptions to conditional parallel trends assumptions. In our application, we have three covariates: `x1`, `x2`, and `x3`. In the following table, we compare the average values of these covariates across treated cohorts and the not-yet-treated group at each time period. 
 ```{r}
 #| tbl-cap: "Normalized differences in covariate means across treated cohorts and the not-yet-treated groups at each time period"
 #| label: tbl-covariate-balance
@@ -375,13 +375,13 @@ $$
 $$
 :::
 
-The next assumption is the conditional version of the strong overlap assumptionthat we adapter for the common treatment timing case. 
+The next assumption is the conditional version of the strong overlap assumptionthat we adapted for the common treatment timing case. 
 
 :::{.callout-important icon=false title="Strong overlap with staggered adoption"}
 For all $g \in \mathcal{G}$ and $X_i$, we have $\epsilon<P(G_i = g|X_i)<1-\epsilon$ for some $\epsilon > 0$. 
 :::
 
-In the next theorem, we show that under the no anticipation assumption, the conditional parallel trends assumptions, and the strong overlap assumption, we can identify the group-time average treatment effects $ATT(g,t)$ for all $g \in \mathcal{G}$ and $t \geq g$.
+In the next theorem, we show that under the no anticipation assumption, the conditional parallel trends assumptions, and the strong overlap assumption, we can identify $ATT(g,t)$ for all $g \in \mathcal{G}$ and $t \geq g$.
 
 :::{#thm-identification-staggered-covariates}
 ## Identification of the group-time average treatment effects with covariates
@@ -417,7 +417,7 @@ $$
 where the second equality follows from adding and subtracting $Y_{i,g-1}(\infty)$, the third equality follows from the law of iterated expectations, the fourth equality follows from the conditional parallel trends assumption based on the never-treated group, and the last equality follows from the no anticipation assumption and the definition of the observed outcome.
 :::
 
-As in the case of common treatment timing dicussed in Chapter 22, we can estimate the group-time average treatment effects $ATT(g,t)$ using the sample analog of the identification results in Theorem @thm-identification-staggered-covariates.  The first term in these identification results $\E[Y_{it} - Y_{i,g-1}|G_i = g]$ can be estimated using the sample average of $Y_{it} - Y_{i,g-1}$ for units in cohort $g$. The second term in these identification results can be estimated using a regression adjustment method, the inverse probability weighting method, or the doubly robust method discussed in Chapter 22. The `att_gt` function from the `did` package allows us to implement these estimation methods in the staggered treatment design with covariates.
+As in the case of common treatment timing dicussed in Chapter 22, we can estimate $ATT(g,t)$ using the sample analog of the identification results in Theorem @thm-identification-staggered-covariates.  The first term in these identification results $\E[Y_{it} - Y_{i,g-1}|G_i = g]$ can be estimated using the sample average of $Y_{it} - Y_{i,g-1}$ for units in cohort $g$. The second term in these identification results can be estimated using the regression adjustment method, the inverse probability weighting method, or the doubly robust method discussed in Chapter 22. The `att_gt` function from the `did` package allows us to implement these estimation methods in the staggered treatment design with covariates.
 
 In our application on the effect of Walmart openings on retail employment, we can estimate the group-time average treatment effects using the `att_gt` function with `xformla = ~ x1 + x2 + x3` to include the covariates in the estimation. We can then summarize these estimates using event-study parameters and plot them as we did in the case without covariates.
 ```{r}
@@ -439,7 +439,7 @@ event_study_with_x <- aggte(model_with_x, type = "dynamic")
 summary(event_study_with_x)
 ```
 
-The event-study plot in @fig-AppendixA1-5 is similar to the event-study plot in @fig-AppendixA1-4. The figure indicates that there are still some statistically significant pre-treatment effects, suggesting that the conditional parallel trends assumption based on the never-treated group may not hold in this application. Therefore, given the presence of these pre-treatment effects, the positive post-treatment effects should be interpreted with caution.
+The event-study plot in @fig-AppendixA1-5 is similar to the event-study plot in @fig-AppendixA1-4. The figure indicates that there are still some statistically significant pre-treatment effects, suggesting that the conditional parallel trends assumption based on the not-yet-treated group may not hold in this application. Therefore, given the presence of these pre-treatment effects, the positive post-treatment effects should be interpreted with caution.
 
 ```{r}
 #| fig-cap: "Effects of Walmart Opening on log(Retail Employment) with covariates"
