@@ -328,12 +328,26 @@ where $\mu^{'}_j=\E(Y^j)$ is the $j$th moment of $Y$, and $o(t^k)$ is a term suc
 
 :::{#exm-exmC-3}
 ## Characteristic function of normal distribution
-Let $Y\sim N(\mu,\sigma^2)$. Then, the characteristic function of $Y$ is given by
+Let $Y\sim N(0,1)$. Then, the characteristic function of $Y$ is given by
 $$
-\varphi_Y(t)=e^{i\mu t-\sigma^2t^2/2}.
+\varphi_Y(t)=\E(e^{itY})=\int_{-\infty}^{\infty}e^{ity}\frac{1}{\sqrt{2\pi}}e^{-y^2/2}dy.
 $$
+Instead of evaluating the above integral directly, we use Stein's lemma with $f(y)=ie^{ity}$ to find the characteristic function of $Y$:
+$$
+\begin{align*}
+\frac{d\varphi_Y(t)}{dt}&=\E\left(Yie^{itY}\right)=\E(Yf(Y))= \E(f'(Y))\\
+&=\E(i^2 t e^{itY})=-t\E(e^{itY})=-t\varphi_Y(t),
+\end{align*}
+$$
+which is a first-order ordinary differential equation with an initial condition $\varphi_Y(0)=1$. Solving the above ordinary differential equation, we obtain $\varphi_Y(t)=e^{-t^2/2}$.
 
-In particular, if $Z\sim N(0,1)$, then $\varphi_Z(t)=e^{-t^2/2}$.
+Let $X\sim N(\mu,\sigma^2)$. Then, we can express $X$ as $X=\mu+\sigma Y$. Using the properties of characteristic functions, we have
+$$
+\begin{align*}
+\varphi_X(t)&=\E(e^{itX})=\E(e^{it(\mu+\sigma Y)})=e^{it\mu}\E(e^{i\sigma tY})=e^{it\mu}\varphi_Y(\sigma t)\\
+&=e^{it\mu}e^{-\sigma^2t^2/2}=e^{it\mu-\sigma^2t^2/2}.
+\end{align*}
+$$
 :::
 
 ## The proof of the central limit theorem
