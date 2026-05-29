@@ -378,7 +378,7 @@ pie(category_counts,
 
 
 ### Quantile plots
-We use the `qqplot`, `qqnorm`, and `qqline` functions to create quantile plots. The `qqnorm` function creates a normal Q-Q plot, and the `qqline` function adds a reference line to the plot. In the following example, we create the normal Q-Q plot of test scores.
+We use quantile plots to compare the sample quantiles of our data to theoretical quantiles from a specified distribution. The `qqplot` function creates a Q-Q plot for two samples, while the `qqnorm` function produces a normal Q-Q plot, i.e., a plot of the sample quantiles against the theoretical quantiles of a normal distribution. The `qqline` function adds a reference line to the plot. If the points in the Q-Q plot lie approximately along the reference line, this provides evidence that the sample distribution is similar to the theoretical distribution. In the following example, we create a normal Q-Q plot for the test scores variable. The figure indicates that for test scores below approximately 650, the corresponding sample quantiles lie above the theoretical quantiles of the standard normal distribution, whereas for test scores above approximately 700, the sample quantiles lie below the corresponding theoretical quantiles. This suggests that the distribution of test scores has relatively light (thin) left and right tails compared to the normal distribution.
 ```{r}
 #| fig-cap: "Normal Q-Q plot of test scores"
 #| fig-width: 5
@@ -863,11 +863,28 @@ The `geom_qq` function creates the normal Q-Q plot, and the `geom_qq_line` funct
 # Normal Q-Q plot of test scores
 ggplot(data = caschool, aes(sample = testscr)) +
   geom_qq(color = "steelblue", size = 2, shape = 19) +
-  geom_qq_line(color = "red", linewidth = 1) +
-  labs(title = "Normal Q-Q Plot of Test Scores",
-       x = "Theoretical Quantiles",
+  geom_qq_line(distribution = qnorm, color = "red", linewidth = 1) +
+  labs(x = "Theoretical Quantiles",
        y = "Sample Quantiles")
 ```
+
+In the following example, we create a Q-Q plot of test scores against the t-distribution with 5 degrees of freedom. We use the `distribution` argument in the `geom_qq` function to specify the theoretical distribution. The `geom_qq_line` function adds a reference line based on the t-distribution with 5 degrees of freedom. The plot shows that the sample quantiles of test scores deviate from the theoretical quantiles of the t-distribution in the left and right tails, suggesting that the distribution of test scores has relatively light (thin) tails compared to the t-distribution with 5 degrees of freedom.
+
+```{r}
+#| fig-cap: "Q-Q plot of test scores against t-distribution with 5 degrees of freedom"
+#| fig-width: 4
+#| fig-height: 4
+#| label: fig-chapter6-f28-2
+# Q-Q plot of test scores against t-distribution with 5 degrees of freedom
+ggplot(data = caschool, aes(sample = testscr)) +
+  geom_qq(distribution = qt, dparams = list(df = 5),
+          color = "steelblue", size = 2, shape = 19) +
+  geom_qq_line(distribution = qt, dparams = list(df = 5),
+               color = "red", linewidth = 1) +
+  labs(x = "Theoretical Quantiles",
+       y = "Sample Quantiles")
+```
+
 ### Density plots
 The `geom_density` function can be used to create density plots. Its syntax is as follows:
 ```{r}

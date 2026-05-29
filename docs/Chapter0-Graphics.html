@@ -1186,7 +1186,7 @@ Figure&nbsp;6.8: Pie chart of number of schools by category
 </div>
 </section><section id="quantile-plots" class="level3" data-number="6.2.5"><h3 data-number="6.2.5" class="anchored" data-anchor-id="quantile-plots">
 <span class="header-section-number">6.2.5</span> Quantile plots</h3>
-<p>We use the <code>qqplot</code>, <code>qqnorm</code>, and <code>qqline</code> functions to create quantile plots. The <code>qqnorm</code> function creates a normal Q-Q plot, and the <code>qqline</code> function adds a reference line to the plot. In the following example, we create the normal Q-Q plot of test scores.</p>
+<p>We use quantile plots to compare the sample quantiles of our data to theoretical quantiles from a specified distribution. The <code>qqplot</code> function creates a Q-Q plot for two samples, while the <code>qqnorm</code> function produces a normal Q-Q plot, i.e., a plot of the sample quantiles against the theoretical quantiles of a normal distribution. The <code>qqline</code> function adds a reference line to the plot. If the points in the Q-Q plot lie approximately along the reference line, this provides evidence that the sample distribution is similar to the theoretical distribution. In the following example, we create a normal Q-Q plot for the test scores variable. The figure indicates that for test scores below approximately 650, the corresponding sample quantiles lie above the theoretical quantiles of the standard normal distribution, whereas for test scores above approximately 700, the sample quantiles lie below the corresponding theoretical quantiles. This suggests that the distribution of test scores has relatively light (thin) left and right tails compared to the normal distribution.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Normal Q-Q plot of test scores</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/qqnorm.html">qqnorm</a></span><span class="op">(</span><span class="va">caschool</span><span class="op">$</span><span class="va">testscr</span>,</span>
@@ -1887,9 +1887,8 @@ Figure&nbsp;6.26: Boxplot of test scores by category with constant fill color
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Normal Q-Q plot of test scores</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">caschool</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">testscr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"steelblue"</span>, size <span class="op">=</span> <span class="fl">2</span>, shape <span class="op">=</span> <span class="fl">19</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Normal Q-Q Plot of Test Scores"</span>,</span>
-<span>       x <span class="op">=</span> <span class="st">"Theoretical Quantiles"</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span><span class="op">(</span>distribution <span class="op">=</span> <span class="va">qnorm</span>, color <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Theoretical Quantiles"</span>,</span>
 <span>       y <span class="op">=</span> <span class="st">"Sample Quantiles"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-chapter6-f28" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1902,11 +1901,32 @@ Figure&nbsp;6.27: Normal Q-Q plot of test scores
 </div>
 </div>
 </div>
+<p>In the following example, we create a Q-Q plot of test scores against the t-distribution with 5 degrees of freedom. We use the <code>distribution</code> argument in the <code>geom_qq</code> function to specify the theoretical distribution. The <code>geom_qq_line</code> function adds a reference line based on the t-distribution with 5 degrees of freedom. The plot shows that the sample quantiles of test scores deviate from the theoretical quantiles of the t-distribution in the left and right tails, suggesting that the distribution of test scores has relatively light (thin) tails compared to the t-distribution with 5 degrees of freedom.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Q-Q plot of test scores against t-distribution with 5 degrees of freedom</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">caschool</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">testscr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span><span class="op">(</span>distribution <span class="op">=</span> <span class="va">qt</span>, dparams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
+<span>          color <span class="op">=</span> <span class="st">"steelblue"</span>, size <span class="op">=</span> <span class="fl">2</span>, shape <span class="op">=</span> <span class="fl">19</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span><span class="op">(</span>distribution <span class="op">=</span> <span class="va">qt</span>, dparams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
+<span>               color <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Theoretical Quantiles"</span>,</span>
+<span>       y <span class="op">=</span> <span class="st">"Sample Quantiles"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-chapter6-f28-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-chapter6-f28-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Chapter0-Graphics_files/figure-html/fig-chapter6-f28-2-1.png" class="img-fluid figure-img" width="384">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chapter6-f28-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.28: Q-Q plot of test scores against t-distribution with 5 degrees of freedom
+</figcaption></figure>
+</div>
+</div>
+</div>
 </section><section id="density-plots-1" class="level3" data-number="6.3.8"><h3 data-number="6.3.8" class="anchored" data-anchor-id="density-plots-1">
 <span class="header-section-number">6.3.8</span> Density plots</h3>
 <p>The <code>geom_density</code> function can be used to create density plots. Its syntax is as follows:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="cn">NULL</span>, data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="cn">NULL</span>, data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>                 stat <span class="op">=</span> <span class="st">"density"</span>, position <span class="op">=</span> <span class="st">"identity"</span>,</span>
 <span>                 <span class="va">...</span>,</span>
 <span>                 na.rm <span class="op">=</span> <span class="cn">FALSE</span>, show.legend <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -1915,7 +1935,7 @@ Figure&nbsp;6.27: Normal Q-Q plot of test scores
 <p>It understands the following aesthetics: (i) <code>x</code>: x-coordinate of the density curve, (ii) <code>y</code>: height of the density curve (computed by default), (iii) <code>fill</code>: fill color of the area under the density curve, (iv) <code>color</code>: border color of the density curve, (v) <code>linetype</code>: line type of the density curve, and (vi) <code>size</code>: line width of the density curve, (vii) <code>alpha</code>: transparency of the fill color, and (viii) <code>group</code>: grouping variable for the density curve.</p>
 <p>In the following example, we create a density plot of test scores.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Density plot of test scores</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Density plot of test scores</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">caschool</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">testscr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"lightblue"</span>, color <span class="op">=</span> <span class="st">"black"</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Density Plot of Test Scores"</span>,</span>
@@ -1927,14 +1947,14 @@ Figure&nbsp;6.27: Normal Q-Q plot of test scores
 <img src="Chapter0-Graphics_files/figure-html/fig-chapter6-f29-1.png" class="img-fluid figure-img" width="384">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chapter6-f29-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.28: Density plot of test scores
+Figure&nbsp;6.29: Density plot of test scores
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>We can overlay a density plot on a histogram. In the following example, we create a histogram of test scores and overlay a density plot on it. The plot is shown in <a href="#fig-chapter6-f30" class="quarto-xref">Figure&nbsp;<span>6.29</span></a>.</p>
+<p>We can overlay a density plot on a histogram. In the following example, we create a histogram of test scores and overlay a density plot on it. The plot is shown in <a href="#fig-chapter6-f30" class="quarto-xref">Figure&nbsp;<span>6.30</span></a>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Density plot and histogram of test scores</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Density plot and histogram of test scores</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">caschool</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">testscr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">after_stat</a></span><span class="op">(</span><span class="va">density</span><span class="op">)</span><span class="op">)</span>, binwidth <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>                    fill <span class="op">=</span> <span class="st">"lightgray"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1948,16 +1968,16 @@ Figure&nbsp;6.28: Density plot of test scores
 <img src="Chapter0-Graphics_files/figure-html/fig-chapter6-f30-1.png" class="img-fluid figure-img" width="576">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chapter6-f30-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.29: Density plot and histogram of test scores
+Figure&nbsp;6.30: Density plot and histogram of test scores
 </figcaption></figure>
 </div>
 </div>
 </div>
 </section><section id="multiple-plots-in-one-figure-1" class="level3" data-number="6.3.9"><h3 data-number="6.3.9" class="anchored" data-anchor-id="multiple-plots-in-one-figure-1">
 <span class="header-section-number">6.3.9</span> Multiple plots in one figure</h3>
-<p>We can use the <code>gridExtra</code> package to create multiple plots in one figure. The <code>grid.arrange</code> function in the <code>gridExtra</code> package arranges multiple <code>ggplot</code> objects in a grid layout. In the following example, we create a 2x2 grid of plots. The figure is shown in <a href="#fig-chapter6-f31" class="quarto-xref">Figure&nbsp;<span>6.30</span></a>.</p>
+<p>We can use the <code>gridExtra</code> package to create multiple plots in one figure. The <code>grid.arrange</code> function in the <code>gridExtra</code> package arranges multiple <code>ggplot</code> objects in a grid layout. In the following example, we create a 2x2 grid of plots. The figure is shown in <a href="#fig-chapter6-f31" class="quarto-xref">Figure&nbsp;<span>6.31</span></a>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Multiple plots in one figure</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Multiple plots in one figure</span></span>
 <span><span class="co"># Scatterplot</span></span>
 <span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">caschool</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">str</span>, y <span class="op">=</span> <span class="va">testscr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"steelblue"</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1991,7 +2011,7 @@ Figure&nbsp;6.29: Density plot and histogram of test scores
 <img src="Chapter0-Graphics_files/figure-html/fig-chapter6-f31-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chapter6-f31-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.30: Multiple plots in one figure
+Figure&nbsp;6.31: Multiple plots in one figure
 </figcaption></figure>
 </div>
 </div>
@@ -2052,9 +2072,9 @@ Table&nbsp;6.6: Commonly used themes in ggplot2
 </div>
 </div>
 </div>
-<p>In the following example, we create a scatterplot of test scores versus student-teacher ratio using the <code>theme_classical</code> theme. The scatterplot is shown in <a href="#fig-chapter6-f32" class="quarto-xref">Figure&nbsp;<span>6.31</span></a>.</p>
+<p>In the following example, we create a scatterplot of test scores versus student-teacher ratio using the <code>theme_classical</code> theme. The scatterplot is shown in <a href="#fig-chapter6-f32" class="quarto-xref">Figure&nbsp;<span>6.32</span></a>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Scatterplot of test scores vs. student-teacher ratio with minimal theme</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Scatterplot of test scores vs. student-teacher ratio with minimal theme</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">caschool</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">str</span>, y <span class="op">=</span> <span class="va">testscr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"steelblue"</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Test Scores vs. Student-Teacher Ratio"</span>,</span>
@@ -2067,7 +2087,7 @@ Table&nbsp;6.6: Commonly used themes in ggplot2
 <img src="Chapter0-Graphics_files/figure-html/fig-chapter6-f32-1.png" class="img-fluid figure-img" width="480">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chapter6-f32-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.31: Scatterplot of test scores vs.&nbsp;student-teacher ratio with minimal theme
+Figure&nbsp;6.32: Scatterplot of test scores vs.&nbsp;student-teacher ratio with minimal theme
 </figcaption></figure>
 </div>
 </div>
