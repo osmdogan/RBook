@@ -622,6 +622,50 @@ ggplot(mydata, aes(x = pirat, y = deny)) +
     coord_cartesian(ylim = c(-0.4, 1.4))
 ```
 
+Alternatively, we can also resort to the `stat_smooth` or `geom_smooth` functions in `ggplot2` to plot the predicted probabilities from the probit and logit models.
+```{r}
+#| label: fig-chapter20-6
+#| fig-cap: Predicted probabilities based on probit and logit models
+#| fig-width: 6
+#| fig-height: 4
+#| warning: false
+#| message: false
+# Plot with stat_smooth()
+ggplot(mydata, aes(x = pirat, y = deny)) +
+    geom_point(color = "black", size = 1.5) +
+    stat_smooth(
+        aes(color = "Probit", linetype = "Probit"),
+        method = "glm",
+        method.args = list(family = binomial(link = "probit")),
+        se = FALSE, linewidth = 0.8
+    ) +
+    stat_smooth(
+        aes(color = "Logit", linetype = "Logit"),
+        method = "glm",
+        method.args = list(family = binomial(link = "logit")),
+        se = FALSE, linewidth = 0.8
+    ) +
+    geom_hline(yintercept = 1, linetype = "dashed") +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    annotate("text", x = 2.2, y = 0.9,
+             label = "Mortgage denied", size = 3) +
+    annotate("text", x = 2.2, y = -0.1,
+             label = "Mortgage approved", size = 3) +
+    scale_color_manual(
+        values = c(Probit = "red", Logit = "blue")
+    ) +
+    scale_linetype_manual(
+        values = c(Probit = "dashed", Logit = "solid")
+    ) +
+    labs(
+        x = "P/I ratio",
+        y = "Deny",
+        color = "Model",
+        linetype = "Model"
+    ) +
+    coord_cartesian(ylim = c(-0.4, 1.4))
+```
+
 
 ## Estimation and inference in the probit and logit models
 We use the maximum likelihood estimator (MLE) to estimate the probit and logit models. To define this estimator, we first need to define the likelihood function.
@@ -646,7 +690,7 @@ P(Y_i=y_i|X_{1i},X_{2i},\ldots,X_{ki})&=\left[\Phi(\beta_0+\beta_1X_{1i}+\beta_2
 &\times\left[1-\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})\right]^{1-y_i},
 \end{align*}
 $$
-where $y_i\in\{0,1\}$. Then, @def-def18-1 suggests the following likelihood function:
+where $y_i\in\{0,1\}$. Then, @def-chapter20-1 suggests the following likelihood function:
 $$
 \begin{align*}
 f(\bs{\beta}|\bs{Y},\bs{X})&=P(Y_1=y_1,Y_2=y_2,\ldots,Y_n=y_n|X_{1},X_{2},\ldots,X_{k})\\
@@ -668,7 +712,7 @@ $$
 \hat{\bs{\beta}}=\text{argmax}_{\bs{\beta}}\ln\left(f(\bs{\beta}|\bs{Y},\bs{X})\right).
 $$
 
-Since the log-likelihood function is a non-linear function of parameters, there is no analytical solution for the MLE. We can resort to numerical algorithms to compute the MLE. Under some standard conditions, it can be shown that the MLE is a consistent estimator and has an asymptotic normal distribution in large samples (see @Hansen2022 for more details). 
+Since the log-likelihood function is a non-linear function of parameters, there is no analytical solution for the MLE. We can resort to numerical algorithms to compute the MLE. Under some standard conditions, it can be shown that the MLE is a consistent estimator and has an asymptotic normal distribution in large samples. For the theoretical properties of the MLE, see @Hansen2022 for more details. 
 
 To get the log likelihood function of the logit model, we need to replace $\Phi(\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\ldots+\beta_kX_{ki})$ in @eq-eq18-1 by 
 $$
