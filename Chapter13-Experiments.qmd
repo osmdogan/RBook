@@ -592,7 +592,7 @@ modelsummary(model1,
 )
 ```
 
-We can also use @eq-eq22.8 to estimate the DiD parameter $\beta_3$. In the following code chunk, we first create the `treatment` variable, which represents $D_i \times {\tt Period}_t$, and then use the OLS estimator to estimate $\beta_3$. Note that we use clustered standard errors at the store level to account for correlation. The DiD estimate of $\beta_3$ is 2.75 with a $t$-value of 2.05.
+We can also use @eq-eq22.8 to estimate the DiD parameter $\beta_3$. In the following code chunk, we use the OLS estimator and report clustered standard errors at the store level to account for within-store correlation. The DiD estimate of $\beta_3$ is 2.75 with a $t$-value of 2.05.
 
 
 ```{r}
@@ -849,7 +849,7 @@ df_est$lag3 <- as.integer(df_est$D == 1 & df_est$month == 11) # November
 df_est$lag4 <- as.integer(df_est$D == 1 & df_est$month == 12) # December
 ```
 
-The common treatment timing $t_0$ is August and the $t_0-1$ period is July. Thus, in the event study analysis, July will be the baseline period (reference period) and $\beta_{\text{july}}=0$. We use the fixed effects estimator to estimate the event study regression in @eq-eq22.10.
+The common treatment timing $t_0$ is August and the $t_0-1$ period is June. Thus, in the event study analysis, June will be the baseline period (reference period) and $\beta_{\text{june}}=0$. We use the fixed effects estimator to estimate the event study regression in @eq-eq22.10.
 
 
 ```{r}

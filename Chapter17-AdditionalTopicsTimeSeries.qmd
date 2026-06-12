@@ -79,7 +79,7 @@ $$
 Then, we can express the model with the following compact form:
 $$
 \begin{align}
-\bs{Y}_t=\bs{B}_0+\bs{B}_1\bs{Y}_{t-1}+\ldots+\bs{B}_{p}\bs{Y}_{t-p}+\bs{u}_t,
+\bs{Y}_t=\bs{b}_0+\bs{B}_1\bs{Y}_{t-1}+\ldots+\bs{B}_{p}\bs{Y}_{t-p}+\bs{u}_t,
 \end{align}
 $${#eq-chapter26-2}
 where
@@ -90,7 +90,7 @@ $$
 Y_t\\
 X_t
 \end{pmatrix},\,
-\bs{B}_0=
+\bs{b}_0=
 \begin{pmatrix}
 \beta_{10}\\
 \beta_{20}
@@ -109,7 +109,7 @@ u_{2t}
 $$
 for $j=1,2,\ldots,p$.
 
-The VAR($p$) in @eq-chapter26-2 is called the reduced-form VAR($p$) or the VAR($p$) in standard form.
+The VAR($p$) in @eq-chapter26-2 is referred to as the reduced-form or standard-form VAR($p$). There is nothing specific to the two-variable case. The model can be generalized to $k$ variables by replacing the $2\times1$ vector $\bs{Y}_t$ with a $k\times1$ vector $\bs{Y}_t=(Y_{1t},\ldots,Y_{kt})'$ and adjusting the dimensions of $\bs{b}_0$, $\bs{B}_j$, and $\bs{u}_t$ accordingly.
 
 We can use the OLS estimator to estimate each equation in a VAR model. The assumptions required for estimating the VAR model are the same as those outlined in @sec-chapter22-assumptions for the ADL model. In particular, each variable in the model must be stationary. In large samples, the OLS estimator is consistent and asymptotically normal. Consequently, inference can be conducted as in a multiple regression model.
 
@@ -150,10 +150,7 @@ where $k$ is the number of VAR variables, $\text{det}(\hat{\Sigma}_u)$ is the de
 
 For the third question, we should use economic theory to select VAR variables that are related to each other so they can effectively predict and forecast one another. We can apply the Granger causality test and include variables that Granger-cause each other. Including variables that do not Granger-cause each other can introduce estimation errors, thereby reducing the model's forecasting ability.
 
-### Structural VAR models
-So far, we have only considered using VAR models for prediction and forecasting. However, VAR models can also be used to study causal relationships among the VAR variables. This type of VAR model is called a structural VAR model (SVAR). SVAR models are typically used to analyze the dynamic effects of a structural shock in one variable on the other VAR variables. These models require assumptions to specify which VAR variables are exogenous. For further discussion on SVAR models, see @Lutkepohl2005 and @Hansen2022.
-
-### An empirical application
+### An empirical application: A VAR model for the GDP growth rate and the term spread
 In this section, we consider a VAR($2$) model for the GDP growth rate (GDPGR) and the term spread (TSpread) for the U.S. economy. The model takes the following form:
 $$
 \begin{align*}
@@ -163,7 +160,7 @@ $$
 \beta_{22}\text{GDPGR}_{t-2}+\gamma_{21}\text{TSpread}_{t-1}+\gamma_{22}\text{TSpread}_{t-2}+u_{2t}.
 \end{align*}
 $$
-The `GDGGR` variable is contained in the `GrowthRate.csv` file, and the `TSpread` variable is available in the `TermSpread.csv` file. The `GrowthRate.csv` file contains data on the following variables:
+The `GDPGR` variable is contained in the `GrowthRate.csv` file, and the `TSpread` variable is available in the `TermSpread.csv` file. The `GrowthRate.csv` file contains data on the following variables:
 
 - `Y`: Logarithm of real GDP 
 - `YGROWTH`: Annual real GDP growth rate
@@ -402,30 +399,288 @@ fanchart(fc,
 )
 ```
 
+### Impulse Response Analysis
+VAR models are often used to analyze the dynamic effects of a shock in one variable on the other variables in the system. This type of analysis is called impulse response analysis. For this analysis, we need to express our VAR($p$) model in its moving average (MA) representation. To that end, we assume that the error term $\bs{u}_t$ satisfies the following condition:
+$$
+\begin{align*}
+\E\left(\bs{u}_t|\bs{Y}_{t-1}, \bs{Y}_{t-2}, \ldots\right) &= 0.
+\end{align*}
+$$
 
-Finally, we consider the effect of a shock in the term spread on the GDP growth rate. Suppose that we are willing to assume that `GDPGR` has a contemporaneous effect on `TSpread` but `TSpread` affects the  `GDPGR` sequence with a one-period lag. To impose such an assumption, we need to order the variable such that `GDPGR` is the first column in `varData` (which is the case). That is, the order of variables in the system is important, and the variable that has the contemporaneous effect should be the first variable in the system. 
+This assumption implies that (i) $\E(\bs{u}_t)=0$, (ii) $\E(\bs{u}_t\bs{u}^{'}_{t-k})=0$ for $k\geq1$, and (iii) the VAR($p$) model in @eq-chapter26-2 is correctly specified so that the coefficient matrices beyond lag $p$ are zero. In our analysis, we will further assume that $\E(\bs{u}_t\bs{u}^{'}_{t})=\bs{\Sigma}$ for some positive definite matrix $\bs{\Sigma}$. 
 
-The effect of a shock in `TSpread` on `GDPGR` can be analysed through the impulse-response analysis. To that end, we can use the `irf` function from the `vars` package. The response function of `GDPGR` is plotted in @fig-chapter26-4. The plot shows that a shock in the term spread has a negative effect on the GDP growth rate in the first period.
+The multivariate Wold decomposition theorem states that the VAR($p$) model in @eq-chapter26-2 can be expressed in the following MA representation (@Lutkepohl2005 and @Hansen2022):
+$$
+\begin{align*}
+\bs{Y}_t=\bs{\mu}+\sum_{j=0}^{\infty}\bs{\Psi}_j\bs{u}_{t-j},
+\end{align*}
+$${#eq-chapter26-4}
+where $\bs{\mu}=(\bs{I}-\bs{B}_1-\ldots-\bs{B}_p)^{-1}\bs{b}_0$ is the mean of $\bs{Y}_t$, and $\bs{\Psi}_j$ is the $k\times k$ matrix of coefficents for the $j$th lag of the error term $\bs{u}_{t-j}$ in the MA representation. We can determine $\bs{\Psi}_j$ recursively using the following formula:
+$$
+\begin{align*}
+&\bs{\Psi}_0=\bs{I},\\
+&\bs{\Psi}_j=\bs{B}_1\bs{\Psi}_{j-1}+\bs{B}_2\bs{\Psi}_{j-2}+\ldots+\bs{B}_p\bs{\Psi}_{j-p},\,\,\text{for}\,\,j\geq1,
+\end{align*}
+$${#eq-chapter26-5-0}
+where $\bs{I}$ is the $k\times k$ identity matrix. Thus, once we estimate the coefficient matrices $\bs{B}_1,\ldots,\bs{B}_p$, we can compute $\bs{\Psi}_j$ for any $j\geq0$. 
 
+Note that the MA representation in @eq-chapter26-4 implies that $\bs{Y}_t$ is a linear function of the current and past error terms. We can also determine $h$-period ahead value $\bs{Y}_{t+h}$ as a linear function of the current and past error terms in the following way:
+$$
+\begin{align*}
+\bs{Y}_{t+h}=\bs{\mu}+\sum_{j=0}^{h-1}\bs{\Psi}_j\bs{u}_{t+h-j}+\sum_{j=h}^{\infty}\bs{\Psi}_j\bs{u}_{t+h-j}.
+\end{align*}
+$$
+Let $\mathcal{F}_t$ be the information set at time $t$ that contains the current and past values of $\bs{Y}_t$ and $\bs{u}_t$. Then, we have
+$$
+\begin{align*}
+\E\left(\bs{Y}_{t+h}|\mathcal{F}_t\right) = \bs{\mu}+\sum_{j=h}^{\infty}\bs{\Psi}_j\bs{u}_{t+h-j}.
+\end{align*}
+$$
+
+:::{#def-impulse-response}
+## Impulse response function
+The impulse response function (IRF) at horizon $h$ is defined as the response of $\E\left(\bs{Y}_{t+h}|\mathcal{F}_t\right)$ to a change in $\bs{u}_t$:
+$$
+\begin{align*}
+\text{IRF}(h) = \frac{\partial\E\left(\bs{Y}_{t+h}|\mathcal{F}_t\right)}{\partial \bs{u}^{'}_t} = \bs{\Psi}_h.
+\end{align*}
+$${#eq-chapter26-5}
+:::
+
+Note that $\text{IRF}(h)$ is a $k\times k$ matrix, and the $(i,j)$th element, denoted by $\text{IRF}_{ij}(h)$, is the response of the $i$th variable $Y_{i,t+h}$ to a one-unit change in the $j$th error term $u_{jt}$. Thus, we can use $\text{IRF}_{ij}(h)$ to analyze the dynamic effect of a change in $u_{jt}$ on the $i$th variable $Y_{it}$ over time.
+
+Using $\text{IRF}(h)$, we can also define the cumulative impulse response function (CIRF) at horizon $h$ as follows:
+$$
+\begin{align*}
+\text{CIRF}(h) = \sum_{j=1}^h \text{IRF}(j) = \sum_{j=1}^h \bs{\Psi}_j,
+\end{align*}
+$$
+which gives the cumulative responses of $\bs{Y}_{t}$ from time $t$ to $t+h$. The limit of $\text{CIRF}(h)$ as $h\to\infty$ is called the long-run cumulative impulse response function, which gives the long-run response of $\bs{Y}_t$ to a change in $\bs{u}_t$:
+$$
+\begin{align*}
+\text{CIRF} = \lim_{h\to\infty} \sum_{j=1}^h \text{IRF}(j) = \sum_{j=1}^\infty \bs{\Psi}_j=(\bs{I}-\bs{B}_1-\ldots-\bs{B}_p)^{-1}.
+\end{align*}
+$$
+
+The elements of $\bs{u}_t$ are contemporaneously correlated. Therefore, $\text{IRF}_{ij}(h)$, which measures the response of $\E(Y_{i,t+h}|\mathcal{F}_t)$ to a change in $u_{jt}$ while holding the other error terms fixed, may not be economically meaningful. A natural solution is to define the impulse response function in terms of uncorrelated (orthogonalized) shocks. To this end, we factor $\bs{\Sigma}$ as $\bs{\Sigma}=\bs{B}\bs{B}'$ for some nonsingular matrix $\bs{B}$ and define $\bs{\varepsilon}_t=\bs{B}^{-1}\bs{u}_t$. Note that $\E(\bs{\varepsilon}_t)=0$ and $\E(\bs{\varepsilon}_t\bs{\varepsilon}^{'}_t)=\bs{I}$, so the elements of $\bs{\varepsilon}_t$ are uncorrelated. 
+
+:::{#def-orthogonalized-shocks}
+## Orthogonalized shocks
+We call $\bs{\varepsilon}_t$ the vector of orthogonalized shocks and refer to its elements simply as shocks.
+:::
+
+Unfortunately, the matrix $\bs{B}$ is not unique. For example, if $\bs{P}$ is any $k\times k$ orthogonal matrix (i.e., $\bs{P}\bs{P}'=\bs{P}'\bs{P}=\bs{I}$), then $\bs{\Sigma}=(\bs{B}\bs{P})(\bs{B}\bs{P})'$, showing that there are infinitely many ways to factor $\bs{\Sigma}$. @Sims1980 suggests using the [Cholesky decomposition](https://en.wikipedia.org/wiki/Cholesky_decomposition) of $\bs{\Sigma}$: $\bs{B}=\text{Cholesky}(\bs{\Sigma})$, which is a lower triangular matrix. When $k=3$, the Cholesky decomposition of $\bs{\Sigma}$ is given by
+$$
+\begin{align*}
+\bs{B}=
+\begin{pmatrix}
+b_{11} & 0 & 0\\
+b_{21} & b_{22} & 0\\
+b_{31} & b_{32} & b_{33}
+\end{pmatrix},
+\end{align*}
+$$
+with non-negative diagonal elements. Thus, we can express $\bs{u}_t$ in terms of $\bs{\varepsilon}_t$ as follows:
+$$
+\begin{align*}
+&u_{1t}=b_{11}\varepsilon_{1t},\\
+&u_{2t}=b_{21}\varepsilon_{1t}+b_{22}\varepsilon_{2t},\\
+&u_{3t}=b_{31}\varepsilon_{1t}+b_{32}\varepsilon_{2t}+b_{33}\varepsilon_{3t}.
+\end{align*}
+$$
+
+Therefore, the first shock $\varepsilon_{1t}$ affects all three error components, the second shock $\varepsilon_{2t}$ affects only the second and third components, and the third shock $\varepsilon_{3t}$ affects only the third component. Thus, the Cholesky decomposition imposes a recursive structure on the contemporaneous relationships among the VAR variables. Specifically, the first variable in the system is affected only by its own shock, the second variable is affected by its own shock and the shock to the first variable, and so on. Therefore, the ordering of variables in the system matters when using the Cholesky decomposition to orthogonalize shocks.
+
+Using $\bs{\varepsilon}_t$, we can express the VAR($p$) model in @eq-chapter26-2 in the following MA representation:
+$$
+\begin{align*}
+\bs{Y}_t=\bs{\mu}+\sum_{j=0}^{\infty}\bs{\Psi}_j\bs{B}\bs{\varepsilon}_{t-j}.
+\end{align*}
+$${#eq-chapter26-VAR6}
+We can then define the **orthogonalized impulse response function** (OIRF) at horizon $h$ as follows:
+$$
+\begin{align*}
+\text{OIRF}(h) = \frac{\partial\E\left(\bs{Y}_{t+h}|\mathcal{F}_t\right)}{\partial \bs{\varepsilon}^{'}_t} = \bs{\Psi}_h\bs{B}.
+\end{align*}
+$$
+
+The discussion in this section suggests that we can formulate the orthogonalized impulse response function using the following steps:
+
+1. Estimate the reduced-form VAR($p$) model in @eq-chapter26-2 and obtain the OLS residuals $\hat{\bs{u}}_t$.
+2. Compute the estimated covariance matrix of the residuals $\hat{\bs{\Sigma}}=\frac{1}{T}\sum_{t=1}^T\hat{\bs{u}}_t\hat{\bs{u}}_{t}'$ and its Cholesky decomposition $\hat{\bs{B}}$.
+3. Compute $\hat{\bs{\Psi}}_j$ for $j=0,\ldots, h$ using the recursive formula in @eq-chapter26-5-0.
+4. Compute the estimated OIRF at horizon $h$ as $\widehat{\text{OIRF}}(h)=\hat{\bs{\Psi}}_h\hat{\bs{B}}$.
+
+To compute the standard errors of $\widehat{\text{OIRF}}(h)$, we can resort to the [bootstrap method](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)) or the [delta method](https://en.wikipedia.org/wiki/Delta_method). Because of the complexity of the OIRF estimator, the recursive bootstrap method is more commonly used in the literature. The recursive bootstrap method involves resampling the residuals $\hat{\bs{u}}_t$ to generate new samples of $\bs{Y}_t$, re-estimating the VAR model for each sample, and computing the OIRF for each sample. The standard errors of $\widehat{\text{OIRF}}(h)$ can then be computed from the distribution of the OIRF estimates across the bootstrap samples (@Hansen2022).
+
+In our VAR($2$) model for the GDP growth rate and the term spread, we use the OIRF to analyze the effect of a shock to the term spread on the GDP growth rate. We assume that a shock to the GDP growth rate contemporaneously affects both the GDP growth rate and the term spread, while a shock to the term spread contemporaneously affects only the term spread. This identification assumption is consistent with the Cholesky decomposition of $\hat{\bs{\Sigma}}$ when `GDPGR` is ordered before `TSpread` in the VAR specification.
+
+We use the `irf` function from the `vars` package to compute the OIRF. The resulting estimates are shown in @tbl-chapter26-4. The table reports the point estimates of the OIRF and the cumulative OIRF, along with their confidence intervals. In @fig-chapter26-4, we plot the estimated OIRF and cumulative OIRF. The OIRF plot shows that a shock to the term spread has a negative effect on GDP growth in the first quarter (a drop of about 0.3 percent). The effect then becomes positive in subsequent quarters, peaking at about 0.26 percent in the sixth quarter. However, all estimates are statistically insignificant at the 5% level, except for the first-quarter point estimate.
+
+The cumulative OIRF plot shows that the cumulative effect of a shock to the term spread on GDP growth is negative over the first four quarters and then becomes positive and increases over time. However, all estimates of the cumulative OIRF are statistically insignificant at the 5% level, except again for the first-quarter point estimate. Overall, we find that a shock to the term spread has a statistically significant negative effect on GDP growth only in the first quarter, but its effect becomes indistinguishable from zero in subsequent quarters.
 
 ```{r}
-#| fig-cap: "Impulse response analysis"
-#| label: fig-chapter26-4
-#| fig-width: 8
-#| fig-height: 6
-
 # Compute impulse response functions
 irf_res <- irf(
     var_model,
     impulse = "RSPREAD",
     response = "YGROWTH",
-    n.ahead = 10,
-    ortho = TRUE
+    n.ahead = 8,
+    ortho = TRUE,
+    boot = TRUE,
+    cumulative = FALSE
 )
 
-# Plot IRFs
-plot(irf_res, cex.axis = 0.5, cex.lab = 0.8)
+# Compute impulse response functions
+irf_res_cum <- irf(
+    var_model,
+    impulse = "RSPREAD",
+    response = "YGROWTH",
+    n.ahead = 8,
+    ortho = TRUE,
+    boot = TRUE,
+    cumulative = TRUE
+)
 ```
+
+```{r}
+#| tbl-cap: "The response of the GDP growth rate to a shock in the term spread"
+#| label: tbl-chapter26-4
+irf_table <- data.frame(
+    Horizon = 0:8,
+    Point_Estimate = irf_res$irf$RSPREAD,
+    Lower_CI = irf_res$Lower$RSPREAD,
+    Upper_CI = irf_res$Upper$RSPREAD,
+    Cum_Point_Estimate = irf_res_cum$irf$RSPREAD,
+    Cum_Lower_CI = irf_res_cum$Lower$RSPREAD,
+    Cum_Upper_CI = irf_res_cum$Upper$RSPREAD
+)
+col_names <- c("Horizon", "Point Estimate", "Lower CI", "Upper CI", "Cumulative Point Estimate", "Cumulative Lower CI", "Cumulative Upper CI")
+kable(irf_table, digits = 3, col.names = col_names)
+```
+
+```{r}
+#| fig-cap: "Impulse response analysis"
+#| label: fig-chapter26-4
+#| layout-ncol: 2
+#| fig-width: 12
+#| fig-height: 10
+#| fig-subcap:
+#|   - "Impulse response function"
+#|   - "Cumulative impulse response function"
+# Plot impulse response functions
+plot(irf_res, cex.axis = 0.5, cex.lab = 0.8)
+plot(irf_res_cum, cex.axis = 0.5, cex.lab = 0.8)
+```
+
+### Forecast error variance decomposition
+In addition to impulse response analysis, we can also use the VAR model to analyze the contribution of each shock to the forecast error variance of each variable in the system. This type of analysis is called the **forecast error variance decomposition** (FEVD). 
+
+:::{#def-fevd}
+## Forecast error variance decomposition
+The forecast error variance decomposition (FEVD) at horizon $h$ is defined as the proportion of the variance of the forecast error of $Y_{i,t+h}$ that can be attributed to each shock $\varepsilon_{jt}$ for $i,j=1,\ldots, k$.
+:::
+
+Consider @eq-chapter26-VAR6 and let $\bs{Y}_{t+h|t}$ be the $h$-period ahead forecast of $\bs{Y}_t$ based on the information set at time $t$. We can express the forecast error $\bs{Y}_{t+h}-\bs{Y}_{t+h|t}$ as follows:
+$$
+\begin{align*}
+\bs{Y}_{t+h}-\bs{Y}_{t+h|t} = \sum_{j=0}^{h-1}\bs{\Psi}_j\bs{B}\bs{\varepsilon}_{t+h-j}.
+\end{align*}
+$$
+
+Given the orthogonality of $\bs{\varepsilon}_t$, we can compute the variance of the forecast error as follows:
+$$
+\begin{align*}
+\text{Var}(\bs{Y}_{t+h}-\bs{Y}_{t+h|t}) = \sum_{j=0}^{h-1}\bs{\Psi}_j\bs{B}\bs{B}'\bs{\Psi}_j'.
+\end{align*}
+$$
+
+Note that $\text{Var}(\bs{Y}_{t+h}-\bs{Y}_{t+h|t})$ is a $k\times k$ matrix. Let $\sigma_{ij}^2(h)$ be the $(i,j)$th element of this matrix. The FEVD for the $i$th variable at horizon $h$ due to shock $\varepsilon_{jt}$ is then given by:
+$$
+\begin{align*}
+\text{FEVD}_{ij}(h) = \frac{\sigma_{ij}^2(h)}{\sum_{k=1}^k \sigma_{ik}^2(h)},
+\end{align*}
+$$
+which shows the proportion of the variance of the forecast error of $Y_{i,t+h}$ that can be attributed to shock $\varepsilon_{jt}$. Thus, we can use the FEVD to analyze the relative importance of each shock in explaining the variability of each variable in the system over time.
+
+For our VAR($2$) model for the GDP growth rate and the term spread, we use the `fevd` function from the `vars` package to compute the FEVD for each variable. The resulting estimates are reported in @tbl-chapter26-fevd. The table presents the FEVDs of the GDP growth rate and the term spread at different horizons. The results show that a shock to the term spread explains about 2.3% of the forecast error variance of the GDP growth rate at horizon 1, and its contribution increases to about 6% by horizon 8. Conversely, a shock to the GDP growth rate accounts for most of the forecast error variance of the GDP growth rate, explaining about 97.7% at horizon 1 and about 94% at horizon 8.
+
+For the term spread, a shock to the term spread explains about 99.9% of its forecast error variance at horizon 1, although its contribution declines to about 94% by horizon 8. In contrast, a shock to the GDP growth rate explains only a negligible proportion of the forecast error variance of the term spread at short horizons, but its contribution increases to about 10% by horizon 8. Overall, the results suggest that the term spread has a relatively small but increasing contribution to the forecast error variance of the GDP growth rate over time, while the GDP growth rate has a negligible contribution to the forecast error variance of the term spread at short horizons but an increasing contribution at longer horizons.
+
+```{r}
+# Compute forecast error variance decomposition
+fevd_result <- fevd(var_model, n.ahead = 8)
+```
+
+```{r}
+#| tbl-cap: "Forecast error variance decomposition"
+#| label: tbl-chapter26-fevd
+# Display the FEVD results in a table format
+fevd_table <- data.frame(
+    Horizon = 1:8,
+    FEVD_YGROWTH_RSPREAD = fevd_result$YGROWTH[,"RSPREAD"],
+    FEVD_YGROWTH_YGROWTH = fevd_result$YGROWTH[,"YGROWTH"],
+    FEVD_RSPREAD_RSPREAD = fevd_result$RSPREAD[,"RSPREAD"],
+    FEVD_RSPREAD_YGROWTH = fevd_result$RSPREAD[,"YGROWTH"]
+)
+col_names <- c("Horizon", "FEVD of YGROWTH due to RSPREAD", "FEVD of YGROWTH due to YGROWTH", "FEVD of RSPREAD due to RSPREAD", "FEVD of RSPREAD due to YGROWTH")
+kable(fevd_table, digits = 3, col.names = col_names)
+```
+
+```{r}
+#| fig-cap: "Forecast error variance decomposition"
+#| label: fig-chapter26-fevd
+#| fig-width: 10
+#| fig-height: 8
+# Display the FEVD results
+plot(fevd_result, cex.axis = 0.5, cex.lab = 0.8)
+```
+
+### Structural VAR models
+In Sections 26.2.5 and 26.2.6, we used the Cholesky decomposition to orthogonalize shocks and compute the OIRF and FEVD. However, the Cholesky decomposition imposes a recursive structure on the contemporaneous relationships among the VAR variables, which may not be economically meaningful in some cases. To address this issue, we can use structural VAR (SVAR) models, which allow for more flexible contemporaneous relationships among the variables. In an SVAR model, we assume that the error terms $\bs{u}_t$ in the reduced-form VAR model and the structural shocks $\bs{\varepsilon}_t$ is formulated in the following way:
+$$
+\begin{align*}
+\bs{A}\bs{u}_t = \bs{B}\bs{\varepsilon}_t,
+\end{align*}
+$${#eq-chapter26-SVAR1}
+where $\bs{A}$ and $\bs{B}$ are non-singular matrices of parameters to be estimated. In the literature, the diagonal elements of $\bs{A}$ are often normalized to 1 to achieve identification. When $k=3$, the matrices $\bs{A}$ and $\bs{B}$ can be expressed as follows:
+$$
+\begin{align*}
+\bs{A}=
+\begin{pmatrix}
+1 & a_{12} & a_{13}\\
+a_{21} & 1 & a_{23}\\
+a_{31} & a_{32} & 1
+\end{pmatrix},\,\,\,
+\bs{B}=
+\begin{pmatrix}
+b_{11} & b_{12} & b_{13}\\
+b_{21} & b_{22} & b_{23}\\
+b_{31} & b_{32} & b_{33}
+\end{pmatrix}.
+\end{align*}
+$$
+These matrices suggest that we can express $\bs{u}_t$ in terms of $\bs{\varepsilon}_t$ as follows:
+$$
+\begin{align*}
+u_{1t} &= b_{11}\varepsilon_{1t}+b_{12}\varepsilon_{2t}+b_{13}\varepsilon_{3t}-a_{12}u_{2t}-a_{13}u_{3t},\\
+u_{2t} &= b_{21}\varepsilon_{1t}+b_{22}\varepsilon_{2t}+b_{23}\varepsilon_{3t}-a_{21}u_{1t}-a_{23}u_{3t},\\
+u_{3t} &= b_{31}\varepsilon_{1t}+b_{32}\varepsilon_{2t}+b_{33}\varepsilon_{3t}-a_{31}u_{1t}-a_{32}u_{2t}.
+\end{align*}
+$$
+
+From @eq-chapter26-SVAR1, we can derive the following relationship between the covariance matrix of the reduced-form errors $\bs{\Sigma}$ and the parameters in $\bs{A}$ and $\bs{B}$:
+$$
+\begin{align*}
+\bs{\Sigma} = \E(\bs{u}_t\bs{u}_t') = \bs{A}^{-1}\bs{B}\E(\bs{\varepsilon}_t\bs{\varepsilon}_t')\bs{B}'(\bs{A}^{-1})' = \bs{A}^{-1}\bs{B}\bs{B}'(\bs{A}^{-1})'.
+\end{align*}
+$${#eq-chapter26-SVAR2}
+
+The coefficients in $\bs{A}$ and $\bs{B}$ are identified if they can be uniquely determined from @eq-chapter26-SVAR2. Since $\bs{\Sigma}$ is symmetric, it has $k(k+1)/2$ unique elements. Therefore, the total number of free coefficients in $\bs{A}$ and $\bs{B}$ cannot exceed $k(k+1)/2$ for identification to be possible. This requirement is known as the **order condition** for identification. On the other hand, $\bs{A}$ and $\bs{B}$ together contain $2k^2-k$ parameters (since the diagonal elements of $\bs{A}$ are normalized to 1). For $k=3$, $\bs{A}$ and $\bs{B}$ contain 15 parameters, whereas $\bs{\Sigma}$ has only 6 unique elements. Therefore, at least 9 restrictions must be imposed on the parameters in $\bs{A}$ and $\bs{B}$ to achieve identification. 
+
+In the literature, various types of restrictions have been proposed to achieve identification in SVAR models, including short-run restrictions, long-run restrictions, and sign restrictions. The choice among these approaches depends on the economic setting and the research question of interest. We refer readers to @Lutkepohl2005 and @Hansen2022 for comprehensive discussions of these identification strategies and their implications for the interpretation of SVAR models.
+
+In R, the `SVAR` function from the `vars` package can be used to estimate SVAR models. This function allows the user to specify the type of identifying restrictions to impose on the model. In particular, the `Amat` and `Bmat` arguments can be used to impose restrictions on the parameters in $\bs{A}$ and $\bs{B}$, respectively. After estimating the SVAR model, the OIRF and FEVD can be computed using the estimated $\bs{A}$ and $\bs{B}$ matrices, similar to the Cholesky decomposition case. The relatively new `svars` package provides additional functionality for estimating SVAR models under heteroskedasticity-based identification schemes, as well as for conducting inference on the OIRF and FEVD. For the `vars` package, see @Pfaff2008vars, and for the `svars` package, see @Lange2021svars.
 
 
 ## Multi-period forecasts
